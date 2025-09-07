@@ -53,16 +53,16 @@ public class RobotParams
         public static final boolean updateDashboard             = !inCompetition;
         public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
-        public static final boolean showVision                  = false;
+        public static final boolean showVision                  = true;
         public static final boolean showSubsystems              = true;
         public static final boolean useRumble                   = false;
         // Vision
-        public static final boolean useVision                   = false;
-        public static final boolean useWebCam                   = false;    // false to use Android phone camera.
+        public static final boolean useVision                   = true;
+        public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
         public static final boolean useLimelightVision          = false;
         public static final boolean useCameraStreamProcessor    = false;
-        public static final boolean useWebcamAprilTagVision     = false;
+        public static final boolean useWebcamAprilTagVision     = true;
         public static final boolean useColorBlobVision          = false;
         public static final boolean useSolvePnp                 = false;
         public static final boolean showVisionView              = !inCompetition;
@@ -72,7 +72,12 @@ public class RobotParams
         public static final boolean usePinpointOdometry         = false;
         public static final boolean useSparkfunOTOS             = false;
         // Subsystems
-        public static final boolean useSubsystems               = false;
+        public static final boolean useSubsystems               = true;
+        public static final boolean useIntake                   = true;
+        public static final boolean useShooter                  = true;
+        // Auto Tasks.
+        public static final boolean useAutoShoot                = true;
+        public static final boolean useAutoPickup               = false;
         // Tuning
         public static final boolean tuneColorBlobVision         = false;
         public static final boolean tuneDriveBase               = false;

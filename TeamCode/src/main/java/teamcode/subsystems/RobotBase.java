@@ -279,8 +279,8 @@ public class RobotBase
             fastModeEnabled = true;
             // Vision
             webCam1 = new Vision.FrontCamParams();
-            webCam2 = new Vision.BackCamParams();
-            limelight = new Vision.LimelightParams();
+            webCam2 = null;//new Vision.BackCamParams();
+            limelight = null;//new Vision.LimelightParams();
             // Miscellaneous
             indicator1Name = null;
             indicator1Type = null;

@@ -29,9 +29,13 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.driverio.FtcMatchInfo;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.sensor.FtcRobotBattery;
+import teamcode.autotasks.TaskAutoPickup;
+import teamcode.autotasks.TaskAutoShoot;
+import teamcode.subsystems.Intake;
 import teamcode.subsystems.LEDIndicator;
 import teamcode.subsystems.RobotBase;
 import teamcode.subsystems.RumbleIndicator;
+import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -40,6 +44,8 @@ import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.sensor.TrcDigitalInput;
+import trclib.subsystem.TrcRollerIntake;
+import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
 
 /**
@@ -67,7 +73,12 @@ public class Robot
     public RumbleIndicator operatorRumble;
     public FtcRobotBattery battery;
     // Subsystems.
+    public TrcRollerIntake intake;
+    public Shooter shooterSubsystem;
+    public TrcShooter shooter;
     // Autotasks.
+    public TaskAutoShoot autoShootTask;
+    public TaskAutoPickup autoPickupTask;
 
     /**
      * Constructor: Create an instance of the object.
@@ -111,8 +122,34 @@ public class Robot
             if (RobotParams.Preferences.useSubsystems)
             {
                 // Create subsystems.
+                if (RobotParams.Preferences.useIntake)
+                {
+                    intake = new Intake().getIntake();
+                }
+
+                if (RobotParams.Preferences.useShooter)
+                {
+                    // Note: Since shooter depends on Intake, Intake subsystem must instantiate before shooter.
+                    shooterSubsystem = new Shooter(intake);
+                    shooter = shooterSubsystem.getShooter();
+                }
 
                 // Create autotasks.
+                if (RobotParams.Preferences.useAutoShoot)
+                {
+                    if (shooter != null)
+                    {
+                        autoShootTask = new TaskAutoShoot(this);
+                    }
+                }
+
+                if (RobotParams.Preferences.useAutoPickup)
+                {
+                    if (intake != null)
+                    {
+                        autoPickupTask = new TaskAutoPickup(this);
+                    }
+                }
 
                 // Zero calibrate all subsystems only in Auto or if TeleOp is run standalone without prior Auto.
                 // There is no reason to zero calibrate again if Auto was run right before TeleOp.
