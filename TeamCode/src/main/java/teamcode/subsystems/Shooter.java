@@ -50,10 +50,6 @@ public class Shooter extends TrcSubsystem
     {
         public static final String SUBSYSTEM_NAME               = "Shooter";
         public static final boolean NEED_ZERO_CAL               = false;
-        public static final boolean TUNE_SHOOTER_MOTOR1_PID     = false;
-        public static final boolean TUNE_SHOOTER_MOTOR2_PID     = false;
-        public static final boolean TUNE_PAN_MOTOR_PID          = false;
-        public static final boolean TUNE_TILT_MOTOR_PID         = false;
 
         public static final boolean HAS_TWO_SHOOTER_MOTORS      = false;
         public static final boolean HAS_PAN_MOTOR               = false;
@@ -348,6 +344,7 @@ public class Shooter extends TrcSubsystem
     /**
      * This method is called to prep the subsystem for tuning.
      *
+     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
      * @param tuneParams specifies tuning parameters.
      *        tuneParam0 - Kp
      *        tuneParam1 - Ki
@@ -358,33 +355,36 @@ public class Shooter extends TrcSubsystem
      *        tuneParam6 - Shooter motor target velocity in RPM
      */
     @Override
-    public void prepSubsystemForTuning(double... tuneParams)
+    public void prepSubsystemForTuning(String subComponent, double... tuneParams)
     {
-        if (Params.TUNE_SHOOTER_MOTOR1_PID)
+        if (subComponent != null)
         {
-            shooter.getShooterMotor1().setVelocityPidParameters(
-                tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
-                Params.SHOOTER_SOFTWARE_PID_ENABLED);
-            shooter1Velocity.setValue(tuneParams[6]);
-        }
-        else if (Params.TUNE_SHOOTER_MOTOR2_PID)
-        {
-             shooter.getShooterMotor2().setVelocityPidParameters(
-                 tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
-                 Params.SHOOTER_SOFTWARE_PID_ENABLED);
-             shooter2Velocity.setValue(tuneParams[6]);
-        }
-        else if (Params.TUNE_PAN_MOTOR_PID)
-        {
-             shooter.getPanMotor().setPositionPidParameters(
-                 tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-                 Params.PAN_SOFTWARE_PID_ENABLED);
-        }
-        else if (Params.TUNE_TILT_MOTOR_PID)
-        {
-             shooter.getTiltMotor().setPositionPidParameters(
-                 tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-                 Params.TILT_SOFTWARE_PID_ENABLED);
+            if (subComponent.equalsIgnoreCase("ShooterMotor1"))
+            {
+                shooter.getShooterMotor1().setVelocityPidParameters(
+                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
+                    Params.SHOOTER_SOFTWARE_PID_ENABLED);
+                shooter1Velocity.setValue(tuneParams[6]);
+            }
+            else if (subComponent.equalsIgnoreCase("ShooterMotor2"))
+            {
+                shooter.getShooterMotor2().setVelocityPidParameters(
+                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
+                    Params.SHOOTER_SOFTWARE_PID_ENABLED);
+                shooter2Velocity.setValue(tuneParams[6]);
+            }
+            else if (subComponent.equalsIgnoreCase("PanMotor"))
+            {
+                shooter.getPanMotor().setPositionPidParameters(
+                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
+                    Params.PAN_SOFTWARE_PID_ENABLED);
+            }
+            else if (subComponent.equalsIgnoreCase("TiltMotor"))
+            {
+                shooter.getTiltMotor().setPositionPidParameters(
+                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
+                    Params.TILT_SOFTWARE_PID_ENABLED);
+            }
         }
     }   //prepSubsystemForTuning
 
