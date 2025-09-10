@@ -62,7 +62,7 @@ public class Shooter extends TrcSubsystem
         // Shooter Motor1
         public static final String SHOOTER_MOTOR1_NAME          = SUBSYSTEM_NAME + ".shooterMotor1";
         public static final MotorType SHOOTER_MOTOR1_TYPE       = MotorType.DcMotor;
-        public static final boolean SHOOTER_MOTOR1_INVERTED     = true;
+        public static final boolean SHOOTER_MOTOR1_INVERTED     = false;
 
         // Shooter Motor2
         public static final String SHOOTER_MOTOR2_NAME          = SUBSYSTEM_NAME + ".shooterMotor2";
@@ -79,7 +79,7 @@ public class Shooter extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.075, 0.0, 0.0, 0.008, 0.0);
         public static final TrcPidController.PidCoefficients shooter2PidCoeffs =
             new TrcPidController.PidCoefficients(0.075, 0.0, 0.0, 0.008, 0.0);
-        public static final double SHOOTER_PID_TOLERANCE        = 10.0/60.0;// in RPS (10 RPM)
+        public static final double SHOOTER_PID_TOLERANCE        = 100.0/60.0;// in RPS (100 RPM)
         public static final double SHOOTER_OFF_DELAY            = 0.5;      // in sec
 
         // These are for tuning shooter motor.
@@ -291,42 +291,55 @@ public class Shooter extends TrcSubsystem
      * This method update the dashboard with the subsystem status.
      *
      * @param lineNum specifies the starting line number to print the subsystem status.
+     * @param slowLoop specifies true if this is a slow loop, false otherwise.
      * @return updated line number for the next subsystem to print.
      */
     @Override
-    public int updateStatus(int lineNum)
+    public int updateStatus(int lineNum, boolean slowLoop)
     {
-        TrcMotor motor;
-
-        motor = shooter.getShooterMotor1();
-        dashboard.displayPrintf(
-            lineNum++, "%sMotor1: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
-            Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(),
-            shooter.getShooterMotor1RPM(), shooter.getShooterMotor1TargetRPM());
-
-        motor = shooter.getShooterMotor2();
-        if (motor != null)
+        if (slowLoop)
         {
+            TrcMotor motor;
+
+            motor = shooter.getShooterMotor1();
             dashboard.displayPrintf(
-                lineNum++, "%sMotor2: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
+                lineNum++, "%sMotor1: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
                 Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(),
-                shooter.getShooterMotor2RPM(), shooter.getShooterMotor2TargetRPM());
-        }
+                shooter.getShooterMotor1RPM(), shooter.getShooterMotor1TargetRPM());
 
-        motor = shooter.getPanMotor();
-        if (motor != null)
-        {
-            dashboard.displayPrintf(
-                lineNum++, "%sPanMotor: power=%.3f, current=%.3f, pos=%.3f/%.3f",
-                Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(), motor.getPosition(), motor.getPidTarget());
-        }
+            motor = shooter.getShooterMotor2();
+            if (motor != null)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%sMotor2: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
+                    Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(),
+                    shooter.getShooterMotor2RPM(), shooter.getShooterMotor2TargetRPM());
+            }
 
-        motor = shooter.getTiltMotor();
-        if (motor != null)
+            motor = shooter.getPanMotor();
+            if (motor != null)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%sPanMotor: power=%.3f, current=%.3f, pos=%.3f/%.3f",
+                    Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(), motor.getPosition(),
+                    motor.getPidTarget());
+            }
+
+            motor = shooter.getTiltMotor();
+            if (motor != null)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%sTiltMotor: power=%.3f, current=%.3f, pos=%.3f/%.3f",
+                    Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(), motor.getPosition(),
+                    motor.getPidTarget());
+            }
+        }
+        else
         {
-            dashboard.displayPrintf(
-                lineNum++, "%sTiltMotor: power=%.3f, current=%.3f, pos=%.3f/%.3f",
-                Params.SUBSYSTEM_NAME, motor.getPower(), motor.getCurrent(), motor.getPosition(), motor.getPidTarget());
+            dashboard.putObject("Shooter1MotorRPM", shooter.getShooterMotor1RPM());
+            dashboard.putObject("ShooterMotor1TargetRPM", shooter.getShooterMotor1TargetRPM());
+            dashboard.putObject("ShooterMotor1RangeMin", 0.0);
+            dashboard.putObject("ShooterMotor1RangeMax", Params.SHOOTER_MAX_VEL);
         }
 
         return lineNum;
