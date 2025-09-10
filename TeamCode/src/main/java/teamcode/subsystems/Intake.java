@@ -163,6 +163,7 @@ public class Intake extends TrcSubsystem
                 Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.hasObject(),
                 intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
         }
+
         return lineNum;
     }   //updateStatus
 
