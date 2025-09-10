@@ -31,6 +31,7 @@ SOFTWARE.
             <goBILDA5202SeriesMotor name="Shooter.shooterMotor1" port="0"/>
             <goBILDA5202SeriesMotor name="Intake.primary" port="1"/>
             <DigitalDevice name="Intake.backSensor" port="0" />
+            <Servo name="Shooter.launcher" port="0" />
             <!--
             <RevBlinkinLedDriver name="blinkin" port="0" />
             <Servo name="gobildaLED" port="1" />
