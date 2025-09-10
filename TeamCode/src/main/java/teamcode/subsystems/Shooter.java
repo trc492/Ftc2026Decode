@@ -354,8 +354,8 @@ public class Shooter extends TrcSubsystem
      *        tuneParam2 - Kd
      *        tuneParam3 - Kf
      *        tuneParam4 - iZone
-     *        tuneParam5 - PidTolerance
-     *        tuneParam6 - Shooter motor target velocity
+     *        tuneParam5 - PidTolerance (in RPM for velocity, in degrees for pan/tilt)
+     *        tuneParam6 - Shooter motor target velocity in RPM
      */
     @Override
     public void prepSubsystemForTuning(double... tuneParams)
@@ -363,14 +363,14 @@ public class Shooter extends TrcSubsystem
         if (Params.TUNE_SHOOTER_MOTOR1_PID)
         {
             shooter.getShooterMotor1().setVelocityPidParameters(
-                tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
+                tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
                 Params.SHOOTER_SOFTWARE_PID_ENABLED);
             shooter1Velocity.setValue(tuneParams[6]);
         }
         else if (Params.TUNE_SHOOTER_MOTOR2_PID)
         {
              shooter.getShooterMotor2().setVelocityPidParameters(
-                 tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
+                 tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
                  Params.SHOOTER_SOFTWARE_PID_ENABLED);
              shooter2Velocity.setValue(tuneParams[6]);
         }
