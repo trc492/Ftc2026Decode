@@ -77,7 +77,7 @@ public class Shooter extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.075, 0.0, 0.0, 0.008, 0.0);
         public static final TrcPidController.PidCoefficients shooter2PidCoeffs =
             new TrcPidController.PidCoefficients(0.075, 0.0, 0.0, 0.008, 0.0);
-        public static final double SHOOTER_PID_TOLERANCE        = 20.0/60.0;// in RPS (20 RPM)
+        public static final double SHOOTER_PID_TOLERANCE        = 1.0;      // in RPS (60 RPM)
         public static final double SHOOTER_OFF_DELAY            = 0.5;      // in sec
 
         // These are for tuning shooter motor with gamepad.
