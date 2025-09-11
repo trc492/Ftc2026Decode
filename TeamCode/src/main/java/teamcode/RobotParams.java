@@ -22,7 +22,7 @@
 
 package teamcode;
 
-import android.os.Environment;
+import android.annotation.SuppressLint;
 
 import teamcode.subsystems.RobotBase;
 import trclib.drivebase.TrcDriveBase.DriveOrientation;
@@ -89,9 +89,9 @@ public class RobotParams
     public static class Robot
     {
 //        public static final String TEAM_FOLDER_PATH             =
-//            AppUtil.getDefContext().getExternalFilesDir(null).getPath() + "/FIRST/ftcTeam";
-        public static final String TEAM_FOLDER_PATH             =
-            Environment.getExternalStorageDirectory().getPath() + "/FIRST/ftcTeam";
+//            Environment.getExternalStorageDirectory().getPath() + "/FIRST/ftc3543";
+        @SuppressLint("SdCardPath")
+        public static final String TEAM_FOLDER_PATH             = "/sdcard/FIRST/ftc3543";
         public static final String LOG_FOLDER_PATH              = TEAM_FOLDER_PATH + "/tracelogs";
         public static final String STEER_ZERO_CAL_FILE          = TEAM_FOLDER_PATH + "/SteerZeroCalibration.txt";
         public static final double DASHBOARD_UPDATE_INTERVAL    = 0.2;      // in msec
