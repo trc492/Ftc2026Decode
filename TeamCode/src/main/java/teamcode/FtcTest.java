@@ -640,29 +640,6 @@ public class FtcTest extends FtcTeleOp
                         passToTeleOp = false;
                     }
                 }
-                else if (testChoices.test == Test.TUNE_SUBSYSTEM)
-                {
-                    if (pressed)
-                    {
-                        if (!Dashboard.Subsystem.subsystemName.isEmpty())
-                        {
-                            String[] tokens = Dashboard.Subsystem.subsystemName.split("\\.");
-                            String subComponent = tokens.length > 1 && !tokens[1].isEmpty()? tokens[1]: null;
-                            TrcSubsystem subsystem = TrcSubsystem.getSubsystem(tokens[0]);
-
-                            robot.globalTracer.traceInfo(
-                                moduleName,
-                                "Tuning Subsystem " + tokens[0] + ":" +
-                                "\n\tsubComponent=" + subComponent +
-                                "\n\ttuneParams=" + Arrays.toString(Dashboard.Subsystem.tuneParams));
-                            if (subsystem != null)
-                            {
-                                subsystem.prepSubsystemForTuning(subComponent, Dashboard.Subsystem.tuneParams);
-                            }
-                        }
-                    }
-                    passToTeleOp = false;
-                }
                 else if (testChoices.test == Test.CALIBRATE_SWERVE_STEERING)
                 {
                     if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
@@ -732,7 +709,32 @@ public class FtcTest extends FtcTeleOp
             case DpadLeft:
             case DpadRight:
             case Back:
+                break;
+
             case Start:
+                if (testChoices.test == Test.TUNE_SUBSYSTEM)
+                {
+                    if (pressed)
+                    {
+                        if (!Dashboard.Subsystem.subsystemName.isEmpty())
+                        {
+                            String[] tokens = Dashboard.Subsystem.subsystemName.split("\\.");
+                            String subComponent = tokens.length > 1 && !tokens[1].isEmpty()? tokens[1]: null;
+                            TrcSubsystem subsystem = TrcSubsystem.getSubsystem(tokens[0]);
+
+                            robot.globalTracer.traceInfo(
+                                moduleName,
+                                "Tuning Subsystem " + tokens[0] + ":" +
+                                "\n\tsubComponent=" + subComponent +
+                                "\n\ttuneParams=" + Arrays.toString(Dashboard.Subsystem.tuneParams));
+                            if (subsystem != null)
+                            {
+                                subsystem.prepSubsystemForTuning(subComponent, Dashboard.Subsystem.tuneParams);
+                            }
+                        }
+                    }
+                    passToTeleOp = false;
+                }
                 break;
         }
         //
