@@ -171,16 +171,16 @@ public class FtcTest extends FtcTeleOp
                         robot.vision.setLimelightVisionEnabled(0, true);
                     }
 
-                    if (robot.vision.redBlobVision != null)
+                    if (robot.vision.purpleBlobVision != null)
                     {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling RedBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.RedBlob, true);
+                        robot.globalTracer.traceInfo(moduleName, "Enabling PurpleBlobVision.");
+                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.PurpleArtifact, true);
                     }
 
-                    if (robot.vision.blueBlobVision != null)
+                    if (robot.vision.greenBlobVision != null)
                     {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling BlueBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.BlueBlob, true);
+                        robot.globalTracer.traceInfo(moduleName, "Enabling GreenBlobVision.");
+                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.GreenArtifact, true);
                     }
                 }
                 break;
@@ -192,7 +192,7 @@ public class FtcTest extends FtcTeleOp
                     robot.vision.setCameraStreamEnabled(true);
                     robot.vision.setRawColorBlobVisionEnabled(true);
                     Dashboard.Vision.colorThresholds = robot.vision.getRawColorBlobThresholds();
-                    Dashboard.Vision.filterContourParams = Vision.colorBlobFilterContourParams.clone();
+                    Dashboard.Vision.filterContourParams = Vision.artifactFilterContourParams.clone();
                 }
                 break;
 
@@ -860,14 +860,14 @@ public class FtcTest extends FtcTeleOp
                 robot.vision.getDetectedAprilTag(null, lineNum++);
             }
 
-            if (robot.vision.redBlobVision != null)
+            if (robot.vision.purpleBlobVision != null)
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.RedBlob, 0.0, lineNum++);
+                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.PurpleArtifact, 0.0, lineNum++);
             }
 
-            if (robot.vision.blueBlobVision != null)
+            if (robot.vision.greenBlobVision != null)
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.BlueBlob, 0.0, lineNum++);
+                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.GreenArtifact, 0.0, lineNum++);
             }
 
             if (robot.vision.vision != null)

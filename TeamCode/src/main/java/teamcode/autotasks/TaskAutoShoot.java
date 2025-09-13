@@ -238,7 +238,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     if (robot.ledIndicator1 != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator1.setDetectedPattern(LEDIndicator.FOUND_NOTHING);
+                        robot.ledIndicator1.setDetectedPattern(LEDIndicator.NOT_FOUND);
                     }
                     sm.setState(State.DONE);
                 }

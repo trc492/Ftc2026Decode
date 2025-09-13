@@ -280,7 +280,7 @@ public class RobotBase
             // Vision
             webCam1 = new Vision.FrontCamParams();
             webCam2 = null;//new Vision.BackCamParams();
-            limelight = null;//new Vision.LimelightParams();
+            limelight = new Vision.LimelightParams();
             // Miscellaneous
             indicator1Name = null;
             indicator1Type = null;

@@ -264,16 +264,16 @@ public class Robot
                 vision.setAprilTagVisionEnabled(false);
             }
 
-            if (vision.redBlobVision != null)
+            if (vision.purpleBlobVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling RedBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.RedBlob, false);
+                globalTracer.traceInfo(moduleName, "Disabling PurpleBlobVision.");
+                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.PurpleArtifact, false);
             }
 
-            if (vision.blueBlobVision != null)
+            if (vision.greenBlobVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling BlueBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.BlueBlob, false);
+                globalTracer.traceInfo(moduleName, "Disabling GreenBlobVision.");
+                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.GreenArtifact, false);
             }
 
             if (vision.limelightVision != null)
