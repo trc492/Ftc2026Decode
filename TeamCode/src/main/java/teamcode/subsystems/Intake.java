@@ -90,15 +90,18 @@ public class Intake extends TrcSubsystem
 
         if (Params.HAS_FRONT_SENSOR)
         {
-            intakeParams.setFrontDigitalInputTrigger(
-                Params.FRONT_SENSOR_NAME, Params.FRONT_SENSOR_INVERTED, TriggerAction.NoAction, null, null, null);
+            // TODO: Create a DigitalState trigger providing a method to call vision to detect the correct artifact.
+//            intakeParams.setFrontDigitalInputTrigger(
+//                Params.FRONT_SENSOR_NAME, Params.FRONT_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null,
+//                null);
         }
 
         if (Params.HAS_BACK_SENSOR)
         {
-            robot.spindexer.registerEntryEvent()
-            intakeParams.setBackDigitalInputTrigger(
-                Params.BACK_SENSOR_NAME, Params.BACK_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null, null);
+            // TODO: Create a DigitalState trigger providing a method to call spindexer to detect if the "slot" has
+            // captured an artifact.
+//            intakeParams.setBackDigitalInputTrigger(
+//                Params.BACK_SENSOR_NAME, Params.BACK_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
