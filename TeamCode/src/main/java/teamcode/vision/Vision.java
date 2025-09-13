@@ -80,10 +80,10 @@ public class Vision
             camName = "Webcam 1";
             camImageWidth = 640;
             camImageHeight = 480;
-            camXOffset = -4.25;                 // Inches to the right from robot center
-            camYOffset = 5.5;                   // Inches forward from robot center
-            camZOffset = 10.608;                // Inches up from the floor
-            camYaw = -2.0;                      // degrees clockwise from robot forward
+            camXOffset = 0.0;                   // Inches to the right from robot center
+            camYOffset = 0.0;                   // Inches forward from robot center
+            camZOffset = 11.25;                 // Inches up from the floor
+            camYaw = 0.0;                      // degrees clockwise from robot forward
             camPitch = -32.346629699;           // degrees up from horizontal
             camRoll = 0.0;
             camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
@@ -146,8 +146,8 @@ public class Vision
             camName = "Limelight3a";
             camImageWidth = 640;
             camImageHeight = 480;
-            camHFov = 80.0;                             // in degrees
-            camVFov = 56.0;                             // in degrees
+            camHFov = 54.5;                             // in degrees
+            camVFov = 42.0;                             // in degrees
             camXOffset = 135.47*TrcUtil.INCHES_PER_MM;  // Inches to the right from robot center
             camYOffset = 2.073;                         // Inches forward from robot center
             camZOffset = 10.758;                        // Inches up from the floor
@@ -160,9 +160,9 @@ public class Vision
 
     public enum ColorBlobType
     {
-        RedBlob,
-        BlueBlob,
-        AnyColorBlob
+        PurpleArtifact,
+        GreenArtifact,
+        AnyArtifact
     }   //enum ColorBlobType
 
     // Warning: EOCV converts camera stream to RGBA whereas Desktop OpenCV converts it to BGRA. Therefore, the correct
@@ -170,19 +170,19 @@ public class Vision
     //
     // YCrCb Color Space.
     private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] redBlobColorThresholds = {10.0, 180.0, 170.0, 240.0, 80.0, 120.0};
-    private static final double[] blueBlobColorThresholds = {0.0, 180.0, 80.0, 150.0, 150.0, 200.0};
-    public static final TrcOpenCvColorBlobPipeline.FilterContourParams colorBlobFilterContourParams =
+    private static final double[] purpleBlobColorThresholds = {0.0, 180.0, 80.0, 150.0, 150.0, 200.0};
+    private static final double[] greenBlobColorThresholds = {100.0, 250.0, 120.0, 200.0, 60.0, 90.0};
+    public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(500.0)
-            .setMinPerimeter(100.0)
-            .setWidthRange(10.0, 1000.0)
-            .setHeightRange(10.0, 1000.0)
+            .setMinArea(400.0)
+            .setMinPerimeter(80.0)
+            .setWidthRange(20.0, 500.0)
+            .setHeightRange(20.0, 500.0)
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
-            .setAspectRatioRange(0.5, 2.5);
-    private static final double objectWidth = 3.5;
-    private static final double objectHeight = 1.5;
+            .setAspectRatioRange(0.8, 1.25);
+    private static final double objectWidth = 5.0;
+    private static final double objectHeight = 5.0;
     // Logitech C920
     private static final double fx = 622.001;
     private static final double fy = 622.001;
@@ -199,10 +199,10 @@ public class Vision
     private FtcCameraStreamProcessor cameraStreamProcessor;
     public FtcVisionAprilTag aprilTagVision;
     private AprilTagProcessor aprilTagProcessor;
-    public FtcVisionEocvColorBlob redBlobVision;
-    private FtcEocvColorBlobProcessor redBlobProcessor;
-    public FtcVisionEocvColorBlob blueBlobVision;
-    private FtcEocvColorBlobProcessor blueBlobProcessor;
+    public FtcVisionEocvColorBlob purpleBlobVision;
+    private FtcEocvColorBlobProcessor purpleBlobProcessor;
+    public FtcVisionEocvColorBlob greenBlobVision;
+    private FtcEocvColorBlobProcessor greenBlobProcessor;
     public FtcVision vision;
 
     /**
@@ -259,7 +259,7 @@ public class Vision
                 RobotParams.Preferences.useSolvePnp? cameraMatrix: null, distCoeffs, robot.robotInfo.webCam1.camPose);
             // By default, display original Mat.
             rawColorBlobPipeline.setVideoOutput(0);
-            rawColorBlobPipeline.setAnnotateEnabled(true);
+            rawColorBlobPipeline.enableAnnotation(false);
             rawColorBlobVision = new FtcRawEocvVision(
                 "rawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
                 null, null,
@@ -319,19 +319,19 @@ public class Vision
                 }
 
                 tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
-                redBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.RED_BLOB, colorConversion, redBlobColorThresholds, colorBlobFilterContourParams,
+                purpleBlobVision = new FtcVisionEocvColorBlob(
+                    LEDIndicator.PURPLE_BLOB, colorConversion, purpleBlobColorThresholds, artifactFilterContourParams,
                     true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true);
-                redBlobProcessor = redBlobVision.getVisionProcessor();
-                visionProcessorsList.add(redBlobProcessor);
+                    worldRect, true, false);
+                purpleBlobProcessor = purpleBlobVision.getVisionProcessor();
+                visionProcessorsList.add(purpleBlobProcessor);
 
-                blueBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.BLUE_BLOB, colorConversion, blueBlobColorThresholds, colorBlobFilterContourParams,
+                greenBlobVision = new FtcVisionEocvColorBlob(
+                    LEDIndicator.GREEN_BLOB, colorConversion, greenBlobColorThresholds, artifactFilterContourParams,
                     true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true);
-                blueBlobProcessor = blueBlobVision.getVisionProcessor();
-                visionProcessorsList.add(blueBlobProcessor);
+                    worldRect, true, false);
+                greenBlobProcessor = greenBlobVision.getVisionProcessor();
+                visionProcessorsList.add(greenBlobProcessor);
             }
 
             if (!visionProcessorsList.isEmpty())
@@ -593,11 +593,11 @@ public class Vision
                         break;
 
                     case 1:
-                        objectName = LEDIndicator.RED_BLOB;
+                        objectName = LEDIndicator.PURPLE_BLOB;
                         break;
 
                     case 2:
-                        objectName = LEDIndicator.BLUE_BLOB;
+                        objectName = LEDIndicator.GREEN_BLOB;
                         break;
 
                     default:
@@ -796,17 +796,17 @@ public class Vision
     {
         switch (colorBlobType)
         {
-            case RedBlob:
-                setVisionProcessorEnabled(redBlobProcessor, enabled);
+            case PurpleArtifact:
+                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
                 break;
 
-            case BlueBlob:
-                setVisionProcessorEnabled(blueBlobProcessor, enabled);
+            case GreenArtifact:
+                setVisionProcessorEnabled(greenBlobProcessor, enabled);
                 break;
 
-            case AnyColorBlob:
-                setVisionProcessorEnabled(redBlobProcessor, enabled);
-                setVisionProcessorEnabled(blueBlobProcessor, enabled);
+            case AnyArtifact:
+                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
+                setVisionProcessorEnabled(greenBlobProcessor, enabled);
                 break;
         }
     }   //setColorBlobVisionEnabled
@@ -823,16 +823,16 @@ public class Vision
 
         switch (colorBlobType)
         {
-            case RedBlob:
-                enabled = isVisionProcessorEnabled(redBlobProcessor);
+            case PurpleArtifact:
+                enabled = isVisionProcessorEnabled(purpleBlobProcessor);
                 break;
 
-            case BlueBlob:
-                enabled = isVisionProcessorEnabled(blueBlobProcessor);
+            case GreenArtifact:
+                enabled = isVisionProcessorEnabled(greenBlobProcessor);
                 break;
 
-            case AnyColorBlob:
-                enabled = isVisionProcessorEnabled(redBlobProcessor) || isVisionProcessorEnabled(blueBlobProcessor);
+            case AnyArtifact:
+                enabled = isVisionProcessorEnabled(purpleBlobProcessor) || isVisionProcessorEnabled(greenBlobProcessor);
                 break;
         }
 
@@ -854,28 +854,28 @@ public class Vision
 
         switch (colorBlobType)
         {
-            case RedBlob:
-                colorBlobInfo = redBlobVision != null? redBlobVision.getBestDetectedTargetInfo(
+            case PurpleArtifact:
+                colorBlobInfo = purpleBlobVision != null? purpleBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
                 break;
 
-            case BlueBlob:
-                colorBlobInfo = blueBlobVision != null? blueBlobVision.getBestDetectedTargetInfo(
+            case GreenArtifact:
+                colorBlobInfo = greenBlobVision != null? greenBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
                 break;
 
-            case AnyColorBlob:
+            case AnyArtifact:
                 ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobList =
                     new ArrayList<>();
 
-                colorBlobInfo = redBlobVision != null ? redBlobVision.getBestDetectedTargetInfo(
+                colorBlobInfo = purpleBlobVision != null ? purpleBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
                 if (colorBlobInfo != null)
                 {
                     colorBlobList.add(colorBlobInfo);
                 }
 
-                colorBlobInfo = blueBlobVision != null ? blueBlobVision.getBestDetectedTargetInfo(
+                colorBlobInfo = greenBlobVision != null ? greenBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
                 if (colorBlobInfo != null)
                 {
@@ -912,7 +912,7 @@ public class Vision
             }
             else
             {
-                robot.dashboard.displayPrintf(lineNum, "No colorblob found.");
+                robot.dashboard.displayPrintf(lineNum, "No ColorBlob found.");
             }
         }
 
@@ -982,14 +982,14 @@ public class Vision
                 lineNum = aprilTagVision.updateStatus(lineNum);
             }
 
-            if (redBlobVision != null)
+            if (purpleBlobVision != null)
             {
-                lineNum = redBlobVision.updateStatus(lineNum);
+                lineNum = purpleBlobVision.updateStatus(lineNum);
             }
 
-            if (blueBlobVision != null)
+            if (greenBlobVision != null)
             {
-                lineNum = blueBlobVision.updateStatus(lineNum);
+                lineNum = greenBlobVision.updateStatus(lineNum);
             }
         }
 
