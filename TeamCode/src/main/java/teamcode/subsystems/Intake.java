@@ -42,7 +42,7 @@ public class Intake extends TrcSubsystem
         public static final boolean NEED_ZERO_CAL               = false;
 
         public static final boolean HAS_TWO_MOTORS              = false;
-        public static final boolean HAS_FRONT_SENSOR            = false;
+        public static final boolean HAS_FRONT_SENSOR            = true;
         public static final boolean HAS_BACK_SENSOR             = true;
 
         public static final String PRIMARY_MOTOR_NAME           = SUBSYSTEM_NAME + ".primary";
@@ -96,6 +96,7 @@ public class Intake extends TrcSubsystem
 
         if (Params.HAS_BACK_SENSOR)
         {
+            robot.spindexer.registerEntryEvent()
             intakeParams.setBackDigitalInputTrigger(
                 Params.BACK_SENSOR_NAME, Params.BACK_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null, null);
         }
