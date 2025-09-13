@@ -28,7 +28,12 @@ def runPipeline(image, llrobot):
     # Define range for green color in YCrCb
     lower_green = np.array([100, 120, 30])
     upper_green = np.array([250, 200, 80])
-
+    # For green object, lower hsv = (52, 187, 79)
+    # For green object, lower bgr = (21, 79, 36)
+    # For green object, higher hsv = (50, 105, 199)
+    # For green object, higher bgr = (119, 199, 145)
+    # I think these are right, the link for the photos is here: https://tinyurl.com/decodeobj
+    
     # Create mask for green color
     mask = cv2.inRange(ycrcb, lower_green, upper_green)
 
