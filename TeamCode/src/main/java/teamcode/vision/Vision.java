@@ -75,6 +75,7 @@ public class Vision
      */
     public static class FrontCamParams extends FtcRobotDrive.VisionInfo
     {
+        public static final double CAM_Z_OFFSET = 11.25;
         public FrontCamParams()
         {
             camName = "Webcam 1";
@@ -82,7 +83,7 @@ public class Vision
             camImageHeight = 480;
             camXOffset = 0.0;                   // Inches to the right from robot center
             camYOffset = 0.0;                   // Inches forward from robot center
-            camZOffset = 11.25;                 // Inches up from the floor
+            camZOffset = CAM_Z_OFFSET;                 // Inches up from the floor
             camYaw = 0.0;                      // degrees clockwise from robot forward
             camPitch = -32.346629699;           // degrees up from horizontal
             camRoll = 0.0;

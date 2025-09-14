@@ -75,6 +75,7 @@ public class RobotParams
         public static final boolean useSubsystems               = true;
         public static final boolean useIntake                   = false;
         public static final boolean useShooter                  = true;
+        public static final boolean useSpindexer                = true;
         // Auto Tasks.
         public static final boolean useAutoShoot                = true;
         public static final boolean useAutoPickup               = false;

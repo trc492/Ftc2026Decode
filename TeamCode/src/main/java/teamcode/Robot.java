@@ -36,6 +36,7 @@ import teamcode.subsystems.LEDIndicator;
 import teamcode.subsystems.RobotBase;
 import teamcode.subsystems.RumbleIndicator;
 import teamcode.subsystems.Shooter;
+//import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -76,6 +77,8 @@ public class Robot
     public TrcRollerIntake intake;
     public Shooter shooterSubsystem;
     public TrcShooter shooter;
+
+    public Spindexer spindexer;
     // Autotasks.
     public TaskAutoShoot autoShootTask;
     public TaskAutoPickup autoPickupTask;
@@ -124,7 +127,7 @@ public class Robot
                 // Create subsystems.
                 if (RobotParams.Preferences.useIntake)
                 {
-                    intake = new Intake().getIntake();
+                    intake = new Intake(this).getIntake();
                 }
 
                 if (RobotParams.Preferences.useShooter)

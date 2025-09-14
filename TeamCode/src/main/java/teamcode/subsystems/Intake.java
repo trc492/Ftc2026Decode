@@ -22,13 +22,17 @@
 
 package teamcode.subsystems;
 
+import teamcode.Robot;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
+import teamcode.vision.Vision;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
+import trclib.vision.TrcOpenCvColorBlobPipeline;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class implements an Intake Subsystem. This implementation consists of one or two motors and optionally a
@@ -68,11 +72,13 @@ public class Intake extends TrcSubsystem
 
     private final FtcDashboard dashboard;
     private final TrcRollerIntake intake;
+    private Vision.ColorBlobType artifact_Type = Vision.ColorBlobType.AnyArtifact;
+    private Robot robot;
 
     /**
      * Constructor: Creates an instance of the object.
      */
-    public Intake()
+    public Intake(Robot robot)
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
 
@@ -90,21 +96,43 @@ public class Intake extends TrcSubsystem
 
         if (Params.HAS_FRONT_SENSOR)
         {
-            // TODO: Create a DigitalState trigger providing a method to call vision to detect the correct artifact.
-//            intakeParams.setFrontDigitalInputTrigger(
-//                Params.FRONT_SENSOR_NAME, Params.FRONT_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null,
-//                null);
+            intakeParams.setFrontDigitalSourceTrigger(Params.FRONT_SENSOR_NAME, this::getVisionDetectedArtifact, TriggerAction.StartOnTrigger, null, null, null);
         }
 
         if (Params.HAS_BACK_SENSOR)
         {
-            // TODO: Create a DigitalState trigger providing a method to call spindexer to detect if the "slot" has
-            // captured an artifact.
-//            intakeParams.setBackDigitalInputTrigger(
-//                Params.BACK_SENSOR_NAME, Params.BACK_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null, null);
+            intakeParams.setBackDigitalSourceTrigger(Params.BACK_SENSOR_NAME, this::getSpindexFrontSensorValue, TriggerAction.FinishOnTrigger, null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
+
+    public void setIntakeArtifactType(Vision.ColorBlobType artifact_Type){
+        this.artifact_Type = artifact_Type;
+    }
+//    private boolean getSpindexFrontSensorValue() {
+//        // TODO: Tell Daniel to make this function
+//        return robot.spindexer.isFrontSensorActive();
+//    } //getSpindexFrontSensorValue
+
+    private boolean getVisionDetectedArtifact(){
+        boolean artifactDetected = false;
+        if (artifact_Type == Vision.ColorBlobType.GreenArtifact){
+            artifactDetected = robot.vision.greenBlobVision.getBestDetectedTargetInfo(null, this::compareDistance,0, Vision.FrontCamParams.camZOffset);
+        }else if (artifact_Type == Vision.ColorBlobType.PurpleArtifact){
+            artifactDetected = robot.vision.purpleBlobVision.getBestDetectedTargetInfo(null, this::compareDistance, 0, Vision.FrontCamParams.camZOffset);
+        }
+        return artifactDetected;
+    }   //getVisionDetectedArtifact
+
+    private boolean compareDistance(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> detectedObjectTrcVisionTargetInfo) {
+    }
+
+    private int compareDistance(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a, TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b){
+        return (int)((a.objPose.y - b.objPose.y)*100);
+    }   //compareDistance
+
+
+
 
     /**
      * This method returns the created TrcRollerIntake.
