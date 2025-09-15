@@ -132,9 +132,9 @@ public class Shooter extends TrcSubsystem
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".launcher";
-        public static final boolean LAUNCHER_SERVO_INVERTED     = true;
+        public static final boolean LAUNCHER_SERVO_INVERTED     = false;
         public static double LAUNCHER_REST_POS                  = 0.0;
-        public static double LAUNCHER_LAUNCH_POS                = 0.5;
+        public static double LAUNCHER_LAUNCH_POS                = 0.06;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.5;  // in seconds
     }   //class Params
 
