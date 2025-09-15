@@ -264,7 +264,6 @@ public class Spindexer extends TrcSubsystem
      *        tuneParam3 - Kf
      *        tuneParam4 - iZone
      *        tuneParam5 - PidTolerance
-     *        tuneParam6 - GravityCompPower
      */
     @Override
     public void prepSubsystemForTuning(String subComponent, double... tuneParams)
