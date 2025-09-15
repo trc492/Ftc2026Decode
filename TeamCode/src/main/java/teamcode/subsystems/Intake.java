@@ -31,12 +31,11 @@ import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
-import trclib.vision.TrcOpenCvColorBlobPipeline;
-import trclib.vision.TrcVisionTargetInfo;
 
 /**
- * This class implements an Intake Subsystem. This implementation consists of one or two motors and optionally a
- * front and/or back digital sensor(s) that can detect object entering/exiting the intake.
+ * This class implements an Intake Subsystem. This implementation consists of one motor but no sensor of its own.
+ * It does have two triggers, one front and one back. The front trigger is triggered by vision detecting if there is
+ * a correct color artifact in front of it. The back trigger is triggered by the entry sensor of the spindexer.
  */
 public class Intake extends TrcSubsystem
 {
@@ -45,23 +44,15 @@ public class Intake extends TrcSubsystem
         public static final String SUBSYSTEM_NAME               = "Intake";
         public static final boolean NEED_ZERO_CAL               = false;
 
-        public static final boolean HAS_TWO_MOTORS              = false;
-        public static final boolean HAS_FRONT_SENSOR            = true;
-        public static final boolean HAS_BACK_SENSOR             = true;
+        public static final boolean HAS_FRONT_TRIGGER           = true;
+        public static final boolean HAS_BACK_TRIGGER            = true;
 
-        public static final String PRIMARY_MOTOR_NAME           = SUBSYSTEM_NAME + ".primary";
-        public static final MotorType PRIMARY_MOTOR_TYPE        = MotorType.DcMotor;
-        public static final boolean PRIMARY_MOTOR_INVERTED      = true;
+        public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".motor";
+        public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
+        public static final boolean MOTOR_INVERTED              = true;
 
-        public static final String FOLLOWER_MOTOR_NAME          = SUBSYSTEM_NAME + ".follower";
-        public static final MotorType FOLLOWER_MOTOR_TYPE       = MotorType.DcMotor;
-        public static final boolean FOLLOWER_MOTOR_INVERTED     = !PRIMARY_MOTOR_INVERTED;
-
-        public static final String FRONT_SENSOR_NAME            = SUBSYSTEM_NAME + ".frontSensor";
-        public static final boolean FRONT_SENSOR_INVERTED       = false;
-
-        public static final String BACK_SENSOR_NAME             = SUBSYSTEM_NAME + ".backSensor";
-        public static final boolean BACK_SENSOR_INVERTED        = false;
+        public static final String FRONT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".frontTrigger";
+        public static final String BACK_TRIGGER_NAME             = SUBSYSTEM_NAME + ".backTrigger";
 
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
         public static final double EJECT_POWER                  = 1.0;  // Eject forward
@@ -71,9 +62,8 @@ public class Intake extends TrcSubsystem
     }   //class Params
 
     private final FtcDashboard dashboard;
+    private final Robot robot;
     private final TrcRollerIntake intake;
-    private Vision.ColorBlobType artifact_Type = Vision.ColorBlobType.AnyArtifact;
-    private Robot robot;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -82,57 +72,72 @@ public class Intake extends TrcSubsystem
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
 
-        dashboard = FtcDashboard.getInstance();
+        this.dashboard = FtcDashboard.getInstance();
+        this.robot = robot;
         FtcRollerIntake.Params intakeParams = new FtcRollerIntake.Params()
-            .setPrimaryMotor(Params.PRIMARY_MOTOR_NAME, Params.PRIMARY_MOTOR_TYPE, Params.PRIMARY_MOTOR_INVERTED)
+            .setPrimaryMotor(Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
             .setPowerLevels(Params.INTAKE_POWER, Params.EJECT_POWER, Params.RETAIN_POWER)
             .setFinishDelays(Params.INTAKE_FINISH_DELAY, Params.EJECT_FINISH_DELAY);
 
-        if (Params.HAS_TWO_MOTORS)
+        if (Params.HAS_FRONT_TRIGGER)
         {
-            intakeParams.setFollowerMotor(
-                Params.FOLLOWER_MOTOR_NAME, Params.FOLLOWER_MOTOR_TYPE, Params.FOLLOWER_MOTOR_INVERTED);
+            intakeParams.setFrontDigitalSourceTrigger(
+                Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact, TriggerAction.StartOnTrigger,
+                null, null, null);
         }
 
-        if (Params.HAS_FRONT_SENSOR)
+        if (Params.HAS_BACK_TRIGGER)
         {
-            intakeParams.setFrontDigitalSourceTrigger(Params.FRONT_SENSOR_NAME, this::getVisionDetectedArtifact, TriggerAction.StartOnTrigger, null, null, null);
-        }
-
-        if (Params.HAS_BACK_SENSOR)
-        {
-            intakeParams.setBackDigitalSourceTrigger(Params.BACK_SENSOR_NAME, this::getSpindexFrontSensorValue, TriggerAction.FinishOnTrigger, null, null, null);
+            intakeParams.setBackDigitalSourceTrigger(
+                Params.BACK_TRIGGER_NAME, this::spindexerEntryHasArtifact, TriggerAction.FinishOnTrigger,
+                null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
 
-    public void setIntakeArtifactType(Vision.ColorBlobType artifact_Type){
-        this.artifact_Type = artifact_Type;
-    }
-//    private boolean getSpindexFrontSensorValue() {
-//        // TODO: Tell Daniel to make this function
-//        return robot.spindexer.isFrontSensorActive();
-//    } //getSpindexFrontSensorValue
-
-    private boolean getVisionDetectedArtifact(){
+    /**
+     * This method is called by the Intake front trigger using vision to detect the correct artifact type to be
+     * picked up. The caller is responsible for calling robot.vision.setDetectArtifactType to specify whether
+     * vision to look for green artifact, purple artifact or any artifact.
+     *
+     * @return true if vision found the specified artifact type, false otherwise.
+     */
+    private boolean visionDetectedArtifact()
+    {
         boolean artifactDetected = false;
-        if (artifact_Type == Vision.ColorBlobType.GreenArtifact){
-            artifactDetected = robot.vision.greenBlobVision.getBestDetectedTargetInfo(null, this::compareDistance,0, Vision.FrontCamParams.camZOffset);
-        }else if (artifact_Type == Vision.ColorBlobType.PurpleArtifact){
-            artifactDetected = robot.vision.purpleBlobVision.getBestDetectedTargetInfo(null, this::compareDistance, 0, Vision.FrontCamParams.camZOffset);
+
+        if (robot.vision.detectArtifactType == Vision.ColorBlobType.GreenArtifact)
+        {
+            artifactDetected = robot.vision.greenBlobVision.getBestDetectedTargetInfo(
+                null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
         }
+        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.PurpleArtifact)
+        {
+            artifactDetected = robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
+                null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
+        }
+        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.AnyArtifact)
+        {
+            artifactDetected =
+                robot.vision.greenBlobVision.getBestDetectedTargetInfo(
+                    null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null ||
+                robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
+                    null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
+        }
+
         return artifactDetected;
-    }   //getVisionDetectedArtifact
+    }   //visionDetectedArtifact
 
-    private boolean compareDistance(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> detectedObjectTrcVisionTargetInfo) {
-    }
-
-    private int compareDistance(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a, TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b){
-        return (int)((a.objPose.y - b.objPose.y)*100);
-    }   //compareDistance
-
-
-
+    /**
+     * This method is called by the Intake back trigger using the spindexer entry sensor to detect if the artifact
+     * has entered the spindexer, so it can stop the Intake.
+     *
+     * @return true if spindexer entry sensor has detected the artifact, false otherwise.
+     */
+    private boolean spindexerEntryHasArtifact()
+    {
+        return robot.spindexer.isEntrySensorActive();
+    }   //spindexerEntryHasArtifact
 
     /**
      * This method returns the created TrcRollerIntake.

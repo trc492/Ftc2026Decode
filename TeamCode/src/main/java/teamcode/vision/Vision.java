@@ -75,7 +75,6 @@ public class Vision
      */
     public static class FrontCamParams extends FtcRobotDrive.VisionInfo
     {
-        public static final double CAM_Z_OFFSET = 11.25;
         public FrontCamParams()
         {
             camName = "Webcam 1";
@@ -83,8 +82,8 @@ public class Vision
             camImageHeight = 480;
             camXOffset = 0.0;                   // Inches to the right from robot center
             camYOffset = 0.0;                   // Inches forward from robot center
-            camZOffset = CAM_Z_OFFSET;                 // Inches up from the floor
-            camYaw = 0.0;                      // degrees clockwise from robot forward
+            camZOffset = 11.25;                 // Inches up from the floor
+            camYaw = 0.0;                       // degrees clockwise from robot forward
             camPitch = -32.346629699;           // degrees up from horizontal
             camRoll = 0.0;
             camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
@@ -205,6 +204,7 @@ public class Vision
     public FtcVisionEocvColorBlob greenBlobVision;
     private FtcEocvColorBlobProcessor greenBlobProcessor;
     public FtcVision vision;
+    public ColorBlobType detectArtifactType = ColorBlobType.AnyArtifact;
 
     /**
      * Constructor: Create an instance of the object.
@@ -943,6 +943,16 @@ public class Vision
     }   //getTargetGroundOffset
 
     /**
+     * This method sets the artifact type to be detected by ColorBlob detection.
+     *
+     * @param artifactType specifies the colorblob type to detect.
+     */
+    public void setDetectArtifactType(ColorBlobType artifactType)
+    {
+        this.detectArtifactType = artifactType;
+    }   //setDetectArtifactType
+
+    /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance.
      *
      * @param a specifies the first target
@@ -950,7 +960,7 @@ public class Vision
      * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
      *         if a has higher distance than b.
      */
-    private int compareDistance(
+    public int compareDistance(
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
     {

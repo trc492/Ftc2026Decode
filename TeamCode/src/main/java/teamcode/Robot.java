@@ -36,7 +36,7 @@ import teamcode.subsystems.LEDIndicator;
 import teamcode.subsystems.RobotBase;
 import teamcode.subsystems.RumbleIndicator;
 import teamcode.subsystems.Shooter;
-//import teamcode.subsystems.Spindexer;
+import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -77,7 +77,6 @@ public class Robot
     public TrcRollerIntake intake;
     public Shooter shooterSubsystem;
     public TrcShooter shooter;
-
     public Spindexer spindexer;
     // Autotasks.
     public TaskAutoShoot autoShootTask;
@@ -135,6 +134,11 @@ public class Robot
                     // Note: Since shooter depends on Intake, Intake subsystem must instantiate before shooter.
                     shooterSubsystem = new Shooter();
                     shooter = shooterSubsystem.getShooter();
+                }
+
+                if (RobotParams.Preferences.useSpindexer)
+                {
+                    spindexer = new Spindexer();
                 }
 
                 // Create autotasks.
