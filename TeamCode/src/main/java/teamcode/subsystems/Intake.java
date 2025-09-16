@@ -47,12 +47,12 @@ public class Intake extends TrcSubsystem
         public static final boolean HAS_FRONT_TRIGGER           = true;
         public static final boolean HAS_BACK_TRIGGER            = true;
 
-        public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".motor";
+        public static final String MOTOR_NAME                   = "Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
         public static final boolean MOTOR_INVERTED              = true;
 
-        public static final String FRONT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".frontTrigger";
-        public static final String BACK_TRIGGER_NAME             = SUBSYSTEM_NAME + ".backTrigger";
+        public static final String FRONT_TRIGGER_NAME            = "FrontTrigger";
+        public static final String BACK_TRIGGER_NAME             = "BackTrigger";
 
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
         public static final double EJECT_POWER                  = 1.0;  // Eject forward
@@ -75,22 +75,22 @@ public class Intake extends TrcSubsystem
         this.dashboard = FtcDashboard.getInstance();
         this.robot = robot;
         FtcRollerIntake.Params intakeParams = new FtcRollerIntake.Params()
-            .setPrimaryMotor(Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
+            .setPrimaryMotor(Params.SUBSYSTEM_NAME + "." + Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
             .setPowerLevels(Params.INTAKE_POWER, Params.EJECT_POWER, Params.RETAIN_POWER)
             .setFinishDelays(Params.INTAKE_FINISH_DELAY, Params.EJECT_FINISH_DELAY);
 
         if (Params.HAS_FRONT_TRIGGER)
         {
             intakeParams.setFrontDigitalSourceTrigger(
-                Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact, TriggerAction.StartOnTrigger,
-                null, null, null);
+                Params.SUBSYSTEM_NAME + "." + Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact,
+                TriggerAction.StartOnTrigger, null, null, null);
         }
 
         if (Params.HAS_BACK_TRIGGER)
         {
             intakeParams.setBackDigitalSourceTrigger(
-                Params.BACK_TRIGGER_NAME, this::spindexerEntryHasArtifact, TriggerAction.FinishOnTrigger,
-                null, null, null);
+                Params.SUBSYSTEM_NAME + "." + Params.BACK_TRIGGER_NAME, this::spindexerEntryHasArtifact,
+                TriggerAction.FinishOnTrigger, null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
@@ -197,8 +197,8 @@ public class Intake extends TrcSubsystem
         {
             dashboard.displayPrintf(
                 lineNum++, "%s: power=%.3f, current=%.3f, hasObject=%s, sensorState=%s/%s, autoActive=%s",
-                Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.hasObject(),
-                intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
+                Params.SUBSYSTEM_NAME + "." + Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(),
+                intake.hasObject(), intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
         }
 
         return lineNum;

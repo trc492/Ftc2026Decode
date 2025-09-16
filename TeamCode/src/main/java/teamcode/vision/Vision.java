@@ -82,9 +82,9 @@ public class Vision
             camImageHeight = 480;
             camXOffset = 0.0;                   // Inches to the right from robot center
             camYOffset = 0.0;                   // Inches forward from robot center
-            camZOffset = 11.25;                 // Inches up from the floor
+            camZOffset = 21.0;                  // Inches up from the floor
             camYaw = 0.0;                       // degrees clockwise from robot forward
-            camPitch = -32.346629699;           // degrees up from horizontal
+            camPitch = -19.0;                   // degrees up from horizontal
             camRoll = 0.0;
             camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
             camOrientation = OpenCvCameraRotation.UPRIGHT;

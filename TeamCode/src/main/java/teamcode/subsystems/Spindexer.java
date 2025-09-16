@@ -22,7 +22,10 @@
 
 package teamcode.subsystems;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -34,6 +37,7 @@ import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcPresets;
+import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.subsystem.TrcPidStorage;
 import trclib.subsystem.TrcSubsystem;
 
@@ -51,11 +55,11 @@ public class Spindexer extends TrcSubsystem
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean HAS_EXIT_SENSOR             = true;
 
-        public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".motor";
+        public static final String MOTOR_NAME                   = "Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
         public static final boolean MOTOR_INVERTED              = true;
 
-        public static final String LOWER_LIMIT_SWITCH_NAME      = SUBSYSTEM_NAME + ".lowerLimit";
+        public static final String LOWER_LIMIT_SWITCH_NAME      = "LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double GOBILDA312_CPR               = (((1.0 + (46.0/17.0))) * (1.0 + (46.0/11.0))) * 28.0;
@@ -69,8 +73,8 @@ public class Spindexer extends TrcSubsystem
             new TrcPidController.PidCoefficients(1.0, 0.0, 0.0, 0.0, 0.0);
         public static final double POS_PID_TOLERANCE            = 1.0;
 
-        public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".entrySensor";
-        public static final String EXIT_SENSOR_NAME             = SUBSYSTEM_NAME + ".exitSensor";
+        public static final String ENTRY_SENSOR_NAME            = "EntrySensor";
+        public static final String EXIT_SENSOR_NAME             = "ExitSensor";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
         public static final double MOVE_POWER                   = 1.0;
@@ -83,8 +87,8 @@ public class Spindexer extends TrcSubsystem
         public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 0.0;  // in inches
         public static final double EXIT_TRIGGER_SETTLING        = 0.2;  // in seconds
 
-        public static final String ENTRY_PRESETS_NAME           = SUBSYSTEM_NAME + ".entryPresets";
-        public static final String EXIT_PRESETS_NAME            = SUBSYSTEM_NAME + ".exitPresets";
+        public static final String ENTRY_PRESETS_NAME           = "EntryPresets";
+        public static final String EXIT_PRESETS_NAME            = "ExitPresets";
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {60.0, 180.0, 300.0};
         public static final double POS_PRESET_TOLERANCE         = 5.0;
@@ -105,8 +109,10 @@ public class Spindexer extends TrcSubsystem
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
         dashboard = FtcDashboard.getInstance();
         FtcPidStorage.Params spindexerParams = new FtcPidStorage.Params()
-            .setPrimaryMotor(Params.MOTOR_NAME, Spindexer.Params.MOTOR_TYPE, Spindexer.Params.MOTOR_INVERTED)
-            .setLowerLimitSwitch(Params.LOWER_LIMIT_SWITCH_NAME, Params.LOWER_LIMIT_SWITCH_INVERTED)
+            .setPrimaryMotor(
+                Params.SUBSYSTEM_NAME + "." + Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
+            .setLowerLimitSwitch(
+                Params.SUBSYSTEM_NAME + "." + Params.LOWER_LIMIT_SWITCH_NAME, Params.LOWER_LIMIT_SWITCH_INVERTED)
             .setPositionScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET)
             .setObjectDistance(Params.OBJECT_DISTANCE)
             .setMovePower(Params.MOVE_POWER)
@@ -115,10 +121,11 @@ public class Spindexer extends TrcSubsystem
         if (Params.HAS_ENTRY_SENSOR)
         {
             entryAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                RevColorSensorV3.class, Params.ENTRY_SENSOR_NAME);
+                RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME);
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.ENTRY_SENSOR_NAME, this::getEntrySensorData, Params.ENTRY_TRIGGER_LOW_THRESHOLD,
-                Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING, false, null, null);
+                Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME, this::getEntrySensorData,
+                Params.ENTRY_TRIGGER_LOW_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING,
+                false, null, null);
         }
         else
         {
@@ -128,10 +135,11 @@ public class Spindexer extends TrcSubsystem
         if (Params.HAS_EXIT_SENSOR)
         {
             exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                RevColorSensorV3.class, Params.EXIT_SENSOR_NAME);
+                RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME);
             spindexerParams.setExitAnalogSourceTrigger(
-                Params.EXIT_SENSOR_NAME, this::getExitSensorData, Params.EXIT_TRIGGER_LOW_THRESHOLD,
-                Params.EXIT_TRIGGER_HIGH_THRESHOLD, Params.EXIT_TRIGGER_SETTLING, false, null, null);
+                Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME, this::getExitSensorData,
+                Params.EXIT_TRIGGER_LOW_THRESHOLD, Params.EXIT_TRIGGER_HIGH_THRESHOLD, Params.EXIT_TRIGGER_SETTLING,
+                false, null, null);
         }
         else
         {
@@ -142,9 +150,11 @@ public class Spindexer extends TrcSubsystem
         spindexer.motor.setPositionPidParameters(
             Params.posPidCoeffs, Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
         entryPresets = new TrcPresets(
-            Params.ENTRY_PRESETS_NAME, Params.POS_PRESET_TOLERANCE, Params.entryPresetPositions);
+            Params.SUBSYSTEM_NAME + "." + Params.ENTRY_PRESETS_NAME, Params.POS_PRESET_TOLERANCE,
+            Params.entryPresetPositions);
         exitPresets = new TrcPresets(
-            Params.EXIT_PRESETS_NAME, Params.POS_PRESET_TOLERANCE, Params.exitPresetPositions);
+            Params.SUBSYSTEM_NAME + "." + Params.EXIT_PRESETS_NAME, Params.POS_PRESET_TOLERANCE,
+            Params.exitPresetPositions);
     }   //Spindexer
 
     /**
@@ -177,21 +187,84 @@ public class Spindexer extends TrcSubsystem
         return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
     }   //getExitSensorData
 
+    /**
+     * This method checks if the entry sensor is triggered.
+     *
+     * @return true if entry sensor is in triggered state, false otherwise.
+     */
     public boolean isEntrySensorActive()
     {
         return spindexer.isEntrySensorActive();
     }   //isEntrySensorActive
 
+    /**
+     * This method checks if the exit sensor is triggered.
+     *
+     * @return true if exit sensor is in triggered state, false otherwise.
+     */
     public boolean isExitSensorActive()
     {
         return spindexer.isExitSensorActive();
     }   //isExitSensorActive
 
+    /**
+     * This method reads the REV Color Sensor and returns the Hue value.
+     *
+     * @param sensor specifies the REV color sensor object.
+     * @return hue value.
+     */
+    private double getSensorHue(RevColorSensorV3 sensor)
+    {
+        if (sensor != null)
+        {
+            float[] hsvValues = {0.0f, 0.0f, 0.0f};
+            NormalizedRGBA normalizedColors = sensor.getNormalizedColors();
+            Color.RGBToHSV(
+                (int) (normalizedColors.red*255),
+                (int) (normalizedColors.green*255),
+                (int) (normalizedColors.blue*255),
+                hsvValues);
+            return hsvValues[0];
+        }
+
+        return 0.0;
+    }   //getSensorHue
+
+    /**
+     * This method returns the hue value read from the entry sensor.
+     *
+     * @return hue value.
+     */
+    public double getEntrySensorHue()
+    {
+        return getSensorHue(entryAnalogSensor);
+    }   //getEntrySensorHue
+
+    /**
+     * This method returns the hue value read from the exit sensor.
+     *
+     * @return hue value.
+     */
+    public double getExitSensorHue()
+    {
+        return getSensorHue(exitAnalogSensor);
+    }   //getExitSensorHue
+
+    /**
+     * This method rotates the Spindexer to the next vacant slot at the entrance. If there is no vacant slot, the
+     * Spindexer will not turn.
+     */
     public void setEntryPosition()
     {
 
     }   //setEntryPosition
 
+    /**
+     * This method rotates the Spindexer to the slot containing the specified artifact type. If the specified artifact
+     * type is not found, the Spindexer will not turn.
+     *
+     * @param artifactType specifies the artifact type.
+     */
     public void setExitPosition(Vision.ColorBlobType artifactType)
     {
 
@@ -244,10 +317,9 @@ public class Spindexer extends TrcSubsystem
         if (slowLoop)
         {
             dashboard.displayPrintf(
-                lineNum++, "%s: power=%.3f, current=%.3f, pos=%.3f/%.3f, LimitSw=%s/%s",
-                Params.SUBSYSTEM_NAME, spindexer.motor.getPower(), spindexer.motor.getCurrent(),
-                spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
-                spindexer.motor.isLowerLimitSwitchActive());
+                lineNum++, "%s: pos=%.3f/%.3f, LimitSw=%s, hue(entry/exit)=%f/%f",
+                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
+                spindexer.motor.isLowerLimitSwitchActive(), getEntrySensorHue(), getExitSensorHue());
         }
 
         return lineNum;
@@ -258,19 +330,40 @@ public class Spindexer extends TrcSubsystem
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
      * @param tuneParams specifies tuning parameters.
-     *        tuneParam0 - Kp
-     *        tuneParam1 - Ki
-     *        tuneParam2 - Kd
-     *        tuneParam3 - Kf
-     *        tuneParam4 - iZone
-     *        tuneParam5 - PidTolerance
+     *        Motor PID tuning:
+     *          tuneParam0 - Kp
+     *          tuneParam1 - Ki
+     *          tuneParam2 - Kd
+     *          tuneParam3 - Kf
+     *          tuneParam4 - iZone
+     *          tuneParam5 - PidTolerance
+     *        Sensor tuning:
+     *          tuneParam0 - Low Threshold
+     *          tuneParam1 - High Threshold
+     *          tuneParam2 - Settling Period
      */
     @Override
     public void prepSubsystemForTuning(String subComponent, double... tuneParams)
     {
-        spindexer.motor.setPositionPidParameters(
-            tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-            Params.SOFTWARE_PID_ENABLED);
+        if (subComponent != null)
+        {
+            if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
+            {
+                spindexer.motor.setPositionPidParameters(
+                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
+                    Params.SOFTWARE_PID_ENABLED);
+            }
+            else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
+            {
+                ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
+                    tuneParams[0], tuneParams[1], tuneParams[2]);
+            }
+            else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
+            {
+                ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
+                    tuneParams[0], tuneParams[1], tuneParams[2]);
+            }
+        }
     }   //prepSubsystemForTuning
 
 }   //class Spindexer
