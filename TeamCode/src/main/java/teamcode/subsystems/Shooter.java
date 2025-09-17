@@ -26,6 +26,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
+import teamcode.Dashboard;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcDiscreteValue;
 import trclib.motor.TrcMotor;
@@ -423,56 +424,51 @@ public class Shooter extends TrcSubsystem
      * This method is called to prep the subsystem for tuning.
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
-     * @param tuneParams specifies tuning parameters.
-     *        Motor PID tuning:
-     *          tuneParam0 - Kp
-     *          tuneParam1 - Ki
-     *          tuneParam2 - Kd
-     *          tuneParam3 - Kf
-     *          tuneParam4 - iZone
-     *          tuneParam5 - PidTolerance (in RPM for velocity, in degrees for pan/tilt)
-     *          tuneParam6 - Shooter motor target velocity in RPM (for shooter motors only)
-     *        Launcher position tuning:
-     *          tuneParams0 - RestPos
-     *          tuneParams1 - LaunchPos
-     *          tuneParams2 - LaunchDuration
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent, double... tuneParams)
+    public void prepSubsystemForTuning(String subComponent)
     {
         if (subComponent != null)
         {
             if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR1_NAME))
             {
                 shooter.getShooterMotor1().setVelocityPidParameters(
-                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
-                    Params.SHOOTER_SOFTWARE_PID_ENABLED);
-                shooter1Velocity.setValue(tuneParams[6]);
+                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    // Translate PidTolerance from RPM to RPS.
+                    Dashboard.Subsystem.PidTuning.pidTolerance/60.0,
+                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                // PID target is in the unit of RPM.
+                shooter1Velocity.setValue(Dashboard.Subsystem.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
             {
                 shooter.getShooterMotor2().setVelocityPidParameters(
-                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5]/60.0,
-                    Params.SHOOTER_SOFTWARE_PID_ENABLED);
-                shooter2Velocity.setValue(tuneParams[6]);
+                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    // Translate PidTolerance from RPM to RPS.
+                    Dashboard.Subsystem.PidTuning.pidTolerance/60.0,
+                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                // PID target is in the unit of RPM.
+                shooter2Velocity.setValue(Dashboard.Subsystem.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
             {
                 shooter.getPanMotor().setPositionPidParameters(
-                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-                    Params.PAN_SOFTWARE_PID_ENABLED);
+                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    Dashboard.Subsystem.PidTuning.pidTolerance,
+                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.TILT_MOTOR_NAME))
             {
                 shooter.getTiltMotor().setPositionPidParameters(
-                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-                    Params.TILT_SOFTWARE_PID_ENABLED);
+                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    Dashboard.Subsystem.PidTuning.pidTolerance,
+                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.LAUNCHER_SERVO_NAME))
             {
-                Params.LAUNCHER_REST_POS = tuneParams[0];
-                Params.LAUNCHER_LAUNCH_POS = tuneParams[1];
-                Params.LAUNCHER_LAUNCH_DURATION = tuneParams[2];
+                Params.LAUNCHER_REST_POS = Dashboard.Subsystem.ServoPositionTuning.minPos;
+                Params.LAUNCHER_LAUNCH_POS = Dashboard.Subsystem.ServoPositionTuning.maxPos;
+                Params.LAUNCHER_LAUNCH_DURATION = Dashboard.Subsystem.ServoPositionTuning.activateDuration;
             }
         }
     }   //prepSubsystemForTuning

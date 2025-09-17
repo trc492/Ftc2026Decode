@@ -33,6 +33,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.subsystem.FtcPidStorage;
+import teamcode.Dashboard;
 import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.robotcore.TrcEvent;
@@ -329,39 +330,32 @@ public class Spindexer extends TrcSubsystem
      * This method is called to prep the subsystem for tuning.
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
-     * @param tuneParams specifies tuning parameters.
-     *        Motor PID tuning:
-     *          tuneParam0 - Kp
-     *          tuneParam1 - Ki
-     *          tuneParam2 - Kd
-     *          tuneParam3 - Kf
-     *          tuneParam4 - iZone
-     *          tuneParam5 - PidTolerance
-     *        Sensor tuning:
-     *          tuneParam0 - Low Threshold
-     *          tuneParam1 - High Threshold
-     *          tuneParam2 - Settling Period
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent, double... tuneParams)
+    public void prepSubsystemForTuning(String subComponent)
     {
         if (subComponent != null)
         {
             if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
             {
                 spindexer.motor.setPositionPidParameters(
-                    tuneParams[0], tuneParams[1], tuneParams[2], tuneParams[3], tuneParams[4], tuneParams[5],
-                    Params.SOFTWARE_PID_ENABLED);
+                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    Dashboard.Subsystem.PidTuning.pidTolerance,
+                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
             {
                 ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
-                    tuneParams[0], tuneParams[1], tuneParams[2]);
+                    Dashboard.Subsystem.TriggerThresholdsTuning.lowThreshold,
+                    Dashboard.Subsystem.TriggerThresholdsTuning.highThreshold,
+                    Dashboard.Subsystem.TriggerThresholdsTuning.settlingPeriod);
             }
             else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
             {
                 ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
-                    tuneParams[0], tuneParams[1], tuneParams[2]);
+                    Dashboard.Subsystem.TriggerThresholdsTuning.lowThreshold,
+                    Dashboard.Subsystem.TriggerThresholdsTuning.highThreshold,
+                    Dashboard.Subsystem.TriggerThresholdsTuning.settlingPeriod);
             }
         }
     }   //prepSubsystemForTuning

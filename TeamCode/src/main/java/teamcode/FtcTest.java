@@ -651,13 +651,10 @@ public class FtcTest extends FtcTeleOp
                             TrcSubsystem subsystem = TrcSubsystem.getSubsystem(tokens[0]);
 
                             robot.globalTracer.traceInfo(
-                                moduleName,
-                                "Tuning Subsystem " + tokens[0] + ":" +
-                                "\n\tsubComponent=" + subComponent +
-                                "\n\ttuneParams=" + Arrays.toString(Dashboard.Subsystem.tuneParams));
+                                moduleName, "Tuning Subsystem " + tokens[0] + ": subComponent=" + subComponent);
                             if (subsystem != null)
                             {
-                                subsystem.prepSubsystemForTuning(subComponent, Dashboard.Subsystem.tuneParams);
+                                subsystem.prepSubsystemForTuning(subComponent);
                             }
                         }
                     }

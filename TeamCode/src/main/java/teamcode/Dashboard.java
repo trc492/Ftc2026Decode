@@ -105,8 +105,34 @@ public class Dashboard
     public static class Subsystem
     {
         public static String subsystemName = "";
-        // 7 doubles: Kp, Ki, Kd, Kf, iZone, PIDTolerance, GravityCompPower
-        public static double[] tuneParams = new double[7];
+
+        public static class PidTuning
+        {
+            public static TrcPidController.PidCoefficients pidCoeffs =
+                new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
+            public static TrcPidController.FFCoefficients ffCoeffs =
+                new TrcPidController.FFCoefficients(0.0, 0.0, 0.0);
+            public static double pidTolerance = 0.0;
+            public static boolean useSoftwarePid = true;
+            public static boolean enableSquid = false;
+            public static double pidTarget = 0.0;
+            public static double gravityCompPower = 0.0;
+        }   //PidTuning
+
+        public static class ServoPositionTuning
+        {
+            public static double minPos = 0.0;
+            public static double maxPos = 0.0;
+            public static double activateDuration = 0.0;
+        }   //ServoPositionTuning
+
+        public static class TriggerThresholdsTuning
+        {
+            public static double lowThreshold = 0.0;
+            public static double highThreshold = 0.0;
+            public static double settlingPeriod = 0.0;
+        }   //TriggerThresholdsTuning
+
     }   //class Subsystem
 
 }   //class Dashboard
