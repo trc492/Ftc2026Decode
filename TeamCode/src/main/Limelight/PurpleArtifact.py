@@ -29,9 +29,11 @@ def runPipeline(image, llrobot):
     lower_purple = np.array([0, 80, 150])
     upper_purple = np.array([180, 150, 200])
     # Lower purple bgr (140, 3, 119)
+    # Higher purple bgr (238, 135, 203)
+    # Lower purple YCbCr = (62, 171, 169)
+    # Higher purple YCbCr = (160, 163, 151)
     # Lower purple hsv (145, 250, 140)
     # Higher purple hsv (140, 110, 238)
-    # Higher purple bgr (238, 135, 203)
     # I think these are right, the link for the photos is here: https://tinyurl.com/decodeobj
 
     # Create mask for purple color
