@@ -32,8 +32,10 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
 /**
  * This class creates the robot object that consists of sensors, indicators, drive base and all the subsystems.
  */
+@Config
 public class Dashboard
 {
+    public static String tuneSubsystemName = "";
     private static Double nextDashboardUpdateTime =  null;
 
     /**
@@ -74,15 +76,15 @@ public class Dashboard
     }   //updateDashboard
 
     @Config
-    public static class Vision
+    public static class VisionTuning
     {
         public static double[] colorThresholds = new double[6];
         public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
             new TrcOpenCvColorBlobPipeline.FilterContourParams();
-    }   //class Vision
+    }   //class VisionTuning
 
     @Config
-    public static class Drive
+    public static class DriveBaseTuning
     {
         public static double xTarget = 0.0;
         public static double yTarget = 0.0;
@@ -99,40 +101,36 @@ public class Dashboard
         public static double maxVelocity = 0.0;
         public static double maxAcceleration = 0.0;
         public static double maxDeceleration = 0.0;
-    }   //class Drive
+    }   //class DriveBaseTuning
 
     @Config
-    public static class Subsystem
+    public static class PidTuning
     {
-        public static String subsystemName = "";
+        public static TrcPidController.PidCoefficients pidCoeffs =
+            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
+        public static TrcPidController.FFCoefficients ffCoeffs =
+            new TrcPidController.FFCoefficients(0.0, 0.0, 0.0);
+        public static double pidTolerance = 0.0;
+        public static boolean useSoftwarePid = true;
+        public static boolean enableSquid = false;
+        public static double pidTarget = 0.0;
+        public static double gravityCompPower = 0.0;
+    }   //PidTuning
 
-        public static class PidTuning
-        {
-            public static TrcPidController.PidCoefficients pidCoeffs =
-                new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-            public static TrcPidController.FFCoefficients ffCoeffs =
-                new TrcPidController.FFCoefficients(0.0, 0.0, 0.0);
-            public static double pidTolerance = 0.0;
-            public static boolean useSoftwarePid = true;
-            public static boolean enableSquid = false;
-            public static double pidTarget = 0.0;
-            public static double gravityCompPower = 0.0;
-        }   //PidTuning
+    @Config
+    public static class ServoPositionTuning
+    {
+        public static double minPos = 0.0;
+        public static double maxPos = 0.0;
+        public static double activateDuration = 0.0;
+    }   //ServoPositionTuning
 
-        public static class ServoPositionTuning
-        {
-            public static double minPos = 0.0;
-            public static double maxPos = 0.0;
-            public static double activateDuration = 0.0;
-        }   //ServoPositionTuning
-
-        public static class TriggerThresholdsTuning
-        {
-            public static double lowThreshold = 0.0;
-            public static double highThreshold = 0.0;
-            public static double settlingPeriod = 0.0;
-        }   //TriggerThresholdsTuning
-
-    }   //class Subsystem
+    @Config
+    public static class TriggerThresholdsTuning
+    {
+        public static double lowThreshold = 0.0;
+        public static double highThreshold = 0.0;
+        public static double settlingPeriod = 0.0;
+    }   //TriggerThresholdsTuning
 
 }   //class Dashboard

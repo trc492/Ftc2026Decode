@@ -28,10 +28,10 @@ SOFTWARE.
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x045e|product=0x0779|connection="/>
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
-            <goBILDA5202SeriesMotor name="Shooter.shooterMotor1" port="0"/>
-            <goBILDA5202SeriesMotor name="Intake.primary" port="1"/>
+            <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="0"/>
+            <goBILDA5202SeriesMotor name="Intake.Motor" port="1"/>
             <DigitalDevice name="Intake.backSensor" port="0" />
-            <Servo name="Shooter.launcher" port="5" />
+            <Servo name="Shooter.Launcher" port="5" />
             <!--
             <RevBlinkinLedDriver name="blinkin" port="0" />
             <Servo name="gobildaLED" port="1" />

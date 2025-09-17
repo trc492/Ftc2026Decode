@@ -257,7 +257,6 @@ public class Spindexer extends TrcSubsystem
      */
     public void setEntryPosition()
     {
-
     }   //setEntryPosition
 
     /**
@@ -327,37 +326,68 @@ public class Spindexer extends TrcSubsystem
     }   //updateStatus
 
     /**
-     * This method is called to prep the subsystem for tuning.
+     * This method is called to initialize the Dashboard from subsystem parameters.
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent)
+    public void initDashboardFromSubsystemParams(String subComponent)
+    {
+        if (subComponent != null)
+        {
+            if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
+            {
+                Dashboard.PidTuning.pidCoeffs = Params.posPidCoeffs;
+                Dashboard.PidTuning.pidTolerance = Params.POS_PID_TOLERANCE;
+                Dashboard.PidTuning.useSoftwarePid = Params.SOFTWARE_PID_ENABLED;
+            }
+            else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
+            {
+                Dashboard.TriggerThresholdsTuning.lowThreshold = Params.ENTRY_TRIGGER_LOW_THRESHOLD;
+                Dashboard.TriggerThresholdsTuning.highThreshold = Params.ENTRY_TRIGGER_HIGH_THRESHOLD;
+                Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.ENTRY_TRIGGER_SETTLING;
+            }
+            else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
+            {
+                Dashboard.TriggerThresholdsTuning.lowThreshold = Params.EXIT_TRIGGER_LOW_THRESHOLD;
+                Dashboard.TriggerThresholdsTuning.highThreshold = Params.EXIT_TRIGGER_HIGH_THRESHOLD;
+                Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.EXIT_TRIGGER_SETTLING;
+            }
+        }
+    }   //initDashboardFromSubsystemParams
+
+    /**
+     * This method is called to initialize the subsystem parameters from the Dashboard for tuning.
+     *
+     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     */
+    @Override
+    public void initSubsystemParamsForTuning(String subComponent)
     {
         if (subComponent != null)
         {
             if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
             {
                 spindexer.motor.setPositionPidParameters(
-                    Dashboard.Subsystem.PidTuning.pidCoeffs,
-                    Dashboard.Subsystem.PidTuning.pidTolerance,
-                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.pidCoeffs,
+                    Dashboard.PidTuning.pidTolerance,
+                    Dashboard.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
             {
                 ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
-                    Dashboard.Subsystem.TriggerThresholdsTuning.lowThreshold,
-                    Dashboard.Subsystem.TriggerThresholdsTuning.highThreshold,
-                    Dashboard.Subsystem.TriggerThresholdsTuning.settlingPeriod);
+                    Dashboard.TriggerThresholdsTuning.lowThreshold,
+                    Dashboard.TriggerThresholdsTuning.highThreshold,
+                    Dashboard.TriggerThresholdsTuning.settlingPeriod);
             }
             else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
             {
                 ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
-                    Dashboard.Subsystem.TriggerThresholdsTuning.lowThreshold,
-                    Dashboard.Subsystem.TriggerThresholdsTuning.highThreshold,
-                    Dashboard.Subsystem.TriggerThresholdsTuning.settlingPeriod);
+                    Dashboard.TriggerThresholdsTuning.lowThreshold,
+                    Dashboard.TriggerThresholdsTuning.highThreshold,
+                    Dashboard.TriggerThresholdsTuning.settlingPeriod);
             }
         }
-    }   //prepSubsystemForTuning
+    }   //initSubsystemParamsForTuning
 
 }   //class Spindexer

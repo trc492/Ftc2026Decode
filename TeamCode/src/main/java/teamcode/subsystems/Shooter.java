@@ -421,56 +421,101 @@ public class Shooter extends TrcSubsystem
     }   //updateStatus
 
     /**
-     * This method is called to prep the subsystem for tuning.
+     * This method is called to initialize the Dashboard from subsystem parameters.
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent)
+    public void initDashboardFromSubsystemParams(String subComponent)
+    {
+        if (subComponent != null)
+        {
+            if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR1_NAME))
+            {
+                Dashboard.PidTuning.pidCoeffs = Params.shooter1PidCoeffs;
+                Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
+                Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
+                Dashboard.PidTuning.pidTarget = shooter1Velocity.getValue();
+            }
+            else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
+            {
+                Dashboard.PidTuning.pidCoeffs = Params.shooter2PidCoeffs;
+                Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
+                Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
+                Dashboard.PidTuning.pidTarget = shooter2Velocity.getValue();
+            }
+            else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
+            {
+                Dashboard.PidTuning.pidCoeffs = Params.panPidCoeffs;
+                Dashboard.PidTuning.pidTolerance = Params.PAN_PID_TOLERANCE;
+                Dashboard.PidTuning.useSoftwarePid = Params.PAN_SOFTWARE_PID_ENABLED;
+            }
+            else if (subComponent.equalsIgnoreCase(Params.TILT_MOTOR_NAME))
+            {
+                Dashboard.PidTuning.pidCoeffs = Params.tiltPidCoeffs;
+                Dashboard.PidTuning.pidTolerance = Params.TILT_PID_TOLERANCE;
+                Dashboard.PidTuning.useSoftwarePid = Params.TILT_SOFTWARE_PID_ENABLED;
+            }
+            else if (subComponent.equalsIgnoreCase(Params.LAUNCHER_SERVO_NAME))
+            {
+                Dashboard.ServoPositionTuning.minPos = Params.LAUNCHER_REST_POS;
+                Dashboard.ServoPositionTuning.maxPos = Params.LAUNCHER_LAUNCH_POS;
+                Dashboard.ServoPositionTuning.activateDuration = Params.LAUNCHER_LAUNCH_DURATION;
+            }
+        }
+    }   //initDashboardFromSubsystemParams
+
+    /**
+     * This method is called to initialize the subsystem parameters from the Dashboard for tuning.
+     *
+     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     */
+    @Override
+    public void initSubsystemParamsForTuning(String subComponent)
     {
         if (subComponent != null)
         {
             if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR1_NAME))
             {
                 shooter.getShooterMotor1().setVelocityPidParameters(
-                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    Dashboard.PidTuning.pidCoeffs,
                     // Translate PidTolerance from RPM to RPS.
-                    Dashboard.Subsystem.PidTuning.pidTolerance/60.0,
-                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.pidTolerance/60.0,
+                    Dashboard.PidTuning.useSoftwarePid);
                 // PID target is in the unit of RPM.
-                shooter1Velocity.setValue(Dashboard.Subsystem.PidTuning.pidTarget);
+                shooter1Velocity.setValue(Dashboard.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
             {
                 shooter.getShooterMotor2().setVelocityPidParameters(
-                    Dashboard.Subsystem.PidTuning.pidCoeffs,
+                    Dashboard.PidTuning.pidCoeffs,
                     // Translate PidTolerance from RPM to RPS.
-                    Dashboard.Subsystem.PidTuning.pidTolerance/60.0,
-                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.pidTolerance/60.0,
+                    Dashboard.PidTuning.useSoftwarePid);
                 // PID target is in the unit of RPM.
-                shooter2Velocity.setValue(Dashboard.Subsystem.PidTuning.pidTarget);
+                shooter2Velocity.setValue(Dashboard.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
             {
                 shooter.getPanMotor().setPositionPidParameters(
-                    Dashboard.Subsystem.PidTuning.pidCoeffs,
-                    Dashboard.Subsystem.PidTuning.pidTolerance,
-                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.pidCoeffs,
+                    Dashboard.PidTuning.pidTolerance,
+                    Dashboard.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.TILT_MOTOR_NAME))
             {
                 shooter.getTiltMotor().setPositionPidParameters(
-                    Dashboard.Subsystem.PidTuning.pidCoeffs,
-                    Dashboard.Subsystem.PidTuning.pidTolerance,
-                    Dashboard.Subsystem.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.pidCoeffs,
+                    Dashboard.PidTuning.pidTolerance,
+                    Dashboard.PidTuning.useSoftwarePid);
             }
             else if (subComponent.equalsIgnoreCase(Params.LAUNCHER_SERVO_NAME))
             {
-                Params.LAUNCHER_REST_POS = Dashboard.Subsystem.ServoPositionTuning.minPos;
-                Params.LAUNCHER_LAUNCH_POS = Dashboard.Subsystem.ServoPositionTuning.maxPos;
-                Params.LAUNCHER_LAUNCH_DURATION = Dashboard.Subsystem.ServoPositionTuning.activateDuration;
+                Params.LAUNCHER_REST_POS = Dashboard.ServoPositionTuning.minPos;
+                Params.LAUNCHER_LAUNCH_POS = Dashboard.ServoPositionTuning.maxPos;
+                Params.LAUNCHER_LAUNCH_DURATION = Dashboard.ServoPositionTuning.activateDuration;
             }
         }
-    }   //prepSubsystemForTuning
+    }   //initSubsystemParamsForTuning
 
 }   //class Shooter

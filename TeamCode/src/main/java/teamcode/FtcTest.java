@@ -26,8 +26,6 @@ import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import java.util.Arrays;
-
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcChoiceMenu;
@@ -111,6 +109,10 @@ public class FtcTest extends FtcTeleOp
     private boolean steerCalibrating = false;
     private boolean teleOpControlEnabled = true;
     private boolean fpsMeterEnabled = false;
+    // Tune Subsystem.
+    private String tuneSubsystemName = null;
+    private TrcSubsystem subsystem = null;
+    private String subComponent = null;
 
     //
     // Overrides FtcOpMode abstract method.
@@ -191,8 +193,10 @@ public class FtcTest extends FtcTeleOp
                     robot.globalTracer.traceInfo(moduleName, "Enabling FtcRawEocvVision.");
                     robot.vision.setCameraStreamEnabled(true);
                     robot.vision.setRawColorBlobVisionEnabled(true);
-                    Dashboard.Vision.colorThresholds = robot.vision.getRawColorBlobThresholds();
-                    Dashboard.Vision.filterContourParams = Vision.artifactFilterContourParams.clone();
+                    System.arraycopy(
+                        robot.vision.tuneColorThresholds, 0, Dashboard.VisionTuning.colorThresholds, 0,
+                        Dashboard.VisionTuning.colorThresholds.length);
+                    Dashboard.VisionTuning.filterContourParams.setAs(robot.vision.tuneFilterContourParams);
                 }
                 break;
 
@@ -209,8 +213,8 @@ public class FtcTest extends FtcTeleOp
                 {
                     robot.robotDrive.driveBase.resetOdometry();
                     testCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, 0.0, Dashboard.Drive.driveTime,
-                        Dashboard.Drive.drivePower, 0.0, 0.0);
+                        robot.robotDrive.driveBase, 0.0, Dashboard.DriveBaseTuning.driveTime,
+                        Dashboard.DriveBaseTuning.drivePower, 0.0, 0.0);
                 }
                 break;
 
@@ -219,8 +223,8 @@ public class FtcTest extends FtcTeleOp
                 {
                     robot.robotDrive.driveBase.resetOdometry();
                     testCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, 0.0, Dashboard.Drive.driveTime,
-                        0.0, Dashboard.Drive.drivePower, 0.0);
+                        robot.robotDrive.driveBase, 0.0, Dashboard.DriveBaseTuning.driveTime,
+                        0.0, Dashboard.DriveBaseTuning.drivePower, 0.0);
                 }
                 break;
 
@@ -228,13 +232,13 @@ public class FtcTest extends FtcTeleOp
                 if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
                 {
                     robot.robotDrive.driveBase.resetOdometry();
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(Dashboard.Drive.drivePower);
-                    robot.robotDrive.purePursuitDrive.setRotOutputLimit(Dashboard.Drive.turnPower);
+                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(Dashboard.DriveBaseTuning.drivePower);
+                    robot.robotDrive.purePursuitDrive.setRotOutputLimit(Dashboard.DriveBaseTuning.turnPower);
                     robot.robotDrive.purePursuitDrive.start(
                         true, robot.robotInfo.profiledMaxVelocity, robot.robotInfo.profiledMaxAcceleration,
                         robot.robotInfo.profiledMaxAcceleration,
-                        new TrcPose2D(Dashboard.Drive.xTarget*12.0, Dashboard.Drive.yTarget*12.0,
-                                      Dashboard.Drive.turnTarget));
+                        new TrcPose2D(Dashboard.DriveBaseTuning.xTarget*12.0, Dashboard.DriveBaseTuning.yTarget*12.0,
+                                      Dashboard.DriveBaseTuning.turnTarget));
                     robot.robotDrive.purePursuitDrive.setTraceLevel(
                         TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
                 }
@@ -246,9 +250,9 @@ public class FtcTest extends FtcTeleOp
                     robot.robotDrive.driveBase.resetOdometry();
                     testCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
                     ((CmdPidDrive) testCommand).start(
-                        0.0, Dashboard.Drive.drivePower, null,
-                        new TrcPose2D(Dashboard.Drive.xTarget*12.0, Dashboard.Drive.yTarget*12.0,
-                                      Dashboard.Drive.turnTarget));
+                        0.0, Dashboard.DriveBaseTuning.drivePower, null,
+                        new TrcPose2D(Dashboard.DriveBaseTuning.xTarget*12.0, Dashboard.DriveBaseTuning.yTarget*12.0,
+                                      Dashboard.DriveBaseTuning.turnTarget));
                     robot.robotDrive.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
                 }
                 break;
@@ -381,6 +385,30 @@ public class FtcTest extends FtcTeleOp
 
         if (slowPeriodicLoop)
         {
+            if (!tuneSubsystemName.equals(Dashboard.tuneSubsystemName))
+            {
+                // User has changed the tuning subsystem name, reinitialize the Dashboard accordingly.
+                tuneSubsystemName = Dashboard.tuneSubsystemName;
+                if (tuneSubsystemName == null || tuneSubsystemName.isEmpty())
+                {
+                    subsystem = null;
+                    subComponent = null;
+                }
+                else
+                {
+                    String[] tokens = tuneSubsystemName.split("\\.");
+
+                    subsystem = TrcSubsystem.getSubsystem(tokens[0]);
+                    subComponent = tokens.length > 1 && !tokens[1].isEmpty()? tokens[1]: null;
+                    robot.globalTracer.traceInfo(
+                        moduleName, "Tuning Subsystem " + tokens[0] + ": subComponent=" + subComponent);
+                    if (subsystem != null)
+                    {
+                        subsystem.initDashboardFromSubsystemParams(subComponent);
+                    }
+                }
+            }
+
             if (allowTeleOp())
             {
                 //
@@ -405,7 +433,8 @@ public class FtcTest extends FtcTeleOp
                 case Y_TIMED_DRIVE:
                     if (robot.robotDrive != null)
                     {
-                        robot.dashboard.displayPrintf(lineNum++, "Timed Drive: %.0f sec", Dashboard.Drive.driveTime);
+                        robot.dashboard.displayPrintf(
+                            lineNum++, "Timed Drive: %.0f sec", Dashboard.DriveBaseTuning.driveTime);
                         robot.dashboard.displayPrintf(
                             lineNum++, "RobotPose=%s", robot.robotDrive.driveBase.getFieldPosition());
                         robot.dashboard.displayPrintf(
@@ -620,20 +649,25 @@ public class FtcTest extends FtcTeleOp
                                 tuneDriveStartPoint = robot.robotDrive.driveBase.getFieldPosition();
                                 tuneDriveEndPoint = tuneDriveStartPoint.addRelativePose(
                                     new TrcPose2D(
-                                        Dashboard.Drive.xTarget*12.0, Dashboard.Drive.yTarget*12.0,
-                                        Dashboard.Drive.turnTarget));
+                                        Dashboard.DriveBaseTuning.xTarget*12.0, Dashboard.DriveBaseTuning.yTarget*12.0,
+                                        Dashboard.DriveBaseTuning.turnTarget));
                                 tuneDriveAtEndPoint = false;
                             }
-                            robot.robotDrive.purePursuitDrive.setXPositionPidCoefficients(Dashboard.Drive.xPidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setYPositionPidCoefficients(Dashboard.Drive.yPidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setTurnPidCoefficients(Dashboard.Drive.turnPidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setMoveOutputLimit(Dashboard.Drive.drivePower);
-                            robot.robotDrive.purePursuitDrive.setRotOutputLimit(Dashboard.Drive.turnPower);
+                            robot.robotDrive.purePursuitDrive.setXPositionPidCoefficients(
+                                Dashboard.DriveBaseTuning.xPidCoeffs);
+                            robot.robotDrive.purePursuitDrive.setYPositionPidCoefficients(
+                                Dashboard.DriveBaseTuning.yPidCoeffs);
+                            robot.robotDrive.purePursuitDrive.setTurnPidCoefficients(
+                                Dashboard.DriveBaseTuning.turnPidCoeffs);
+                            robot.robotDrive.purePursuitDrive.setMoveOutputLimit(
+                                Dashboard.DriveBaseTuning.drivePower);
+                            robot.robotDrive.purePursuitDrive.setRotOutputLimit(
+                                Dashboard.DriveBaseTuning.turnPower);
                             robot.robotDrive.purePursuitDrive.start(
                                 false,
-                                Dashboard.Drive.maxVelocity,
-                                Dashboard.Drive.maxAcceleration,
-                                Dashboard.Drive.maxDeceleration,
+                                Dashboard.DriveBaseTuning.maxVelocity,
+                                Dashboard.DriveBaseTuning.maxAcceleration,
+                                Dashboard.DriveBaseTuning.maxDeceleration,
                                 tuneDriveAtEndPoint? tuneDriveStartPoint: tuneDriveEndPoint);
                             tuneDriveAtEndPoint = !tuneDriveAtEndPoint;
                         }
@@ -644,18 +678,9 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (!Dashboard.Subsystem.subsystemName.isEmpty())
+                        if (subsystem != null)
                         {
-                            String[] tokens = Dashboard.Subsystem.subsystemName.split("\\.");
-                            String subComponent = tokens.length > 1 && !tokens[1].isEmpty()? tokens[1]: null;
-                            TrcSubsystem subsystem = TrcSubsystem.getSubsystem(tokens[0]);
-
-                            robot.globalTracer.traceInfo(
-                                moduleName, "Tuning Subsystem " + tokens[0] + ": subComponent=" + subComponent);
-                            if (subsystem != null)
-                            {
-                                subsystem.prepSubsystemForTuning(subComponent);
-                            }
+                            subsystem.initSubsystemParamsForTuning(subComponent);
                         }
                     }
                     passToTeleOp = false;

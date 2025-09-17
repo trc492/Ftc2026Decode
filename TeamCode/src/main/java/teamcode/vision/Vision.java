@@ -171,7 +171,7 @@ public class Vision
     // YCrCb Color Space.
     private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
     private static final double[] purpleBlobColorThresholds = {0.0, 180.0, 80.0, 150.0, 150.0, 200.0};
-    private static final double[] greenBlobColorThresholds = {100.0, 250.0, 120.0, 200.0, 60.0, 90.0};
+    private static final double[] greenBlobColorThresholds = {20.0, 120.0, 90.0, 115.0, 120.0, 150.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(400.0)
@@ -205,6 +205,9 @@ public class Vision
     private FtcEocvColorBlobProcessor greenBlobProcessor;
     public FtcVision vision;
     public ColorBlobType detectArtifactType = ColorBlobType.AnyArtifact;
+
+    public double[] tuneColorThresholds = greenBlobColorThresholds;
+    public TrcOpenCvColorBlobPipeline.FilterContourParams tuneFilterContourParams = artifactFilterContourParams;
 
     /**
      * Constructor: Create an instance of the object.
@@ -255,8 +258,8 @@ public class Vision
 
             tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
             rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline(
-                "rawColorBlobPipeline", colorConversion, Dashboard.Vision.colorThresholds,
-                Dashboard.Vision.filterContourParams, true, objectWidth, objectHeight,
+                "rawColorBlobPipeline", colorConversion, Dashboard.VisionTuning.colorThresholds,
+                Dashboard.VisionTuning.filterContourParams, true, objectWidth, objectHeight,
                 RobotParams.Preferences.useSolvePnp? cameraMatrix: null, distCoeffs, robot.robotInfo.webCam1.camPose);
             // By default, display original Mat.
             rawColorBlobPipeline.setVideoOutput(0);

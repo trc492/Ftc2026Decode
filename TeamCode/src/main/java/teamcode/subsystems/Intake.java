@@ -205,14 +205,25 @@ public class Intake extends TrcSubsystem
     }   //updateStatus
 
     /**
-     * This method is called to prep the subsystem for tuning.
+     * This method is called to initialize the Dashboard from subsystem parameters.
      *
      * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent)
+    public void initDashboardFromSubsystemParams(String subComponent)
     {
         // Intake subsystem doesn't need tuning.
-    }   //prepSubsystemForTuning
+    }   //initDashboardFromSubsystemParams
+
+    /**
+     * This method is called to initialize the subsystem parameters from the Dashboard for tuning.
+     *
+     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     */
+    @Override
+    public void initSubsystemParamsForTuning(String subComponent)
+    {
+        // Intake subsystem doesn't need tuning.
+    }   //initSubsystemParamsForTuning
 
 }   //class Intake
