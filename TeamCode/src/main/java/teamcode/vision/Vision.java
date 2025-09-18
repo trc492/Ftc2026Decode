@@ -70,6 +70,16 @@ public class Vision
 {
     private final String moduleName = getClass().getSimpleName();
 
+    private static final FtcRobotDrive.CameraInfo logitechC920At640x480 = new FtcRobotDrive.CameraInfo()
+        .setLensProperties(622.001, 622.001, 319.803, 241.251)
+        .setDistortionCoefficents(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
+    private static final FtcRobotDrive.CameraInfo logitechC270At640x480 = new FtcRobotDrive.CameraInfo()
+        .setLensProperties(822.317, 822.317, 319.495, 242.502)
+        .setDistortionCoefficents(-0.0449369, 1.17277, 0, 0, -3.63244, 0, 0, 0);
+    private static final FtcRobotDrive.CameraInfo lifeCamHD3000At640x480 = new FtcRobotDrive.CameraInfo()
+        .setLensProperties(678.154, 678.170, 318.135, 228.374)
+        .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
+
     /**
      * This class contains the parameters of the front camera.
      */
@@ -87,6 +97,7 @@ public class Vision
             camPitch = -19.0;                   // degrees up from horizontal
             camRoll = 0.0;
             camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
+            camInfo = lifeCamHD3000At640x480;
             camOrientation = OpenCvCameraRotation.UPRIGHT;
             // Homography: cameraRect in pixels, worldRect in inches
             cameraRect = new TrcHomographyMapper.Rectangle(
@@ -183,17 +194,11 @@ public class Vision
             .setAspectRatioRange(0.8, 1.25);
     private static final double objectWidth = 5.0;
     private static final double objectHeight = 5.0;
-    // Logitech C920
-    private static final double fx = 622.001;
-    private static final double fy = 622.001;
-    private static final double cx = 319.803;
-    private static final double cy = 241.251;
-    private static final MatOfDouble distCoeffs = new MatOfDouble(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
-    private FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
+    public FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
     public FtcRawEocvVision rawColorBlobVision;
     public FtcLimelightVision limelightVision;
     private FtcCameraStreamProcessor cameraStreamProcessor;
@@ -217,6 +222,8 @@ public class Vision
     public Vision(Robot robot)
     {
         FtcOpMode opMode = FtcOpMode.getInstance();
+        Mat cameraMatrix = null;
+        MatOfDouble distCoeffs = null;
 
         if (robot.robotInfo.webCam1 == null &&
             (RobotParams.Preferences.useWebCam || RobotParams.Preferences.tuneColorBlobVision))
@@ -230,11 +237,20 @@ public class Vision
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
         webcam2 = robot.robotInfo.webCam2 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
-        Mat cameraMatrix = new Mat(3, 3, CvType.CV_64FC1);
-        cameraMatrix.put(0, 0,
-                         fx, 0, cx,
-                         0, fy, cy,
-                         0, 0, 1);
+        if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
+        {
+            FtcRobotDrive.CameraInfo camInfo = robot.robotInfo.webCam1.camInfo;
+            if (camInfo != null)
+            {
+                cameraMatrix = new Mat(3, 3, CvType.CV_64FC1);
+                cameraMatrix.put(
+                    0, 0,
+                    camInfo.fx, 0, camInfo.cx,
+                    0, camInfo.fy, camInfo.cy,
+                    0, 0, 1);
+                distCoeffs = camInfo.distCoeffs;
+            }
+        }
         // TuneColorBlobVision: must use webcam1.
         if (RobotParams.Preferences.tuneColorBlobVision && webcam1 != null)
         {
@@ -259,8 +275,8 @@ public class Vision
             tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
             rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline(
                 "rawColorBlobPipeline", colorConversion, Dashboard.VisionTuning.colorThresholds,
-                Dashboard.VisionTuning.filterContourParams, true, objectWidth, objectHeight,
-                RobotParams.Preferences.useSolvePnp? cameraMatrix: null, distCoeffs, robot.robotInfo.webCam1.camPose);
+                Dashboard.VisionTuning.filterContourParams, true, objectWidth, objectHeight, cameraMatrix, distCoeffs,
+                robot.robotInfo.webCam1.camPose);
             // By default, display original Mat.
             rawColorBlobPipeline.setVideoOutput(0);
             rawColorBlobPipeline.enableAnnotation(false);
