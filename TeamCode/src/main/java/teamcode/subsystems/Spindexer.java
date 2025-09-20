@@ -79,7 +79,7 @@ public class Spindexer extends TrcSubsystem
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
         public static final double MOVE_POWER                   = 1.0;
-        public static final int MAX_CAPACITY                    = 3;
+        public static final int MAX_CAPACITY                    = 6; // 3 entry + 3 exit
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.0;  // in inches
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 0.0;  // in inches
@@ -93,6 +93,12 @@ public class Spindexer extends TrcSubsystem
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {60.0, 180.0, 300.0};
         public static final double POS_PRESET_TOLERANCE         = 5.0;
+
+        public static Vision.ColorBlobType[] currentSlots       = {null, null, null};
+        public static int currentSlot                           = 0;
+        //value 0,2,4 for entry, 1,3,5 for exit locations.
+        //0 is first slot in array facing entry
+
     }   //class Params
 
     private final FtcDashboard dashboard;
@@ -251,12 +257,37 @@ public class Spindexer extends TrcSubsystem
         return getSensorHue(exitAnalogSensor);
     }   //getExitSensorHue
 
+    public static int findSlot(Vision.ColorBlobType[] arr, int currentSlot, Vision.ColorBlobType slotType) {
+        for (int step = 1; step <= 6; step++)
+        {
+            int slot = (currentSlot + step) % 6;
+
+            if (slot % 2 == 0)
+            {
+                int index = slot / 2;
+                if (arr[index] == slotType) //slotType is what you are looking for using this
+                {
+                    return slot;
+                }
+            }
+        }
+        return -1;
+    }  //this gives you the next space in the array that is a 0
+
+    public void moveSpindexer(int slots)
+    {
+        spindexer.move(slots);
+        Params.currentSlot = (Params.currentSlot + slots) % 6;
+    } //updates currentSlot everytime the spindexer moves
+
     /**
      * This method rotates the Spindexer to the next vacant slot at the entrance. If there is no vacant slot, the
      * Spindexer will not turn.
      */
     public void setEntryPosition()
     {
+        moveSpindexer((findSlot(Params.currentSlots, Params.currentSlot, null) - Params.currentSlot + 6) % 6);
+        //should give how many slots to move until next empty slot
     }   //setEntryPosition
 
     /**
@@ -267,6 +298,9 @@ public class Spindexer extends TrcSubsystem
      */
     public void setExitPosition(Vision.ColorBlobType artifactType)
     {
+        moveSpindexer((((findSlot(Params.currentSlots, Params.currentSlot, artifactType) + 3) % 6) - Params.currentSlot + 6) % 6);
+        //same as entry position but should move the thing you select to the opposite of entry, so exit
+        //kinda sketchy math
 
     }   //setExitPosition
 
