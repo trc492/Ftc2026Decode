@@ -181,8 +181,8 @@ public class Vision
     //
     // YCrCb Color Space.
     private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purpleBlobColorThresholds = {0.0, 180.0, 80.0, 150.0, 150.0, 200.0};
-    private static final double[] greenBlobColorThresholds = {20.0, 120.0, 90.0, 115.0, 120.0, 150.0};
+    private static final double[] purpleBlobColorThresholds = {0.0, 210.0, 139.0, 220.0, 130.0, 227.0};
+    private static final double[] greenBlobColorThresholds = {0.0, 110.0, 40.0, 118.0, 100.0, 145.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(400.0)
