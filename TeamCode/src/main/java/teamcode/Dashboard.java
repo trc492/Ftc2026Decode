@@ -81,6 +81,14 @@ public class Dashboard
         public static double[] colorThresholds = new double[6];
         public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
             new TrcOpenCvColorBlobPipeline.FilterContourParams();
+        public static boolean annotationEnabled = true;
+        public static boolean drawRotatedRect = false;
+        public static boolean drawCrosshair = false;
+        public static boolean circleDetectionEnabled = true;
+        public static double minCircleDistance = 30.0;
+        public static boolean cannyEdgeEnabled = false;
+        public static double cannyEdgeThreshold1 = 100.0;
+        public static double cannyEdgeThreshold2 = 200.0;
     }   //class VisionTuning
 
     @Config

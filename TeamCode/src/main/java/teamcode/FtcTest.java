@@ -193,10 +193,6 @@ public class FtcTest extends FtcTeleOp
                     robot.globalTracer.traceInfo(moduleName, "Enabling FtcRawEocvVision.");
                     robot.vision.setCameraStreamEnabled(true);
                     robot.vision.setRawColorBlobVisionEnabled(true);
-                    System.arraycopy(
-                        robot.vision.tuneColorThresholds, 0, Dashboard.VisionTuning.colorThresholds, 0,
-                        Dashboard.VisionTuning.colorThresholds.length);
-                    Dashboard.VisionTuning.filterContourParams.setAs(robot.vision.tuneFilterContourParams);
                 }
                 break;
 
@@ -385,7 +381,7 @@ public class FtcTest extends FtcTeleOp
 
         if (slowPeriodicLoop)
         {
-            if (!tuneSubsystemName.equals(Dashboard.tuneSubsystemName))
+            if (tuneSubsystemName == null || !tuneSubsystemName.equals(Dashboard.tuneSubsystemName))
             {
                 // User has changed the tuning subsystem name, reinitialize the Dashboard accordingly.
                 tuneSubsystemName = Dashboard.tuneSubsystemName;
@@ -682,6 +678,16 @@ public class FtcTest extends FtcTeleOp
                         {
                             subsystem.initSubsystemParamsForTuning(subComponent);
                         }
+                    }
+                    passToTeleOp = false;
+                }
+                else if (testChoices.test == Test.TUNE_COLORBLOB_VISION &&
+                         robot.vision != null && robot.vision.rawColorBlobPipeline != null)
+                {
+                    if (pressed)
+                    {
+                        robot.vision.updateColorBlobPipelineConfig(
+                            robot.vision.rawColorBlobPipeline.getColorBlobPipeline());
                     }
                     passToTeleOp = false;
                 }

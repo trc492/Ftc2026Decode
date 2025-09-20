@@ -69,7 +69,7 @@ import trclib.vision.TrcVisionTargetInfo;
 public class Vision
 {
     private final String moduleName = getClass().getSimpleName();
-
+    // Camera lens properties.
     private static final FtcRobotDrive.CameraInfo logitechC920At640x480 = new FtcRobotDrive.CameraInfo()
         .setLensProperties(622.001, 622.001, 319.803, 241.251)
         .setDistortionCoefficents(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
@@ -210,9 +210,8 @@ public class Vision
     private FtcEocvColorBlobProcessor greenBlobProcessor;
     public FtcVision vision;
     public ColorBlobType detectArtifactType = ColorBlobType.AnyArtifact;
-
+    // Change this reference to the colorThresholds of the tuned artifact.
     public double[] tuneColorThresholds = greenBlobColorThresholds;
-    public TrcOpenCvColorBlobPipeline.FilterContourParams tuneFilterContourParams = artifactFilterContourParams;
 
     /**
      * Constructor: Create an instance of the object.
@@ -233,6 +232,13 @@ public class Vision
 
         this.tracer = new TrcDbgTrace();
         this.robot = robot;
+
+        // Update Dashboard with the initial detection parameters.
+        System.arraycopy(
+            tuneColorThresholds, 0, Dashboard.VisionTuning.colorThresholds, 0,
+            Dashboard.VisionTuning.colorThresholds.length);
+        Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
+
         webcam1 = robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
         webcam2 = robot.robotInfo.webCam2 != null?
@@ -278,8 +284,9 @@ public class Vision
                 Dashboard.VisionTuning.filterContourParams, true, objectWidth, objectHeight, cameraMatrix, distCoeffs,
                 robot.robotInfo.webCam1.camPose);
             // By default, display original Mat.
-            rawColorBlobPipeline.setVideoOutput(0);
-            rawColorBlobPipeline.enableAnnotation(false);
+            rawColorBlobPipeline.getColorBlobPipeline().setVideoOutput(0);
+            // Configuring initial settings from Dashboard.VisionTuning but may change with FtcDashboard.
+            updateColorBlobPipelineConfig(rawColorBlobPipeline.getColorBlobPipeline());
             rawColorBlobVision = new FtcRawEocvVision(
                 "rawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
                 null, null,
@@ -342,15 +349,17 @@ public class Vision
                 purpleBlobVision = new FtcVisionEocvColorBlob(
                     LEDIndicator.PURPLE_BLOB, colorConversion, purpleBlobColorThresholds, artifactFilterContourParams,
                     true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false);
+                    worldRect, true, false, false);
                 purpleBlobProcessor = purpleBlobVision.getVisionProcessor();
+                updateColorBlobPipelineConfig(purpleBlobProcessor.getPipeline());
                 visionProcessorsList.add(purpleBlobProcessor);
 
                 greenBlobVision = new FtcVisionEocvColorBlob(
                     LEDIndicator.GREEN_BLOB, colorConversion, greenBlobColorThresholds, artifactFilterContourParams,
                     true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false);
+                    worldRect, true, false, false);
                 greenBlobProcessor = greenBlobVision.getVisionProcessor();
+                updateColorBlobPipelineConfig(greenBlobProcessor.getPipeline());
                 visionProcessorsList.add(greenBlobProcessor);
             }
 
@@ -396,6 +405,43 @@ public class Vision
             vision.close();
         }
     }   //close
+
+    /**
+     * This method updates the ColorBlob pipeline with the configuration specified in Dashboard.VisionTuning.
+     *
+     * @param colorBlobPipeline specifies the colorblob pipeline to update its configuration.
+     */
+    public void updateColorBlobPipelineConfig(TrcOpenCvColorBlobPipeline colorBlobPipeline)
+    {
+        if (Dashboard.VisionTuning.annotationEnabled)
+        {
+            colorBlobPipeline.enableAnnotation(
+                Dashboard.VisionTuning.drawRotatedRect, Dashboard.VisionTuning.drawCrosshair);
+        }
+        else
+        {
+            colorBlobPipeline.disableAnnotation();
+        }
+
+        if (Dashboard.VisionTuning.circleDetectionEnabled)
+        {
+            colorBlobPipeline.enableCircleDetection(Dashboard.VisionTuning.minCircleDistance);
+        }
+        else
+        {
+            colorBlobPipeline.disableCircleDetection();
+        }
+
+        if (Dashboard.VisionTuning.cannyEdgeEnabled)
+        {
+            colorBlobPipeline.enableCannyEdgeDetection(
+                Dashboard.VisionTuning.cannyEdgeThreshold1, Dashboard.VisionTuning.cannyEdgeThreshold2);
+        }
+        else
+        {
+            colorBlobPipeline.disableCannyEdgeDetection();
+        }
+    }   //updateColorBlobPipelineConfig
 
     /**
      * This method enables/disables FPS meter on the viewport.
@@ -473,29 +519,6 @@ public class Vision
                 currExposure, exposureSetting[0], exposureSetting[1], currGain, gainSetting[0], gainSetting[1]);
         }
     }   //displayExposureSettings
-
-    /**
-     * This method returns the color threshold values of rawColorBlobVision.
-     *
-     * @return array of color threshold values.
-     */
-    public double[] getRawColorBlobThresholds()
-    {
-        return rawColorBlobPipeline != null? rawColorBlobPipeline.getColorThresholds(): null;
-    }   //getRawColorBlobThresholds
-
-    /**
-     * This method sets the color threshold values of rawColorBlobVision.
-     *
-     * @param colorThresholds specifies an array of color threshold values.
-     */
-    public void setRawColorBlobThresholds(double... colorThresholds)
-    {
-        if (rawColorBlobPipeline != null)
-        {
-            rawColorBlobPipeline.setColorThresholds(colorThresholds);
-        }
-    }   //setRawColorBlobThresholds
 
     /**
      * This method enables/disables raw ColorBlob vision.
