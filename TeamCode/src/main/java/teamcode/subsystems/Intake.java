@@ -106,17 +106,17 @@ public class Intake extends TrcSubsystem
     {
         boolean artifactDetected = false;
 
-        if (robot.vision.detectArtifactType == Vision.ColorBlobType.GreenArtifact)
+        if (robot.vision.detectArtifactType == Vision.ColorBlobType.Green)
         {
             artifactDetected = robot.vision.greenBlobVision.getBestDetectedTargetInfo(
                 null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
         }
-        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.PurpleArtifact)
+        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.Purple)
         {
             artifactDetected = robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
                 null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
         }
-        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.AnyArtifact)
+        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.Any)
         {
             artifactDetected =
                 robot.vision.greenBlobVision.getBestDetectedTargetInfo(

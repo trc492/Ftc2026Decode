@@ -274,13 +274,13 @@ public class Robot
             if (vision.purpleBlobVision != null)
             {
                 globalTracer.traceInfo(moduleName, "Disabling PurpleBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.PurpleArtifact, false);
+                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Purple, false);
             }
 
             if (vision.greenBlobVision != null)
             {
                 globalTracer.traceInfo(moduleName, "Disabling GreenBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.GreenArtifact, false);
+                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Green, false);
             }
 
             if (vision.limelightVision != null)

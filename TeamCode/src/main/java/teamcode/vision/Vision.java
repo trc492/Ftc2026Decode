@@ -171,9 +171,9 @@ public class Vision
 
     public enum ColorBlobType
     {
-        PurpleArtifact,
-        GreenArtifact,
-        AnyArtifact
+        Purple,
+        Green,
+        Any
     }   //enum ColorBlobType
 
     // Warning: EOCV converts camera stream to RGBA whereas Desktop OpenCV converts it to BGRA. Therefore, the correct
@@ -209,7 +209,7 @@ public class Vision
     public FtcVisionEocvColorBlob greenBlobVision;
     private FtcEocvColorBlobProcessor greenBlobProcessor;
     public FtcVision vision;
-    public ColorBlobType detectArtifactType = ColorBlobType.AnyArtifact;
+    public ColorBlobType detectArtifactType = ColorBlobType.Any;
     // Change this reference to the colorThresholds of the tuned artifact.
     public double[] tuneColorThresholds = greenBlobColorThresholds;
 
@@ -839,15 +839,15 @@ public class Vision
     {
         switch (colorBlobType)
         {
-            case PurpleArtifact:
+            case Purple:
                 setVisionProcessorEnabled(purpleBlobProcessor, enabled);
                 break;
 
-            case GreenArtifact:
+            case Green:
                 setVisionProcessorEnabled(greenBlobProcessor, enabled);
                 break;
 
-            case AnyArtifact:
+            case Any:
                 setVisionProcessorEnabled(purpleBlobProcessor, enabled);
                 setVisionProcessorEnabled(greenBlobProcessor, enabled);
                 break;
@@ -866,15 +866,15 @@ public class Vision
 
         switch (colorBlobType)
         {
-            case PurpleArtifact:
+            case Purple:
                 enabled = isVisionProcessorEnabled(purpleBlobProcessor);
                 break;
 
-            case GreenArtifact:
+            case Green:
                 enabled = isVisionProcessorEnabled(greenBlobProcessor);
                 break;
 
-            case AnyArtifact:
+            case Any:
                 enabled = isVisionProcessorEnabled(purpleBlobProcessor) || isVisionProcessorEnabled(greenBlobProcessor);
                 break;
         }
@@ -897,17 +897,17 @@ public class Vision
 
         switch (colorBlobType)
         {
-            case PurpleArtifact:
+            case Purple:
                 colorBlobInfo = purpleBlobVision != null? purpleBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
                 break;
 
-            case GreenArtifact:
+            case Green:
                 colorBlobInfo = greenBlobVision != null? greenBlobVision.getBestDetectedTargetInfo(
                     null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
                 break;
 
-            case AnyArtifact:
+            case Any:
                 ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobList =
                     new ArrayList<>();
 

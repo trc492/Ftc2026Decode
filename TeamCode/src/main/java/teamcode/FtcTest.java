@@ -176,13 +176,13 @@ public class FtcTest extends FtcTeleOp
                     if (robot.vision.purpleBlobVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling PurpleBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.PurpleArtifact, true);
+                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Purple, true);
                     }
 
                     if (robot.vision.greenBlobVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling GreenBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.GreenArtifact, true);
+                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Green, true);
                     }
                 }
                 break;
@@ -890,12 +890,12 @@ public class FtcTest extends FtcTeleOp
 
             if (robot.vision.purpleBlobVision != null)
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.PurpleArtifact, 0.0, lineNum++);
+                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Purple, 0.0, lineNum++);
             }
 
             if (robot.vision.greenBlobVision != null)
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.GreenArtifact, 0.0, lineNum++);
+                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Green, 0.0, lineNum++);
             }
 
             if (robot.vision.vision != null)
