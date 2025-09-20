@@ -60,10 +60,11 @@ public class RobotParams
         public static final boolean useVision                   = true;
         public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
-        public static final boolean useLimelightVision          = false;
+        public static final boolean useLimelightVision          = true;
         public static final boolean useCameraStreamProcessor    = false;
-        public static final boolean useWebcamAprilTagVision     = true;
-        public static final boolean useColorBlobVision          = true;
+        public static final boolean useWebcamAprilTagVision     = false;
+        public static final boolean tuneColorBlobVision         = false;
+        public static final boolean useColorBlobVision          = !tuneColorBlobVision;
         public static final boolean useSolvePnp                 = true;
         public static final boolean showVisionView              = !inCompetition;
         public static final boolean showVisionStat              = true;
@@ -71,6 +72,7 @@ public class RobotParams
         public static final boolean useDriveBase                = false;
         public static final boolean usePinpointOdometry         = false;
         public static final boolean useSparkfunOTOS             = false;
+        public static final boolean tuneDriveBase               = false;
         // Subsystems
         public static final boolean useSubsystems               = true;
         public static final boolean useIntake                   = false;
@@ -79,9 +81,6 @@ public class RobotParams
         // Auto Tasks.
         public static final boolean useAutoShoot                = true;
         public static final boolean useAutoPickup               = false;
-        // Tuning
-        public static final boolean tuneColorBlobVision         = false;
-        public static final boolean tuneDriveBase               = false;
     }   //class Preferences
 
     /**
