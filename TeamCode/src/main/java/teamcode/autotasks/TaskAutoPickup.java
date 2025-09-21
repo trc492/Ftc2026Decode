@@ -207,7 +207,7 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     tracer.traceInfo(moduleName, "***** Not using Vision, manual pickup.");
                     sm.setState(State.PICKUP_OBJ);
                 }
-                else if (robot.vision != null && robot.vision.purpleBlobVision != null)
+                else if (robot.vision != null && robot.vision.colorBlobVision != null)
                 {
                     tracer.traceInfo(moduleName, "***** Using ColorBlob Vision.");
                     visionExpiredTime = null;
@@ -223,8 +223,8 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
             case FIND_OBJ:
                 // Use vision to determine the appropriate AprilTag location.
                 TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> object =
-                    robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
-                        null, null, 0.0, robot.robotInfo.webCam1.camZOffset);
+                    robot.vision.colorBlobVision.getBestDetectedTargetInfo(
+                        null, null, null, 0.0, robot.robotInfo.webCam1.camZOffset);
                 if (object != null)
                 {
                     objPose = object.detectedObj.getObjectPose();

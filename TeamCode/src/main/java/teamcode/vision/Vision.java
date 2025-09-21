@@ -168,6 +168,7 @@ public class Vision
 
     public enum ColorBlobType
     {
+        None,
         Purple,
         Green,
         Any
@@ -191,8 +192,9 @@ public class Vision
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
             .setAspectRatioRange(0.8, 1.25);
-    private static final double objectWidth = 5.0;
-    private static final double objectHeight = 5.0;
+    private static final double objectWidth = 5.0;  // inches
+    private static final double objectHeight = 5.0; // inches
+    private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Purple;
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
@@ -203,15 +205,9 @@ public class Vision
     private FtcCameraStreamProcessor cameraStreamProcessor;
     public FtcVisionAprilTag aprilTagVision;
     private AprilTagProcessor aprilTagProcessor;
-    public FtcVisionEocvColorBlob purpleBlobVision;
-    private FtcEocvColorBlobProcessor purpleBlobProcessor;
-    public FtcVisionEocvColorBlob greenBlobVision;
-    private FtcEocvColorBlobProcessor greenBlobProcessor;
+    public FtcVisionEocvColorBlob colorBlobVision;
+    private FtcEocvColorBlobProcessor colorBlobProcessor;
     public FtcVision vision;
-    public ColorBlobType detectArtifactType = ColorBlobType.Any;
-    // Change this reference to the colorThresholds of the tuned artifact.
-    public double[] tuneColorLowThresholds = greenLowThresholds;
-    public double[] tuneColorHighThresholds = greenHighThresholds;
 
     /**
      * Constructor: Create an instance of the object.
@@ -233,11 +229,11 @@ public class Vision
 
         // Update Dashboard with the initial detection parameters.
         System.arraycopy(
-            tuneColorLowThresholds, 0, Dashboard.VisionTuning.colorLowThresholds, 0,
-            Dashboard.VisionTuning.colorLowThresholds.length);
+            tuneColorBlobType == ColorBlobType.Purple? purpleLowThresholds: greenLowThresholds, 0,
+            Dashboard.VisionTuning.colorLowThresholds, 0, Dashboard.VisionTuning.colorLowThresholds.length);
         System.arraycopy(
-            tuneColorHighThresholds, 0, Dashboard.VisionTuning.colorHighThresholds, 0,
-            Dashboard.VisionTuning.colorHighThresholds.length);
+            tuneColorBlobType == ColorBlobType.Purple? purpleHighThresholds: greenHighThresholds, 0,
+            Dashboard.VisionTuning.colorHighThresholds, 0, Dashboard.VisionTuning.colorHighThresholds.length);
         Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
 
         webcam1 = robot.robotInfo.webCam1 != null?
@@ -267,8 +263,10 @@ public class Vision
 
             tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
             TrcOpenCvColorBlobPipeline.PipelineParams pipelineParams = new TrcOpenCvColorBlobPipeline.PipelineParams()
-                .setColorThresholds(colorConversion, "RawColorBlob", Dashboard.VisionTuning.colorLowThresholds,
-                                    Dashboard.VisionTuning.colorHighThresholds)
+                .setColorThresholds(
+                    colorConversion,
+                    tuneColorBlobType == ColorBlobType.Purple? LEDIndicator.PURPLE_BLOB: LEDIndicator.GREEN_BLOB,
+                    Dashboard.VisionTuning.colorLowThresholds, Dashboard.VisionTuning.colorHighThresholds)
                 .setContourDetectionParams(true, Dashboard.VisionTuning.filterContourParams)
                 .setObjectSize(objectWidth, objectHeight);
             if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
@@ -331,7 +329,8 @@ public class Vision
                 TrcHomographyMapper.Rectangle camRect = null, worldRect = null;
 
                 tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
-                TrcOpenCvColorBlobPipeline.PipelineParams purplePipelineParams =
+                // Create the pipeline for purple artifact initially, can change to other artifacts later.
+                TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
                     new TrcOpenCvColorBlobPipeline.PipelineParams()
                         .setColorThresholds(
                             colorConversion, LEDIndicator.PURPLE_BLOB, purpleLowThresholds, purpleHighThresholds)
@@ -343,7 +342,7 @@ public class Vision
                     camInfo = robot.robotInfo.webCam1.camInfo;
                     if (camInfo != null)
                     {
-                        purplePipelineParams.setSolvePnpParams(
+                        colorBlobPipelineParams.setSolvePnpParams(
                             camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
                             robot.robotInfo.webCam1.camPose);
                     }
@@ -351,29 +350,11 @@ public class Vision
                     worldRect = robot.robotInfo.webCam1.worldRect;
                 }
 
-                purpleBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.PURPLE_BLOB, purplePipelineParams, camRect, worldRect, true, false, false);
-                purpleBlobProcessor = purpleBlobVision.getVisionProcessor();
-                updateColorBlobPipelineConfig(purpleBlobProcessor.getPipeline());
-                visionProcessorsList.add(purpleBlobProcessor);
-
-                TrcOpenCvColorBlobPipeline.PipelineParams greenPipelineParams =
-                    new TrcOpenCvColorBlobPipeline.PipelineParams()
-                        .setColorThresholds(
-                            colorConversion, LEDIndicator.GREEN_BLOB, greenLowThresholds, greenHighThresholds)
-                        .setContourDetectionParams(true, artifactFilterContourParams)
-                        .setObjectSize(objectWidth, objectHeight);
-                if (camInfo != null)
-                {
-                    greenPipelineParams.setSolvePnpParams(
-                        camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
-                        robot.robotInfo.webCam1.camPose);
-                }
-                greenBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.GREEN_BLOB, greenPipelineParams, camRect, worldRect, true, false, false);
-                greenBlobProcessor = greenBlobVision.getVisionProcessor();
-                updateColorBlobPipelineConfig(greenBlobProcessor.getPipeline());
-                visionProcessorsList.add(greenBlobProcessor);
+                colorBlobVision = new FtcVisionEocvColorBlob(
+                    "ColorBlobVision", colorBlobPipelineParams, camRect, worldRect, true, false, false);
+                colorBlobProcessor = colorBlobVision.getVisionProcessor();
+                updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
+                visionProcessorsList.add(colorBlobProcessor);
             }
 
             if (!visionProcessorsList.isEmpty())
@@ -850,20 +831,34 @@ public class Vision
      */
     public void setColorBlobVisionEnabled(ColorBlobType colorBlobType, boolean enabled)
     {
-        switch (colorBlobType)
+        TrcOpenCvColorBlobPipeline colorBlobPipeline =
+            colorBlobProcessor != null? colorBlobProcessor.getPipeline(): null;
+
+        if (colorBlobPipeline != null)
         {
-            case Purple:
-                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
-                break;
+            if (enabled)
+            {
+                switch (colorBlobType)
+                {
+                    case Purple:
+                        colorBlobPipeline.setColorThresholds(
+                            LEDIndicator.PURPLE_BLOB, purpleLowThresholds, purpleHighThresholds);
+                        break;
 
-            case Green:
-                setVisionProcessorEnabled(greenBlobProcessor, enabled);
-                break;
+                    case Green:
+                        colorBlobPipeline.setColorThresholds(
+                            LEDIndicator.GREEN_BLOB, greenLowThresholds, greenHighThresholds);
+                        break;
 
-            case Any:
-                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
-                setVisionProcessorEnabled(greenBlobProcessor, enabled);
-                break;
+                    case Any:
+                        colorBlobPipeline.setColorThresholds(
+                            LEDIndicator.PURPLE_BLOB, purpleLowThresholds, purpleHighThresholds);
+                        colorBlobPipeline.addColorThresholds(
+                            LEDIndicator.GREEN_BLOB, greenLowThresholds, greenHighThresholds);
+                        break;
+                }
+            }
+            setVisionProcessorEnabled(colorBlobProcessor, enabled);
         }
     }   //setColorBlobVisionEnabled
 
@@ -876,20 +871,29 @@ public class Vision
     public boolean isColorBlobVisionEnabled(ColorBlobType colorBlobType)
     {
         boolean enabled = false;
+        TrcOpenCvColorBlobPipeline colorBlobPipeline =
+            colorBlobProcessor != null? colorBlobProcessor.getPipeline(): null;
 
-        switch (colorBlobType)
+        if (colorBlobPipeline != null)
         {
-            case Purple:
-                enabled = isVisionProcessorEnabled(purpleBlobProcessor);
-                break;
+            switch (colorBlobType)
+            {
+                case Purple:
+                    enabled = isVisionProcessorEnabled(colorBlobProcessor) &&
+                              colorBlobPipeline.isColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB);
+                    break;
 
-            case Green:
-                enabled = isVisionProcessorEnabled(greenBlobProcessor);
-                break;
+                case Green:
+                    enabled = isVisionProcessorEnabled(colorBlobProcessor) &&
+                              colorBlobPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB);
+                    break;
 
-            case Any:
-                enabled = isVisionProcessorEnabled(purpleBlobProcessor) || isVisionProcessorEnabled(greenBlobProcessor);
-                break;
+                case Any:
+                    enabled = isVisionProcessorEnabled(colorBlobProcessor) &&
+                              (colorBlobPipeline.isColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB) ||
+                               colorBlobPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB));
+                    break;
+            }
         }
 
         return enabled;
@@ -908,45 +912,12 @@ public class Vision
     {
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> colorBlobInfo = null;
 
-        switch (colorBlobType)
+        if (isColorBlobVisionEnabled(colorBlobType))
         {
-            case Purple:
-                colorBlobInfo = purpleBlobVision != null? purpleBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
-                break;
-
-            case Green:
-                colorBlobInfo = greenBlobVision != null? greenBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
-                break;
-
-            case Any:
-                ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobList =
-                    new ArrayList<>();
-
-                colorBlobInfo = purpleBlobVision != null ? purpleBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
-                if (colorBlobInfo != null)
-                {
-                    colorBlobList.add(colorBlobInfo);
-                }
-
-                colorBlobInfo = greenBlobVision != null ? greenBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
-                if (colorBlobInfo != null)
-                {
-                    colorBlobList.add(colorBlobInfo);
-                }
-
-                if (!colorBlobList.isEmpty())
-                {
-                    if (colorBlobList.size() > 1)
-                    {
-                        colorBlobList.sort(this::compareDistance);
-                    }
-                    colorBlobInfo = colorBlobList.get(0);
-                }
-                break;
+            colorBlobInfo = colorBlobVision == null? null:
+                colorBlobVision.getBestDetectedTargetInfo(
+                    this::colorBlobFilter, colorBlobType, this::compareDistance, groundOffset,
+                    robot.robotInfo.webCam1.camZOffset);
         }
 
         if (cameraStreamProcessor != null && colorBlobInfo != null)
@@ -976,6 +947,38 @@ public class Vision
     }   //getDetectedColorBlob
 
     /**
+     * This method is called by Vision to validate if the detected object matches expectation for filtering.
+     *
+     * @param objInfo specifies the detected object info.
+     * @param context specifies the expected color blob type.
+     * @return true if it matches expectation, false otherwise.
+     */
+    public boolean colorBlobFilter(
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> objInfo, Object context)
+    {
+        ColorBlobType colorBlobType = (ColorBlobType) context;
+        boolean match = false;
+
+        switch (colorBlobType)
+        {
+            case Purple:
+                match = objInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB);
+                break;
+
+            case Green:
+                match = objInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB);
+                break;
+
+            case Any:
+                match = objInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
+                        objInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB);
+                break;
+        }
+
+        return match;
+    }   //colorBlobFilter
+
+    /**
      * This method returns the target Z offset from ground.
      *
      * @param resultType specifies the detected object result type.
@@ -996,16 +999,6 @@ public class Vision
 
         return offset;
     }   //getTargetGroundOffset
-
-    /**
-     * This method sets the artifact type to be detected by ColorBlob detection.
-     *
-     * @param artifactType specifies the colorblob type to detect.
-     */
-    public void setDetectArtifactType(ColorBlobType artifactType)
-    {
-        this.detectArtifactType = artifactType;
-    }   //setDetectArtifactType
 
     /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance.
@@ -1048,14 +1041,9 @@ public class Vision
                 lineNum = aprilTagVision.updateStatus(lineNum);
             }
 
-            if (purpleBlobVision != null)
+            if (colorBlobVision != null)
             {
-                lineNum = purpleBlobVision.updateStatus(lineNum);
-            }
-
-            if (greenBlobVision != null)
-            {
-                lineNum = greenBlobVision.updateStatus(lineNum);
+                lineNum = colorBlobVision.updateStatus(lineNum);
             }
         }
 

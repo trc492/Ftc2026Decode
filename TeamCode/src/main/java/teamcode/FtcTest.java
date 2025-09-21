@@ -173,16 +173,10 @@ public class FtcTest extends FtcTeleOp
                         robot.vision.setLimelightVisionEnabled(0, true);
                     }
 
-                    if (robot.vision.purpleBlobVision != null)
+                    if (robot.vision.colorBlobVision != null)
                     {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling PurpleBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Purple, true);
-                    }
-
-                    if (robot.vision.greenBlobVision != null)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling GreenBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Green, true);
+                        robot.globalTracer.traceInfo(moduleName, "Enabling ColorBlobVision.");
+                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, true);
                     }
                 }
                 break;
@@ -888,14 +882,9 @@ public class FtcTest extends FtcTeleOp
                 robot.vision.getDetectedAprilTag(null, lineNum++);
             }
 
-            if (robot.vision.purpleBlobVision != null)
+            if (robot.vision.colorBlobVision != null)
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Purple, 0.0, lineNum++);
-            }
-
-            if (robot.vision.greenBlobVision != null)
-            {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Green, 0.0, lineNum++);
+                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Any, 0.0, lineNum++);
             }
 
             if (robot.vision.vision != null)

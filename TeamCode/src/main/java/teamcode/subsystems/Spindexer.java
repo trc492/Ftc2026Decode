@@ -34,6 +34,7 @@ import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.subsystem.FtcPidStorage;
 import teamcode.Dashboard;
+import teamcode.Robot;
 import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcWarpSpace;
@@ -100,6 +101,7 @@ public class Spindexer extends TrcSubsystem
     }   //class Params
 
     private final FtcDashboard dashboard;
+    private final Robot robot;
     private final RevColorSensorV3 entryAnalogSensor;
     private final RevColorSensorV3 exitAnalogSensor;
     private final TrcPidStorage spindexer;
@@ -108,14 +110,17 @@ public class Spindexer extends TrcSubsystem
     private final Vision.ColorBlobType[] slotStates  = {null, null, null};
     private Integer entrySlot = 0;
     private Integer exitSlot = null;
+    private int numPurpleArtifacts = 0;
+    private int numGreenArtifacts = 0;
 
     /**
      * Constructor: Creates an instance of the object.
      */
-    public Spindexer()
+    public Spindexer(Robot robot)
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
         dashboard = FtcDashboard.getInstance();
+        this.robot = robot;
         FtcPidStorage.Params spindexerParams = new FtcPidStorage.Params()
             .setPrimaryMotor(
                 Params.SUBSYSTEM_NAME + "." + Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
@@ -181,7 +186,17 @@ public class Spindexer extends TrcSubsystem
     {
         if (!canceled && spindexer.isEntrySensorActive() && entrySlot != null)
         {
-            slotStates[entrySlot] = getEntryArtifactType();
+            Vision.ColorBlobType artifactType = getEntryArtifactType();
+            if (artifactType == Vision.ColorBlobType.Purple)
+            {
+                numPurpleArtifacts++;
+            }
+            else if (artifactType == Vision.ColorBlobType.Green)
+            {
+                numGreenArtifacts++;
+            }
+            slotStates[entrySlot] = artifactType;
+            updateExpectedArtifactType();
         }
     }   //entryTriggerCallback
 
@@ -196,9 +211,46 @@ public class Spindexer extends TrcSubsystem
     {
         if (!canceled && !spindexer.isExitSensorActive() && exitSlot != null)
         {
+            Vision.ColorBlobType artifactType = slotStates[exitSlot];
             slotStates[exitSlot] = null;
+            if (artifactType == Vision.ColorBlobType.Purple)
+            {
+                numPurpleArtifacts--;
+            }
+            else if (artifactType == Vision.ColorBlobType.Green)
+            {
+                numGreenArtifacts--;
+            }
+            updateExpectedArtifactType();
         }
     }   //exitTriggerCallback
+
+    /**
+     * This method checks the next artifact type to pick up by examining the number of purple and green artifacts
+     * already in the Spindexer.
+     */
+    private void updateExpectedArtifactType()
+    {
+        Vision.ColorBlobType artifactType;
+
+        if (numPurpleArtifacts + numGreenArtifacts == 3)
+        {
+            artifactType = Vision.ColorBlobType.None;
+        }
+        else if (numPurpleArtifacts == 2)
+        {
+            artifactType = Vision.ColorBlobType.Green;
+        }
+        else
+        {
+            artifactType = Vision.ColorBlobType.Purple;
+        }
+
+        if (robot.intake != null)
+        {
+            robot.intakeSubsystem.setExpectedArtifactType(artifactType);
+        }
+    }   //updateExpectedArtifactType
 
     /**
      * This method is called by the entry sensor trigger to monitor the sensor value for triggering condition.

@@ -74,6 +74,7 @@ public class Robot
     public RumbleIndicator operatorRumble;
     public FtcRobotBattery battery;
     // Subsystems.
+    public Intake intakeSubsystem;
     public TrcRollerIntake intake;
     public Shooter shooterSubsystem;
     public TrcShooter shooter;
@@ -126,7 +127,8 @@ public class Robot
                 // Create subsystems.
                 if (RobotParams.Preferences.useIntake)
                 {
-                    intake = new Intake(this).getIntake();
+                    intakeSubsystem = new Intake(this);
+                    intake = intakeSubsystem.getIntake();
                 }
 
                 if (RobotParams.Preferences.useShooter)
@@ -138,7 +140,7 @@ public class Robot
 
                 if (RobotParams.Preferences.useSpindexer)
                 {
-                    spindexer = new Spindexer();
+                    spindexer = new Spindexer(this);
                 }
 
                 // Create autotasks.
@@ -271,16 +273,10 @@ public class Robot
                 vision.setAprilTagVisionEnabled(false);
             }
 
-            if (vision.purpleBlobVision != null)
+            if (vision.colorBlobVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling PurpleBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Purple, false);
-            }
-
-            if (vision.greenBlobVision != null)
-            {
-                globalTracer.traceInfo(moduleName, "Disabling GreenBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Green, false);
+                globalTracer.traceInfo(moduleName, "Disabling ColorBlobVision.");
+                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, false);
             }
 
             if (vision.limelightVision != null)

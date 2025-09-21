@@ -64,6 +64,7 @@ public class Intake extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcRollerIntake intake;
+    private Vision.ColorBlobType expectedArtifactType = Vision.ColorBlobType.Any;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -96,6 +97,16 @@ public class Intake extends TrcSubsystem
     }   //Intake
 
     /**
+     * This method is called by the Spindexer to set the expected artifact type.
+     *
+     * @param artifactType specifies the artifact to pick up.
+     */
+    public void setExpectedArtifactType(Vision.ColorBlobType artifactType)
+    {
+        expectedArtifactType = artifactType;
+    }   //setExpectedArtifactType
+
+    /**
      * This method is called by the Intake front trigger using vision to detect the correct artifact type to be
      * picked up. The caller is responsible for calling robot.vision.setDetectArtifactType to specify whether
      * vision to look for green artifact, purple artifact or any artifact.
@@ -106,23 +117,11 @@ public class Intake extends TrcSubsystem
     {
         boolean artifactDetected = false;
 
-        if (robot.vision.detectArtifactType == Vision.ColorBlobType.Green)
+        if (robot.vision != null && robot.vision.colorBlobVision != null)
         {
-            artifactDetected = robot.vision.greenBlobVision.getBestDetectedTargetInfo(
-                null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
-        }
-        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.Purple)
-        {
-            artifactDetected = robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
-                null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
-        }
-        else if (robot.vision.detectArtifactType == Vision.ColorBlobType.Any)
-        {
-            artifactDetected =
-                robot.vision.greenBlobVision.getBestDetectedTargetInfo(
-                    null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null ||
-                robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
-                    null, robot.vision::compareDistance, 0.0, robot.robotInfo.webCam1.camZOffset) != null;
+            artifactDetected = robot.vision.colorBlobVision.getBestDetectedTargetInfo(
+                robot.vision::colorBlobFilter, expectedArtifactType, robot.vision::compareDistance, 0.0,
+                robot.robotInfo.webCam1.camZOffset) != null;
         }
 
         return artifactDetected;
