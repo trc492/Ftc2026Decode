@@ -93,11 +93,8 @@ public class Spindexer extends TrcSubsystem
         public static final double GREEN_LOW_THRESHOLD          = 2.0;
         public static final double GREEN_HIGH_THRESHOLD         = 3.0;
 
-        public static final String ENTRY_PRESETS_NAME           = "EntryPresets";
-        public static final String EXIT_PRESETS_NAME            = "ExitPresets";
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
-        public static final double POS_PRESET_TOLERANCE         = 5.0;
     }   //class Params
 
     private final FtcDashboard dashboard;

@@ -108,8 +108,8 @@ public class Intake extends TrcSubsystem
 
     /**
      * This method is called by the Intake front trigger using vision to detect the correct artifact type to be
-     * picked up. The caller is responsible for calling robot.vision.setDetectArtifactType to specify whether
-     * vision to look for green artifact, purple artifact or any artifact.
+     * picked up. Spindexer is responsible for calling setExpectedArtifactType to specify whether vision should
+     * look for purple artifact, green artifact or any artifact.
      *
      * @return true if vision found the specified artifact type, false otherwise.
      */
