@@ -28,9 +28,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfDouble;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -181,8 +178,10 @@ public class Vision
     //
     // YCrCb Color Space.
     private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purpleBlobColorThresholds = {0.0, 210.0, 139.0, 220.0, 130.0, 227.0};
-    private static final double[] greenBlobColorThresholds = {0.0, 110.0, 40.0, 118.0, 100.0, 145.0};
+    private static final double[] purpleLowThresholds = {0.0, 139.0, 130.0};
+    private static final double[] purpleHighThresholds = {210.0, 220.0, 227.0};
+    private static final double[] greenLowThresholds = {0.0, 40.0, 100.0};
+    private static final double[] greenHighThresholds = {110.0, 118.0, 145.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(400.0)
@@ -211,7 +210,8 @@ public class Vision
     public FtcVision vision;
     public ColorBlobType detectArtifactType = ColorBlobType.Any;
     // Change this reference to the colorThresholds of the tuned artifact.
-    public double[] tuneColorThresholds = greenBlobColorThresholds;
+    public double[] tuneColorLowThresholds = greenLowThresholds;
+    public double[] tuneColorHighThresholds = greenHighThresholds;
 
     /**
      * Constructor: Create an instance of the object.
@@ -221,8 +221,6 @@ public class Vision
     public Vision(Robot robot)
     {
         FtcOpMode opMode = FtcOpMode.getInstance();
-        Mat cameraMatrix = null;
-        MatOfDouble distCoeffs = null;
 
         if (robot.robotInfo.webCam1 == null &&
             (RobotParams.Preferences.useWebCam || RobotParams.Preferences.tuneColorBlobVision))
@@ -235,28 +233,17 @@ public class Vision
 
         // Update Dashboard with the initial detection parameters.
         System.arraycopy(
-            tuneColorThresholds, 0, Dashboard.VisionTuning.colorThresholds, 0,
-            Dashboard.VisionTuning.colorThresholds.length);
+            tuneColorLowThresholds, 0, Dashboard.VisionTuning.colorLowThresholds, 0,
+            Dashboard.VisionTuning.colorLowThresholds.length);
+        System.arraycopy(
+            tuneColorHighThresholds, 0, Dashboard.VisionTuning.colorHighThresholds, 0,
+            Dashboard.VisionTuning.colorHighThresholds.length);
         Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
 
         webcam1 = robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
         webcam2 = robot.robotInfo.webCam2 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
-        if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
-        {
-            FtcRobotDrive.CameraInfo camInfo = robot.robotInfo.webCam1.camInfo;
-            if (camInfo != null)
-            {
-                cameraMatrix = new Mat(3, 3, CvType.CV_64FC1);
-                cameraMatrix.put(
-                    0, 0,
-                    camInfo.fx, 0, camInfo.cx,
-                    0, camInfo.fy, camInfo.cy,
-                    0, 0, 1);
-                distCoeffs = camInfo.distCoeffs;
-            }
-        }
         // TuneColorBlobVision: must use webcam1.
         if (RobotParams.Preferences.tuneColorBlobVision && webcam1 != null)
         {
@@ -279,18 +266,29 @@ public class Vision
             }
 
             tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
-            rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline(
-                "rawColorBlobPipeline", colorConversion, Dashboard.VisionTuning.colorThresholds,
-                Dashboard.VisionTuning.filterContourParams, true, objectWidth, objectHeight, cameraMatrix, distCoeffs,
-                robot.robotInfo.webCam1.camPose);
+            TrcOpenCvColorBlobPipeline.PipelineParams pipelineParams = new TrcOpenCvColorBlobPipeline.PipelineParams()
+                .setColorThresholds(colorConversion, "RawColorBlob", Dashboard.VisionTuning.colorLowThresholds,
+                                    Dashboard.VisionTuning.colorHighThresholds)
+                .setContourDetectionParams(true, Dashboard.VisionTuning.filterContourParams)
+                .setObjectSize(objectWidth, objectHeight);
+            if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
+            {
+                FtcRobotDrive.CameraInfo camInfo = robot.robotInfo.webCam1.camInfo;
+                if (camInfo != null)
+                {
+                    pipelineParams.setSolvePnpParams(
+                        camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
+                        robot.robotInfo.webCam1.camPose);
+                }
+            }
+            rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline("RawColorBlobPipeline", pipelineParams);
             // By default, display original Mat.
             rawColorBlobPipeline.getColorBlobPipeline().setVideoOutput(0);
             // Configuring initial settings from Dashboard.VisionTuning but may change with FtcDashboard.
             updateColorBlobPipelineConfig(rawColorBlobPipeline.getColorBlobPipeline());
             rawColorBlobVision = new FtcRawEocvVision(
-                "rawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                null, null,
-                openCvCamera, robot.robotInfo.webCam1.camOrientation);
+                "RawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
+                null, null, openCvCamera, robot.robotInfo.webCam1.camOrientation);
             rawColorBlobVision.setFpsMeterEnabled(RobotParams.Preferences.showVisionStat);
             setRawColorBlobVisionEnabled(false);
         }
@@ -329,35 +327,50 @@ public class Vision
 
             if (RobotParams.Preferences.useColorBlobVision && robot.robotInfo.webCam1 != null)
             {
-                Mat camMatrix;
-                TrcHomographyMapper.Rectangle camRect, worldRect;
+                FtcRobotDrive.CameraInfo camInfo = null;
+                TrcHomographyMapper.Rectangle camRect = null, worldRect = null;
 
-                if (RobotParams.Preferences.useSolvePnp)
+                tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
+                TrcOpenCvColorBlobPipeline.PipelineParams purplePipelineParams =
+                    new TrcOpenCvColorBlobPipeline.PipelineParams()
+                        .setColorThresholds(
+                            colorConversion, LEDIndicator.PURPLE_BLOB, purpleLowThresholds, purpleHighThresholds)
+                        .setContourDetectionParams(true, artifactFilterContourParams)
+                        .setObjectSize(objectWidth, objectHeight);
+
+                if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
                 {
-                    camMatrix = cameraMatrix;
-                    camRect = null;
-                    worldRect = null;
-                }
-                else
-                {
-                    camMatrix = null;
+                    camInfo = robot.robotInfo.webCam1.camInfo;
+                    if (camInfo != null)
+                    {
+                        purplePipelineParams.setSolvePnpParams(
+                            camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
+                            robot.robotInfo.webCam1.camPose);
+                    }
                     camRect = robot.robotInfo.webCam1.cameraRect;
                     worldRect = robot.robotInfo.webCam1.worldRect;
                 }
 
-                tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
                 purpleBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.PURPLE_BLOB, colorConversion, purpleBlobColorThresholds, artifactFilterContourParams,
-                    true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false, false);
+                    LEDIndicator.PURPLE_BLOB, purplePipelineParams, camRect, worldRect, true, false, false);
                 purpleBlobProcessor = purpleBlobVision.getVisionProcessor();
                 updateColorBlobPipelineConfig(purpleBlobProcessor.getPipeline());
                 visionProcessorsList.add(purpleBlobProcessor);
 
+                TrcOpenCvColorBlobPipeline.PipelineParams greenPipelineParams =
+                    new TrcOpenCvColorBlobPipeline.PipelineParams()
+                        .setColorThresholds(
+                            colorConversion, LEDIndicator.GREEN_BLOB, greenLowThresholds, greenHighThresholds)
+                        .setContourDetectionParams(true, artifactFilterContourParams)
+                        .setObjectSize(objectWidth, objectHeight);
+                if (camInfo != null)
+                {
+                    greenPipelineParams.setSolvePnpParams(
+                        camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
+                        robot.robotInfo.webCam1.camPose);
+                }
                 greenBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.GREEN_BLOB, colorConversion, greenBlobColorThresholds, artifactFilterContourParams,
-                    true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false, false);
+                    LEDIndicator.GREEN_BLOB, greenPipelineParams, camRect, worldRect, true, false, false);
                 greenBlobProcessor = greenBlobVision.getVisionProcessor();
                 updateColorBlobPipelineConfig(greenBlobProcessor.getPipeline());
                 visionProcessorsList.add(greenBlobProcessor);

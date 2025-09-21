@@ -78,7 +78,8 @@ public class Dashboard
     @Config
     public static class VisionTuning
     {
-        public static double[] colorThresholds = new double[6];
+        public static double[] colorLowThresholds = new double[3];
+        public static double[] colorHighThresholds = new double[3];
         public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
             new TrcOpenCvColorBlobPipeline.FilterContourParams();
         public static boolean annotationEnabled = true;
