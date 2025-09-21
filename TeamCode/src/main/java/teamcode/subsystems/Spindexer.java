@@ -238,6 +238,10 @@ public class Spindexer extends TrcSubsystem
         {
             artifactType = Vision.ColorBlobType.Green;
         }
+        else if (numGreenArtifacts == 0)
+        {
+            artifactType = Vision.ColorBlobType.Any;
+        }
         else
         {
             artifactType = Vision.ColorBlobType.Purple;
