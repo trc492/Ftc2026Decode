@@ -188,21 +188,23 @@ public class Spindexer extends TrcSubsystem
         if (!canceled && spindexer.isEntrySensorActive() && entrySlot != null)
         {
             Vision.ColorBlobType artifactType = getEntryArtifactType();
+            String artifactName = null;
             if (artifactType == Vision.ColorBlobType.Purple)
             {
                 numPurpleArtifacts++;
+                artifactName = LEDIndicator.PURPLE_BLOB;
             }
             else if (artifactType == Vision.ColorBlobType.Green)
             {
                 numGreenArtifacts++;
+                artifactName = LEDIndicator.GREEN_BLOB;
             }
             slotStates[entrySlot] = artifactType;
             updateExpectedArtifactType();
 
-            if (robot.ledIndicator1 != null)
+            if (robot.ledIndicator != null)
             {
-                // TODO: Add led support for artifacts in Spindexer.
-                robot.ledIndicator1.setDetectedPattern("");
+                robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
         }
     }   //entryTriggerCallback
@@ -230,10 +232,9 @@ public class Spindexer extends TrcSubsystem
             }
             updateExpectedArtifactType();
 
-            if (robot.ledIndicator1 != null)
+            if (robot.ledIndicator != null)
             {
-                // TODO: Add led support for artifacts in Spindexer.
-                robot.ledIndicator1.setDetectedPattern("");
+                robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
             }
         }
     }   //exitTriggerCallback

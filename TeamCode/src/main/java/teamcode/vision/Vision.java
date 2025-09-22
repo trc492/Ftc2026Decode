@@ -554,9 +554,9 @@ public class Vision
                 colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
         }
 
-        if (colorBlobInfo != null && robot.ledIndicator1 != null)
+        if (colorBlobInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator1.setDetectedPattern(colorBlobInfo.detectedObj.label);
+            robot.ledIndicator.setStatusPattern(colorBlobInfo.detectedObj.label);
         }
 
         if (lineNum != -1)
@@ -642,9 +642,9 @@ public class Vision
                 }
             }
 
-            if (objectName != null && robot.ledIndicator1 != null)
+            if (objectName != null && robot.ledIndicator != null)
             {
-                robot.ledIndicator1.setDetectedPattern(objectName);
+                robot.ledIndicator.setStatusPattern(objectName);
             }
 
             if (lineNum != -1)
@@ -745,9 +745,9 @@ public class Vision
                                  aprilTagInfo.detectedObj.getRotatedRectVertices());
         }
 
-        if (aprilTagInfo != null && robot.ledIndicator1 != null)
+        if (aprilTagInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator1.setDetectedPattern(LEDIndicator.APRIL_TAG);
+            robot.ledIndicator.setStatusPattern(LEDIndicator.APRIL_TAG);
         }
 
         if (lineNum != -1)
@@ -926,9 +926,9 @@ public class Vision
                 colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
         }
 
-        if (colorBlobInfo != null && robot.ledIndicator1 != null)
+        if (colorBlobInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator1.setDetectedPattern(colorBlobInfo.detectedObj.label);
+            robot.ledIndicator.setStatusPattern(colorBlobInfo.detectedObj.label);
         }
 
         if (lineNum != -1)

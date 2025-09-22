@@ -160,10 +160,11 @@ public class RobotBase
             webCam2 = new Vision.BackCamParams();
             limelight = new Vision.LimelightParams();
             // Miscellaneous
-            indicator1Name = null;
-            indicator1Type = null;
-            indicator2Name = null;
-            indicator2Type = null;
+            indicatorNames = new String[] {
+                LEDIndicator.STATUS_LED_NAME,
+                LEDIndicator.SPINDEXER1_LED_NAME,
+                LEDIndicator.SPINDEXER2_LED_NAME,
+                LEDIndicator.SPINDEXER3_LED_NAME};
             // Steer Encoders
             steerEncoderNames = new String[] {"lfSteerEncoder", "rfSteerEncoder", "lbSteerEncoder", "rbSteerEncoder"};
             steerEncoderInverted = new boolean[] {false, false, false, false};
@@ -282,10 +283,7 @@ public class RobotBase
             webCam2 = null;//new Vision.BackCamParams();
             limelight = new Vision.LimelightParams();
             // Miscellaneous
-            indicator1Name = null;
-            indicator1Type = null;
-            indicator2Name = null;
-            indicator2Type = null;
+            indicatorNames = null;
         }   //MecanumParams
     }   //class MecanumParams
 

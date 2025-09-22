@@ -68,8 +68,7 @@ public class Robot
     // Vision subsystems.
     public Vision vision;
     // Sensors and indicators.
-    public LEDIndicator ledIndicator1;
-    public LEDIndicator ledIndicator2;
+    public LEDIndicator ledIndicator;
     public RumbleIndicator driverRumble;
     public RumbleIndicator operatorRumble;
     public FtcRobotBattery battery;
@@ -114,10 +113,7 @@ public class Robot
         if (RobotParams.Preferences.robotType != RobotBase.RobotType.VisionOnly)
         {
             // Create and initialize sensors and indicators.
-            ledIndicator1 = robotInfo.indicator1Name != null?
-                new LEDIndicator(robotInfo.indicator1Name, robotInfo.indicator1Type): null;
-            ledIndicator2 = robotInfo.indicator2Name != null?
-                new LEDIndicator(robotInfo.indicator2Name, robotInfo.indicator2Type): null;
+            ledIndicator = robotInfo.indicatorNames != null? new LEDIndicator(robotInfo.indicatorNames): null;
             battery = RobotParams.Preferences.useBatteryMonitor? new FtcRobotBattery(): null;
             //
             // Create and initialize other subsystems.

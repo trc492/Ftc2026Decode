@@ -235,10 +235,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     // Timed out, moving on.
                     tracer.traceInfo(moduleName, "***** No AprilTag found.");
-                    if (robot.ledIndicator1 != null)
+                    if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator1.setDetectedPattern(LEDIndicator.NOT_FOUND);
+                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND);
                     }
                     sm.setState(State.DONE);
                 }

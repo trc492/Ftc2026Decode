@@ -88,7 +88,7 @@ public class Intake extends TrcSubsystem
         {
             intakeParams.setFrontDigitalSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact,
-                TriggerAction.StartOnTrigger, TrcTrigger.TriggerMode.OnBoth, this::frontTriggerCallback, null);
+                TriggerAction.StartOnTrigger, null, null, null);
         }
 
         if (Params.HAS_BACK_TRIGGER)
@@ -99,21 +99,6 @@ public class Intake extends TrcSubsystem
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
-
-    /**
-     * This method is called when the front sensor is triggered. The front sensor in this case is Vision that detected
-     * an artifact. The callback allows us to update the LED to indicate such event.
-     *
-     * @param context (not used).
-     * @param canceled specifies true if the trigger is disabled, false other wise.
-     */
-    private void frontTriggerCallback(Object context, boolean canceled)
-    {
-        if (!canceled && robot.ledIndicator1 != null)
-        {
-            robot.ledIndicator1.setDetectedPattern(detectedArtifactName);
-        }
-    }   //frontTriggerCallback
 
     /**
      * This method is called by the Spindexer to set the expected artifact type.
