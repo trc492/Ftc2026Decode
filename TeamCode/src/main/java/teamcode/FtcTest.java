@@ -670,6 +670,8 @@ public class FtcTest extends FtcTeleOp
                     {
                         if (subsystem != null)
                         {
+                            robot.dashboard.putObject(
+                                "DashboardStatus", "Tuning subsystem " + subsystem + "." + subComponent);
                             subsystem.initSubsystemParamsForTuning(subComponent);
                         }
                     }

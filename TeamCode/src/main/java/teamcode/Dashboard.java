@@ -35,8 +35,9 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
 @Config
 public class Dashboard
 {
-    public static String tuneSubsystemName = "";
     private static Double nextDashboardUpdateTime =  null;
+
+    public static String tuneSubsystemName = "";
 
     /**
      * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard

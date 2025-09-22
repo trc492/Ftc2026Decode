@@ -52,10 +52,10 @@ public class Spindexer extends TrcSubsystem
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Spindexer";
-        public static final boolean NEED_ZERO_CAL               = false;
+        public static final boolean NEED_ZERO_CAL               = true;
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
-        public static final boolean HAS_EXIT_SENSOR             = false;
+        public static final boolean HAS_EXIT_SENSOR             = true;
 
         public static final String MOTOR_NAME                   = "Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
@@ -64,11 +64,8 @@ public class Spindexer extends TrcSubsystem
         public static final String LOWER_LIMIT_SWITCH_NAME      = "LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
-//        public static final double GOBILDA312_CPR               = (((1.0 + (46.0/17.0))) * (1.0 + (46.0/11.0))) * 28.0;
-//        public static final double GOBILDA435_CPR               = (((1.0 + 46.0/17.0)*(1.0 + 46.0/17.0))*28.0);
-//        public static final double DEG_PER_COUNT                = 360.0 / GOBILDA435_CPR;
         public static final double REV_COREHEX_ENCODER_PPR      = 288.0;
-        public static final double GEAR_RATIO                   = 42.0 / 22.0;
+        public static final double GEAR_RATIO                   = 22.0 / 42.0;  // Load to Motor
         public static final double DEG_PER_COUNT                = 360.0/(REV_COREHEX_ENCODER_PPR*GEAR_RATIO);
         public static final double POS_OFFSET                   = 0.0;
         public static final double ZERO_OFFSET                  = 0.0;
@@ -77,7 +74,7 @@ public class Spindexer extends TrcSubsystem
         public static final boolean SOFTWARE_PID_ENABLED        = true;
         public static final TrcPidController.PidCoefficients posPidCoeffs =
             new TrcPidController.PidCoefficients(0.01, 0.0, 0.0, 0.0, 0.0);
-        public static final double POS_PID_TOLERANCE            = 10.0;
+        public static final double POS_PID_TOLERANCE            = 1.0;
 
         public static final String ENTRY_SENSOR_NAME            = "EntrySensor";
         public static final String EXIT_SENSOR_NAME             = "ExitSensor";
@@ -88,12 +85,15 @@ public class Spindexer extends TrcSubsystem
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.2;  // in inches
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 2.0;  // in inches
-        public static final double ENTRY_TRIGGER_SETTLING       = 0.2;  // in seconds
+        public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
+
         public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.2;  // in inches
         public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 2.0;  // in inches
-        public static final double EXIT_TRIGGER_SETTLING        = 0.2;  // in seconds
+        public static final double EXIT_TRIGGER_SETTLING        = 0.1;  // in seconds
+
         public static final double PURPLE_LOW_THRESHOLD         = 200.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 250.0;
+
         public static final double GREEN_LOW_THRESHOLD          = 100.0;
         public static final double GREEN_HIGH_THRESHOLD         = 190.0;
 
@@ -340,6 +340,11 @@ public class Spindexer extends TrcSubsystem
         return getSensorHue(exitAnalogSensor);
     }   //getExitSensorHue
 
+    /**
+     * This method checks the color sensor for the color the artifact at the entry.
+     *
+     * @return detected artifact type at the entry.
+     */
     public Vision.ColorBlobType getEntryArtifactType()
     {
         Vision.ColorBlobType artifactType = null;
@@ -362,20 +367,20 @@ public class Spindexer extends TrcSubsystem
     }   //getEntryArtifactType
 
     /**
-     * This method looks for the specified slot type in the spindexer starting from the specified startSlot. It will
-     * return the slot found or null if none found.
+     * This method looks for the specified artifact type in the spindexer starting from the specified startSlot. It
+     * will return the slot found or null if none found.
      *
-     * @param slotType specifies the slot type to look for.
+     * @param artifactType specifies the artifact type to look for.
      * @param startSlot specifies the slot to start looking.
-     * @return slot that matches the slot type or null if none found.
+     * @return slot that contains the artifact type or null if none found.
      */
-    private Integer findSlot(Vision.ColorBlobType slotType, int startSlot)
+    private Integer findSlot(Vision.ColorBlobType artifactType, int startSlot)
     {
         for (int i = 0; i < slotStates.length; i++)
         {
             int slot = (startSlot + i)%slotStates.length;
 
-            if (slotStates[slot] == slotType)
+            if (slotStates[slot] == artifactType)
             {
                 return slot;
             }
@@ -402,12 +407,12 @@ public class Spindexer extends TrcSubsystem
     }   //moveToEntrySlot
 
     /**
-     * This method finds the slot that matches the specified slot type near the current exit slot and move the
+     * This method finds the slot that contains the specified artifact type near the current exit slot and move the
      * spindexer to that slot position at the exit. If there is no match, the spindexer will not move.
      */
-    public void moveToExitSlot(Vision.ColorBlobType slotType)
+    public void moveToExitSlot(Vision.ColorBlobType artifactType)
     {
-        Integer slot = findSlot(slotType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
+        Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
         if (slot != null)
         {
@@ -418,52 +423,6 @@ public class Spindexer extends TrcSubsystem
         }
     }   //moveToExitSlot
 
-//    public void moveToSlot(Vision.ColorBlobType slotType, boolean isEntry)
-//    {
-//        int slot = isEntry ? entrySlot : (exitSlot == null ? 0 : exitSlot);
-//
-//        for (int step = 1; step <= slotStates.length; step++)
-//        {
-//            int slotIndex = (slot + step) % slotStates.length;
-//
-//            // ENTRY → look for empty
-//            if (isEntry && slotStates[slotIndex] == null)
-//            {
-//                double targetPos = Params.entryPresetPositions[slotIndex];
-//                spindexer.motor.setPosition(targetPos, true, Params.MOVE_POWER);
-//                entrySlot = slotIndex;
-//                exitSlot = null;
-//                return;
-//            }
-//
-//            // EXIT → look for a ball of matching type
-//            if (!isEntry && slotStates[slotIndex] == slotType)
-//            {
-//                double targetPos = Params.exitPresetPositions[slotIndex];
-//                spindexer.motor.setPosition(targetPos, true, Params.MOVE_POWER);
-//                exitSlot = slotIndex;
-//                entrySlot = null;
-//                return;
-//            }
-//        }
-//    }   //moveToSlot
-//
-//    public void updateEntrySlotState(Vision.ColorBlobType artifactType)
-//    {
-//        if (entrySlot != null)
-//        {
-//            slotStates[entrySlot] = artifactType;
-//        }
-//    }
-//
-//    public void updateExitSlotState()
-//    {
-//        if (exitSlot != null)
-//        {
-//            slotStates[exitSlot] = null;
-//        }
-//    }
-//
     /**
      * This method move the spindexer to the next entry slot up.
      */
@@ -564,13 +523,16 @@ public class Spindexer extends TrcSubsystem
         {
             dashboard.displayPrintf(
                 lineNum++, "%s: pos=%.3f/%.3f, power=%.3f, current=%.3f, LimitSw=%s, hue(entry/exit)=%f/%f",
-                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(), spindexer.motor.getPower(), spindexer.motor.getCurrent(),
-                spindexer.motor.isLowerLimitSwitchActive(), getEntrySensorHue(), getExitSensorHue());
+                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
+                spindexer.motor.getPower(), spindexer.motor.getCurrent(), spindexer.motor.isLowerLimitSwitchActive());
             dashboard.displayPrintf(
-                lineNum++, "%s: slots(%s, %s, %s)", Params.SUBSYSTEM_NAME, slotStates[0], slotStates[1], slotStates[2]);
-            dashboard.displayPrintf(lineNum++, "%s: trigger(entry/exit)=%s", Params.SUBSYSTEM_NAME,
-                    spindexer.getEntryTrigger().getTriggerState());
-            dashboard.displayPrintf(lineNum++, "%s: entrySensor=%f", Params.SUBSYSTEM_NAME, getEntrySensorData());
+                lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Hue/Dist/Trig)=%.3f/%.3f/%s",
+                Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
+                getExitSensorHue(), getExitSensorData(), isExitSensorActive());
+            dashboard.displayPrintf(
+                lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
+                Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
+                slotStates[0], slotStates[1], slotStates[2]);
         }
 
         return lineNum;
