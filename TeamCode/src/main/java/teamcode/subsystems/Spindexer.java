@@ -198,6 +198,12 @@ public class Spindexer extends TrcSubsystem
             }
             slotStates[entrySlot] = artifactType;
             updateExpectedArtifactType();
+
+            if (robot.ledIndicator1 != null)
+            {
+                // TODO: Add led support for artifacts in Spindexer.
+                robot.ledIndicator1.setDetectedPattern("");
+            }
         }
     }   //entryTriggerCallback
 
@@ -223,6 +229,12 @@ public class Spindexer extends TrcSubsystem
                 numGreenArtifacts--;
             }
             updateExpectedArtifactType();
+
+            if (robot.ledIndicator1 != null)
+            {
+                // TODO: Add led support for artifacts in Spindexer.
+                robot.ledIndicator1.setDetectedPattern("");
+            }
         }
     }   //exitTriggerCallback
 

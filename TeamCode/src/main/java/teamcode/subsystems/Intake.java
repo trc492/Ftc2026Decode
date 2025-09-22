@@ -27,11 +27,13 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
 import teamcode.vision.Vision;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
+import trclib.sensor.TrcTrigger;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
+import trclib.vision.TrcOpenCvColorBlobPipeline;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class implements an Intake Subsystem. This implementation consists of one motor but no sensor of its own.
@@ -66,6 +68,7 @@ public class Intake extends TrcSubsystem
     private final Robot robot;
     private final TrcRollerIntake intake;
     private Vision.ColorBlobType expectedArtifactType = Vision.ColorBlobType.Any;
+    private String detectedArtifactName = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -85,7 +88,7 @@ public class Intake extends TrcSubsystem
         {
             intakeParams.setFrontDigitalSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact,
-                TriggerAction.StartOnTrigger, null, null, null);
+                TriggerAction.StartOnTrigger, TrcTrigger.TriggerMode.OnBoth, this::frontTriggerCallback, null);
         }
 
         if (Params.HAS_BACK_TRIGGER)
@@ -98,6 +101,21 @@ public class Intake extends TrcSubsystem
     }   //Intake
 
     /**
+     * This method is called when the front sensor is triggered. The front sensor in this case is Vision that detected
+     * an artifact. The callback allows us to update the LED to indicate such event.
+     *
+     * @param context (not used).
+     * @param canceled specifies true if the trigger is disabled, false other wise.
+     */
+    private void frontTriggerCallback(Object context, boolean canceled)
+    {
+        if (!canceled && robot.ledIndicator1 != null)
+        {
+            robot.ledIndicator1.setDetectedPattern(detectedArtifactName);
+        }
+    }   //frontTriggerCallback
+
+    /**
      * This method is called by the Spindexer to set the expected artifact type.
      *
      * @param artifactType specifies the artifact to pick up.
@@ -108,8 +126,8 @@ public class Intake extends TrcSubsystem
     }   //setExpectedArtifactType
 
     /**
-     * This method is called by the Intake front trigger using vision to detect the correct artifact type to be
-     * picked up. Spindexer is responsible for calling setExpectedArtifactType to specify whether vision should
+     * This method is called by the Intake front trigger periodically using vision to detect the correct artifact type
+     * to be picked up. Spindexer is responsible for calling setExpectedArtifactType to specify whether vision should
      * look for purple artifact, green artifact or any artifact.
      *
      * @return true if vision found the specified artifact type, false otherwise.
@@ -120,21 +138,20 @@ public class Intake extends TrcSubsystem
 
         if (robot.vision != null && robot.vision.colorBlobVision != null)
         {
-            artifactDetected = robot.vision.colorBlobVision.getBestDetectedTargetInfo(
-                robot.vision::colorBlobFilter, expectedArtifactType, robot.vision::compareDistance, 0.0,
-                robot.robotInfo.webCam1.camZOffset) != null;
-            if (artifactDetected)
-            {
-                TrcDbgTrace.globalTraceInfo(Params.SUBSYSTEM_NAME, "Detected artifact: " + expectedArtifactType);
-            }
+            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
+                robot.vision.colorBlobVision.getBestDetectedTargetInfo(
+                    robot.vision::colorBlobFilter, expectedArtifactType, robot.vision::compareDistance, 0.0,
+                    robot.robotInfo.webCam1.camZOffset);
+            artifactDetected = artifactInfo != null;
+            detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;
         }
 
         return artifactDetected;
     }   //visionDetectedArtifact
 
     /**
-     * This method is called by the Intake back trigger using the spindexer entry sensor to detect if the artifact
-     * has entered the spindexer, so it can stop the Intake.
+     * This method is called by the Intake back trigger periodically using the spindexer entry sensor to detect if the
+     * artifact has entered the spindexer, so it can stop the Intake.
      *
      * @return true if spindexer entry sensor has detected the artifact, false otherwise.
      */
@@ -200,9 +217,11 @@ public class Intake extends TrcSubsystem
         if (slowLoop)
         {
             dashboard.displayPrintf(
-                lineNum++, "%s: power=%.3f, current=%.3f, hasObject=%s, sensorState=%s/%s, autoActive=%s",
+                lineNum++, "%s: power=%.3f, current=%.3f, hasObject=%s, front/back=%s/%s, autoActive=%s",
                 Params.SUBSYSTEM_NAME + "." + Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(),
                 intake.hasObject(), intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
+            dashboard.displayPrintf(
+                lineNum++, "%s: artifact(detected/expected)=%s/%s", detectedArtifactName, expectedArtifactType);
         }
 
         return lineNum;
