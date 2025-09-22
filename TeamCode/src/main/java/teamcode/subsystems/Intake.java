@@ -27,6 +27,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
 import teamcode.vision.Vision;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
@@ -122,6 +123,10 @@ public class Intake extends TrcSubsystem
             artifactDetected = robot.vision.colorBlobVision.getBestDetectedTargetInfo(
                 robot.vision::colorBlobFilter, expectedArtifactType, robot.vision::compareDistance, 0.0,
                 robot.robotInfo.webCam1.camZOffset) != null;
+            if (artifactDetected)
+            {
+                TrcDbgTrace.globalTraceInfo(Params.SUBSYSTEM_NAME, "Detected artifact: " + expectedArtifactType);
+            }
         }
 
         return artifactDetected;
@@ -135,7 +140,7 @@ public class Intake extends TrcSubsystem
      */
     private boolean spindexerEntryHasArtifact()
     {
-        return robot.spindexer.isEntrySensorActive();
+        return robot.spindexer != null && robot.spindexer.isEntrySensorActive();
     }   //spindexerEntryHasArtifact
 
     /**

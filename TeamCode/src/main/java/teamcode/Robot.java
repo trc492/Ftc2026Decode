@@ -141,6 +141,7 @@ public class Robot
                 if (RobotParams.Preferences.useSpindexer)
                 {
                     spindexer = new Spindexer(this);
+                    TrcDbgTrace.globalTraceInfo(moduleName, "Spindexer is enabled.");
                 }
 
                 // Create autotasks.

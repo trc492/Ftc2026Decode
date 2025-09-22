@@ -52,10 +52,10 @@ public class Spindexer extends TrcSubsystem
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Spindexer";
-        public static final boolean NEED_ZERO_CAL               = true;
+        public static final boolean NEED_ZERO_CAL               = false;
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
-        public static final boolean HAS_EXIT_SENSOR             = true;
+        public static final boolean HAS_EXIT_SENSOR             = false;
 
         public static final String MOTOR_NAME                   = "Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
@@ -64,16 +64,20 @@ public class Spindexer extends TrcSubsystem
         public static final String LOWER_LIMIT_SWITCH_NAME      = "LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
-        public static final double GOBILDA312_CPR               = (((1.0 + (46.0/17.0))) * (1.0 + (46.0/11.0))) * 28.0;
-        public static final double DEG_PER_COUNT                = 360.0 / GOBILDA312_CPR;
+//        public static final double GOBILDA312_CPR               = (((1.0 + (46.0/17.0))) * (1.0 + (46.0/11.0))) * 28.0;
+//        public static final double GOBILDA435_CPR               = (((1.0 + 46.0/17.0)*(1.0 + 46.0/17.0))*28.0);
+//        public static final double DEG_PER_COUNT                = 360.0 / GOBILDA435_CPR;
+        public static final double REV_COREHEX_ENCODER_PPR      = 288.0;
+        public static final double GEAR_RATIO                   = 42.0 / 22.0;
+        public static final double DEG_PER_COUNT                = 360.0/(REV_COREHEX_ENCODER_PPR*GEAR_RATIO);
         public static final double POS_OFFSET                   = 0.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
         public static final boolean SOFTWARE_PID_ENABLED        = true;
         public static final TrcPidController.PidCoefficients posPidCoeffs =
-            new TrcPidController.PidCoefficients(1.0, 0.0, 0.0, 0.0, 0.0);
-        public static final double POS_PID_TOLERANCE            = 1.0;
+            new TrcPidController.PidCoefficients(0.01, 0.0, 0.0, 0.0, 0.0);
+        public static final double POS_PID_TOLERANCE            = 10.0;
 
         public static final String ENTRY_SENSOR_NAME            = "EntrySensor";
         public static final String EXIT_SENSOR_NAME             = "ExitSensor";
@@ -82,16 +86,16 @@ public class Spindexer extends TrcSubsystem
         public static final double MOVE_POWER                   = 1.0;
         public static final int MAX_CAPACITY                    = 3;
 
-        public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.0;  // in inches
-        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 0.0;  // in inches
+        public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.2;  // in inches
+        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 2.0;  // in inches
         public static final double ENTRY_TRIGGER_SETTLING       = 0.2;  // in seconds
-        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.0;  // in inches
-        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 0.0;  // in inches
+        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.2;  // in inches
+        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 2.0;  // in inches
         public static final double EXIT_TRIGGER_SETTLING        = 0.2;  // in seconds
-        public static final double PURPLE_LOW_THRESHOLD         = 0.0;
-        public static final double PURPLE_HIGH_THRESHOLD        = 1.0;
-        public static final double GREEN_LOW_THRESHOLD          = 2.0;
-        public static final double GREEN_HIGH_THRESHOLD         = 3.0;
+        public static final double PURPLE_LOW_THRESHOLD         = 200.0;
+        public static final double PURPLE_HIGH_THRESHOLD        = 250.0;
+        public static final double GREEN_LOW_THRESHOLD          = 100.0;
+        public static final double GREEN_HIGH_THRESHOLD         = 190.0;
 
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
@@ -559,11 +563,14 @@ public class Spindexer extends TrcSubsystem
         if (slowLoop)
         {
             dashboard.displayPrintf(
-                lineNum++, "%s: pos=%.3f/%.3f, LimitSw=%s, hue(entry/exit)=%f/%f",
-                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
+                lineNum++, "%s: pos=%.3f/%.3f, power=%.3f, current=%.3f, LimitSw=%s, hue(entry/exit)=%f/%f",
+                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(), spindexer.motor.getPower(), spindexer.motor.getCurrent(),
                 spindexer.motor.isLowerLimitSwitchActive(), getEntrySensorHue(), getExitSensorHue());
             dashboard.displayPrintf(
                 lineNum++, "%s: slots(%s, %s, %s)", Params.SUBSYSTEM_NAME, slotStates[0], slotStates[1], slotStates[2]);
+            dashboard.displayPrintf(lineNum++, "%s: trigger(entry/exit)=%s", Params.SUBSYSTEM_NAME,
+                    spindexer.getEntryTrigger().getTriggerState());
+            dashboard.displayPrintf(lineNum++, "%s: entrySensor=%f", Params.SUBSYSTEM_NAME, getEntrySensorData());
         }
 
         return lineNum;

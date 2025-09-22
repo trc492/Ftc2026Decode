@@ -744,13 +744,45 @@ public class FtcTest extends FtcTeleOp
         switch (button)
         {
             case A:
+                if (pressed)
+                {
+                    robot.intakeSubsystem.setExpectedArtifactType(Vision.ColorBlobType.Green);
+                    robot.intake.autoIntake(null);
+                }
+                else
+                {
+                    robot.intake.cancel();
+                }
+                passToTeleOp = false;
+                break;
             case B:
+                if (pressed)
+                {
+                    robot.intakeSubsystem.setExpectedArtifactType(Vision.ColorBlobType.Purple);
+                    robot.intake.autoIntake(null);
+                }
+                else
+                {
+                    robot.intake.cancel();
+                }
+                passToTeleOp = false;
+                break;
             case X:
             case Y:
             case LeftBumper:
             case RightBumper:
             case DpadUp:
+                if (pressed) {
+                    robot.spindexer.entrySlotUp();
+                }
+                passToTeleOp = false;
+                break;
             case DpadDown:
+                if (pressed) {
+                    robot.spindexer.entrySlotDown();
+                }
+                passToTeleOp = false;
+                break;
             case DpadLeft:
             case DpadRight:
             case Back:
