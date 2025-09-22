@@ -426,6 +426,15 @@ public class Vision
             colorBlobPipeline.disableCircleDetection();
         }
 
+        if (Dashboard.VisionTuning.blurCircle)
+        {
+            colorBlobPipeline.enableCircleBlur();
+        }
+        else
+        {
+            colorBlobPipeline.disableCircleBlur();
+        }
+
         if (Dashboard.VisionTuning.cannyEdgeEnabled)
         {
             colorBlobPipeline.enableCannyEdgeDetection(

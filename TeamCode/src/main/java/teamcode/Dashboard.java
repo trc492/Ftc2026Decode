@@ -87,6 +87,7 @@ public class Dashboard
         public static boolean drawRotatedRect = false;
         public static boolean drawCrosshair = false;
         public static boolean circleDetectionEnabled = true;
+        public static boolean blurCircle = false;
         public static double minCircleDistance = 30.0;
         public static boolean cannyEdgeEnabled = false;
         public static double cannyEdgeThreshold1 = 100.0;
