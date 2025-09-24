@@ -125,6 +125,7 @@ public class Intake extends TrcSubsystem
     private void frontTriggerCallback(Object context, boolean canceled)
     {
         // Vision found the artifact we want. Enable Spindexer entry trigger preparing to receive it.
+        intake.tracer.traceInfo(instanceName, "Vision found artifact " + detectedArtifactName);
         if (!canceled && robot.spindexer != null)
         {
             robot.spindexer.setEntryTriggerEnabled(true);
@@ -141,6 +142,7 @@ public class Intake extends TrcSubsystem
      */
     public void setPickupArtifactType(Vision.ColorBlobType artifactType)
     {
+        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
         pickupArtifactType = artifactType;
     }   //setPickupArtifactType
 

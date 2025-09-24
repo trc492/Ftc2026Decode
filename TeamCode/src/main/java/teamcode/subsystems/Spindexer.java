@@ -39,7 +39,6 @@ import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcWarpSpace;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.subsystem.TrcPidStorage;
@@ -105,7 +104,6 @@ public class Spindexer extends TrcSubsystem
     }   //class Params
 
     private final FtcDashboard dashboard;
-    public final TrcDbgTrace tracer;
     private final Robot robot;
     private final RevColorSensorV3 entryAnalogSensor;
     private final RevColorSensorV3 exitAnalogSensor;
@@ -128,7 +126,6 @@ public class Spindexer extends TrcSubsystem
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
         dashboard = FtcDashboard.getInstance();
-        tracer = new TrcDbgTrace();
         this.robot = robot;
         FtcPidStorage.Params spindexerParams = new FtcPidStorage.Params()
             .setPrimaryMotor(
@@ -227,13 +224,13 @@ public class Spindexer extends TrcSubsystem
             {
                 robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
-            tracer.traceInfo(
+            spindexer.tracer.traceInfo(
                 instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
         }
         else
         {
-            tracer.traceInfo(
+            spindexer.tracer.traceInfo(
                 instanceName, "Entry[%s]: entrySensor=%s, canceled=%s",
                 entrySlot, spindexer.isEntrySensorActive(), canceled);
         }
@@ -271,13 +268,13 @@ public class Spindexer extends TrcSubsystem
             {
                 robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
             }
-            tracer.traceInfo(
+            spindexer.tracer.traceInfo(
                 instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
         }
         else
         {
-            tracer.traceInfo(
+            spindexer.tracer.traceInfo(
                 instanceName, "Exit[%s]: exitSensor=%s, canceled=%s",
                 exitSlot, spindexer.isExitSensorActive(), canceled);
         }
@@ -452,7 +449,7 @@ public class Spindexer extends TrcSubsystem
     {
         Integer slot = findSlot(null, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
 
-        tracer.traceInfo(instanceName, "moveToNextVacantEntrySlot(from=%d, to=%d)", entrySlot, slot);
+        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot);
         if (slot != null)
         {
             double pos = warpSpace.getOptimizedTarget(
@@ -470,7 +467,8 @@ public class Spindexer extends TrcSubsystem
     {
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
-        tracer.traceInfo(instanceName, "moveToExitySlotWithArtifact(from=%d, to=%d)", exitSlot, slot);
+        spindexer.tracer.traceInfo(
+            instanceName, "FromSlot=" + exitSlot + ", ToSlot=" + slot + ", artifactType=" + artifactType);
         if (slot != null)
         {
             double pos = warpSpace.getOptimizedTarget(
@@ -489,7 +487,7 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
-        tracer.traceInfo(instanceName, "entrySlotUp(from=%d, to=%d, targetPos=%.0f)", entrySlot, slot, pos);
+        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
         entrySlot = slot;
     }   //entrySlotUp
@@ -504,7 +502,7 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
-        tracer.traceInfo(instanceName, "entrySlotDown(from=%d, to=%d, targetPos=%.0f)", entrySlot, slot, pos);
+        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
         entrySlot = slot;
     }   //entrySlotDown
@@ -518,7 +516,7 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
-        tracer.traceInfo(instanceName, "exitSlotUp(from=%d, to=%d, targetPos=%.0f)", exitSlot, slot, pos);
+        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + exitSlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
         exitSlot = slot;
     }   //exitSlotUp
@@ -533,7 +531,7 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
-        tracer.traceInfo(instanceName, "exitSlotDown(from=%d, to=%d, targetPos=%.0f)", exitSlot, slot, pos);
+        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
         exitSlot = slot;
     }   //exitSlotDown
