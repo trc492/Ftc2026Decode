@@ -91,11 +91,7 @@ public class Intake extends TrcSubsystem
         {
             intakeParams.setFrontDigitalSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact,
-                TriggerAction.StartOnTrigger, TrcTrigger.TriggerMode.OnActive,
-                (ctxt, canceled) -> {
-                    // Enable Spindexer entry trigger.
-                    if (!canceled && robot.spindexer != null) robot.spindexer.setEntryTriggerEnabled(true);
-                }, null);
+                TriggerAction.StartOnTrigger, TrcTrigger.TriggerMode.OnActive, this::frontTriggerCallback, null);
         }
 
         if (Params.HAS_BACK_TRIGGER)
@@ -116,6 +112,24 @@ public class Intake extends TrcSubsystem
     {
         return intake;
     }   //getIntake
+
+    /**
+     * This method is called when the front sensor is triggered.
+     * While vision kept finding correct objects, it will keep calling this method and keep enabling the spindexer
+     * entry trigger. That's okay because it does no harm enabling a trigger that's already enabled. It will just
+     * be ignored.
+     *
+     * @param context (not used).
+     * @param canceled specifies if the trigger is disabled.
+     */
+    private void frontTriggerCallback(Object context, boolean canceled)
+    {
+        // Vision found the artifact we want. Enable Spindexer entry trigger preparing to receive it.
+        if (!canceled && robot.spindexer != null)
+        {
+            robot.spindexer.setEntryTriggerEnabled(true);
+        }
+    }   //frontTriggerCallback
 
     /**
      * This method is called by the Spindexer to set the artifact type to pick up. This is according to what artifacts

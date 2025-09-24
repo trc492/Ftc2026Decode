@@ -218,7 +218,7 @@ public class Spindexer extends TrcSubsystem
 
             slotStates[entrySlot] = artifactType;
             updateExpectedArtifactType();
-            // We are done adding the entry artifact. Turn off trigger so we can move the Spindexer without it
+            // We are done adding the entry artifact. Turn off entry trigger so we can move the Spindexer without it
             // triggering.
             spindexer.setEntryTriggerEnabled(false);
             moveToNextVacantEntrySlot();
@@ -234,7 +234,7 @@ public class Spindexer extends TrcSubsystem
         else
         {
             tracer.traceInfo(
-                instanceName, "Entry[%d]: entrySensor=%s, canceled=%s",
+                instanceName, "Entry[%s]: entrySensor=%s, canceled=%s",
                 entrySlot, spindexer.isEntrySensorActive(), canceled);
         }
     }   //entryTriggerCallback
@@ -264,9 +264,8 @@ public class Spindexer extends TrcSubsystem
                 numGreenArtifacts--;
             }
             updateExpectedArtifactType();
-            // We are done removing the exit artifact. Turn off trigger so we can move the Spindexer without it
-            // triggering.
-            spindexer.setEntryTriggerEnabled(false);
+            // We are done removing the exit artifact. Turn off exit trigger.
+            spindexer.setExitTriggerEnabled(false);
 
             if (robot.ledIndicator != null)
             {
@@ -279,7 +278,7 @@ public class Spindexer extends TrcSubsystem
         else
         {
             tracer.traceInfo(
-                instanceName, "Exit[%d]: exitSensor=%s, canceled=%s",
+                instanceName, "Exit[%s]: exitSensor=%s, canceled=%s",
                 exitSlot, spindexer.isExitSensorActive(), canceled);
         }
     }   //exitTriggerCallback
