@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import java.util.Arrays;
 
 import ftclib.vision.FtcVisionAprilTag;
+import teamcode.Dashboard;
 import teamcode.Robot;
 import teamcode.subsystems.LEDIndicator;
 import teamcode.subsystems.Shooter;
@@ -263,7 +264,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 else
                 {
                     // We did not use vision, just shoot assuming operator manually aimed.
-                    double shooterVel = robot.shooterSubsystem.shooter1Velocity.getValue();
+                    double shooterVel = Dashboard.shooter1Velocity;
                     // ShooterVel is in RPM, aimShooter wants RPS.
                     robot.shooter.aimShooter(
                         owner, shooterVel / 60.0, 0.0, null, null, event, 0.0,

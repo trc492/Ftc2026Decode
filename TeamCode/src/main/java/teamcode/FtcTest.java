@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Titan Robotics Club (http://www.titanrobotics.com)
+ * Copyright (c) 2025 Titan Robotics Club (http://www.titanrobotics.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ import ftclib.driverio.FtcChoiceMenu;
 import ftclib.driverio.FtcGamepad;
 import ftclib.driverio.FtcMenu;
 import ftclib.vision.FtcLimelightVision;
+import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.command.CmdDriveMotorsTest;
 import trclib.command.CmdPidDrive;
@@ -746,45 +747,161 @@ public class FtcTest extends FtcTeleOp
         switch (button)
         {
             case A:
-                if (pressed)
+                if (robot.intake != null)
                 {
-                    robot.intakeSubsystem.setExpectedArtifactType(Vision.ColorBlobType.Green);
-                    robot.intake.autoIntake(null);
+                    if (pressed)
+                    {
+                        if (robot.autoPickupTask != null)
+                        {
+                            if (robot.autoPickupTask.isActive())
+                            {
+                                robot.autoPickupTask.cancel();
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Pickup");
+                            }
+                            else
+                            {
+                                robot.autoPickupTask.autoPickup(moduleName, null, !operatorAltFunc);
+                                robot.globalTracer.traceInfo(
+                                    moduleName, ">>>>> Auto Pickup (useVision=" + !operatorAltFunc + ")");
+                            }
+                        }
+                        else
+                        {
+                            if (operatorAltFunc)
+                            {
+                                if (robot.intake.isActive())
+                                {
+                                    robot.intake.cancel();
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Intake");
+                                }
+                                else
+                                {
+                                    robot.intake.intake();
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Intake");
+                                }
+                            }
+                            else
+                            {
+                                if (robot.intake.isAutoActive())
+                                {
+                                    robot.intake.cancel();
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Sensor Intake");
+                                }
+                                else
+                                {
+                                    robot.intake.autoIntake(moduleName);
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Sensor Intake");
+                                }
+                            }
+                        }
+                    }
+                    passToTeleOp = false;
                 }
-                else
-                {
-                    robot.intake.cancel();
-                }
-                passToTeleOp = false;
                 break;
+
             case B:
-                if (pressed)
+                if (robot.shooter != null)
                 {
-                    robot.intakeSubsystem.setExpectedArtifactType(Vision.ColorBlobType.Purple);
-                    robot.intake.autoIntake(null);
+                    if (pressed)
+                    {
+                        if (robot.autoShootTask != null)
+                        {
+                            // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
+                            if (robot.autoShootTask.isActive())
+                            {
+                                robot.autoShootTask.cancel();
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                            }
+                            else
+                            {
+                                robot.autoShootTask.autoShoot(moduleName, null, !operatorAltFunc, (int[]) null);
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                            }
+                        }
+                        else
+                        {
+                            // Auto Shoot Task is disabled, shoot manually.
+                            if (robot.shooter.isActive())
+                            {
+                                robot.shooter.cancel(moduleName);
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
+                            }
+                            else
+                            {
+                                robot.shooter.aimShooter(
+                                    moduleName, Dashboard.shooter1Velocity / 60.0, 0.0,
+                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                    Shooter.Params.SHOOTER_OFF_DELAY);
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
+                            }
+                        }
+                    }
+                    passToTeleOp = false;
                 }
-                else
-                {
-                    robot.intake.cancel();
-                }
-                passToTeleOp = false;
                 break;
+
             case X:
+                if (robot.intakeSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        robot.intakeSubsystem.setPickupArtifactType(Vision.ColorBlobType.Green);
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case Y:
+                if (robot.intakeSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        robot.intakeSubsystem.setPickupArtifactType(Vision.ColorBlobType.Purple);
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case LeftBumper:
             case RightBumper:
+                break;
+
             case DpadUp:
-                if (pressed) {
-                    robot.spindexer.entrySlotUp();
+                if (robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (operatorAltFunc)
+                        {
+                            robot.spindexerSubsystem.exitSlotUp();
+                        }
+                        else
+                        {
+                            robot.spindexerSubsystem.entrySlotUp();
+                        }
+                    }
+                    passToTeleOp = false;
                 }
-                passToTeleOp = false;
                 break;
+
             case DpadDown:
-                if (pressed) {
-                    robot.spindexer.entrySlotDown();
+                if (robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (operatorAltFunc)
+                        {
+                            robot.spindexerSubsystem.exitSlotDown();
+                        }
+                        else
+                        {
+                            robot.spindexerSubsystem.entrySlotDown();
+                        }
+                    }
+                    passToTeleOp = false;
                 }
-                passToTeleOp = false;
                 break;
+
             case DpadLeft:
             case DpadRight:
             case Back:

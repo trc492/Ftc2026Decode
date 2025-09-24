@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Titan Robotics Club (http://www.titanrobotics.com)
+ * Copyright (c) 2025 Titan Robotics Club (http://www.titanrobotics.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@ import java.util.Locale;
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
-import teamcode.subsystems.Intake;
 import teamcode.subsystems.RumbleIndicator;
-import teamcode.subsystems.Shooter;
+import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
@@ -236,10 +235,10 @@ public class FtcTeleOp extends FtcOpMode
             //
             // Other subsystems.
             //
-            if (RobotParams.Preferences.useSubsystems)
-            {
-                // Analog control of subsystems.
-            }
+//            if (RobotParams.Preferences.useSubsystems)
+//            {
+//                // Analog control of subsystems.
+//            }
             // Display subsystem status.
             if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
             {
@@ -455,97 +454,7 @@ public class FtcTeleOp extends FtcOpMode
         switch (button)
         {
             case A:
-                break;
-
             case B:
-                if (robot.shooter != null)
-                {
-                    if (pressed)
-                    {
-                        if (robot.autoShootTask != null)
-                        {
-                            // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
-                            if (robot.autoShootTask.isActive())
-                            {
-                                robot.autoShootTask.cancel();
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
-                            }
-                            else
-                            {
-                                robot.autoShootTask.autoShoot(moduleName, null, !driverAltFunc, (int[]) null);
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
-                            }
-                        }
-                        else
-                        {
-                            // Auto Shoot Task is disabled, shoot manually.
-                            if (robot.shooter.isActive())
-                            {
-                                robot.shooter.cancel(moduleName);
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
-                            }
-                            else
-                            {
-                                robot.shooter.aimShooter(
-                                    moduleName, robot.shooterSubsystem.shooter1Velocity.getValue() / 60.0, 0.0,
-                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
-                                    Shooter.Params.SHOOTER_OFF_DELAY);
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
-                            }
-                        }
-                    }
-                }
-                else if (robot.intake != null)
-                {
-                    if (pressed)
-                    {
-                        if (robot.autoPickupTask != null)
-                        {
-                            if (robot.autoPickupTask.isActive())
-                            {
-                                robot.autoPickupTask.cancel();
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Pickup");
-                            }
-                            else
-                            {
-                                robot.autoPickupTask.autoPickup(moduleName, null, !driverAltFunc);
-                                robot.globalTracer.traceInfo(
-                                    moduleName, ">>>>> Auto Pickup (useVision=" + !driverAltFunc + ")");
-                            }
-                        }
-                        else
-                        {
-                            if (driverAltFunc)
-                            {
-                                if (robot.intake.getPower() == 0.0)
-                                {
-                                    robot.intake.setPower(Intake.Params.INTAKE_POWER);
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Intake");
-                                }
-                                else
-                                {
-                                    robot.intake.cancel();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Intake");
-                                }
-                            }
-                            else
-                            {
-                                if (robot.intake.isAutoActive())
-                                {
-                                    robot.intake.cancel();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Sensor Intake");
-                                }
-                                else
-                                {
-                                    robot.intake.autoIntake(moduleName);
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Sensor Intake");
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-
             case X:
             case Y:
                 break;
@@ -556,50 +465,10 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case RightBumper:
-                break;
-
             case DpadUp:
-                if (robot.shooter != null)
-                {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.upValue();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity up");
-                    }
-                }
-                break;
-
             case DpadDown:
-                if (robot.shooter != null)
-                {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.downValue();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity down");
-                    }
-                }
-                break;
-
             case DpadLeft:
-                if (robot.shooter != null)
-                {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.downIncrement();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity increment down");
-                    }
-                }
-                break;
-
             case DpadRight:
-                if (robot.shooter != null)
-                {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.upIncrement();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity increment up");
-                    }
-                }
                 break;
 
             case Back:

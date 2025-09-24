@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Titan Robotics Club (http://www.titanrobotics.com)
+ * Copyright (c) 2025 Titan Robotics Club (http://www.titanrobotics.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,7 @@ import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.sensor.TrcDigitalInput;
+import trclib.subsystem.TrcPidStorage;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
@@ -75,12 +76,13 @@ public class Robot
     // Subsystems.
     public Intake intakeSubsystem;
     public TrcRollerIntake intake;
+    public Spindexer spindexerSubsystem;
+    public TrcPidStorage spindexer;
     public Shooter shooterSubsystem;
     public TrcShooter shooter;
-    public Spindexer spindexer;
     // Autotasks.
-    public TaskAutoShoot autoShootTask;
     public TaskAutoPickup autoPickupTask;
+    public TaskAutoShoot autoShootTask;
 
     /**
      * Constructor: Create an instance of the object.
@@ -127,34 +129,27 @@ public class Robot
                     intake = intakeSubsystem.getIntake();
                 }
 
+                if (RobotParams.Preferences.useSpindexer)
+                {
+                    spindexerSubsystem = new Spindexer(this);
+                    spindexer = spindexerSubsystem.getPidStorage();
+                }
+
                 if (RobotParams.Preferences.useShooter)
                 {
-                    // Note: Since shooter depends on Intake, Intake subsystem must instantiate before shooter.
-                    shooterSubsystem = new Shooter();
+                    shooterSubsystem = new Shooter(this);
                     shooter = shooterSubsystem.getShooter();
                 }
 
-                if (RobotParams.Preferences.useSpindexer)
-                {
-                    spindexer = new Spindexer(this);
-                    TrcDbgTrace.globalTraceInfo(moduleName, "Spindexer is enabled.");
-                }
-
                 // Create autotasks.
-                if (RobotParams.Preferences.useAutoShoot)
+                if (RobotParams.Preferences.useAutoPickup && intake != null && spindexer != null)
                 {
-                    if (shooter != null)
-                    {
-                        autoShootTask = new TaskAutoShoot(this);
-                    }
+                    autoPickupTask = new TaskAutoPickup(this);
                 }
 
-                if (RobotParams.Preferences.useAutoPickup)
+                if (RobotParams.Preferences.useAutoShoot && shooter != null && spindexer != null)
                 {
-                    if (intake != null)
-                    {
-                        autoPickupTask = new TaskAutoPickup(this);
-                    }
+                    autoShootTask = new TaskAutoShoot(this);
                 }
 
                 // Zero calibrate all subsystems only in Auto or if TeleOp is run standalone without prior Auto.
@@ -217,6 +212,13 @@ public class Robot
             // Consume it so it's no longer valid for next run.
             endOfAutoRobotPose = null;
         }
+
+        if (vision.colorBlobVision != null)
+        {
+            globalTracer.traceInfo(moduleName, "Enabling WebCam ColorBlobVision.");
+            vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, true);
+        }
+
         TrcDigitalInput.setElapsedTimerEnabled(true);
         TrcMotor.setElapsedTimerEnabled(true);
         TrcServo.setElapsedTimerEnabled(true);
@@ -317,6 +319,15 @@ public class Robot
         if (robotDrive != null) robotDrive.cancel();
         TrcSubsystem.cancelAll();
         // Cancel auto tasks.
+        if (autoPickupTask != null)
+        {
+            autoPickupTask.cancel();
+        }
+
+        if (autoShootTask != null)
+        {
+            autoShootTask.cancel();
+        }
     }   //cancelAll
 
     /**

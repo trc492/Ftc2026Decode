@@ -38,6 +38,11 @@ SOFTWARE.
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="1" />
             <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
+            <!-- LED Indicators -->
+            <RevBlinkinLedDriver name="StatusLED" port="0" />
+            <Servo name="Spindexer1LED" port="1" />
+            <Servo name="Spindexer2LED" port="2" />
+            <Servo name="Spindexer3LED" port="3" />
             <!--
             <DigitalDevice name="Intake.backSensor" port="0" />
             <RevBlinkinLedDriver name="blinkin" port="0" />

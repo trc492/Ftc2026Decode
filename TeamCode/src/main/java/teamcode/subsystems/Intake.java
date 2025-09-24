@@ -38,7 +38,8 @@ import trclib.vision.TrcVisionTargetInfo;
 /**
  * This class implements an Intake Subsystem. This implementation consists of one motor but no sensor of its own.
  * It does have two triggers, one front and one back. The front trigger is triggered by vision detecting if there is
- * a correct color artifact in front of it. The back trigger is triggered by the entry sensor of the spindexer.
+ * a correct color artifact in front of it. The back trigger is triggered by the entry sensor of the spindexer so
+ * it can stop the Intake.
  */
 public class Intake extends TrcSubsystem
 {
@@ -67,11 +68,13 @@ public class Intake extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcRollerIntake intake;
-    private Vision.ColorBlobType expectedArtifactType = Vision.ColorBlobType.Any;
+    private Vision.ColorBlobType pickupArtifactType = Vision.ColorBlobType.Any;
     private String detectedArtifactName = null;
 
     /**
      * Constructor: Creates an instance of the object.
+     *
+     * @param robot specifies the robot object to access the other subsystems.
      */
     public Intake(Robot robot)
     {
@@ -88,7 +91,11 @@ public class Intake extends TrcSubsystem
         {
             intakeParams.setFrontDigitalSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact,
-                TriggerAction.StartOnTrigger, null, null, null);
+                TriggerAction.StartOnTrigger, TrcTrigger.TriggerMode.OnActive,
+                (ctxt, canceled) -> {
+                    // Enable Spindexer entry trigger.
+                    if (!canceled && robot.spindexer != null) robot.spindexer.setEntryTriggerEnabled(true);
+                }, null);
         }
 
         if (Params.HAS_BACK_TRIGGER)
@@ -101,19 +108,32 @@ public class Intake extends TrcSubsystem
     }   //Intake
 
     /**
-     * This method is called by the Spindexer to set the expected artifact type.
+     * This method returns the created TrcRollerIntake.
+     *
+     * @return created Roller Intake.
+     */
+    public TrcRollerIntake getIntake()
+    {
+        return intake;
+    }   //getIntake
+
+    /**
+     * This method is called by the Spindexer to set the artifact type to pick up. This is according to what artifacts
+     * are already in the Spindexer. It will ask for Any artifact if Spindexer is empty or has one Purple artifact.
+     * It will ask for Purple if it has one or two vacant slots and already has a Green. It will ask for None if
+     * Spindexer is full.
      *
      * @param artifactType specifies the artifact to pick up.
      */
-    public void setExpectedArtifactType(Vision.ColorBlobType artifactType)
+    public void setPickupArtifactType(Vision.ColorBlobType artifactType)
     {
-        expectedArtifactType = artifactType;
-    }   //setExpectedArtifactType
+        pickupArtifactType = artifactType;
+    }   //setPickupArtifactType
 
     /**
      * This method is called by the Intake front trigger periodically using vision to detect the correct artifact type
-     * to be picked up. Spindexer is responsible for calling setExpectedArtifactType to specify whether vision should
-     * look for purple artifact, green artifact or any artifact.
+     * to be picked up. Spindexer is responsible for calling setPickupArtifactType to specify whether vision should
+     * look for purple artifact, green artifact, any artifact or None.
      *
      * @return true if vision found the specified artifact type, false otherwise.
      */
@@ -121,11 +141,12 @@ public class Intake extends TrcSubsystem
     {
         boolean artifactDetected = false;
 
-        if (robot.vision != null && robot.vision.colorBlobVision != null)
+        if (robot.vision != null && robot.vision.colorBlobVision != null &&
+            pickupArtifactType != Vision.ColorBlobType.None)
         {
             TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
                 robot.vision.colorBlobVision.getBestDetectedTargetInfo(
-                    robot.vision::colorBlobFilter, expectedArtifactType, robot.vision::compareDistance, 0.0,
+                    robot.vision::colorBlobFilter, pickupArtifactType, robot.vision::compareDistance, 0.0,
                     robot.robotInfo.webCam1.camZOffset);
             artifactDetected = artifactInfo != null;
             detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;
@@ -144,16 +165,6 @@ public class Intake extends TrcSubsystem
     {
         return robot.spindexer != null && robot.spindexer.isEntrySensorActive();
     }   //spindexerEntryHasArtifact
-
-    /**
-     * This method returns the created TrcRollerIntake.
-     *
-     * @return created Roller Intake.
-     */
-    public TrcRollerIntake getIntake()
-    {
-        return intake;
-    }   //getIntake
 
     //
     // Implements TrcSubsystem abstract methods.
@@ -206,7 +217,8 @@ public class Intake extends TrcSubsystem
                 Params.SUBSYSTEM_NAME + "." + Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(),
                 intake.hasObject(), intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
             dashboard.displayPrintf(
-                lineNum++, "%s: artifact(detected/expected)=%s/%s", detectedArtifactName, expectedArtifactType);
+                lineNum++, "%s: artifact(detected/expected)=%s/%s",
+                Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
         }
 
         return lineNum;

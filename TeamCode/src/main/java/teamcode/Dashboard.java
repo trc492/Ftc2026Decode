@@ -38,6 +38,7 @@ public class Dashboard
     private static Double nextDashboardUpdateTime =  null;
 
     public static String tuneSubsystemName = "";
+    public static double shooter1Velocity = 5000.0; // in RPM
 
     /**
      * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard

@@ -27,8 +27,8 @@ import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
 import teamcode.Dashboard;
+import teamcode.Robot;
 import trclib.controller.TrcPidController;
-import trclib.dataprocessor.TrcDiscreteValue;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.robotcore.TrcDbgTrace;
@@ -82,12 +82,9 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOTER_OFF_DELAY            = 0.5;      // in sec
 
         // These are for tuning shooter motor with gamepad.
-        public static final double SHOOTER_MIN_VEL              = 10.0;     // in RPM
         public static final double SHOOTER_MAX_VEL              = 7360.0;   // in RPM
-        public static final double SHOOTER_MIN_VEL_INC          = 1.0;      // in RPM
-        public static final double SHOOTER_MAX_VEL_INC          = 1000.0;   // in RPM
-        public static final double SHOOTER_DEF_VEL              = 1000.0;   // in RPM
-        public static final double SHOOTER_DEF_VEL_INC          = 10.0;     // in RPM
+        public static final double SHOOTER1_DEF_VEL             = 1000.0;   // in RPM
+        public static final double SHOOTER2_DEF_VEL             = 1000.0;   // in RPM
 
         // Pan Motor
         public static final String PAN_MOTOR_NAME               = "PanMotor";
@@ -140,9 +137,10 @@ public class Shooter extends TrcSubsystem
     }   //class Params
 
     private final FtcDashboard dashboard;
+    private final Robot robot;
     private final TrcShooter shooter;
-    public final TrcDiscreteValue shooter1Velocity;
-    public final TrcDiscreteValue shooter2Velocity;
+//    public final TrcDiscreteValue shooter1Velocity;
+//    public final TrcDiscreteValue shooter2Velocity;
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
@@ -150,11 +148,14 @@ public class Shooter extends TrcSubsystem
 
     /**
      * Constructor: Creates an instance of the object.
+     *
+     * @param robot specifies the robot object to access the other subsystems.
      */
-    public Shooter()
+    public Shooter(Robot robot)
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
         dashboard = FtcDashboard.getInstance();
+        this.robot = robot;
         FtcShooter.Params shooterParams = new FtcShooter.Params()
             .setShooterMotor1(
                 Params.SUBSYSTEM_NAME + "." + Params.SHOOTER_MOTOR1_NAME, Params.SHOOTER_MOTOR1_TYPE,
@@ -188,12 +189,12 @@ public class Shooter extends TrcSubsystem
         motor.setPositionSensorScaleAndOffset(Params.SHOOTER_REV_PER_COUNT, 0.0);
         motor.setVelocityPidParameters(
             Params.shooter1PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED);
-        // For tuning shooter motor 1 PID.
-        shooter1Velocity = new TrcDiscreteValue(
-            Params.SUBSYSTEM_NAME + ".motor1TargetVel",
-            Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
-            Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
-            Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
+//        // For tuning shooter motor 1 PID.
+//        shooter1Velocity = new TrcDiscreteValue(
+//            Params.SUBSYSTEM_NAME + ".motor1TargetVel",
+//            Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
+//            Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
+//            Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
 
         motor = shooter.getShooterMotor2();
         if (motor != null)
@@ -203,17 +204,17 @@ public class Shooter extends TrcSubsystem
             motor.setPositionSensorScaleAndOffset(Params.SHOOTER_REV_PER_COUNT, 0.0);
             motor.setVelocityPidParameters(
                 Params.shooter2PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED);
-            // For tuning shooter motor 2 PID.
-            shooter2Velocity = new TrcDiscreteValue(
-                Params.SUBSYSTEM_NAME + ".motor2TargetVel",
-                Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
-                Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
-                Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
+//            // For tuning shooter motor 2 PID.
+//            shooter2Velocity = new TrcDiscreteValue(
+//                Params.SUBSYSTEM_NAME + ".motor2TargetVel",
+//                Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
+//                Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
+//                Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
         }
-        else
-        {
-            shooter2Velocity = null;
-        }
+//        else
+//        {
+//            shooter2Velocity = null;
+//        }
 
         motor = shooter.getPanMotor();
         if (motor != null)
@@ -273,6 +274,11 @@ public class Shooter extends TrcSubsystem
         if (launcher != null)
         {
             TrcDbgTrace.globalTraceInfo(instanceName, "shoot(owner=" + owner + ", event=" + completionEvent + ")");
+            if (robot.spindexer != null)
+            {
+                // Enable Spindexer exit trigger.
+                robot.spindexer.setExitTriggerEnabled(true);
+            }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
             launchCallbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".launchCallback");
@@ -435,14 +441,14 @@ public class Shooter extends TrcSubsystem
                 Dashboard.PidTuning.pidCoeffs = Params.shooter1PidCoeffs;
                 Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
                 Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
-                Dashboard.PidTuning.pidTarget = shooter1Velocity.getValue();
+                Dashboard.PidTuning.pidTarget = Params.SHOOTER1_DEF_VEL;
             }
             else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
             {
                 Dashboard.PidTuning.pidCoeffs = Params.shooter2PidCoeffs;
                 Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
                 Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
-                Dashboard.PidTuning.pidTarget = shooter2Velocity.getValue();
+                Dashboard.PidTuning.pidTarget = Params.SHOOTER2_DEF_VEL;
             }
             else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
             {
@@ -482,8 +488,6 @@ public class Shooter extends TrcSubsystem
                     // Translate PidTolerance from RPM to RPS.
                     Dashboard.PidTuning.pidTolerance/60.0,
                     Dashboard.PidTuning.useSoftwarePid);
-                // PID target is in the unit of RPM.
-                shooter1Velocity.setValue(Dashboard.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
             {
@@ -492,8 +496,6 @@ public class Shooter extends TrcSubsystem
                     // Translate PidTolerance from RPM to RPS.
                     Dashboard.PidTuning.pidTolerance/60.0,
                     Dashboard.PidTuning.useSoftwarePid);
-                // PID target is in the unit of RPM.
-                shooter2Velocity.setValue(Dashboard.PidTuning.pidTarget);
             }
             else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
             {

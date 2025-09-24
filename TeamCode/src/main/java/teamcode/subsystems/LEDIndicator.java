@@ -28,12 +28,14 @@ import trclib.drivebase.TrcDriveBase;
 import trclib.driverio.TrcGobildaIndicatorLight;
 import trclib.driverio.TrcPriorityIndicator;
 import trclib.driverio.TrcRevBlinkin;
+import trclib.robotcore.TrcDbgTrace;
 
 /**
  * This class encapsulates the LED controller to provide a priority indicator showing the status of the robot.
  */
 public class LEDIndicator
 {
+    private static final String moduleName = LEDIndicator.class.getSimpleName();
     // LED device names.
     public static final String STATUS_LED_NAME = "StatusLED";
     public static final String SPINDEXER1_LED_NAME = "Spindexer1LED";
@@ -50,6 +52,7 @@ public class LEDIndicator
     public static final String DRIVE_ORIENTATION_INVERTED = "InvertedMode";
     public static final String OFF_PATTERN = "Off";
 
+    public final TrcDbgTrace tracer;
     private TrcPriorityIndicator<?> statusIndicator = null;
     private final TrcPriorityIndicator<?>[] spindexerIndicators = new TrcPriorityIndicator[3];
 
@@ -80,6 +83,7 @@ public class LEDIndicator
             // Lowest priority.
         };
 
+        tracer = new TrcDbgTrace();
         for (String indicatorName: indicatorNames)
         {
             switch (indicatorName)
@@ -91,8 +95,10 @@ public class LEDIndicator
                     }
                     else
                     {
+                        tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         statusIndicator = new FtcRevBlinkin(indicatorName);
                         ((FtcRevBlinkin) statusIndicator).setPatternPriorities(statusLEDPatternPriorities);
+                        statusIndicator.setPatternState(OFF_PATTERN, true);
                     }
                     break;
 
@@ -103,9 +109,11 @@ public class LEDIndicator
                     }
                     else
                     {
+                        tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[0] = new FtcGobildaIndicatorLight(indicatorName);
                         ((FtcGobildaIndicatorLight) spindexerIndicators[0]).setPatternPriorities(
                             spindexerLEDPatternPriorities);
+                        spindexerIndicators[0].setPatternState(OFF_PATTERN, true);
                     }
                     break;
 
@@ -116,9 +124,11 @@ public class LEDIndicator
                     }
                     else
                     {
+                        tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[1] = new FtcGobildaIndicatorLight(indicatorName);
                         ((FtcGobildaIndicatorLight) spindexerIndicators[1]).setPatternPriorities(
                             spindexerLEDPatternPriorities);
+                        spindexerIndicators[1].setPatternState(OFF_PATTERN, true);
                     }
                     break;
 
@@ -129,9 +139,11 @@ public class LEDIndicator
                     }
                     else
                     {
+                        tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[2] = new FtcGobildaIndicatorLight(indicatorName);
                         ((FtcGobildaIndicatorLight) spindexerIndicators[2]).setPatternPriorities(
                             spindexerLEDPatternPriorities);
+                        spindexerIndicators[2].setPatternState(OFF_PATTERN, true);
                     }
                     break;
             }
@@ -193,7 +205,7 @@ public class LEDIndicator
     {
         if (spindexerIndicators[slot] != null)
         {
-            spindexerIndicators[slot].setPatternState(patternName, true, 0.5);
+            spindexerIndicators[slot].setPatternState(patternName, true);
         }
     }   //setSpindexerPattern
 

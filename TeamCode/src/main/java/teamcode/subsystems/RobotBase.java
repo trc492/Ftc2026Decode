@@ -283,7 +283,11 @@ public class RobotBase
             webCam2 = null;//new Vision.BackCamParams();
             limelight = new Vision.LimelightParams();
             // Miscellaneous
-            indicatorNames = null;
+            indicatorNames = new String[] {
+                LEDIndicator.STATUS_LED_NAME,
+                LEDIndicator.SPINDEXER1_LED_NAME,
+                LEDIndicator.SPINDEXER2_LED_NAME,
+                LEDIndicator.SPINDEXER3_LED_NAME};
         }   //MecanumParams
     }   //class MecanumParams
 
