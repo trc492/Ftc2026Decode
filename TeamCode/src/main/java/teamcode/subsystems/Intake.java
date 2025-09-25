@@ -142,8 +142,8 @@ public class Intake extends TrcSubsystem
      */
     public void setPickupArtifactType(Vision.ColorBlobType artifactType)
     {
-        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
         pickupArtifactType = artifactType;
+        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
     }   //setPickupArtifactType
 
     /**

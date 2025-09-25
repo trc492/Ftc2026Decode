@@ -86,11 +86,11 @@ public class Spindexer extends TrcSubsystem
         public static final int MAX_CAPACITY                    = 3;
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.2;  // in inches
-        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 2.0;  // in inches
+        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 1.0;  // in inches
         public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
 
         public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.2;  // in inches
-        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 2.0;  // in inches
+        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 1.0;  // in inches
         public static final double EXIT_TRIGGER_SETTLING        = 0.1;  // in seconds
 
         public static final double PURPLE_LOW_THRESHOLD         = 200.0;
@@ -116,6 +116,10 @@ public class Spindexer extends TrcSubsystem
     private int numPurpleArtifacts = 0;
     private int numGreenArtifacts = 0;
     private Vision.ColorBlobType expectedArtifactType = Vision.ColorBlobType.Any;
+    private double entrySensorDistance = 10.0;
+    private double entrySensorHue = 0.0;
+    private double exitSensorDistance = 10.0;
+    private double exitSensorHue = 0.0;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -218,15 +222,15 @@ public class Spindexer extends TrcSubsystem
             // We are done adding the entry artifact. Turn off entry trigger so we can move the Spindexer without it
             // triggering.
             spindexer.setEntryTriggerEnabled(false);
+            spindexer.tracer.traceInfo(
+                instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
+                entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
             moveToNextVacantEntrySlot();
 
             if (robot.ledIndicator != null)
             {
                 robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
-            spindexer.tracer.traceInfo(
-                instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
-                entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
         }
         else
         {
@@ -263,14 +267,14 @@ public class Spindexer extends TrcSubsystem
             updateExpectedArtifactType();
             // We are done removing the exit artifact. Turn off exit trigger.
             spindexer.setExitTriggerEnabled(false);
+            spindexer.tracer.traceInfo(
+                instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
+                exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
 
             if (robot.ledIndicator != null)
             {
                 robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
             }
-            spindexer.tracer.traceInfo(
-                instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
-                exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
         }
         else
         {
@@ -292,14 +296,17 @@ public class Spindexer extends TrcSubsystem
         }
         else if (numPurpleArtifacts == 2)
         {
+            // We have two artifacts and both are purple.
             expectedArtifactType = Vision.ColorBlobType.Green;
         }
         else if (numGreenArtifacts == 0)
         {
+            // We have either one purple or no artifact at all.
             expectedArtifactType = Vision.ColorBlobType.Any;
         }
         else
         {
+            // We have either one purple, one green or just one green.
             expectedArtifactType = Vision.ColorBlobType.Purple;
         }
 
@@ -316,7 +323,29 @@ public class Spindexer extends TrcSubsystem
      */
     private double getEntrySensorData()
     {
-        return entryAnalogSensor != null? entryAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
+        if (entryAnalogSensor != null)
+        {
+            double distance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
+            double hue = getSensorHue(entryAnalogSensor);
+
+            if (distance < 6.0f)
+            {
+                // Since getEntrySensorData is called periodically, use it to update hue value as well.
+                entrySensorDistance = distance;
+                entrySensorHue = hue;
+            }
+            else
+            {
+                spindexer.tracer.traceDebug(
+                    instanceName,
+                    "Invalid data, use previous values: Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
+                    distance, entrySensorDistance, hue, entrySensorHue);
+            }
+
+            return entrySensorDistance;
+        }
+
+        return 0.0;
     }   //getEntrySensorData
 
     /**
@@ -326,7 +355,25 @@ public class Spindexer extends TrcSubsystem
      */
     private double getExitSensorData()
     {
-        return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
+        if (exitAnalogSensor != null)
+        {
+            double distance = exitAnalogSensor.getDistance(DistanceUnit.INCH);
+
+            if (distance < 6.0f)
+            {
+                exitSensorDistance = distance;
+            }
+            else
+            {
+                spindexer.tracer.traceDebug(
+                    instanceName, "Invalid data, use previous values: Distance(sensor=%f, prev=%f)",
+                    distance, exitSensorDistance);
+            }
+
+            return exitSensorDistance;
+        }
+
+        return 0.0;
     }   //getExitSensorData
 
     /**
@@ -357,6 +404,8 @@ public class Spindexer extends TrcSubsystem
      */
     private double getSensorHue(RevColorSensorV3 sensor)
     {
+        double hue = 0.0;
+
         if (sensor != null)
         {
             float[] hsvValues = {0.0f, 0.0f, 0.0f};
@@ -366,10 +415,48 @@ public class Spindexer extends TrcSubsystem
                 (int) (normalizedColors.green*255),
                 (int) (normalizedColors.blue*255),
                 hsvValues);
-            return hsvValues[0];
+
+            double sensorDistance = sensor.getDistance(DistanceUnit.INCH);
+            if (sensorDistance < 6.0f)
+            {
+                hue = hsvValues[0];
+                if (sensor == entryAnalogSensor)
+                {
+                    entrySensorDistance = sensorDistance;
+                    entrySensorHue = hue;
+                }
+                else
+                {
+                    exitSensorDistance = sensorDistance;
+                    exitSensorHue = hue;
+                }
+            }
+            else
+            {
+                // When distance is 6.0f, hue value is invalid, use previous detected hue value instead.
+                String sensorName;
+                double distance;
+                if (sensor == entryAnalogSensor)
+                {
+                    sensorName = "EntrySensor";
+                    distance = entrySensorDistance;
+                    hue = entrySensorHue;
+                }
+                else
+                {
+                    sensorName = "ExitSensor";
+                    distance = exitSensorDistance;
+                    hue = exitSensorHue;
+                }
+                spindexer.tracer.traceDebug(
+                    instanceName,
+                    "Invalid sensor data, use previous values. %s: " +
+                    "Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
+                    sensorName, sensorDistance, distance, hsvValues[0], hue);
+            }
         }
 
-        return 0.0;
+        return hue;
     }   //getSensorHue
 
     /**
@@ -413,6 +500,7 @@ public class Spindexer extends TrcSubsystem
             {
                 artifactType = Vision.ColorBlobType.Green;
             }
+            spindexer.tracer.traceInfo(instanceName, "EntryArtifact: hue=%.3f, type=%s", hue, artifactType);
         }
 
         return artifactType;
@@ -585,10 +673,9 @@ public class Spindexer extends TrcSubsystem
         if (slowLoop)
         {
             dashboard.displayPrintf(
-                lineNum++, "%s: pos=%.3f/%.3f, power=%.3f, current=%.3f, LimitSw=%s, hue(entry/exit)=%f/%f",
+                lineNum++, "%s: pos=%.3f/%.3f, power=%.3f, current=%.3f, LimitSw=%s",
                 Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
-                spindexer.motor.getPower(), spindexer.motor.getCurrent(), spindexer.motor.isLowerLimitSwitchActive(),
-                getEntrySensorHue(), getExitSensorHue());
+                spindexer.motor.getPower(), spindexer.motor.getCurrent(), spindexer.motor.isLowerLimitSwitchActive());
             dashboard.displayPrintf(
                 lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Hue/Dist/Trig)=%.3f/%.3f/%s",
                 Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
