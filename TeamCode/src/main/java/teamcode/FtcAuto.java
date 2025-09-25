@@ -302,6 +302,11 @@ public class FtcAuto extends FtcOpMode
         {
             Dashboard.updateDashboard(robot, 1);
         }
+        else if (slowPeriodicLoop && robot.spindexerSubsystem != null)
+        {
+            // Hack: Work around the color sensor issue where it occasionally returns invalid Hue data.
+            robot.spindexerSubsystem.getEntrySensorData();
+        }
     }   //periodic
 
     /**

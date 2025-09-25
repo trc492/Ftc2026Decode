@@ -321,7 +321,7 @@ public class Spindexer extends TrcSubsystem
      *
      * @return entry sensor value.
      */
-    private double getEntrySensorData()
+    public double getEntrySensorData()
     {
         if (entryAnalogSensor != null)
         {

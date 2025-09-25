@@ -407,6 +407,10 @@ public class FtcTest extends FtcTeleOp
                 //
                 super.periodic(elapsedTime, true);
             }
+            else if (robot.spindexerSubsystem != null)
+            {
+                robot.spindexerSubsystem.getEntrySensorData();
+            }
 
             switch (testChoices.test)
             {
