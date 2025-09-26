@@ -222,6 +222,8 @@ public class Spindexer extends TrcSubsystem
             // We are done adding the entry artifact. Turn off entry trigger so we can move the Spindexer without it
             // triggering.
             spindexer.setEntryTriggerEnabled(false);
+            entrySensorDistance = 6.0;
+            entrySensorHue = 0.0;
             spindexer.tracer.traceInfo(
                 instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
@@ -267,6 +269,8 @@ public class Spindexer extends TrcSubsystem
             updateExpectedArtifactType();
             // We are done removing the exit artifact. Turn off exit trigger.
             spindexer.setExitTriggerEnabled(false);
+            exitSensorDistance = 6.0;
+            exitSensorHue = 0.0;
             spindexer.tracer.traceInfo(
                 instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
@@ -424,11 +428,13 @@ public class Spindexer extends TrcSubsystem
                 {
                     entrySensorDistance = sensorDistance;
                     entrySensorHue = hue;
+                    spindexer.tracer.traceDebug(instanceName, "Entry: distance=%f, hue=%f", sensorDistance, hue);
                 }
                 else
                 {
                     exitSensorDistance = sensorDistance;
                     exitSensorHue = hue;
+                    spindexer.tracer.traceDebug(instanceName, "Exit: distance=%f, hue=%f", sensorDistance, hue);
                 }
             }
             else

@@ -84,7 +84,7 @@ public class Dashboard
         public static double[] colorHighThresholds = new double[3];
         public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
             new TrcOpenCvColorBlobPipeline.FilterContourParams();
-        public static boolean annotationEnabled = true;
+        public static boolean annotationEnabled = false;
         public static boolean drawRotatedRect = false;
         public static boolean drawCrosshair = false;
         public static boolean circleDetectionEnabled = true;
