@@ -227,12 +227,13 @@ public class Spindexer extends TrcSubsystem
             spindexer.tracer.traceInfo(
                 instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
-            moveToNextVacantEntrySlot();
 
             if (robot.ledIndicator != null)
             {
                 robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
+
+            moveToNextVacantEntrySlot();
         }
         else
         {
