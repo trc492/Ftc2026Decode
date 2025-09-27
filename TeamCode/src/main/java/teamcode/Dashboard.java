@@ -80,19 +80,24 @@ public class Dashboard
     @Config
     public static class VisionTuning
     {
-        public static double[] colorLowThresholds = new double[3];
-        public static double[] colorHighThresholds = new double[3];
-        public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
-            new TrcOpenCvColorBlobPipeline.FilterContourParams();
         public static boolean annotationEnabled = false;
-        public static boolean drawRotatedRect = false;
-        public static boolean drawCrosshair = false;
+        public static boolean annotateDrawRotatedRect = false;
+        public static boolean annotateDrawCrosshair = false;
+        public static double[] colorThresholdsLow = new double[3];
+        public static double[] colorThresholdsHigh = new double[3];
+        public static boolean morphologyEnabled = false;
+        public static boolean morphologyClosing = true;
+        public static int morphologyKernelSize = 9;
         public static boolean circleDetectionEnabled = true;
-        public static boolean blurCircle = false;
-        public static double minCircleDistance = 30.0;
+        public static double circleMinDistance = 30.0;
+        public static boolean blurEnableGaussian = true;
+        public static boolean blurEnableMedian = false;
+        public static int blurKernelSize = 9;
         public static boolean cannyEdgeEnabled = false;
         public static double cannyEdgeThreshold1 = 100.0;
         public static double cannyEdgeThreshold2 = 200.0;
+        public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
+            new TrcOpenCvColorBlobPipeline.FilterContourParams();
     }   //class VisionTuning
 
     @Config
