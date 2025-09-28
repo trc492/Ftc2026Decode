@@ -162,7 +162,7 @@ public class Intake extends TrcSubsystem
         {
             TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
                 robot.vision.colorBlobVision.getBestDetectedTargetInfo(
-                    robot.vision::colorBlobFilter, pickupArtifactType, robot.vision::compareDistance, 0.0,
+                    robot.vision::colorBlobFilter, pickupArtifactType, robot.vision::compareDistanceY, 0.0,
                     robot.robotInfo.webCam1.camZOffset);
             artifactDetected = artifactInfo != null;
             detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;
