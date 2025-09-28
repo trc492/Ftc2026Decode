@@ -31,6 +31,7 @@ import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.motor.FtcMotorActuator;
 import ftclib.sensor.FtcPinpointOdometry;
 import ftclib.sensor.FtcSparkFunOtos;
+import ftclib.sensor.GoBildaPinpointDriver;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
@@ -58,51 +59,51 @@ public class RobotBase
         // Generic Mecanum Drive Base Robot
         MecanumRobot,
         // Generic Swerve Drive Base Robot
-        SwerveRobot
+        DecodeRobot
     }   //enum RobotType
 
     /**
-     * This class contains the Swerve Drive Base Parameters.
+     * This class contains the Decode Drive Base Parameters.
      */
-    public static class SwerveParams extends FtcSwerveDrive.SwerveInfo
+    public static class DecodeParams extends FtcSwerveDrive.SwerveInfo
     {
-        // Optii Odometry Wheel
-        private static final double ODWHEEL_DIAMETER_MM = 35.0;
+        // Gobilda 4-bar Odometry Pods
+        private static final double ODWHEEL_DIAMETER_MM = 32.0;
         private static final double ODWHEEL_DIAMETER = ODWHEEL_DIAMETER_MM*TrcUtil.INCHES_PER_MM;
-        private static final double ODWHEEL_CPR = 4096.0;
+        private static final double ODWHEEL_CPR = 2000.0;
 
-        public SwerveParams()
+        public DecodeParams()
         {
-            robotName = "SwerveRobot";
+            robotName = "DecodeRobot";
             // Robot Dimensions (measured from CAD model if possible)
-            robotLength = RobotParams.Robot.ROBOT_LENGTH;
-            robotWidth = RobotParams.Robot.ROBOT_WIDTH;
-            wheelBaseLength = (24.0 * 14)*TrcUtil.INCHES_PER_MM;
-            wheelBaseWidth = 16.0;
+            robotLength = RobotParams.Robot.ROBOT_LENGTH;   //TODO: Needs final update
+            robotWidth = RobotParams.Robot.ROBOT_WIDTH;     //TODO: Needs final update
+            wheelBaseLength = 336.0*TrcUtil.INCHES_PER_MM;
+            wheelBaseWidth = 336.0*TrcUtil.INCHES_PER_MM;
             // IMU (not used if using AbsoluteOdometry).
             imuName = null;
-            hubLogoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;     // Control Hub orientation
-            hubUsbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;  // Control Hub orientation
+            hubLogoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;  // Control Hub orientation
+            hubUsbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;       // Control Hub orientation
             // Drive Motors
             driveMotorType = FtcMotorActuator.MotorType.DcMotor;
             driveMotorNames = new String[] {"lfDriveMotor", "rfDriveMotor", "lbDriveMotor", "rbDriveMotor"};
-            driveMotorInverted = new boolean[] {false, false, false, false};
+            driveMotorInverted = new boolean[] {false, false, false, false};    //TODO: Need to verify
             odometryType = TrcDriveBase.OdometryType.AbsoluteOdometry;
-            // Odometry Wheels (Offset from wheel base center)
-            odWheelXScale = odWheelYScale = Math.PI * ODWHEEL_DIAMETER / ODWHEEL_CPR;
-            xOdWheelXOffsets = new double[] {4.0 * TrcUtil.INCHES_PER_MM};
-            xOdWheelYOffsets = new double[] {-132.0 * TrcUtil.INCHES_PER_MM};
-            yOdWheelXOffsets = new double[] {-156.0 * TrcUtil.INCHES_PER_MM, 156.0 * TrcUtil.INCHES_PER_MM};
-            yOdWheelYOffsets = new double[] {-4.0 * TrcUtil.INCHES_PER_MM, -4.0 * TrcUtil.INCHES_PER_MM};
+            // Odometry Wheels (Offset from wheel base center - not used for Pinpoint)
+            odWheelXScale = odWheelYScale = Math.PI * ODWHEEL_DIAMETER / ODWHEEL_CPR;   //inches per count
+            xOdWheelXOffsets = new double[] {-48.0 * TrcUtil.INCHES_PER_MM};
+            xOdWheelYOffsets = new double[] {-192.0 * TrcUtil.INCHES_PER_MM};
+            yOdWheelXOffsets = new double[] {0.0 * TrcUtil.INCHES_PER_MM};
+            yOdWheelYOffsets = new double[] {-192.0 * TrcUtil.INCHES_PER_MM};
             // Absolute Odometry
             if (odometryType == TrcDriveBase.OdometryType.AbsoluteOdometry)
             {
                 if (RobotParams.Preferences.usePinpointOdometry)
                 {
                     FtcPinpointOdometry.Config ppOdoConfig = new FtcPinpointOdometry.Config()
-                        .setPodOffsets(-156.0, -131.4)  // Offsets from robot center in mm
-                        .setEncoderResolution(ODWHEEL_CPR / (Math.PI * ODWHEEL_DIAMETER_MM))
-                        .setEncodersInverted(false, false);
+                        .setPodOffsets(0.0, -192.0)     // Offsets from robot center in mm
+                        .setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+                        .setEncodersInverted(false, false); //TODO: Need to determine
                     absoluteOdometry = new FtcPinpointOdometry("pinpointOdo", ppOdoConfig);
                     headingWrapRangeLow = -180.0;
                     headingWrapRangeHigh = 180.0;
@@ -123,19 +124,19 @@ public class RobotBase
             xDrivePosScale = 1.0;   // in/count
             yDrivePosScale = 1.0;   // in/count
             // Robot Drive Characteristics
-            driveMotorMaxVelocity = null;
-            driveMotorVelPidCoeffs = null;
-            driveMotorVelPidTolerance = null;
-            driveMotorSoftwarePid = false;
-            robotMaxVelocity = 80.0;        // inches/sec
-            robotMaxAcceleration  = 350.0;  // inches/sec2
-            robotMaxDeceleration = 300.0;
-            robotMaxTurnRate = 80.0;        // degrees/sec
-            profiledMaxVelocity = robotMaxVelocity;
-            profiledMaxAcceleration = robotMaxAcceleration;
-            profiledMaxDeceleration = robotMaxDeceleration;
-            profiledMaxTurnRate = robotMaxTurnRate;
-            // DriveBase PID Parameters
+            driveMotorMaxVelocity = null;       //TODO: Need to determine
+            driveMotorVelPidCoeffs = null;      //TODO: Need to determine
+            driveMotorVelPidTolerance = null;   //TODO: Need to determine
+            driveMotorSoftwarePid = false;      //TODO: Need to determine
+            robotMaxVelocity = 80.0;        // inches/sec TODO: Need to determine
+            robotMaxAcceleration  = 350.0;  // inches/sec2 TODO: Need to determine
+            robotMaxDeceleration = 300.0;   // inches/sec2 TODO:Need to determine
+            robotMaxTurnRate = 80.0;        // degrees/sec TODO:Need to determine
+            profiledMaxVelocity = robotMaxVelocity;         //TODO: Need to determine
+            profiledMaxAcceleration = robotMaxAcceleration; //TODO: Need to determine
+            profiledMaxDeceleration = robotMaxDeceleration; //TODO: Need to determine
+            profiledMaxTurnRate = robotMaxTurnRate;         //TODO: Need to determine
+            // DriveBase PID Parameters TODO: Need to tune
             drivePidTolerance = 1.0;
             turnPidTolerance = 1.0;
             xDrivePidCoeffs = yDrivePidCoeffs = new TrcPidController.PidCoefficients(0.072, 0.001, 0.0065, 0.0, 2.0);
@@ -149,7 +150,7 @@ public class RobotBase
             // PidDrive Parameters
             usePidDrive = true;
             enablePidDriveSquareRootPid = false;
-            // PurePursuit Parameters.
+            // PurePursuit Parameters. TODO: Need to experiment and tune
             usePurePursuitDrive = true;
             enablePurePursuitDriveSquareRootPid = false;
             ppdFollowingDistance = 6.0;
@@ -157,7 +158,7 @@ public class RobotBase
             fastModeEnabled = true;
             // Vision
             webCam1 = new Vision.FrontCamParams();
-            webCam2 = new Vision.BackCamParams();
+            webCam2 = null;
             limelight = new Vision.LimelightParams();
             // Miscellaneous
             indicatorNames = new String[] {
@@ -165,7 +166,7 @@ public class RobotBase
                 LEDIndicator.SPINDEXER1_LED_NAME,
                 LEDIndicator.SPINDEXER2_LED_NAME,
                 LEDIndicator.SPINDEXER3_LED_NAME};
-            // Steer Encoders
+            // Steer Encoders TODO: Need to determine
             steerEncoderNames = new String[] {"lfSteerEncoder", "rfSteerEncoder", "lbSteerEncoder", "rbSteerEncoder"};
             steerEncoderInverted = new boolean[] {false, false, false, false};
             steerEncoderZeros = new double[] {0.474812, 0.467663, 0.541338, 0.545340};
@@ -387,9 +388,9 @@ public class RobotBase
                 robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
                 break;
 
-            case SwerveRobot:
-                robotInfo = new SwerveParams();
-                robotDrive = RobotParams.Preferences.useDriveBase? new FtcSwerveDrive((SwerveParams) robotInfo): null;
+            case DecodeRobot:
+                robotInfo = new DecodeParams();
+                robotDrive = RobotParams.Preferences.useDriveBase? new FtcSwerveDrive((DecodeParams) robotInfo): null;
                 break;
 
             default:

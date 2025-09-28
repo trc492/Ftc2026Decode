@@ -35,8 +35,10 @@ SOFTWARE.
             <goBILDA5202SeriesMotor name="Intake.Motor" port="1"/>
             <!-- Spindexer -->
             <RevRobotics40HDHexMotor name="Spindexer.Motor" port="2" />
+            <!--
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="1" />
             <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
+            -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <!-- LED Indicators -->
             <RevBlinkinLedDriver name="StatusLED" port="0" />

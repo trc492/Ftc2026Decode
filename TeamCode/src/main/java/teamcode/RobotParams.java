@@ -25,6 +25,7 @@ package teamcode;
 import android.annotation.SuppressLint;
 
 import teamcode.subsystems.RobotBase;
+import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase.DriveOrientation;
 import trclib.driverio.TrcGameController.DriveMode;
 import trclib.pathdrive.TrcPose2D;
@@ -75,8 +76,8 @@ public class RobotParams
         public static final boolean tuneDriveBase               = false;
         // Subsystems
         public static final boolean useSubsystems               = true;
-        public static final boolean useIntake                   = true;
-        public static final boolean useSpindexer                = true;
+        public static final boolean useIntake                   = false;
+        public static final boolean useSpindexer                = false;
         public static final boolean useShooter                  = false;
         // Auto Tasks.
         public static final boolean useAutoPickup               = false;
@@ -103,8 +104,9 @@ public class RobotParams
         public static final double DRIVE_NORMAL_SCALE           = 1.0;
         public static final double TURN_SLOW_SCALE              = 0.3;
         public static final double TURN_NORMAL_SCALE            = 0.6;
-        public static final double ROBOT_LENGTH                 = 18.0;
-        public static final double ROBOT_WIDTH                  = 18.0;
+        //TODO: Needs adjustment with Shooter and side plates mounted.
+        public static final double ROBOT_LENGTH                 = 432.0*TrcUtil.INCHES_PER_MM;
+        public static final double ROBOT_WIDTH                  = 384.0*TrcUtil.INCHES_PER_MM;
     }   //class Robot
 
     /**
