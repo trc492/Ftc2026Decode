@@ -22,12 +22,14 @@
 
 package teamcode.vision;
 
+import org.firstinspires.ftc.robotcore.external.State;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -197,7 +199,14 @@ public class Vision
     private static final double objectWidth = 5.0;  // inches
     private static final double objectHeight = 5.0; // inches
     private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Green;
-
+    private static final double ONE_BALL_THRESHOLD = 1.0;
+    private static final double TWO_BALL_THRESHOLD = 2.0;
+    private static final double THREE_BALL_THRESHOLD = 3.0;
+    private static final double FOUR_BALL_THRESHOLD = 4.0;
+    private static final double FIVE_BALL_THRESHOLD = 5.0;
+    private static final double SIX_BALL_THRESHOLD = 6.0;
+    private static final double SEVEN_BALL_THRESHOLD = 7.0;
+    private static final double EIGHT_BALL_THRESHOLD = 8.0;
     private final TrcDbgTrace tracer;
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
@@ -210,6 +219,7 @@ public class Vision
     public FtcVisionEocvColorBlob colorBlobVision;
     private FtcEocvColorBlobProcessor colorBlobProcessor;
     public FtcVision vision;
+    private FtcAuto.Alliance alliance = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -933,9 +943,62 @@ public class Vision
      *
      * @param alliance specifies the alliance color for sorting the array.
      */
-    public void setDetectedMotif(FtcAuto.Alliance alliance)
+    public ColorBlobType[] setDetectedMotif(FtcAuto.Alliance alliance)
     {
+        ColorBlobType[] colorBlobs = null;
 
+         if (isColorBlobVisionEnabled(ColorBlobType.Any))
+        {
+            this.alliance = alliance;
+            ArrayList<TrcOpenCvColorBlobPipeline.DetectedObject> objects =
+                    getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, alliance);
+            if (objects != null) {
+                colorBlobs = new ColorBlobType[9];
+                int index = 0;
+                for (int i = 0; i < objects.size(); i++) {
+                    TrcOpenCvColorBlobPipeline.DetectedObject obj = objects.get(i);
+                    ColorBlobType colorBlob;
+                    if (obj.label.equals(LEDIndicator.PURPLE_BLOB)) {
+                        colorBlob = ColorBlobType.Purple;
+                    } else{
+                        colorBlob = ColorBlobType.Green;
+                    }
+                    Rect rect = obj.getObjectRect();
+                    double aspectRatio = rect.width / rect.height;
+                    int count = 0;
+                    if (aspectRatio <= ONE_BALL_THRESHOLD)
+                    {
+                        count = 1;
+                    } else if(aspectRatio <= TWO_BALL_THRESHOLD){
+                        count = 2;
+                    } else if(aspectRatio <= THREE_BALL_THRESHOLD){
+                        count = 3;
+                    } else if(aspectRatio <= FOUR_BALL_THRESHOLD){
+                        count = 4;
+                    } else if(aspectRatio <= FIVE_BALL_THRESHOLD){
+                        count = 5;
+                    } else if(aspectRatio <= SIX_BALL_THRESHOLD){
+                        count = 6;
+                    } else if(aspectRatio <= SEVEN_BALL_THRESHOLD) {
+                        count = 7;
+                    } else if (aspectRatio <= EIGHT_BALL_THRESHOLD) {
+                        count = 8;
+                    }else{
+                        count = 9;
+                    }
+                    for (int j = 0; j < count; j++){
+                        colorBlobs[index++] = colorBlob;
+                    }
+                }
+                for (int k = index; k < colorBlobs.length; k++){
+                    colorBlobs[k] = ColorBlobType.None;
+                }
+            }
+        }
+
+//                vision.getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0);
+        // if
+      return colorBlobs;
     }   //setDetectedMotif
 
     /**
@@ -955,7 +1018,7 @@ public class Vision
         {
             colorBlobInfo = colorBlobVision == null? null:
                 colorBlobVision.getBestDetectedTargetInfo(
-                    this::colorBlobFilter, colorBlobType, this::compareDistance, groundOffset,
+                    this::colorBlobFilter, colorBlobType, this::compareDistanceY, groundOffset,
                     robot.robotInfo.webCam1.camZOffset);
         }
 
@@ -1047,12 +1110,24 @@ public class Vision
      * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
      *         if a has higher distance than b.
      */
-    public int compareDistance(
+    public int compareDistanceY(
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
     {
         return (int)((b.objPose.y - a.objPose.y)*100);
-    }   //compareDistance
+    }   //compareDistanceY
+
+    public int compareDistanceX(
+            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
+            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b){
+        int comp = (int)((a.objPose.x - b.objPose.x)*100);
+        if (alliance == FtcAuto.Alliance.BLUE_ALLIANCE){
+            comp = (int)((a.objPose.x - b.objPose.x)*100);
+        }else if (alliance == FtcAuto.Alliance.RED_ALLIANCE){
+            comp = (int)((b.objPose.x - a.objPose.x)*100);
+        }
+        return comp;
+    }   //compareDistanceX
 
     /**
      * This method update the dashboard with vision status.
