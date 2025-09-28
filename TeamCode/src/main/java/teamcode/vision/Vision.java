@@ -47,6 +47,7 @@ import ftclib.vision.FtcVision;
 import ftclib.vision.FtcVisionAprilTag;
 import ftclib.vision.FtcVisionEocvColorBlob;
 import teamcode.Dashboard;
+import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.subsystems.LEDIndicator;
@@ -924,6 +925,18 @@ public class Vision
 
         return enabled;
     }   //isColorBlobVisionEnabled
+
+    /**
+     * The method uses vision to detect all Artifacts in the ramp and returns an array of 9 slots specifying the
+     * type of artifacts in each slot. At the end portion of the ramp where there is no artifact, it will contain
+     * None.
+     *
+     * @param alliance specifies the alliance color for sorting the array.
+     */
+    public void setDetectedMotif(FtcAuto.Alliance alliance)
+    {
+
+    }   //setDetectedMotif
 
     /**
      * This method calls ColorBlob vision to detect the specified color blob object.
