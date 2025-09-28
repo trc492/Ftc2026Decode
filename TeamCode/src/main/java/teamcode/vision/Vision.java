@@ -180,22 +180,22 @@ public class Vision
     //
     // YCrCb Color Space.
     private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purpleThresholdsLow = {0.0, 139.0, 120.0};
-    private static final double[] purpleThresholdsHigh = {110.0, 160.0, 150.0};
-    private static final double[] greenThresholdsLow = {0.0, 40.0, 100.0};
-    private static final double[] greenThresholdsHigh = {110.0, 118.0, 145.0};
+    private static final double[] purpleThresholdsLow = {80.0, 139.0, 120.0};
+    private static final double[] purpleThresholdsHigh = {180.0, 160.0, 150.0};
+    private static final double[] greenThresholdsLow = {70.0, 40.0, 100.0};
+    private static final double[] greenThresholdsHigh = {220.0, 118.0, 145.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(400.0)
-            .setMinPerimeter(80.0)
-            .setWidthRange(20.0, 500.0)
-            .setHeightRange(20.0, 500.0)
+            .setMinArea(50.0)
+            .setMinPerimeter(20.0)
+            .setWidthRange(10.0, 500.0)
+            .setHeightRange(10.0, 500.0)
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
-            .setAspectRatioRange(0.8, 1.25);
+            .setAspectRatioRange(0.5, 2.0);
     private static final double objectWidth = 5.0;  // inches
     private static final double objectHeight = 5.0; // inches
-    private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Purple;
+    private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Green;
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
