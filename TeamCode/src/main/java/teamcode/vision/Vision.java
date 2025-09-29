@@ -22,14 +22,12 @@
 
 package teamcode.vision;
 
-import org.firstinspires.ftc.robotcore.external.State;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -37,6 +35,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.robotcore.FtcOpMode;
@@ -938,68 +937,124 @@ public class Vision
 
     /**
      * The method uses vision to detect all Artifacts in the ramp and returns an array of 9 slots specifying the
-     * type of artifacts in each slot. At the end portion of the ramp where there is no artifact, it will contain
-     * None.
+     * type of artifacts in each slot.
      *
      * @param alliance specifies the alliance color for sorting the array.
      */
-    public ColorBlobType[] setDetectedMotif(FtcAuto.Alliance alliance)
+    public ColorBlobType[] getDetectedMotif(FtcAuto.Alliance alliance)
     {
         ColorBlobType[] colorBlobs = null;
 
          if (isColorBlobVisionEnabled(ColorBlobType.Any))
         {
             this.alliance = alliance;
-            ArrayList<TrcOpenCvColorBlobPipeline.DetectedObject> objects =
-                    getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, alliance);
-            if (objects != null) {
-                colorBlobs = new ColorBlobType[9];
+            ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> objects =
+                    getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0, 0.0);
+
+            if (objects != null)
+            {
                 int index = 0;
-                for (int i = 0; i < objects.size(); i++) {
-                    TrcOpenCvColorBlobPipeline.DetectedObject obj = objects.get(i);
+                colorBlobs = new ColorBlobType[9];
+
+                for (int i = 0; i < objects.size(); i++)
+                {
+                    TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj = objects.get(i);
                     ColorBlobType colorBlob;
-                    if (obj.label.equals(LEDIndicator.PURPLE_BLOB)) {
+
+                    if (obj.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB))
+                    {
                         colorBlob = ColorBlobType.Purple;
-                    } else{
+                    }
+                    else
+                    {
                         colorBlob = ColorBlobType.Green;
                     }
-                    Rect rect = obj.getObjectRect();
-                    double aspectRatio = rect.width / rect.height;
-                    int count = 0;
+
+                    double aspectRatio = (double) obj.objRect.width / (double) obj.objRect.height;
+                    int count;
+
                     if (aspectRatio <= ONE_BALL_THRESHOLD)
                     {
                         count = 1;
-                    } else if(aspectRatio <= TWO_BALL_THRESHOLD){
+                    }
+                    else if (aspectRatio <= TWO_BALL_THRESHOLD)
+                    {
                         count = 2;
-                    } else if(aspectRatio <= THREE_BALL_THRESHOLD){
+                    }
+                    else if (aspectRatio <= THREE_BALL_THRESHOLD)
+                    {
                         count = 3;
-                    } else if(aspectRatio <= FOUR_BALL_THRESHOLD){
+                    } else if (aspectRatio <= FOUR_BALL_THRESHOLD)
+                    {
                         count = 4;
-                    } else if(aspectRatio <= FIVE_BALL_THRESHOLD){
+                    } else if (aspectRatio <= FIVE_BALL_THRESHOLD)
+                    {
                         count = 5;
-                    } else if(aspectRatio <= SIX_BALL_THRESHOLD){
+                    }
+                    else if (aspectRatio <= SIX_BALL_THRESHOLD)
+                    {
                         count = 6;
-                    } else if(aspectRatio <= SEVEN_BALL_THRESHOLD) {
+                    } else if (aspectRatio <= SEVEN_BALL_THRESHOLD)
+                    {
                         count = 7;
-                    } else if (aspectRatio <= EIGHT_BALL_THRESHOLD) {
+                    } else if (aspectRatio <= EIGHT_BALL_THRESHOLD)
+                    {
                         count = 8;
-                    }else{
+                    }
+                    else
+                    {
                         count = 9;
                     }
-                    for (int j = 0; j < count; j++){
+
+                    for (int j = 0; j < count; j++)
+                    {
                         colorBlobs[index++] = colorBlob;
                     }
                 }
-                for (int k = index; k < colorBlobs.length; k++){
+
+                for (int k = index; k < colorBlobs.length; k++)
+                {
                     colorBlobs[k] = ColorBlobType.None;
                 }
             }
         }
 
-//                vision.getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0);
-        // if
       return colorBlobs;
-    }   //setDetectedMotif
+    }   //getDetectedMotif
+
+    /**
+     * This method calls ColorBlob vision to detect the specified color blob object.
+     *
+     * @param colorBlobType specifies the color blob type to be detected.
+     * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
+     * @param objGroundOffset specifies the object ground offset above the floor.
+     * @param cameraHeight specifies the height of the camera above the floor.
+     * @return detected color blob object info.
+     */
+    public ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> getDetectedColorBlobs(
+        ColorBlobType colorBlobType,
+        Comparator<? super TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> comparator,
+        double objGroundOffset, double cameraHeight)
+    {
+        ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobsInfo = null;
+
+        if (isColorBlobVisionEnabled(colorBlobType))
+        {
+            colorBlobsInfo = colorBlobVision.getDetectedTargetsInfo(
+                this::colorBlobFilter, colorBlobType, this::compareDistanceX, objGroundOffset, cameraHeight);
+
+            if (cameraStreamProcessor != null && colorBlobsInfo != null)
+            {
+                for (TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> objInfo: colorBlobsInfo)
+                {
+                    cameraStreamProcessor.addRectInfo(
+                        objInfo.detectedObj.label, objInfo.detectedObj.getRotatedRectVertices());
+                }
+            }
+        }
+
+        return colorBlobsInfo;
+    }   //getDetectedColorBlobs
 
     /**
      * This method calls ColorBlob vision to detect the specified color blob object.
@@ -1103,7 +1158,29 @@ public class Vision
     }   //getTargetGroundOffset
 
     /**
-     * This method is called by the Arrays.sort to sort the target object by increasing distance.
+     * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction
+     * will be determined by the alliance color.
+     *
+     * @param a specifies the first target
+     * @param b specifies the second target.
+     * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
+     *         if a has higher distance than b.
+     */
+    public int compareDistanceX(
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
+    {
+        int diff = (int)((b.objPose.x - a.objPose.x)*100);
+        if (alliance == FtcAuto.Alliance.RED_ALLIANCE)
+        {
+            diff = -diff;
+        }
+
+        return diff;
+    }   //compareDistanceX
+
+    /**
+     * This method is called by the Arrays.sort to sort the target object by increasing distance Y.
      *
      * @param a specifies the first target
      * @param b specifies the second target.
@@ -1116,18 +1193,6 @@ public class Vision
     {
         return (int)((b.objPose.y - a.objPose.y)*100);
     }   //compareDistanceY
-
-    public int compareDistanceX(
-            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
-            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b){
-        int comp = (int)((a.objPose.x - b.objPose.x)*100);
-        if (alliance == FtcAuto.Alliance.BLUE_ALLIANCE){
-            comp = (int)((a.objPose.x - b.objPose.x)*100);
-        }else if (alliance == FtcAuto.Alliance.RED_ALLIANCE){
-            comp = (int)((b.objPose.x - a.objPose.x)*100);
-        }
-        return comp;
-    }   //compareDistanceX
 
     /**
      * This method update the dashboard with vision status.
