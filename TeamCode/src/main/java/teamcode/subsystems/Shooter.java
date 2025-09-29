@@ -29,6 +29,7 @@ import ftclib.subsystem.FtcShooter;
 import ftclib.vision.FtcVisionAprilTag;
 import teamcode.Dashboard;
 import teamcode.Robot;
+import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -141,14 +142,11 @@ public class Shooter extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcShooter shooter;
-//    public final TrcDiscreteValue shooter1Velocity;
-//    public final TrcDiscreteValue shooter2Velocity;
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private TrcEvent launchCallbackEvent = null;
 
-    private boolean aprilTagTrackingEnabled = false;
     private Integer trackedAprilTagId = null;
     private double prevPanPosition = 0.0;
 
@@ -194,13 +192,7 @@ public class Shooter extends TrcSubsystem
         TrcMotor motor = shooter.getShooterMotor1();
         motor.setPositionSensorScaleAndOffset(Params.SHOOTER_REV_PER_COUNT, 0.0);
         motor.setVelocityPidParameters(
-            Params.shooter1PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED);
-//        // For tuning shooter motor 1 PID.
-//        shooter1Velocity = new TrcDiscreteValue(
-//            Params.SUBSYSTEM_NAME + ".motor1TargetVel",
-//            Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
-//            Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
-//            Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
+            Params.shooter1PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED, null);
 
         motor = shooter.getShooterMotor2();
         if (motor != null)
@@ -209,25 +201,15 @@ public class Shooter extends TrcSubsystem
             // If it needs to, this allows different PID coefficients for motor2 in case they are not quite identical.
             motor.setPositionSensorScaleAndOffset(Params.SHOOTER_REV_PER_COUNT, 0.0);
             motor.setVelocityPidParameters(
-                Params.shooter2PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED);
-//            // For tuning shooter motor 2 PID.
-//            shooter2Velocity = new TrcDiscreteValue(
-//                Params.SUBSYSTEM_NAME + ".motor2TargetVel",
-//                Params.SHOOTER_MIN_VEL, Params.SHOOTER_MAX_VEL,
-//                Params.SHOOTER_MIN_VEL_INC, Params.SHOOTER_MAX_VEL_INC,
-//                Params.SHOOTER_DEF_VEL, Params.SHOOTER_DEF_VEL_INC);
+                Params.shooter2PidCoeffs, Params.SHOOTER_PID_TOLERANCE, Params.SHOOTER_SOFTWARE_PID_ENABLED, null);
         }
-//        else
-//        {
-//            shooter2Velocity = null;
-//        }
 
         motor = shooter.getPanMotor();
         if (motor != null)
         {
             motor.setPositionSensorScaleAndOffset(Params.PAN_DEG_PER_COUNT, 0.0);
             motor.setPositionPidParameters(
-                Params.panPidCoeffs, Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
+                Params.panPidCoeffs, Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED, this::getPanPosition);
             // There is no lower limit switch, enable stall detection for zero calibration and soft limits for
             // protection.
             motor.setStallProtection(
@@ -241,7 +223,7 @@ public class Shooter extends TrcSubsystem
         {
             motor.setPositionSensorScaleAndOffset(Params.TILT_DEG_PER_COUNT, 0.0);
             motor.setPositionPidParameters(
-                Params.tiltPidCoeffs, Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
+                Params.tiltPidCoeffs, Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED, null);
             motor.setSoftPositionLimits(Params.TILT_MIN_POS, Params.TILT_MAX_POS, false);
         }
 
@@ -326,40 +308,52 @@ public class Shooter extends TrcSubsystem
     }   //launchCallback
 
     /**
-     * This method enables PurePursuitDrive AprilTag tracking.
+     * This method enables AprilTag tracking with the Turret (Pan motor).
      *
-     * @param trackedAprilTagId specifies the AprilTag IDs to looking for.
+     * @param aprilTagId specifies the AprilTag ID to track.
      */
-    public synchronized void enableAprilTagTracking(Integer trackedAprilTagId)
+    public void enableAprilTagTracking(int aprilTagId)
     {
-        this.trackedAprilTagId = trackedAprilTagId;
-        this.aprilTagTrackingEnabled = true;
-        shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+        if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
+        {
+            robot.vision.limelightVision.setPipeline(Vision.LimelightPipelineType.APRIL_TAG.ordinal());
+            this.trackedAprilTagId = aprilTagId;
+            shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+        }
     }   //enableAprilTagTracking
 
     /**
-     * This method disables PurePursuitDrive AprilTag tracking.
+     * This method disables AprilTag tracking.
      */
-    public synchronized void disableAprilTagTracking()
+    public void disableAprilTagTracking()
     {
+        shooter.panMotor.cancel();
         this.trackedAprilTagId = null;
-        this.aprilTagTrackingEnabled = false;
     }   //disableAprilTagTracking
 
+    /**
+     * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
+     * position, we can use the PID controller to track the AprilTag target.
+     *
+     * @return angle distance between the current position and the AprilTag target if tracking is ON, angle position
+     *         of the target relative to robot heading if tracking is OFF.
+     */
     public double getPanPosition()
     {
-        if (aprilTagTrackingEnabled)
+        if (trackedAprilTagId != null)
         {
+            // Tracking is enabled.
             TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> object =
-                    robot.vision.aprilTagVision.getBestDetectedTargetInfo(trackedAprilTagId, null);
+                robot.vision.aprilTagVision.getBestDetectedTargetInfo(trackedAprilTagId, null);
             prevPanPosition = object != null ? -object.objPose.angle : prevPanPosition;
             return prevPanPosition;
         }
         else
         {
-            return shooter.getPanMotor().getPosition();
+            // Tracking is disabled.
+            return shooter.panMotor.getPosition();
         }
-    }
+    }   //getPanPosition
 
     //
     // Implements TrcSubsystem abstract methods.
@@ -529,7 +523,8 @@ public class Shooter extends TrcSubsystem
                     Dashboard.PidTuning.pidCoeffs,
                     // Translate PidTolerance from RPM to RPS.
                     Dashboard.PidTuning.pidTolerance/60.0,
-                    Dashboard.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.useSoftwarePid,
+                    null);
             }
             else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
             {
@@ -537,21 +532,24 @@ public class Shooter extends TrcSubsystem
                     Dashboard.PidTuning.pidCoeffs,
                     // Translate PidTolerance from RPM to RPS.
                     Dashboard.PidTuning.pidTolerance/60.0,
-                    Dashboard.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.useSoftwarePid,
+                    null);
             }
             else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
             {
                 shooter.getPanMotor().setPositionPidParameters(
                     Dashboard.PidTuning.pidCoeffs,
                     Dashboard.PidTuning.pidTolerance,
-                    Dashboard.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.useSoftwarePid,
+                    this::getPanPosition);
             }
             else if (subComponent.equalsIgnoreCase(Params.TILT_MOTOR_NAME))
             {
                 shooter.getTiltMotor().setPositionPidParameters(
                     Dashboard.PidTuning.pidCoeffs,
                     Dashboard.PidTuning.pidTolerance,
-                    Dashboard.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.useSoftwarePid,
+                    null);
             }
             else if (subComponent.equalsIgnoreCase(Params.LAUNCHER_SERVO_NAME))
             {

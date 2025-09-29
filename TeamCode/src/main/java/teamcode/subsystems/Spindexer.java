@@ -171,7 +171,7 @@ public class Spindexer extends TrcSubsystem
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
         spindexer.motor.setPositionPidParameters(
-            Params.posPidCoeffs, Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
+            Params.posPidCoeffs, Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED, null);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);
     }   //Spindexer
 
@@ -742,7 +742,8 @@ public class Spindexer extends TrcSubsystem
                 spindexer.motor.setPositionPidParameters(
                     Dashboard.PidTuning.pidCoeffs,
                     Dashboard.PidTuning.pidTolerance,
-                    Dashboard.PidTuning.useSoftwarePid);
+                    Dashboard.PidTuning.useSoftwarePid,
+                    null);
             }
             else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
             {

@@ -150,7 +150,7 @@ public class Vision
      */
     public static class LimelightParams extends FtcRobotDrive.VisionInfo
     {
-        public static final int NUM_PIPELINES = 4;
+        public static final int NUM_PIPELINES = 2;
 
         public LimelightParams()
         {
@@ -176,6 +176,18 @@ public class Vision
         Green,
         Any
     }   //enum ColorBlobType
+
+    public enum LimelightPipelineType
+    {
+        APRIL_TAG(0),
+        ARTIFACT(1);
+
+        final int value;
+        LimelightPipelineType(int value)
+        {
+            this.value = value;
+        }
+    }   //enum LimelightPipelineType
 
     // Warning: EOCV converts camera stream to RGBA whereas Desktop OpenCV converts it to BGRA. Therefore, the correct
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
@@ -206,6 +218,7 @@ public class Vision
     private static final double SIX_BALL_THRESHOLD = 6.0;
     private static final double SEVEN_BALL_THRESHOLD = 7.0;
     private static final double EIGHT_BALL_THRESHOLD = 8.0;
+
     private final TrcDbgTrace tracer;
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
@@ -308,7 +321,7 @@ public class Vision
             {
                 limelightVision = new FtcLimelightVision(
                     robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose, this::getTargetGroundOffset);
-                limelightVision.setPipeline(0);
+                limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
             }
             // Creating Vision Processors for VisionPortal.
             ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
