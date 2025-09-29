@@ -146,9 +146,7 @@ public class Shooter extends TrcSubsystem
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private TrcEvent launchCallbackEvent = null;
-
     private Integer trackedAprilTagId = null;
-    private double prevPanPosition = 0.0;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -340,19 +338,22 @@ public class Shooter extends TrcSubsystem
      */
     public double getPanPosition()
     {
+        double panPosition;
+
         if (trackedAprilTagId != null)
         {
             // Tracking is enabled.
             TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> object =
                 robot.vision.aprilTagVision.getBestDetectedTargetInfo(trackedAprilTagId, null);
-            prevPanPosition = object != null ? -object.objPose.angle : prevPanPosition;
-            return prevPanPosition;
+            panPosition = object != null ? -object.objPose.angle : 0.0;
         }
         else
         {
             // Tracking is disabled.
-            return shooter.panMotor.getPosition();
+            panPosition = shooter.panMotor.getPosition();
         }
+
+        return panPosition;
     }   //getPanPosition
 
     //
