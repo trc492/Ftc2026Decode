@@ -969,7 +969,8 @@ public class Vision
 
     /**
      * The method uses vision to detect all Artifacts in the ramp and returns an array of 9 slots specifying the
-     * type of artifacts in each slot.
+     * type of artifacts in each slot. It assumes Circle Detection of the ColorBlob pipeline has been turned off
+     * before calling this method.
      *
      * @param alliance specifies the alliance color for sorting the array.
      */
