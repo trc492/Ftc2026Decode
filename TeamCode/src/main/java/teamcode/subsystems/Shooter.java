@@ -334,6 +334,7 @@ public class Shooter extends TrcSubsystem
     {
         this.trackedAprilTagId = trackedAprilTagId;
         this.aprilTagTrackingEnabled = true;
+        shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
     }   //enableAprilTagTracking
 
     /**
@@ -356,7 +357,7 @@ public class Shooter extends TrcSubsystem
         }
         else
         {
-            return 0.0;
+            return shooter.getPanMotor().getPosition();
         }
     }
 
