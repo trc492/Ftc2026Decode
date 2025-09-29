@@ -26,6 +26,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
+import ftclib.vision.FtcVisionAprilTag;
 import teamcode.Dashboard;
 import teamcode.Robot;
 import trclib.controller.TrcPidController;
@@ -36,6 +37,7 @@ import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcShootParamTable;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class implements a Shooter Subsystem. This implementation consists of one or two shooter motors. For
@@ -145,6 +147,10 @@ public class Shooter extends TrcSubsystem
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private TrcEvent launchCallbackEvent = null;
+
+    private boolean aprilTagTrackingEnabled = false;
+    private Integer trackedAprilTagId = null;
+    private double prevPanPosition = 0.0;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -318,6 +324,41 @@ public class Shooter extends TrcSubsystem
         launchOwner = null;
         launchCallbackEvent = null;
     }   //launchCallback
+
+    /**
+     * This method enables PurePursuitDrive AprilTag tracking.
+     *
+     * @param trackedAprilTagId specifies the AprilTag IDs to looking for.
+     */
+    public synchronized void enableAprilTagTracking(Integer trackedAprilTagId)
+    {
+        this.trackedAprilTagId = trackedAprilTagId;
+        this.aprilTagTrackingEnabled = true;
+    }   //enableAprilTagTracking
+
+    /**
+     * This method disables PurePursuitDrive AprilTag tracking.
+     */
+    public synchronized void disableAprilTagTracking()
+    {
+        this.trackedAprilTagId = null;
+        this.aprilTagTrackingEnabled = false;
+    }   //disableAprilTagTracking
+
+    public double getPanPosition()
+    {
+        if (aprilTagTrackingEnabled)
+        {
+            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> object =
+                    robot.vision.aprilTagVision.getBestDetectedTargetInfo(trackedAprilTagId, null);
+            prevPanPosition = object != null ? -object.objPose.angle : prevPanPosition;
+            return prevPanPosition;
+        }
+        else
+        {
+            return 0.0;
+        }
+    }
 
     //
     // Implements TrcSubsystem abstract methods.
