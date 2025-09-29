@@ -936,6 +936,25 @@ public class Vision
     }   //isColorBlobVisionEnabled
 
     /**
+     * This method checks the detected object aspect ratio to determine how many artifacts are in the detected object.
+     *
+     * @param obj specifies the detected object.
+     * @return count of artifact in the detected object.
+     */
+    private int getArtifactCount(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj)
+    {
+        double aspectRatio = (double) obj.objRect.width/(double) obj.objRect.height;
+        return aspectRatio <= ONE_BALL_THRESHOLD ? 1 :
+               aspectRatio <= TWO_BALL_THRESHOLD ? 2 :
+               aspectRatio <= THREE_BALL_THRESHOLD ? 3 :
+               aspectRatio <= FOUR_BALL_THRESHOLD ? 4 :
+               aspectRatio <= FIVE_BALL_THRESHOLD ? 5 :
+               aspectRatio <= SIX_BALL_THRESHOLD ? 6 :
+               aspectRatio <= SEVEN_BALL_THRESHOLD ? 8 :
+               aspectRatio <= EIGHT_BALL_THRESHOLD ? 8 : 9;
+    }   //getArtifactCount
+
+    /**
      * The method uses vision to detect all Artifacts in the ramp and returns an array of 9 slots specifying the
      * type of artifacts in each slot.
      *
@@ -945,11 +964,11 @@ public class Vision
     {
         ColorBlobType[] colorBlobs = null;
 
-         if (isColorBlobVisionEnabled(ColorBlobType.Any))
+        if (isColorBlobVisionEnabled(ColorBlobType.Any))
         {
             this.alliance = alliance;
             ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> objects =
-                    getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0, 0.0);
+                getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0, 0.0);
 
             if (objects != null)
             {
@@ -959,52 +978,10 @@ public class Vision
                 for (int i = 0; i < objects.size(); i++)
                 {
                     TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj = objects.get(i);
-                    ColorBlobType colorBlob;
-
-                    if (obj.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB))
-                    {
-                        colorBlob = ColorBlobType.Purple;
-                    }
-                    else
-                    {
-                        colorBlob = ColorBlobType.Green;
-                    }
-
-                    double aspectRatio = (double) obj.objRect.width / (double) obj.objRect.height;
-                    int count;
-
-                    if (aspectRatio <= ONE_BALL_THRESHOLD)
-                    {
-                        count = 1;
-                    }
-                    else if (aspectRatio <= TWO_BALL_THRESHOLD)
-                    {
-                        count = 2;
-                    }
-                    else if (aspectRatio <= THREE_BALL_THRESHOLD)
-                    {
-                        count = 3;
-                    } else if (aspectRatio <= FOUR_BALL_THRESHOLD)
-                    {
-                        count = 4;
-                    } else if (aspectRatio <= FIVE_BALL_THRESHOLD)
-                    {
-                        count = 5;
-                    }
-                    else if (aspectRatio <= SIX_BALL_THRESHOLD)
-                    {
-                        count = 6;
-                    } else if (aspectRatio <= SEVEN_BALL_THRESHOLD)
-                    {
-                        count = 7;
-                    } else if (aspectRatio <= EIGHT_BALL_THRESHOLD)
-                    {
-                        count = 8;
-                    }
-                    else
-                    {
-                        count = 9;
-                    }
+                    ColorBlobType colorBlob =
+                        obj.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ?
+                            ColorBlobType.Purple : ColorBlobType.Green;
+                    int count = getArtifactCount(obj);
 
                     for (int j = 0; j < count; j++)
                     {
@@ -1019,7 +996,7 @@ public class Vision
             }
         }
 
-      return colorBlobs;
+        return colorBlobs;
     }   //getDetectedMotif
 
     /**
@@ -1041,7 +1018,7 @@ public class Vision
         if (isColorBlobVisionEnabled(colorBlobType))
         {
             colorBlobsInfo = colorBlobVision.getDetectedTargetsInfo(
-                this::colorBlobFilter, colorBlobType, this::compareDistanceX, objGroundOffset, cameraHeight);
+                this::colorBlobFilter, colorBlobType, comparator, objGroundOffset, cameraHeight);
 
             if (cameraStreamProcessor != null && colorBlobsInfo != null)
             {
