@@ -87,7 +87,7 @@ public class RobotBase
             // Drive Motors
             driveMotorType = FtcMotorActuator.MotorType.DcMotor;
             driveMotorNames = new String[] {"lfDriveMotor", "rfDriveMotor", "lbDriveMotor", "rbDriveMotor"};
-            driveMotorInverted = new boolean[] {false, false, false, false};    //TODO: Need to verify
+            driveMotorInverted = new boolean[] {true, false, true, false};
             odometryType = TrcDriveBase.OdometryType.AbsoluteOdometry;
             // Odometry Wheels (Offset from wheel base center - not used for Pinpoint)
             odWheelXScale = odWheelYScale = Math.PI * ODWHEEL_DIAMETER / ODWHEEL_CPR;   //inches per count

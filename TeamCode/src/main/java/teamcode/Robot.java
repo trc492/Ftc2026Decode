@@ -213,7 +213,7 @@ public class Robot
             endOfAutoRobotPose = null;
         }
 
-        if (vision.colorBlobVision != null)
+        if (vision != null)
         {
             globalTracer.traceInfo(moduleName, "Enabling WebCam ColorBlobVision.");
             vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, true);

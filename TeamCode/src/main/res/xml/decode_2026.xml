@@ -40,7 +40,9 @@ SOFTWARE.
             <AnalogInput name="rbSteerEncoder" port="1" />
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
             <!-- Shooter -->
+            <!--
             <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="2"/>
+            -->
             <Servo name="Shooter.Launcher" port="2" />
 
             <!--
@@ -67,10 +69,10 @@ SOFTWARE.
             <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
             -->
             <!-- LED Indicators -->
-            <RevBlinkinLedDriver name="StatusLED" port="0" />
             <Servo name="Spindexer1LED" port="1" />
             <Servo name="Spindexer2LED" port="2" />
             <Servo name="Spindexer3LED" port="3" />
+            <RevBlinkinLedDriver name="StatusLED" port="4" />
 
             <!--
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0"/>
