@@ -22,22 +22,23 @@ SOFTWARE.
 -->
 <Robot type="FirstInspires-FTC" name="Decode_2026">
     <!-- Cameras -->
+    <!--
     <EthernetDevice name="Limelight3a" serialNumber="EthernetOverUsb:eth0:172.29.0.21" port="0" ipAddress="172.29.0.1" />
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x045e|product=0x0779|connection="/>
+    -->
     <!--
     <Webcam name="Webcam 1" serialNumber="13F45DDF"/>
     -->
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
             <!-- DriveBase -->
-            <goBILDA5202SeriesMotor name="rrDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="rbDriveMotor" port="0"/>
             <goBILDA5202SeriesMotor name="rfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="rf.SteerServo" port="0" />
-            <ContinuousRotationServo name="rr.SteerServo" port="5" />
-            <AnalogInput name="rfServoEncoder" port="0" />
-            <AnalogInput name="rrServoEncoder" port="1" />
+            <ContinuousRotationServo name="rfSteerServo" port="0" />
+            <ContinuousRotationServo name="rbSteerServo" port="5" />
+            <AnalogInput name="rfSteerEncoder" port="0" />
+            <AnalogInput name="rbSteerEncoder" port="1" />
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
-
             <!-- Shooter -->
             <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="2"/>
             <Servo name="Shooter.Launcher" port="2" />
@@ -52,14 +53,12 @@ SOFTWARE.
             <!-- DriveBase -->
             <goBILDA5202SeriesMotor name="lbDriveMotor" port="0"/>
             <goBILDA5202SeriesMotor name="lfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="lf.SteerServo" port="0" />
-            <ContinuousRotationServo name="lr.SteerServo" port="5" />
-            <AnalogInput name="lfServoEncoder" port="0" />
-            <AnalogInput name="lrServoEncoder" port="1" />
-
+            <ContinuousRotationServo name="lfSteerServo" port="0" />
+            <ContinuousRotationServo name="lbSteerServo" port="5" />
+            <AnalogInput name="lfSteerEncoder" port="0" />
+            <AnalogInput name="lbSteerEncoder" port="1" />
             <!-- Intake -->
             <RevRobotics40HDHexMotor name="Intake.Motor" port="2"/>
-
             <!-- Spindexer -->
             <RevRobotics40HDHexMotor name="Spindexer.Motor" port="3" />
             <!--

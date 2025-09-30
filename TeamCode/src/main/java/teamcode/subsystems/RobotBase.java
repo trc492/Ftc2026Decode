@@ -58,7 +58,7 @@ public class RobotBase
         DifferentialRobot,
         // Generic Mecanum Drive Base Robot
         MecanumRobot,
-        // Generic Swerve Drive Base Robot
+        // Decode Swerve Drive Base Robot
         DecodeRobot
     }   //enum RobotType
 
@@ -179,7 +179,7 @@ public class RobotBase
             steerMotorPidTolerance = 1.0;
             // Swerve Modules
             swerveModuleNames = new String[] {"lfWheel", "rfWheel", "lbWheel", "rbWheel"};
-        }   //SwerveParams
+        }   //DecodeParams
     }   //class SwerveParams
 
     /**

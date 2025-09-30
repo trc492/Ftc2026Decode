@@ -44,7 +44,7 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final RobotBase.RobotType robotType       = RobotBase.RobotType.MecanumRobot;
+        public static final RobotBase.RobotType robotType       = RobotBase.RobotType.DecodeRobot;
         public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
         public static final boolean useLoopPerformanceMonitor   = true;
@@ -54,11 +54,11 @@ public class RobotParams
         public static final boolean updateDashboard             = !inCompetition;
         public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
-        public static final boolean showVision                  = true;
-        public static final boolean showSubsystems              = true;
+        public static final boolean showVision                  = false;
+        public static final boolean showSubsystems              = false;
         public static final boolean useRumble                   = false;
         // Vision
-        public static final boolean useVision                   = true;
+        public static final boolean useVision                   = false;
         public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
         public static final boolean useLimelightVision          = false;
@@ -70,12 +70,12 @@ public class RobotParams
         public static final boolean showVisionView              = !inCompetition;
         public static final boolean showVisionStat              = true;
         // Drive Base
-        public static final boolean useDriveBase                = false;
-        public static final boolean usePinpointOdometry         = false;
+        public static final boolean useDriveBase                = true;
+        public static final boolean usePinpointOdometry         = true;
         public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = false;
         // Subsystems
-        public static final boolean useSubsystems               = true;
+        public static final boolean useSubsystems               = false;
         public static final boolean useIntake                   = false;
         public static final boolean useSpindexer                = false;
         public static final boolean useShooter                  = false;
