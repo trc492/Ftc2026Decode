@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import java.util.Arrays;
+
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcChoiceMenu;
@@ -1036,6 +1038,11 @@ public class FtcTest extends FtcTeleOp
             if (robot.vision.colorBlobVision != null)
             {
                 robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Any, 0.0, lineNum++);
+                Vision.ColorBlobType[] blobs = robot.vision.getDetectedMotif(FtcAuto.Alliance.BLUE_ALLIANCE);
+                if (blobs != null){
+                    robot.dashboard.displayPrintf(lineNum++, "Blobs=%s", Arrays.toString(blobs));
+                }
+
             }
 
             if (robot.vision.vision != null)

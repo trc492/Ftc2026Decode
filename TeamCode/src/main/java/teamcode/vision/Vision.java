@@ -193,11 +193,11 @@ public class Vision
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
     //
     // YCrCb Color Space.
-    private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purpleThresholdsLow = {80.0, 139.0, 120.0};
-    private static final double[] purpleThresholdsHigh = {180.0, 160.0, 150.0};
-    private static final double[] greenThresholdsLow = {70.0, 40.0, 100.0};
-    private static final double[] greenThresholdsHigh = {220.0, 118.0, 145.0};
+    private static final int colorConversion = Imgproc.COLOR_RGB2HSV;
+    private static final double[] purpleThresholdsLow = {165.0, 255.0, 255.0};
+    private static final double[] purpleThresholdsHigh = {130.0, 20.0, 10.0};
+    private static final double[] greenThresholdsLow = {48.0, 45.0, 45.0};
+    private static final double[] greenThresholdsHigh = {100.0, 250.0, 306.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(50.0)
