@@ -65,7 +65,6 @@ public class FtcTest extends FtcTeleOp
         SENSORS_TEST,
         SUBSYSTEMS_TEST,
         VISION_TEST,
-        TUNE_COLORBLOB_VISION,
         DRIVE_SPEED_TEST,
         DRIVE_MOTORS_TEST,
         X_TIMED_DRIVE,
@@ -116,6 +115,8 @@ public class FtcTest extends FtcTeleOp
     private String tuneSubsystemName = null;
     private TrcSubsystem subsystem = null;
     private String subComponent = null;
+    // Vision Test.
+    private Vision.ColorBlobType testVisionColorBlobType = Vision.ColorBlobType.Any;
 
     //
     // Overrides FtcOpMode abstract method.
@@ -162,8 +163,6 @@ public class FtcTest extends FtcTeleOp
             case VISION_TEST:
                 if (robot.vision != null)
                 {
-                    robot.vision.setCameraStreamEnabled(true);
-                    // Vision generally will impact performance, so we only enable it if it's needed.
                     if (robot.vision.aprilTagVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Webcam.");
@@ -179,17 +178,9 @@ public class FtcTest extends FtcTeleOp
                     if (robot.vision.colorBlobVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling ColorBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, true);
+                        robot.vision.setColorBlobVisionEnabled(testVisionColorBlobType, true);
+                        robot.vision.setDashboardStreamEnabled(true);
                     }
-                }
-                break;
-
-            case TUNE_COLORBLOB_VISION:
-                if (robot.vision != null && robot.vision.rawColorBlobVision != null)
-                {
-                    robot.globalTracer.traceInfo(moduleName, "Enabling FtcRawEocvVision.");
-                    robot.vision.setCameraStreamEnabled(true);
-                    robot.vision.setRawColorBlobVisionEnabled(true);
                 }
                 break;
 
@@ -418,7 +409,6 @@ public class FtcTest extends FtcTeleOp
                     break;
 
                 case VISION_TEST:
-                case TUNE_COLORBLOB_VISION:
                     doVisionTest(lineNum);
                     break;
 
@@ -551,25 +541,22 @@ public class FtcTest extends FtcTeleOp
                     }
                     passToTeleOp = false;
                 }
-                else if (testChoices.test == Test.TUNE_COLORBLOB_VISION &&
-                         robot.vision != null && robot.vision.rawColorBlobVision != null)
+                else if (testChoices.test == Test.VISION_TEST && robot.vision != null)
                 {
                     if (pressed)
                     {
-                        // Set display to next intermediate Mat in the pipeline.
-                        robot.vision.rawColorBlobVision.getPipeline().setNextVideoOutput();
-                    }
-                    passToTeleOp = false;
-                }
-                else if (testChoices.test == Test.VISION_TEST &&
-                         robot.vision != null && robot.vision.isLimelightVisionEnabled())
-                {
-                    if (pressed)
-                    {
-                        int pipelineIndex = (robot.vision.limelightVision.getPipeline() + 1) %
-                                            Vision.LimelightParams.NUM_PIPELINES;
-                        robot.vision.limelightVision.setPipeline(pipelineIndex);
-                        robot.globalTracer.traceInfo(moduleName, "Switch Limelight pipeline to " + pipelineIndex);
+                        if (robot.vision.colorBlobVision != null)
+                        {
+                            // Set display to next intermediate Mat in the pipeline.
+                            robot.vision.colorBlobVision.getVisionProcessor().getPipeline().setNextVideoOutput();
+                        }
+                        else if (robot.vision.isLimelightVisionEnabled())
+                        {
+                            int pipelineIndex = (robot.vision.limelightVision.getPipeline() + 1) %
+                                                Vision.LimelightParams.NUM_PIPELINES;
+                            robot.vision.limelightVision.setPipeline(pipelineIndex);
+                            robot.globalTracer.traceInfo(moduleName, "Switch Limelight pipeline to " + pipelineIndex);
+                        }
                     }
                     passToTeleOp = false;
                 }
@@ -621,6 +608,27 @@ public class FtcTest extends FtcTeleOp
                             FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
                             swerveDrive.setSteerAngle(90.0, false, true);
                         }
+                    }
+                    passToTeleOp = false;
+                }
+                else if (testChoices.test == Test.VISION_TEST && robot.vision != null &&
+                         robot.vision.colorBlobVision != null)
+                {
+                    if (pressed)
+                    {
+                        if (testVisionColorBlobType == Vision.ColorBlobType.Any)
+                        {
+                            testVisionColorBlobType = Vision.ColorBlobType.Purple;
+                        }
+                        else if (testVisionColorBlobType == Vision.ColorBlobType.Purple)
+                        {
+                            testVisionColorBlobType = Vision.ColorBlobType.Green;
+                        }
+                        else
+                        {
+                            testVisionColorBlobType = Vision.ColorBlobType.Any;
+                        }
+                        robot.vision.setColorBlobVisionEnabled(testVisionColorBlobType, true);
                     }
                     passToTeleOp = false;
                 }
@@ -680,13 +688,22 @@ public class FtcTest extends FtcTeleOp
                     }
                     passToTeleOp = false;
                 }
-                else if (testChoices.test == Test.TUNE_COLORBLOB_VISION &&
-                         robot.vision != null && robot.vision.rawColorBlobPipeline != null)
+                else if (testChoices.test == Test.VISION_TEST && robot.vision != null)
                 {
                     if (pressed)
                     {
-                        robot.vision.updateColorBlobPipelineConfig(
-                            robot.vision.rawColorBlobPipeline.getColorBlobPipeline());
+                        if (driverAltFunc)
+                        {
+                            fpsMeterEnabled = !fpsMeterEnabled;
+                            robot.vision.setFpsMeterEnabled(fpsMeterEnabled);
+                            robot.globalTracer.traceInfo(moduleName, "fpsMeterEnabled = %s", fpsMeterEnabled);
+                        }
+                        else
+                        {
+                            robot.vision.updateColorBlobPipelineConfig(
+                                robot.vision.colorBlobVision.getVisionProcessor().getPipeline());
+                            robot.globalTracer.traceInfo(moduleName, "Update ColorBlob pipeline config.");
+                        }
                     }
                     passToTeleOp = false;
                 }
@@ -707,16 +724,6 @@ public class FtcTest extends FtcTeleOp
                             // Stop steer calibration.
                             swerveDrive.stopSteeringCalibration();
                         }
-                    }
-                    passToTeleOp = false;
-                }
-                else if (testChoices.test == Test.VISION_TEST)
-                {
-                    if (pressed)
-                    {
-                        fpsMeterEnabled = !fpsMeterEnabled;
-                        robot.vision.setFpsMeterEnabled(fpsMeterEnabled);
-                        robot.globalTracer.traceInfo(moduleName, "fpsMeterEnabled = %s", fpsMeterEnabled);
                     }
                     passToTeleOp = false;
                 }
@@ -934,7 +941,6 @@ public class FtcTest extends FtcTeleOp
         testMenu.addChoice("Sensors test", Test.SENSORS_TEST, true);
         testMenu.addChoice("Subsystems test", Test.SUBSYSTEMS_TEST, false);
         testMenu.addChoice("Vision test", Test.VISION_TEST, false);
-        testMenu.addChoice("Tune ColorBlob vision", Test.TUNE_COLORBLOB_VISION, false);
         testMenu.addChoice("Drive speed test", Test.DRIVE_SPEED_TEST, false);
         testMenu.addChoice("Drive motors test", Test.DRIVE_MOTORS_TEST, false);
         testMenu.addChoice("X Timed drive", Test.X_TIMED_DRIVE, false);
@@ -1039,10 +1045,10 @@ public class FtcTest extends FtcTeleOp
             {
                 robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Any, 0.0, lineNum++);
                 Vision.ColorBlobType[] blobs = robot.vision.getDetectedMotif(FtcAuto.Alliance.BLUE_ALLIANCE);
-                if (blobs != null){
+                if (blobs != null)
+                {
                     robot.dashboard.displayPrintf(lineNum++, "Blobs=%s", Arrays.toString(blobs));
                 }
-
             }
 
             if (robot.vision.vision != null)

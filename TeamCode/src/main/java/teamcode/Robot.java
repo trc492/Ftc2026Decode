@@ -103,8 +103,7 @@ public class Robot
         robotDrive = robotBase.getRobotDrive();
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
-            (RobotParams.Preferences.tuneColorBlobVision ||
-             RobotParams.Preferences.useWebcamAprilTagVision ||
+            (RobotParams.Preferences.useWebcamAprilTagVision ||
              RobotParams.Preferences.useColorBlobVision ||
              RobotParams.Preferences.useLimelightVision))
         {
@@ -253,7 +252,6 @@ public class Robot
         //
         if (vision != null)
         {
-            vision.setCameraStreamEnabled(false);
             if (vision.isRawColorBlobVisionEnabled())
             {
                 globalTracer.traceInfo(moduleName, "Disabling RawColorBlobVision.");
@@ -275,6 +273,7 @@ public class Robot
             if (vision.colorBlobVision != null)
             {
                 globalTracer.traceInfo(moduleName, "Disabling ColorBlobVision.");
+                vision.setDashboardStreamEnabled(false);
                 vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, false);
             }
 

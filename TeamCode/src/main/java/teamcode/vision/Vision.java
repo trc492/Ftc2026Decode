@@ -30,8 +30,6 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
@@ -192,7 +190,7 @@ public class Vision
     // Warning: EOCV converts camera stream to RGBA whereas Desktop OpenCV converts it to BGRA. Therefore, the correct
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
     //
-    // YCrCb Color Space.
+//    // YCrCb Color Space.
 //    private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
 //    private static final double[] purpleThresholdsLow = {80.0, 139.0, 120.0};
 //    private static final double[] purpleThresholdsHigh = {180.0, 160.0, 150.0};
@@ -248,8 +246,7 @@ public class Vision
     {
         FtcOpMode opMode = FtcOpMode.getInstance();
 
-        if (robot.robotInfo.webCam1 == null &&
-            (RobotParams.Preferences.useWebCam || RobotParams.Preferences.tuneColorBlobVision))
+        if (robot.robotInfo.webCam1 == null && RobotParams.Preferences.useWebCam)
         {
             throw new IllegalArgumentException("Must provide valid WebCam 1 info.");
         }
@@ -270,155 +267,96 @@ public class Vision
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
         webcam2 = robot.robotInfo.webCam2 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
-        // TuneColorBlobVision: must use webcam1.
-        if (RobotParams.Preferences.tuneColorBlobVision && webcam1 != null)
+        // LimelightVision (not a Vision Processor).
+        if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
-            OpenCvCamera openCvCamera;
+            limelightVision = new FtcLimelightVision(
+                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose, this::getTargetGroundOffset);
+            limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
+        }
+        // Creating Vision Processors for VisionPortal.
+        ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
 
-            if (RobotParams.Preferences.showVisionView)
-            {
-                int cameraViewId = opMode.hardwareMap.appContext.getResources().getIdentifier(
-                    "cameraMonitorViewId", "id", opMode.hardwareMap.appContext.getPackageName());
-                openCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcam1, cameraViewId);
-            }
-            else
-            {
-                openCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcam1);
-            }
+        if (RobotParams.Preferences.useWebcamAprilTagVision)
+        {
+            tracer.traceInfo(moduleName, "Starting Webcam AprilTagVision...");
+            FtcVisionAprilTag.Parameters aprilTagParams = new FtcVisionAprilTag.Parameters()
+                .setDrawTagIdEnabled(true)
+                .setDrawTagOutlineEnabled(true)
+                .setDrawAxesEnabled(false)
+                .setDrawCubeProjectionEnabled(false)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
+            aprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
+            aprilTagProcessor = aprilTagVision.getVisionProcessor();
+            visionProcessorsList.add(aprilTagProcessor);
+        }
 
-            if (RobotParams.Preferences.useCameraStreamProcessor)
-            {
-                com.acmerobotics.dashboard.FtcDashboard.getInstance().startCameraStream(openCvCamera, 0);
-            }
+        if (RobotParams.Preferences.useColorBlobVision && robot.robotInfo.webCam1 != null)
+        {
+            FtcRobotDrive.CameraInfo camInfo = null;
+            TrcHomographyMapper.Rectangle camRect = null, worldRect = null;
 
-            tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
-            TrcOpenCvColorBlobPipeline.PipelineParams pipelineParams = new TrcOpenCvColorBlobPipeline.PipelineParams()
-                .setColorThresholds(
-                    colorConversion,
-                    tuneColorBlobType == ColorBlobType.Purple? LEDIndicator.PURPLE_BLOB: LEDIndicator.GREEN_BLOB,
-                    Dashboard.VisionTuning.colorThresholdsLow, Dashboard.VisionTuning.colorThresholdsHigh)
-                .setContourDetectionParams(true, Dashboard.VisionTuning.filterContourParams)
-                .setObjectSize(objectWidth, objectHeight);
+            tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
+            // Create the pipeline for both purple and green artifacts.
+            TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
+                new TrcOpenCvColorBlobPipeline.PipelineParams()
+                    .setColorThresholds(
+                        colorConversion, LEDIndicator.PURPLE_BLOB, purpleThresholdsLow, purpleThresholdsHigh)
+                    .addColorThresholds(LEDIndicator.GREEN_BLOB, greenThresholdsLow, greenThresholdsHigh)
+                    .setContourDetectionParams(true, artifactFilterContourParams)
+                    .setObjectSize(objectWidth, objectHeight);
+
             if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
             {
-                FtcRobotDrive.CameraInfo camInfo = robot.robotInfo.webCam1.camInfo;
+                camInfo = robot.robotInfo.webCam1.camInfo;
                 if (camInfo != null)
                 {
-                    pipelineParams.setSolvePnpParams(
+                    colorBlobPipelineParams.setSolvePnpParams(
                         camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
                         robot.robotInfo.webCam1.camPose);
                 }
+                camRect = robot.robotInfo.webCam1.cameraRect;
+                worldRect = robot.robotInfo.webCam1.worldRect;
             }
-            rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline("RawColorBlobPipeline", pipelineParams);
-            // By default, display original Mat.
-            rawColorBlobPipeline.getColorBlobPipeline().setVideoOutput(0);
-            // Configuring initial settings from Dashboard.VisionTuning but may change with FtcDashboard.
-            updateColorBlobPipelineConfig(rawColorBlobPipeline.getColorBlobPipeline());
-            rawColorBlobVision = new FtcRawEocvVision(
-                "RawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                null, null, openCvCamera, robot.robotInfo.webCam1.camOrientation);
-            rawColorBlobVision.setFpsMeterEnabled(RobotParams.Preferences.showVisionStat);
-            setRawColorBlobVisionEnabled(false);
+
+            colorBlobVision = new FtcVisionEocvColorBlob(
+                "ColorBlobVision", colorBlobPipelineParams, camRect, worldRect, true, false, false);
+            colorBlobProcessor = colorBlobVision.getVisionProcessor();
+            if (RobotParams.Preferences.streamToDashboard)
+            {
+                colorBlobProcessor.enableDashboardStream();
+            }
+            updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
+            visionProcessorsList.add(colorBlobProcessor);
         }
-        else
+
+        if (!visionProcessorsList.isEmpty())
         {
-            // LimelightVision (not a Vision Processor).
-            if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
+            VisionProcessor[] visionProcessors = new VisionProcessor[visionProcessorsList.size()];
+            visionProcessorsList.toArray(visionProcessors);
+            if (RobotParams.Preferences.useWebCam)
             {
-                limelightVision = new FtcLimelightVision(
-                    robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose, this::getTargetGroundOffset);
-                limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
+                // Use USB webcams.
+                vision = new FtcVision(
+                    webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
+                    RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
+                    visionProcessors);
             }
-            // Creating Vision Processors for VisionPortal.
-            ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
-
-            if (RobotParams.Preferences.useCameraStreamProcessor)
+            else
             {
-                cameraStreamProcessor = new FtcCameraStreamProcessor();
-                visionProcessorsList.add(cameraStreamProcessor);
-                com.acmerobotics.dashboard.FtcDashboard.getInstance().startCameraStream(cameraStreamProcessor, 0);
-            }
-
-            if (RobotParams.Preferences.useWebcamAprilTagVision)
-            {
-                tracer.traceInfo(moduleName, "Starting Webcam AprilTagVision...");
-                FtcVisionAprilTag.Parameters aprilTagParams = new FtcVisionAprilTag.Parameters()
-                    .setDrawTagIdEnabled(true)
-                    .setDrawTagOutlineEnabled(true)
-                    .setDrawAxesEnabled(false)
-                    .setDrawCubeProjectionEnabled(false)
-                    .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
-                aprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
-                aprilTagProcessor = aprilTagVision.getVisionProcessor();
-                visionProcessorsList.add(aprilTagProcessor);
+                // Use phone camera.
+                vision = new FtcVision(
+                    RobotParams.Preferences.useBuiltinCamBack?
+                        BuiltinCameraDirection.BACK: BuiltinCameraDirection.FRONT,
+                    robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
+                    RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
+                    visionProcessors);
             }
 
-            if (RobotParams.Preferences.useColorBlobVision && robot.robotInfo.webCam1 != null)
+            // Disable all vision until they are needed.
+            for (VisionProcessor processor: visionProcessors)
             {
-                FtcRobotDrive.CameraInfo camInfo = null;
-                TrcHomographyMapper.Rectangle camRect = null, worldRect = null;
-
-                tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
-                // Create the pipeline for purple artifact initially, can change to other artifacts later.
-                TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
-                    new TrcOpenCvColorBlobPipeline.PipelineParams()
-                        .setColorThresholds(
-                            colorConversion, LEDIndicator.PURPLE_BLOB, purpleThresholdsLow, purpleThresholdsHigh)
-                        .setContourDetectionParams(true, artifactFilterContourParams)
-                        .setObjectSize(objectWidth, objectHeight);
-
-                if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
-                {
-                    camInfo = robot.robotInfo.webCam1.camInfo;
-                    if (camInfo != null)
-                    {
-                        colorBlobPipelineParams.setSolvePnpParams(
-                            camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
-                            robot.robotInfo.webCam1.camPose);
-                    }
-                    camRect = robot.robotInfo.webCam1.cameraRect;
-                    worldRect = robot.robotInfo.webCam1.worldRect;
-                }
-
-                colorBlobVision = new FtcVisionEocvColorBlob(
-                    "ColorBlobVision", colorBlobPipelineParams, camRect, worldRect, true, false, false);
-                colorBlobProcessor = colorBlobVision.getVisionProcessor();
-                if (RobotParams.Preferences.streamToDashboard)
-                {
-                    colorBlobProcessor.enableStreamToDashboard();
-                }
-                updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
-                visionProcessorsList.add(colorBlobProcessor);
-            }
-
-            if (!visionProcessorsList.isEmpty())
-            {
-                VisionProcessor[] visionProcessors = new VisionProcessor[visionProcessorsList.size()];
-                visionProcessorsList.toArray(visionProcessors);
-                if (RobotParams.Preferences.useWebCam)
-                {
-                    // Use USB webcams.
-                    vision = new FtcVision(
-                        webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                        RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
-                        visionProcessors);
-                }
-                else
-                {
-                    // Use phone camera.
-                    vision = new FtcVision(
-                        RobotParams.Preferences.useBuiltinCamBack?
-                            BuiltinCameraDirection.BACK: BuiltinCameraDirection.FRONT,
-                        robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                        RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
-                        visionProcessors);
-                }
-
-                // Disable all vision until they are needed.
-                for (VisionProcessor processor: visionProcessors)
-                {
-                    vision.setProcessorEnabled(processor, false);
-                }
+                vision.setProcessorEnabled(processor, false);
             }
         }
     }   //Vision
@@ -743,27 +681,34 @@ public class Vision
     }   //isVisionProcessorEnabled
 
     /**
-     * This method enables/disables the CameraStream processor.
+     * This method enables/disables ColorBlobProcessor to stream to FtcDashboard.
      *
      * @param enabled specifies true to enable, false to disable.
      */
-    public void setCameraStreamEnabled(boolean enabled)
+    public void setDashboardStreamEnabled(boolean enabled)
     {
-        if (vision != null && cameraStreamProcessor != null)
+        if (vision != null && colorBlobProcessor != null)
         {
-            cameraStreamProcessor.setCameraStreamEnabled(vision, enabled);
+            if (enabled)
+            {
+                colorBlobProcessor.enableDashboardStream();
+            }
+            else
+            {
+                colorBlobProcessor.disableDashboardStream();
+            }
         }
-    }   //setCameraStreamEnabled
+    }   //setDashboardStreamEnabled
 
     /**
-     * This method checks if the CameraStream processor is enabled.
+     * This method checks if the FtcDashboard streaming is enabled.
      *
      * @return true if enabled, false if disabled.
      */
-    public boolean isCameraStreamEnabled()
+    public boolean isDashboardStreamEnabled()
     {
-        return cameraStreamProcessor != null && cameraStreamProcessor.isCameraStreamEnabled();
-    }   //isAprilTagVisionEnabled
+        return colorBlobProcessor != null && colorBlobProcessor.isDashboardStreamEnabled();
+    }   //isDashboardStreamEnabled
 
     /**
      * This method enables/disables AprilTag vision.
