@@ -62,7 +62,7 @@ public class RobotParams
         public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
         public static final boolean useLimelightVision          = false;
-        public static final boolean useCameraStreamProcessor    = false;
+        public static final boolean streamToDashboard           = true;
         public static final boolean useWebcamAprilTagVision     = false;
         public static final boolean tuneColorBlobVision         = false;
         public static final boolean useColorBlobVision          = !tuneColorBlobVision;

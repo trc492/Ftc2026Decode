@@ -698,7 +698,7 @@ public class FtcTest extends FtcTeleOp
                             robot.vision.setFpsMeterEnabled(fpsMeterEnabled);
                             robot.globalTracer.traceInfo(moduleName, "fpsMeterEnabled = %s", fpsMeterEnabled);
                         }
-                        else
+                        else if (robot.vision.colorBlobVision != null)
                         {
                             robot.vision.updateColorBlobPipelineConfig(
                                 robot.vision.colorBlobVision.getVisionProcessor().getPipeline());
@@ -1044,7 +1044,7 @@ public class FtcTest extends FtcTeleOp
             if (robot.vision.colorBlobVision != null)
             {
                 robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Any, 0.0, lineNum++);
-                Vision.ColorBlobType[] blobs = robot.vision.getDetectedMotif(FtcAuto.Alliance.BLUE_ALLIANCE);
+                Vision.ColorBlobType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
                 if (blobs != null)
                 {
                     robot.dashboard.displayPrintf(lineNum++, "Blobs=%s", Arrays.toString(blobs));

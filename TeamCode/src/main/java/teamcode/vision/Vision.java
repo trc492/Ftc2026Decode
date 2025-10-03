@@ -33,11 +33,9 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.robotcore.FtcOpMode;
-import ftclib.vision.FtcCameraStreamProcessor;
 import ftclib.vision.FtcEocvColorBlobProcessor;
 import ftclib.vision.FtcLimelightVision;
 import ftclib.vision.FtcRawEocvColorBlobPipeline;
@@ -214,6 +212,9 @@ public class Vision
     private static final double objectWidth = 5.0;  // inches
     private static final double objectHeight = 5.0; // inches
     private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Green;
+
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 100;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 120;
     private static final double ONE_BALL_THRESHOLD = 1.0;
     private static final double TWO_BALL_THRESHOLD = 2.0;
     private static final double THREE_BALL_THRESHOLD = 3.0;
@@ -229,7 +230,6 @@ public class Vision
     public FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
     public FtcRawEocvVision rawColorBlobVision;
     public FtcLimelightVision limelightVision;
-    private FtcCameraStreamProcessor cameraStreamProcessor;
     public FtcVisionAprilTag aprilTagVision;
     private AprilTagProcessor aprilTagProcessor;
     public FtcVisionEocvColorBlob colorBlobVision;
@@ -271,7 +271,8 @@ public class Vision
         if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
             limelightVision = new FtcLimelightVision(
-                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose, this::getTargetGroundOffset);
+                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
+                this::getLimelightTargetGroundOffset);
             limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
         }
         // Creating Vision Processors for VisionPortal.
@@ -326,7 +327,6 @@ public class Vision
             {
                 colorBlobProcessor.enableDashboardStream();
             }
-            updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
             visionProcessorsList.add(colorBlobProcessor);
         }
 
@@ -357,6 +357,11 @@ public class Vision
             for (VisionProcessor processor: visionProcessors)
             {
                 vision.setProcessorEnabled(processor, false);
+            }
+
+            if (colorBlobProcessor != null)
+            {
+                updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
             }
         }
     }   //Vision
@@ -544,12 +549,6 @@ public class Vision
     {
         TrcVisionTargetInfo<TrcOpenCvDetector.DetectedObject<?>> colorBlobInfo =
             rawColorBlobVision != null? rawColorBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0): null;
-
-        if (cameraStreamProcessor != null && colorBlobInfo != null)
-        {
-            cameraStreamProcessor.addRectInfo(
-                colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
-        }
 
         if (colorBlobInfo != null && robot.ledIndicator != null)
         {
@@ -742,13 +741,6 @@ public class Vision
         TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo =
             aprilTagVision.getBestDetectedTargetInfo(id, null);
 
-        if (cameraStreamProcessor != null && aprilTagInfo != null)
-        {
-            cameraStreamProcessor.addRectInfo(
-                Integer.toString(aprilTagInfo.detectedObj.aprilTagDetection.id),
-                                 aprilTagInfo.detectedObj.getRotatedRectVertices());
-        }
-
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
             robot.ledIndicator.setStatusPattern(LEDIndicator.APRIL_TAG);
@@ -904,105 +896,6 @@ public class Vision
     }   //isColorBlobVisionEnabled
 
     /**
-     * This method checks the detected object aspect ratio to determine how many artifacts are in the detected object.
-     *
-     * @param obj specifies the detected object.
-     * @return count of artifact in the detected object.
-     */
-    private int getArtifactCount(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj)
-    {
-        double aspectRatio = (double) obj.objRect.width/(double) obj.objRect.height;
-        return aspectRatio <= ONE_BALL_THRESHOLD ? 1 :
-               aspectRatio <= TWO_BALL_THRESHOLD ? 2 :
-               aspectRatio <= THREE_BALL_THRESHOLD ? 3 :
-               aspectRatio <= FOUR_BALL_THRESHOLD ? 4 :
-               aspectRatio <= FIVE_BALL_THRESHOLD ? 5 :
-               aspectRatio <= SIX_BALL_THRESHOLD ? 6 :
-               aspectRatio <= SEVEN_BALL_THRESHOLD ? 8 :
-               aspectRatio <= EIGHT_BALL_THRESHOLD ? 8 : 9;
-    }   //getArtifactCount
-
-    /**
-     * The method uses vision to detect all Artifacts in the ramp and returns an array of 9 slots specifying the
-     * type of artifacts in each slot. It assumes Circle Detection of the ColorBlob pipeline has been turned off
-     * before calling this method.
-     *
-     * @param alliance specifies the alliance color for sorting the array.
-     */
-    public ColorBlobType[] getDetectedMotif(FtcAuto.Alliance alliance)
-    {
-        ColorBlobType[] colorBlobs = null;
-
-        if (isColorBlobVisionEnabled(ColorBlobType.Any))
-        {
-            this.alliance = alliance;
-            ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> objects =
-                getDetectedColorBlobs(ColorBlobType.Any, this::compareDistanceX, 0.0, 0.0);
-
-            if (objects != null)
-            {
-                int index = 0;
-                colorBlobs = new ColorBlobType[9];
-
-                for (int i = 0; i < objects.size(); i++)
-                {
-                    TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj = objects.get(i);
-                    ColorBlobType colorBlob =
-                        obj.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ?
-                            ColorBlobType.Purple : ColorBlobType.Green;
-                    int count = getArtifactCount(obj);
-
-                    for (int j = 0; j < count; j++)
-                    {
-                        colorBlobs[index++] = colorBlob;
-                    }
-                }
-
-                for (int k = index; k < colorBlobs.length; k++)
-                {
-                    colorBlobs[k] = ColorBlobType.None;
-                }
-            }
-        }
-
-        return colorBlobs;
-    }   //getDetectedMotif
-
-    /**
-     * This method calls ColorBlob vision to detect the specified color blob object.
-     *
-     * @param colorBlobType specifies the color blob type to be detected.
-     * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
-     * @param objGroundOffset specifies the object ground offset above the floor.
-     * @param cameraHeight specifies the height of the camera above the floor.
-     * @return detected color blob object info.
-     */
-    public ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> getDetectedColorBlobs(
-        ColorBlobType colorBlobType,
-        Comparator<? super TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> comparator,
-        double objGroundOffset, double cameraHeight)
-    {
-        ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobsInfo = null;
-
-        if (isColorBlobVisionEnabled(colorBlobType))
-        {
-            colorBlobsInfo = colorBlobVision.getDetectedTargetsInfo(
-                this::colorBlobFilter, colorBlobType, comparator, objGroundOffset, cameraHeight);
-
-            if (cameraStreamProcessor != null && colorBlobsInfo != null)
-            {
-                for (TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> objInfo: colorBlobsInfo)
-                {
-                    cameraStreamProcessor.addRectInfo(
-                        objInfo.detectedObj.label, objInfo.detectedObj.getRotatedRectVertices());
-                }
-            }
-        }
-
-        return colorBlobsInfo;
-    }   //getDetectedColorBlobs
-
-    /**
      * This method calls ColorBlob vision to detect the specified color blob object.
      *
      * @param colorBlobType specifies the color blob type to be detected.
@@ -1021,12 +914,6 @@ public class Vision
                 colorBlobVision.getBestDetectedTargetInfo(
                     this::colorBlobFilter, colorBlobType, this::compareDistanceY, groundOffset,
                     robot.robotInfo.webCam1.camZOffset);
-        }
-
-        if (cameraStreamProcessor != null && colorBlobInfo != null)
-        {
-            cameraStreamProcessor.addRectInfo(
-                colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
         }
 
         if (colorBlobInfo != null && robot.ledIndicator != null)
@@ -1048,6 +935,109 @@ public class Vision
 
         return colorBlobInfo;
     }   //getDetectedColorBlob
+
+    /**
+     * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
+     * type of artifacts in each slot. It assumes ColorBlob pipeline is enabled to detect Any artifacts and Circle
+     * Detection has been turned off before calling this method.
+     *
+     * @param alliance specifies the alliance color for sorting the array.
+     */
+    public ColorBlobType[] getClassifierArtifacts(FtcAuto.Alliance alliance)
+    {
+        ColorBlobType[] colorBlobs = null;
+
+        if (isColorBlobVisionEnabled(ColorBlobType.Any))
+        {
+            // compareDistanceX is using alliance to determine the sort order of color blobs in the classifier.
+            this.alliance = alliance;
+            ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> objects =
+                colorBlobVision.getDetectedTargetsInfo(
+                    this::classifierColorBlobFilter, null, this::compareDistanceX, 0.0, 0.0);
+
+            if (objects != null)
+            {
+                int index = 0;
+                colorBlobs = new ColorBlobType[9];
+
+                for (int i = 0; i < objects.size(); i++)
+                {
+                    TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj = objects.get(i);
+                    ColorBlobType colorBlob =
+                        obj.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ?
+                            ColorBlobType.Purple : ColorBlobType.Green;
+                    int count = getArtifactCount(obj);
+                    tracer.traceInfo(moduleName, "[%d] color=%s, count=%d, obj=%s", i, colorBlob, count, obj);
+
+                    for (int j = 0; j < count; j++)
+                    {
+                        if (index < colorBlobs.length)
+                        {
+                            colorBlobs[index++] = colorBlob;
+                        }
+                        else
+                        {
+                            tracer.traceWarn(
+                                moduleName, "Number artifact exceeds capacity (color=%s, count=%d, obj=%s)",
+                                colorBlob, count, obj);
+                            break;
+                        }
+                    }
+                }
+
+                for (int k = index; k < colorBlobs.length; k++)
+                {
+                    colorBlobs[k] = ColorBlobType.None;
+                }
+            }
+        }
+
+        return colorBlobs;
+    }   //getClassifierArtifacts
+
+    /**
+     * This method checks the detected object aspect ratio to determine how many artifacts are in the detected object.
+     *
+     * @param obj specifies the detected object.
+     * @return count of artifact in the detected object.
+     */
+    private int getArtifactCount(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> obj)
+    {
+        double aspectRatio = (double) obj.objRect.width/(double) obj.objRect.height;
+        return aspectRatio <= ONE_BALL_THRESHOLD ? 1 :
+               aspectRatio <= TWO_BALL_THRESHOLD ? 2 :
+               aspectRatio <= THREE_BALL_THRESHOLD ? 3 :
+               aspectRatio <= FOUR_BALL_THRESHOLD ? 4 :
+               aspectRatio <= FIVE_BALL_THRESHOLD ? 5 :
+               aspectRatio <= SIX_BALL_THRESHOLD ? 6 :
+               aspectRatio <= SEVEN_BALL_THRESHOLD ? 8 :
+               aspectRatio <= EIGHT_BALL_THRESHOLD ? 8 : 9;
+    }   //getArtifactCount
+
+    /**
+     * This method returns the Limelight target Z offset from ground.
+     *
+     * @param resultType specifies the detected object result type.
+     * @return target ground offset.
+     */
+    private double getLimelightTargetGroundOffset(FtcLimelightVision.ResultType resultType)
+    {
+        double offset;
+
+        switch (resultType)
+        {
+            case Fiducial:
+                offset = 29.5;
+                break;
+
+            case Python:
+            default:
+                offset = 0.0;
+                break;
+        }
+
+        return offset;
+    }   //getLimelightTargetGroundOffset
 
     /**
      * This method is called by Vision to validate if the detected object matches expectation for filtering.
@@ -1082,26 +1072,21 @@ public class Vision
     }   //colorBlobFilter
 
     /**
-     * This method returns the target Z offset from ground.
+     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
+     * height.
      *
-     * @param resultType specifies the detected object result type.
-     * @return target ground offset.
+     * @param objInfo specifies the detected object info.
+     * @param context not used.
+     * @return true if it matches expectation, false otherwise.
      */
-    private double getTargetGroundOffset(FtcLimelightVision.ResultType resultType)
+    public boolean classifierColorBlobFilter(
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> objInfo, Object context)
     {
-        double offset = 0.0;
-
-        if (resultType == FtcLimelightVision.ResultType.Fiducial)
-        {
-            offset = 5.75;
-        }
-        else if (resultType == FtcLimelightVision.ResultType.Python)
-        {
-            offset = 10.0;
-        }
-
-        return offset;
-    }   //getTargetGroundOffset
+        return (objInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
+                objInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
+               objInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
+               objInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
+    }   //classifierColorBlobFilter
 
     /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction
@@ -1117,12 +1102,7 @@ public class Vision
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
     {
         int diff = (int)((b.objPose.x - a.objPose.x)*100);
-        if (alliance == FtcAuto.Alliance.RED_ALLIANCE)
-        {
-            diff = -diff;
-        }
-
-        return diff;
+        return alliance == FtcAuto.Alliance.RED_ALLIANCE? diff: -diff;
     }   //compareDistanceX
 
     /**
