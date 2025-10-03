@@ -28,8 +28,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
@@ -38,12 +36,9 @@ import ftclib.drivebase.FtcRobotDrive;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcEocvColorBlobProcessor;
 import ftclib.vision.FtcLimelightVision;
-import ftclib.vision.FtcRawEocvColorBlobPipeline;
-import ftclib.vision.FtcRawEocvVision;
 import ftclib.vision.FtcVision;
 import ftclib.vision.FtcVisionAprilTag;
 import ftclib.vision.FtcVisionEocvColorBlob;
-import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -54,7 +49,6 @@ import trclib.pathdrive.TrcPose3D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
-import trclib.vision.TrcOpenCvDetector;
 import trclib.vision.TrcVisionTargetInfo;
 
 /**
@@ -195,7 +189,8 @@ public class Vision
 //    private static final double[] greenThresholdsLow = {70.0, 40.0, 100.0};
 //    private static final double[] greenThresholdsHigh = {220.0, 118.0, 145.0};
     // HSV Color Space.
-    private static final int colorConversion = Imgproc.COLOR_RGB2HSV;
+    private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
+        TrcOpenCvColorBlobPipeline.ColorConversion.RGBToHSV;
     private static final double[] purpleThresholdsLow = {130.0, 20.0, 10.0};
     private static final double[] purpleThresholdsHigh = {165.0, 255.0, 255.0};
     private static final double[] greenThresholdsLow = {48.0, 45.0, 45.0};
@@ -223,12 +218,19 @@ public class Vision
     private static final double SIX_BALL_THRESHOLD = 6.0;
     private static final double SEVEN_BALL_THRESHOLD = 7.0;
     private static final double EIGHT_BALL_THRESHOLD = 8.0;
+    public static final TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
+        new TrcOpenCvColorBlobPipeline.PipelineParams()
+            .setColorConversion(colorConversion)
+            .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
+            .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
+            .setCircleDetection(10.0)
+            .setCircleBlur(true, 9)
+            .setFilterContourParams(true, artifactFilterContourParams)
+            .setObjectSize(objectWidth, objectHeight);
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
-    public FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
-    public FtcRawEocvVision rawColorBlobVision;
     public FtcLimelightVision limelightVision;
     public FtcVisionAprilTag aprilTagVision;
     private AprilTagProcessor aprilTagProcessor;
@@ -255,13 +257,13 @@ public class Vision
         this.robot = robot;
 
         // Update Dashboard with the initial detection parameters.
-        System.arraycopy(
-            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsLow: greenThresholdsLow, 0,
-            Dashboard.VisionTuning.colorThresholdsLow, 0, Dashboard.VisionTuning.colorThresholdsLow.length);
-        System.arraycopy(
-            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsHigh: greenThresholdsHigh, 0,
-            Dashboard.VisionTuning.colorThresholdsHigh, 0, Dashboard.VisionTuning.colorThresholdsHigh.length);
-        Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
+//        System.arraycopy(
+//            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsLow: greenThresholdsLow, 0,
+//            Dashboard.VisionTuning.colorThresholdsLow, 0, Dashboard.VisionTuning.colorThresholdsLow.length);
+//        System.arraycopy(
+//            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsHigh: greenThresholdsHigh, 0,
+//            Dashboard.VisionTuning.colorThresholdsHigh, 0, Dashboard.VisionTuning.colorThresholdsHigh.length);
+//        Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
 
         webcam1 = robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
@@ -301,10 +303,12 @@ public class Vision
             // Create the pipeline for both purple and green artifacts.
             TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
                 new TrcOpenCvColorBlobPipeline.PipelineParams()
-                    .setColorThresholds(
-                        colorConversion, LEDIndicator.PURPLE_BLOB, purpleThresholdsLow, purpleThresholdsHigh)
-                    .addColorThresholds(LEDIndicator.GREEN_BLOB, greenThresholdsLow, greenThresholdsHigh)
-                    .setContourDetectionParams(true, artifactFilterContourParams)
+                    .setColorConversion(colorConversion)
+                    .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
+                    .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
+                    .setCircleDetection(10.0)
+                    .setCircleBlur(true, 9)
+                    .setFilterContourParams(true, artifactFilterContourParams)
                     .setObjectSize(objectWidth, objectHeight);
 
             if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
@@ -384,59 +388,59 @@ public class Vision
      */
     public void updateColorBlobPipelineConfig(TrcOpenCvColorBlobPipeline colorBlobPipeline)
     {
-        if (Dashboard.VisionTuning.annotationEnabled)
-        {
-            colorBlobPipeline.enableAnnotation(
-                Dashboard.VisionTuning.annotateDrawRotatedRect, Dashboard.VisionTuning.annotateDrawCrosshair);
-        }
-        else
-        {
-            colorBlobPipeline.disableAnnotation();
-        }
+//        if (Dashboard.VisionTuning.annotationEnabled)
+//        {
+//            colorBlobPipeline.enableAnnotation(
+//                Dashboard.VisionTuning.annotateDrawRotatedRect, Dashboard.VisionTuning.annotateDrawCrosshair);
+//        }
+//        else
+//        {
+//            colorBlobPipeline.disableAnnotation();
+//        }
 
-        if (Dashboard.VisionTuning.morphologyEnabled)
-        {
-            colorBlobPipeline.enableMorphology(
-                Dashboard.VisionTuning.morphologyClosing? Imgproc.MORPH_CLOSE: Imgproc.MORPH_OPEN,
-                Imgproc.MORPH_ELLIPSE,
-                new Size(Dashboard.VisionTuning.morphologyKernelSize, Dashboard.VisionTuning.morphologyKernelSize));
-        }
-        else
-        {
-            colorBlobPipeline.disableMorphology();
-        }
+//        if (Dashboard.VisionTuning.morphologyEnabled)
+//        {
+//            colorBlobPipeline.enableMorphology(
+//                Dashboard.VisionTuning.morphologyClosing? Imgproc.MORPH_CLOSE: Imgproc.MORPH_OPEN,
+//                Imgproc.MORPH_ELLIPSE,
+//                new Size(Dashboard.VisionTuning.morphologyKernelSize, Dashboard.VisionTuning.morphologyKernelSize));
+//        }
+//        else
+//        {
+//            colorBlobPipeline.disableMorphology();
+//        }
 
-        if (Dashboard.VisionTuning.circleDetectionEnabled)
-        {
-            colorBlobPipeline.enableCircleDetection(Dashboard.VisionTuning.circleMinDistance);
-        }
-        else
-        {
-            colorBlobPipeline.disableCircleDetection();
-        }
+//        if (Dashboard.VisionTuning.circleDetectionEnabled)
+//        {
+//            colorBlobPipeline.enableCircleDetection(Dashboard.VisionTuning.circleMinDistance);
+//        }
+//        else
+//        {
+//            colorBlobPipeline.disableCircleDetection();
+//        }
 
-        if (Dashboard.VisionTuning.blurEnableGaussian)
-        {
-            colorBlobPipeline.enableCircleBlur(true, Dashboard.VisionTuning.blurKernelSize);
-        }
-        else if (Dashboard.VisionTuning.blurEnableMedian)
-        {
-            colorBlobPipeline.enableCircleBlur(false, Dashboard.VisionTuning.blurKernelSize);
-        }
-        else
-        {
-            colorBlobPipeline.disableCircleBlur();
-        }
+//        if (Dashboard.VisionTuning.blurEnableGaussian)
+//        {
+//            colorBlobPipeline.enableCircleBlur(true, Dashboard.VisionTuning.blurKernelSize);
+//        }
+//        else if (Dashboard.VisionTuning.blurEnableMedian)
+//        {
+//            colorBlobPipeline.enableCircleBlur(false, Dashboard.VisionTuning.blurKernelSize);
+//        }
+//        else
+//        {
+//            colorBlobPipeline.disableCircleBlur();
+//        }
 
-        if (Dashboard.VisionTuning.cannyEdgeEnabled)
-        {
-            colorBlobPipeline.enableCannyEdgeDetection(
-                Dashboard.VisionTuning.cannyEdgeThreshold1, Dashboard.VisionTuning.cannyEdgeThreshold2);
-        }
-        else
-        {
-            colorBlobPipeline.disableCannyEdgeDetection();
-        }
+//        if (Dashboard.VisionTuning.cannyEdgeEnabled)
+//        {
+//            colorBlobPipeline.enableCannyEdgeDetection(
+//                Dashboard.VisionTuning.cannyEdgeThreshold1, Dashboard.VisionTuning.cannyEdgeThreshold2);
+//        }
+//        else
+//        {
+//            colorBlobPipeline.disableCannyEdgeDetection();
+//        }
     }   //updateColorBlobPipelineConfig
 
     /**
@@ -446,11 +450,7 @@ public class Vision
      */
     public void setFpsMeterEnabled(boolean enabled)
     {
-        if (rawColorBlobVision != null)
-        {
-            rawColorBlobVision.setFpsMeterEnabled(enabled);
-        }
-        else if (vision != null)
+        if (vision != null)
         {
             vision.setFpsMeterEnabled(enabled);
         }
@@ -515,56 +515,6 @@ public class Vision
                 currExposure, exposureSetting[0], exposureSetting[1], currGain, gainSetting[0], gainSetting[1]);
         }
     }   //displayExposureSettings
-
-    /**
-     * This method enables/disables raw ColorBlob vision.
-     *
-     * @param enabled specifies true to enable, false to disable.
-     */
-    public void setRawColorBlobVisionEnabled(boolean enabled)
-    {
-        if (rawColorBlobVision != null)
-        {
-            rawColorBlobVision.setPipeline(enabled? rawColorBlobPipeline: null);
-        }
-    }   //setRawColorBlobVisionEnabled
-
-    /**
-     * This method checks if raw ColorBlob vision is enabled.
-     *
-     * @return true if enabled, false if disabled.
-     */
-    public boolean isRawColorBlobVisionEnabled()
-    {
-        return rawColorBlobVision != null && rawColorBlobVision.getPipeline() != null;
-    }   //isRawColorBlobVisionEnabled
-
-    /**
-     * This method calls RawColorBlob vision to detect the color blob for color threshold tuning.
-     *
-     * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
-     * @return detected raw color blob object info.
-     */
-    public TrcVisionTargetInfo<TrcOpenCvDetector.DetectedObject<?>> getDetectedRawColorBlob(int lineNum)
-    {
-        TrcVisionTargetInfo<TrcOpenCvDetector.DetectedObject<?>> colorBlobInfo =
-            rawColorBlobVision != null? rawColorBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0): null;
-
-        if (colorBlobInfo != null && robot.ledIndicator != null)
-        {
-            robot.ledIndicator.setStatusPattern(colorBlobInfo.detectedObj.label);
-        }
-
-        if (lineNum != -1)
-        {
-            robot.dashboard.displayPrintf(
-                lineNum, "RawColorBlob: %s, heading=%.3f",
-                colorBlobInfo != null? colorBlobInfo: "Not found.",
-                robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): 0.0);
-        }
-
-        return colorBlobInfo;
-    }   //getDetectedRawColorBlob
 
     /**
      * This method enables/disables Limelight vision for the specified pipeline.
@@ -837,24 +787,33 @@ public class Vision
                 switch (colorBlobType)
                 {
                     case Purple:
-                        colorBlobPipeline.setColorThresholds(
-                            LEDIndicator.PURPLE_BLOB, purpleThresholdsLow, purpleThresholdsHigh);
+                        colorBlobPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, enabled);
                         break;
 
                     case Green:
-                        colorBlobPipeline.setColorThresholds(
-                            LEDIndicator.GREEN_BLOB, greenThresholdsLow, greenThresholdsHigh);
+                        colorBlobPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, enabled);
                         break;
 
                     case Any:
-                        colorBlobPipeline.setColorThresholds(
-                            LEDIndicator.PURPLE_BLOB, purpleThresholdsLow, purpleThresholdsHigh);
-                        colorBlobPipeline.addColorThresholds(
-                            LEDIndicator.GREEN_BLOB, greenThresholdsLow, greenThresholdsHigh);
+                        colorBlobPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, enabled);
+                        colorBlobPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, enabled);
                         break;
                 }
+                setVisionProcessorEnabled(colorBlobProcessor, true);
+                if (RobotParams.Preferences.streamToDashboard)
+                {
+                    colorBlobProcessor.enableDashboardStream();
+                }
             }
-            setVisionProcessorEnabled(colorBlobProcessor, enabled);
+            else if (colorBlobType == ColorBlobType.Any)
+            {
+                // Disabling all color thresholds.
+                if (colorBlobProcessor.isDashboardStreamEnabled())
+                {
+                    colorBlobProcessor.disableDashboardStream();
+                }
+                setVisionProcessorEnabled(colorBlobProcessor, false);
+            }
         }
     }   //setColorBlobVisionEnabled
 
@@ -1131,11 +1090,6 @@ public class Vision
     {
         if (slowLoop)
         {
-            if (rawColorBlobVision != null)
-            {
-                lineNum = rawColorBlobVision.updateStatus(lineNum);
-            }
-
             if (limelightVision != null)
             {
                 lineNum = limelightVision.updateStatus(lineNum);

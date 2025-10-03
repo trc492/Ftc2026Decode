@@ -252,12 +252,6 @@ public class Robot
         //
         if (vision != null)
         {
-            if (vision.isRawColorBlobVisionEnabled())
-            {
-                globalTracer.traceInfo(moduleName, "Disabling RawColorBlobVision.");
-                vision.setRawColorBlobVisionEnabled(false);
-            }
-
             if (vision.isLimelightVisionEnabled())
             {
                 globalTracer.traceInfo(moduleName, "Disabling LimelightVision.");

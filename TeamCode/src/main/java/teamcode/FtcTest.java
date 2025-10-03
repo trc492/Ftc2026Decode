@@ -1031,11 +1031,6 @@ public class FtcTest extends FtcTeleOp
                     null, lineNum++);
             }
 
-            if (robot.vision.rawColorBlobVision != null)
-            {
-                robot.vision.getDetectedRawColorBlob(lineNum++);
-            }
-
             if (robot.vision.aprilTagVision != null)
             {
                 robot.vision.getDetectedAprilTag(null, lineNum++);

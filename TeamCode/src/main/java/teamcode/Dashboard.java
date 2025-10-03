@@ -24,6 +24,7 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
@@ -37,6 +38,7 @@ public class Dashboard
 {
     private static Double nextDashboardUpdateTime =  null;
 
+    public static TrcOpenCvColorBlobPipeline.PipelineParams pipelineParams = Vision.colorBlobPipelineParams;
     public static String tuneSubsystemName = "";
     public static double shooter1Velocity = 5000.0; // in RPM
 
@@ -76,29 +78,6 @@ public class Dashboard
 
         return lineNum;
     }   //updateDashboard
-
-    @Config
-    public static class VisionTuning
-    {
-        public static boolean annotationEnabled = false;
-        public static boolean annotateDrawRotatedRect = false;
-        public static boolean annotateDrawCrosshair = false;
-        public static double[] colorThresholdsLow = new double[3];
-        public static double[] colorThresholdsHigh = new double[3];
-        public static boolean morphologyEnabled = false;
-        public static boolean morphologyClosing = true;
-        public static int morphologyKernelSize = 9;
-        public static boolean circleDetectionEnabled = true;
-        public static double circleMinDistance = 30.0;
-        public static boolean blurEnableGaussian = true;
-        public static boolean blurEnableMedian = false;
-        public static int blurKernelSize = 9;
-        public static boolean cannyEdgeEnabled = false;
-        public static double cannyEdgeThreshold1 = 100.0;
-        public static double cannyEdgeThreshold2 = 200.0;
-        public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
-            new TrcOpenCvColorBlobPipeline.FilterContourParams();
-    }   //class VisionTuning
 
     @Config
     public static class DriveBaseTuning
