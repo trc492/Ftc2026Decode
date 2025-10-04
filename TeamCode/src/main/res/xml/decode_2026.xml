@@ -34,8 +34,8 @@ SOFTWARE.
             <!-- DriveBase -->
             <goBILDA5202SeriesMotor name="rbDriveMotor" port="0"/>
             <goBILDA5202SeriesMotor name="rfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="rfSteerServo" port="0" />
-            <ContinuousRotationServo name="rbSteerServo" port="5" />
+            <ContinuousRotationServo name="rfSteerServo" port="5" />
+            <ContinuousRotationServo name="rbSteerServo" port="3" />
             <AnalogInput name="rfSteerEncoder" port="0" />
             <AnalogInput name="rbSteerEncoder" port="1" />
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
@@ -55,8 +55,8 @@ SOFTWARE.
             <!-- DriveBase -->
             <goBILDA5202SeriesMotor name="lbDriveMotor" port="0"/>
             <goBILDA5202SeriesMotor name="lfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="lfSteerServo" port="0" />
-            <ContinuousRotationServo name="lbSteerServo" port="5" />
+            <ContinuousRotationServo name="lfSteerServo" port="5" />
+            <ContinuousRotationServo name="lbSteerServo" port="3" />
             <AnalogInput name="lfSteerEncoder" port="0" />
             <AnalogInput name="lbSteerEncoder" port="1" />
             <!-- Intake -->
@@ -69,9 +69,9 @@ SOFTWARE.
             <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
             -->
             <!-- LED Indicators -->
-            <Servo name="Spindexer1LED" port="1" />
-            <Servo name="Spindexer2LED" port="2" />
-            <Servo name="Spindexer3LED" port="3" />
+            <Servo name="Spindexer1LED" port="0" />
+            <Servo name="Spindexer2LED" port="1" />
+            <Servo name="Spindexer3LED" port="2" />
             <RevBlinkinLedDriver name="StatusLED" port="4" />
 
             <!--

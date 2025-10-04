@@ -223,6 +223,7 @@ public class Vision
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
+            .buildColorThresholdSets()
             .setCircleDetection(10.0)
             .setCircleBlur(true, 9)
             .setFilterContourParams(true, artifactFilterContourParams)
