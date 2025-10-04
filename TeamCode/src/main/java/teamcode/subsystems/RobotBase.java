@@ -169,13 +169,14 @@ public class RobotBase
             // Steer Encoders TODO: Need to determine
             steerEncoderNames = new String[] {"lfSteerEncoder", "rfSteerEncoder", "lbSteerEncoder", "rbSteerEncoder"};
             steerEncoderInverted = new boolean[] {false, false, false, false};
-            steerEncoderZeros = new double[] {0.0, 0.5353981899371973, 0.8503066122215162, 0.7628187310456715};
+            steerEncoderZeros = new double[] {
+                0.7336481892091724, 0.7516847368920779, 0.8226775710748512, 0.7319472704325375};
             steerZerosFilePath = RobotParams.Robot.STEER_ZERO_CAL_FILE;
             // Steer Motors
             steerMotorType = FtcMotorActuator.MotorType.CRServo;
             steerMotorNames = new String[] {"lfSteerServo", "rfSteerServo", "lbSteerServo", "rbSteerServo"};
             steerMotorInverted = new boolean[] {true, true, true, true};
-            steerMotorPidCoeffs = new TrcPidController.PidCoefficients(0.003, 0.0, 0.0, 0.0, 0.0);
+            steerMotorPidCoeffs = new TrcPidController.PidCoefficients(0.001, 0.0, 0.0, 0.0, 0.0);
             steerMotorPidTolerance = 1.0;
             // Swerve Modules
             swerveModuleNames = new String[] {"lfWheel", "rfWheel", "lbWheel", "rbWheel"};
@@ -358,7 +359,7 @@ public class RobotBase
         {
             robotName = "VisionOnly";
             webCam1 = new Vision.FrontCamParams();
-            webCam2 = new Vision.BackCamParams();
+            webCam2 = null;
             limelight = new Vision.LimelightParams();
         }   //VisionOnlyParams
     }   //class VisionOnlyParams

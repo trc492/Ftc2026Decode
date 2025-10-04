@@ -183,7 +183,8 @@ public class Vision
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
     //
 //    // YCrCb Color Space.
-//    private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
+//    private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
+//        TrcOpenCvColorBlobPipeline.ColorConversion.RGBToYCrCb;
 //    private static final double[] purpleThresholdsLow = {80.0, 139.0, 120.0};
 //    private static final double[] purpleThresholdsHigh = {180.0, 160.0, 150.0};
 //    private static final double[] greenThresholdsLow = {70.0, 40.0, 100.0};
@@ -206,10 +207,9 @@ public class Vision
             .setAspectRatioRange(0.5, 2.0);
     private static final double objectWidth = 5.0;  // inches
     private static final double objectHeight = 5.0; // inches
-    private static final Vision.ColorBlobType tuneColorBlobType = Vision.ColorBlobType.Green;
 
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 100;
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 120;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 10;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 230;
     private static final double ONE_BALL_THRESHOLD = 1.0;
     private static final double TWO_BALL_THRESHOLD = 2.0;
     private static final double THREE_BALL_THRESHOLD = 3.0;
@@ -218,6 +218,7 @@ public class Vision
     private static final double SIX_BALL_THRESHOLD = 6.0;
     private static final double SEVEN_BALL_THRESHOLD = 7.0;
     private static final double EIGHT_BALL_THRESHOLD = 8.0;
+    // Create the pipeline parameters for both purple and green artifacts here so that Dashboard can access them.
     public static final TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setColorConversion(colorConversion)
@@ -226,8 +227,7 @@ public class Vision
             .buildColorThresholdSets()
             .setCircleDetection(10.0)
             .setCircleBlur(true, 9)
-            .setFilterContourParams(true, artifactFilterContourParams)
-            .setObjectSize(objectWidth, objectHeight);
+            .setFilterContourParams(true, artifactFilterContourParams);
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
@@ -256,15 +256,6 @@ public class Vision
 
         this.tracer = new TrcDbgTrace();
         this.robot = robot;
-
-        // Update Dashboard with the initial detection parameters.
-//        System.arraycopy(
-//            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsLow: greenThresholdsLow, 0,
-//            Dashboard.VisionTuning.colorThresholdsLow, 0, Dashboard.VisionTuning.colorThresholdsLow.length);
-//        System.arraycopy(
-//            tuneColorBlobType == ColorBlobType.Purple? purpleThresholdsHigh: greenThresholdsHigh, 0,
-//            Dashboard.VisionTuning.colorThresholdsHigh, 0, Dashboard.VisionTuning.colorThresholdsHigh.length);
-//        Dashboard.VisionTuning.filterContourParams.setAs(artifactFilterContourParams);
 
         webcam1 = robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
@@ -301,23 +292,15 @@ public class Vision
             TrcHomographyMapper.Rectangle camRect = null, worldRect = null;
 
             tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
-            // Create the pipeline for both purple and green artifacts.
-            TrcOpenCvColorBlobPipeline.PipelineParams colorBlobPipelineParams =
-                new TrcOpenCvColorBlobPipeline.PipelineParams()
-                    .setColorConversion(colorConversion)
-                    .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
-                    .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
-                    .setCircleDetection(10.0)
-                    .setCircleBlur(true, 9)
-                    .setFilterContourParams(true, artifactFilterContourParams)
-                    .setObjectSize(objectWidth, objectHeight);
+            TrcOpenCvColorBlobPipeline.SolvePnpParams solvePnpParams =
+                new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(objectWidth, objectHeight);
 
             if (RobotParams.Preferences.useSolvePnp && robot.robotInfo.webCam1 != null)
             {
                 camInfo = robot.robotInfo.webCam1.camInfo;
                 if (camInfo != null)
                 {
-                    colorBlobPipelineParams.setSolvePnpParams(
+                    solvePnpParams.setSolvePnpParams(
                         camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
                         robot.robotInfo.webCam1.camPose);
                 }
@@ -326,12 +309,13 @@ public class Vision
             }
 
             colorBlobVision = new FtcVisionEocvColorBlob(
-                "ColorBlobVision", colorBlobPipelineParams, camRect, worldRect, true, false, false);
+                "ColorBlobVision", colorBlobPipelineParams, solvePnpParams, camRect, worldRect, true, false, false);
             colorBlobProcessor = colorBlobVision.getVisionProcessor();
             if (RobotParams.Preferences.streamToDashboard)
             {
                 colorBlobProcessor.enableDashboardStream();
             }
+//            colorBlobProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
             visionProcessorsList.add(colorBlobProcessor);
         }
 
@@ -363,11 +347,6 @@ public class Vision
             {
                 vision.setProcessorEnabled(processor, false);
             }
-
-            if (colorBlobProcessor != null)
-            {
-                updateColorBlobPipelineConfig(colorBlobProcessor.getPipeline());
-            }
         }
     }   //Vision
 
@@ -381,68 +360,6 @@ public class Vision
             vision.close();
         }
     }   //close
-
-    /**
-     * This method updates the ColorBlob pipeline with the configuration specified in Dashboard.VisionTuning.
-     *
-     * @param colorBlobPipeline specifies the colorblob pipeline to update its configuration.
-     */
-    public void updateColorBlobPipelineConfig(TrcOpenCvColorBlobPipeline colorBlobPipeline)
-    {
-//        if (Dashboard.VisionTuning.annotationEnabled)
-//        {
-//            colorBlobPipeline.enableAnnotation(
-//                Dashboard.VisionTuning.annotateDrawRotatedRect, Dashboard.VisionTuning.annotateDrawCrosshair);
-//        }
-//        else
-//        {
-//            colorBlobPipeline.disableAnnotation();
-//        }
-
-//        if (Dashboard.VisionTuning.morphologyEnabled)
-//        {
-//            colorBlobPipeline.enableMorphology(
-//                Dashboard.VisionTuning.morphologyClosing? Imgproc.MORPH_CLOSE: Imgproc.MORPH_OPEN,
-//                Imgproc.MORPH_ELLIPSE,
-//                new Size(Dashboard.VisionTuning.morphologyKernelSize, Dashboard.VisionTuning.morphologyKernelSize));
-//        }
-//        else
-//        {
-//            colorBlobPipeline.disableMorphology();
-//        }
-
-//        if (Dashboard.VisionTuning.circleDetectionEnabled)
-//        {
-//            colorBlobPipeline.enableCircleDetection(Dashboard.VisionTuning.circleMinDistance);
-//        }
-//        else
-//        {
-//            colorBlobPipeline.disableCircleDetection();
-//        }
-
-//        if (Dashboard.VisionTuning.blurEnableGaussian)
-//        {
-//            colorBlobPipeline.enableCircleBlur(true, Dashboard.VisionTuning.blurKernelSize);
-//        }
-//        else if (Dashboard.VisionTuning.blurEnableMedian)
-//        {
-//            colorBlobPipeline.enableCircleBlur(false, Dashboard.VisionTuning.blurKernelSize);
-//        }
-//        else
-//        {
-//            colorBlobPipeline.disableCircleBlur();
-//        }
-
-//        if (Dashboard.VisionTuning.cannyEdgeEnabled)
-//        {
-//            colorBlobPipeline.enableCannyEdgeDetection(
-//                Dashboard.VisionTuning.cannyEdgeThreshold1, Dashboard.VisionTuning.cannyEdgeThreshold2);
-//        }
-//        else
-//        {
-//            colorBlobPipeline.disableCannyEdgeDetection();
-//        }
-    }   //updateColorBlobPipelineConfig
 
     /**
      * This method enables/disables FPS meter on the viewport.
@@ -800,20 +717,19 @@ public class Vision
                         colorBlobPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, enabled);
                         break;
                 }
-                setVisionProcessorEnabled(colorBlobProcessor, true);
+                // Start Dashboard Stream before turning on ColorBlob Processor.
                 if (RobotParams.Preferences.streamToDashboard)
                 {
                     colorBlobProcessor.enableDashboardStream();
                 }
+                setVisionProcessorEnabled(colorBlobProcessor, true);
             }
             else if (colorBlobType == ColorBlobType.Any)
             {
-                // Disabling all color thresholds.
-                if (colorBlobProcessor.isDashboardStreamEnabled())
-                {
-                    colorBlobProcessor.disableDashboardStream();
-                }
+                // Disabling all color threshold sets.
+                // Shutdown ColorBlob Processor first before shutting down Dashboard Stream.
                 setVisionProcessorEnabled(colorBlobProcessor, false);
+                setDashboardStreamEnabled(false);
             }
         }
     }   //setColorBlobVisionEnabled

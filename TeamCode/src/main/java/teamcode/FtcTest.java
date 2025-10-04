@@ -692,18 +692,9 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (driverAltFunc)
-                        {
-                            fpsMeterEnabled = !fpsMeterEnabled;
-                            robot.vision.setFpsMeterEnabled(fpsMeterEnabled);
-                            robot.globalTracer.traceInfo(moduleName, "fpsMeterEnabled = %s", fpsMeterEnabled);
-                        }
-                        else if (robot.vision.colorBlobVision != null)
-                        {
-                            robot.vision.updateColorBlobPipelineConfig(
-                                robot.vision.colorBlobVision.getVisionProcessor().getPipeline());
-                            robot.globalTracer.traceInfo(moduleName, "Update ColorBlob pipeline config.");
-                        }
+                        fpsMeterEnabled = !fpsMeterEnabled;
+                        robot.vision.setFpsMeterEnabled(fpsMeterEnabled);
+                        robot.globalTracer.traceInfo(moduleName, "fpsMeterEnabled = %s", fpsMeterEnabled);
                     }
                     passToTeleOp = false;
                 }
