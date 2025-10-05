@@ -686,6 +686,27 @@ public class Vision
     }   //getRobotFieldPose
 
     /**
+     * This method enables/disables the Dashboard Streaming of the specified ColorBlob processor.
+     *
+     * @param processor specifies the ColorBlob processor to have the Dashboard stream enabled/disabled.
+     * @param enabled specifies true to enable stream, false to disable.
+     */
+    public void setDashboardStreamEnabled(FtcEocvColorBlobProcessor processor, boolean enabled)
+    {
+        if (RobotParams.Preferences.streamToDashboard)
+        {
+            if (enabled)
+            {
+                processor.enableDashboardStream();
+            }
+            else
+            {
+                processor.disableDashboardStream();
+            }
+        }
+    }   //setDashboardStreamEnabled
+
+    /**
      * This method enables/disables vision for the specified artifact type.
      *
      * @param artifactType specifies the artifact type to be detected.
@@ -725,7 +746,7 @@ public class Vision
             if (enabled)
             {
                 // Start Dashboard Stream before turning on Artifact Processor.
-                artifactProcessor.enableDashboardStream();
+                setDashboardStreamEnabled(artifactProcessor, true);
                 setVisionProcessorEnabled(artifactProcessor, true);
             }
             else
@@ -736,7 +757,7 @@ public class Vision
                     !artifactPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB))
                 {
                     setVisionProcessorEnabled(artifactProcessor, false);
-                    artifactProcessor.disableDashboardStream();
+                    setDashboardStreamEnabled(artifactProcessor, false);
                 }
             }
         }
@@ -836,7 +857,7 @@ public class Vision
                 classifierPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, true);
                 classifierPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, true);
                 // Start Dashboard Stream before turning on Classifier Processor.
-                classifierProcessor.enableDashboardStream();
+                setDashboardStreamEnabled(classifierProcessor, true);
                 setVisionProcessorEnabled(classifierProcessor, true);
             }
             else
@@ -844,7 +865,7 @@ public class Vision
                 // We are disabling Classifier Vision, just disable the Classifier processor but no need to disable
                 // the color threshold set.
                 setVisionProcessorEnabled(classifierProcessor, false);
-                classifierProcessor.disableDashboardStream();
+                setDashboardStreamEnabled(classifierProcessor, false);
             }
         }
     }   //setClassifierVisionEnabled
