@@ -170,13 +170,13 @@ public class RobotBase
             steerEncoderNames = new String[] {"lfSteerEncoder", "rfSteerEncoder", "lbSteerEncoder", "rbSteerEncoder"};
             steerEncoderInverted = new boolean[] {false, false, false, false};
             steerEncoderZeros = new double[] {
-                0.7336481892091724, 0.7516847368920779, 0.8226775710748512, 0.7319472704325375};
+                0.7371835041702206, 0.2867303761395389, 0.6728946779463816, 0.4929176551333184};
             steerZerosFilePath = RobotParams.Robot.STEER_ZERO_CAL_FILE;
             // Steer Motors
             steerMotorType = FtcMotorActuator.MotorType.CRServo;
             steerMotorNames = new String[] {"lfSteerServo", "rfSteerServo", "lbSteerServo", "rbSteerServo"};
-            steerMotorInverted = new boolean[] {true, true, true, true};
-            steerMotorPidCoeffs = new TrcPidController.PidCoefficients(0.001, 0.0, 0.0, 0.0, 0.0);
+            steerMotorInverted = new boolean[] {false, false, false, false};
+            steerMotorPidCoeffs = new TrcPidController.PidCoefficients(0.003, 0.0, 0.0, 0.0, 0.0);
             steerMotorPidTolerance = 1.0;
             // Swerve Modules
             swerveModuleNames = new String[] {"lfWheel", "rfWheel", "lbWheel", "rbWheel"};
