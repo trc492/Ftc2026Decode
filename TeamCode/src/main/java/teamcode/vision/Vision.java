@@ -576,50 +576,6 @@ public class Vision
     }   //isVisionProcessorEnabled
 
     /**
-     * This method enables FtcDashboard stream for the specified ColorBlob processor. If processor is null,
-     * it disables FtcDashboard stream for all ColorBlob processors.
-     *
-     * @param processor specifies the ColorBlob processor to enable its FtcDashboard stream or null to disable all.
-     */
-    public void setDashboardStreamEnabled(FtcEocvColorBlobProcessor processor)
-    {
-        if (ftcVision != null && RobotParams.Preferences.streamToDashboard)
-        {
-            if (processor != null)
-            {
-                // Enabling FtcDashboard stream for the specified vision processor.
-                if (processor == artifactProcessor)
-                {
-                    classifierProcessor.disableDashboardStream();
-                    artifactProcessor.enableDashboardStream();
-                }
-                else
-                {
-                    artifactProcessor.disableDashboardStream();
-                    classifierProcessor.enableDashboardStream();
-                }
-            }
-            else
-            {
-                // Disabling FtcDashboard stream for the all vision processor.
-                artifactProcessor.disableDashboardStream();
-                classifierProcessor.disableDashboardStream();
-            }
-        }
-    }   //setDashboardStreamEnabled
-
-    /**
-     * This method checks if the FtcDashboard streaming for the specified ColorBlob processor is enabled.
-     *
-     * @param processor specifies the ColorBlob processor to check.
-     * @return true if FtcDashboard stream is enabled for the specified ColorBlob processor, false if disabled.
-     */
-    public boolean isDashboardStreamEnabled(FtcEocvColorBlobProcessor processor)
-    {
-        return processor != null && processor.isDashboardStreamEnabled();
-    }   //isDashboardStreamEnabled
-
-    /**
      * This method enables/disables AprilTag vision.
      *
      * @param enabled specifies true to enable, false to disable.
@@ -768,10 +724,8 @@ public class Vision
 
             if (enabled)
             {
-                // We are enabling Artifact Vision, disable Classifier Vision.
-                setClassifierVisionEnabled(false);
                 // Start Dashboard Stream before turning on Artifact Processor.
-                setDashboardStreamEnabled(artifactProcessor);
+                artifactProcessor.enableDashboardStream();
                 setVisionProcessorEnabled(artifactProcessor, true);
             }
             else
@@ -878,13 +832,11 @@ public class Vision
         {
             if (enabled)
             {
-                // We are enabling Classifier Vision, disable Artifact Vision.
-                setArtifactVisionEnabled(ArtifactType.Any, false);
                 // Enable both color threshold sets for Classifier Vision in case they are not already enabled.
                 classifierPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, true);
                 classifierPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, true);
                 // Start Dashboard Stream before turning on Classifier Processor.
-                setDashboardStreamEnabled(classifierProcessor);
+                classifierProcessor.enableDashboardStream();
                 setVisionProcessorEnabled(classifierProcessor, true);
             }
             else

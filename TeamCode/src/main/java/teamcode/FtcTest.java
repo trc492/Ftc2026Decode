@@ -641,13 +641,15 @@ public class FtcTest extends FtcTeleOp
 
                         if (testVisionArtifactType == Vision.ArtifactType.None)
                         {
-                            robot.globalTracer.traceInfo(moduleName, "Switch to Classifier Vision");
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Switch to Classifier Vision");
+                            robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
                             robot.vision.setClassifierVisionEnabled(true);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(
-                                moduleName, "Switch to Artifact Vision %s", testVisionArtifactType);
+                                moduleName, ">>>>> Switch to Artifact Vision %s", testVisionArtifactType);
+                            robot.vision.setClassifierVisionEnabled(false);
                             robot.vision.setArtifactVisionEnabled(testVisionArtifactType, true);
                         }
                     }
