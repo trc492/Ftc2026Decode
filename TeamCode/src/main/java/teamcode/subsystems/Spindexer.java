@@ -110,12 +110,12 @@ public class Spindexer extends TrcSubsystem
     public final TrcPidStorage spindexer;
     private final TrcWarpSpace warpSpace;
 
-    private final Vision.ColorBlobType[] slotStates  = {null, null, null};
+    private final Vision.ArtifactType[] slotStates  = {null, null, null};
     private Integer entrySlot = 0;
     private Integer exitSlot = null;
     private int numPurpleArtifacts = 0;
     private int numGreenArtifacts = 0;
-    private Vision.ColorBlobType expectedArtifactType = Vision.ColorBlobType.Any;
+    private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
     private double entrySensorDistance = 10.0;
     private double entrySensorHue = 0.0;
     private double exitSensorDistance = 10.0;
@@ -199,15 +199,15 @@ public class Spindexer extends TrcSubsystem
             // This gets called only if the entry trigger is enabled which is controlled by the Intake subsystem.
             // In other words, if this gets called, it is guaranteed that the Intake is active and an artifact has
             // just entered the entry slot of the Spindexer.
-            Vision.ColorBlobType artifactType = getEntryArtifactType();
+            Vision.ArtifactType artifactType = getEntryArtifactType();
             String artifactName;
 
-            if (artifactType == Vision.ColorBlobType.Purple)
+            if (artifactType == Vision.ArtifactType.Purple)
             {
                 numPurpleArtifacts++;
                 artifactName = LEDIndicator.PURPLE_BLOB;
             }
-            else if (artifactType == Vision.ColorBlobType.Green)
+            else if (artifactType == Vision.ArtifactType.Green)
             {
                 numGreenArtifacts++;
                 artifactName = LEDIndicator.GREEN_BLOB;
@@ -257,13 +257,13 @@ public class Spindexer extends TrcSubsystem
             // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
             // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
             // just left the exit slot of the Spindexer.
-            Vision.ColorBlobType artifactType = slotStates[exitSlot];
+            Vision.ArtifactType artifactType = slotStates[exitSlot];
             slotStates[exitSlot] = null;
-            if (artifactType == Vision.ColorBlobType.Purple)
+            if (artifactType == Vision.ArtifactType.Purple)
             {
                 numPurpleArtifacts--;
             }
-            else if (artifactType == Vision.ColorBlobType.Green)
+            else if (artifactType == Vision.ArtifactType.Green)
             {
                 numGreenArtifacts--;
             }
@@ -297,22 +297,22 @@ public class Spindexer extends TrcSubsystem
     {
         if (numPurpleArtifacts + numGreenArtifacts == 3)
         {
-            expectedArtifactType = Vision.ColorBlobType.None;
+            expectedArtifactType = Vision.ArtifactType.None;
         }
         else if (numPurpleArtifacts == 2)
         {
             // We have two artifacts and both are purple.
-            expectedArtifactType = Vision.ColorBlobType.Green;
+            expectedArtifactType = Vision.ArtifactType.Green;
         }
         else if (numGreenArtifacts == 0)
         {
             // We have either one purple or no artifact at all.
-            expectedArtifactType = Vision.ColorBlobType.Any;
+            expectedArtifactType = Vision.ArtifactType.Any;
         }
         else
         {
             // We have either one purple, one green or just one green.
-            expectedArtifactType = Vision.ColorBlobType.Purple;
+            expectedArtifactType = Vision.ArtifactType.Purple;
         }
 
         if (robot.intake != null)
@@ -491,9 +491,9 @@ public class Spindexer extends TrcSubsystem
      *
      * @return detected artifact type at the entry.
      */
-    public Vision.ColorBlobType getEntryArtifactType()
+    public Vision.ArtifactType getEntryArtifactType()
     {
-        Vision.ColorBlobType artifactType = null;
+        Vision.ArtifactType artifactType = null;
 
         if (entryAnalogSensor != null)
         {
@@ -501,11 +501,11 @@ public class Spindexer extends TrcSubsystem
 
             if (hue >= Params.PURPLE_LOW_THRESHOLD && hue <= Params.PURPLE_HIGH_THRESHOLD)
             {
-                artifactType = Vision.ColorBlobType.Purple;
+                artifactType = Vision.ArtifactType.Purple;
             }
             else if (hue >= Params.GREEN_LOW_THRESHOLD && hue <= Params.GREEN_HIGH_THRESHOLD)
             {
-                artifactType = Vision.ColorBlobType.Green;
+                artifactType = Vision.ArtifactType.Green;
             }
             spindexer.tracer.traceInfo(instanceName, "EntryArtifact: hue=%.3f, type=%s", hue, artifactType);
         }
@@ -521,7 +521,7 @@ public class Spindexer extends TrcSubsystem
      * @param startSlot specifies the slot to start looking.
      * @return slot that contains the artifact type or null if none found.
      */
-    private Integer findSlot(Vision.ColorBlobType artifactType, int startSlot)
+    private Integer findSlot(Vision.ArtifactType artifactType, int startSlot)
     {
         for (int i = 0; i < slotStates.length; i++)
         {
@@ -558,7 +558,7 @@ public class Spindexer extends TrcSubsystem
      * This method finds the slot that contains the specified artifact type near the current exit slot and move the
      * spindexer to that slot position at the exit. If there is no match, the spindexer will not move.
      */
-    public void moveToExitSlotWithArtifact(Vision.ColorBlobType artifactType)
+    public void moveToExitSlotWithArtifact(Vision.ArtifactType artifactType)
     {
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 

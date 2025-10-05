@@ -116,7 +116,7 @@ public class FtcTest extends FtcTeleOp
     private TrcSubsystem subsystem = null;
     private String subComponent = null;
     // Vision Test.
-    private Vision.ColorBlobType testVisionColorBlobType = Vision.ColorBlobType.Any;
+    private Vision.ArtifactType testVisionArtifactType = Vision.ArtifactType.Any;
 
     //
     // Overrides FtcOpMode abstract method.
@@ -175,11 +175,10 @@ public class FtcTest extends FtcTeleOp
                         robot.vision.setLimelightVisionEnabled(0, true);
                     }
 
-                    if (robot.vision.colorBlobVision != null)
+                    if (robot.vision.artifactVision != null)
                     {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling ColorBlobVision.");
-                        robot.vision.setColorBlobVisionEnabled(testVisionColorBlobType, true);
-                        robot.vision.setDashboardStreamEnabled(true);
+                        robot.globalTracer.traceInfo(moduleName, "Enabling ArtifactVision.");
+                        robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
                     }
                 }
                 break;
@@ -545,10 +544,17 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (robot.vision.colorBlobVision != null)
+                        if (robot.vision.artifactVision != null || robot.vision.classifierVision != null)
                         {
                             // Set display to next intermediate Mat in the pipeline.
-                            robot.vision.colorBlobVision.getVisionProcessor().getPipeline().setNextVideoOutput();
+                            if (robot.vision.isArtifactVisionEnabled(Vision.ArtifactType.Any))
+                            {
+                                robot.vision.artifactVision.getVisionProcessor().getPipeline().setNextVideoOutput();
+                            }
+                            else if (robot.vision.isClassifierVisionEnabled())
+                            {
+                                robot.vision.classifierVision.getVisionProcessor().getPipeline().setNextVideoOutput();
+                            }
                         }
                         else if (robot.vision.isLimelightVisionEnabled())
                         {
@@ -612,23 +618,38 @@ public class FtcTest extends FtcTeleOp
                     passToTeleOp = false;
                 }
                 else if (testChoices.test == Test.VISION_TEST && robot.vision != null &&
-                         robot.vision.colorBlobVision != null)
+                         (robot.vision.artifactVision != null || robot.vision.classifierVision != null))
                 {
                     if (pressed)
                     {
-                        if (testVisionColorBlobType == Vision.ColorBlobType.Any)
+                        if (testVisionArtifactType == Vision.ArtifactType.Any)
                         {
-                            testVisionColorBlobType = Vision.ColorBlobType.Purple;
+                            testVisionArtifactType = Vision.ArtifactType.Purple;
                         }
-                        else if (testVisionColorBlobType == Vision.ColorBlobType.Purple)
+                        else if (testVisionArtifactType == Vision.ArtifactType.Purple)
                         {
-                            testVisionColorBlobType = Vision.ColorBlobType.Green;
+                            testVisionArtifactType = Vision.ArtifactType.Green;
+                        }
+                        else if (testVisionArtifactType == Vision.ArtifactType.Green)
+                        {
+                            testVisionArtifactType = Vision.ArtifactType.None;
                         }
                         else
                         {
-                            testVisionColorBlobType = Vision.ColorBlobType.Any;
+                            testVisionArtifactType = Vision.ArtifactType.Any;
                         }
-                        robot.vision.setColorBlobVisionEnabled(testVisionColorBlobType, true);
+
+                        if (testVisionArtifactType == Vision.ArtifactType.None)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, "Switch to Classifier Vision");
+                            robot.vision.setClassifierVisionEnabled(true);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(
+                                moduleName, "Switch to Artifact Vision %s", testVisionArtifactType);
+                            robot.vision.setArtifactVisionEnabled(testVisionArtifactType, true);
+                        }
                     }
                     passToTeleOp = false;
                 }
@@ -845,7 +866,7 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        robot.intakeSubsystem.setPickupArtifactType(Vision.ColorBlobType.Green);
+                        robot.intakeSubsystem.setPickupArtifactType(Vision.ArtifactType.Green);
                     }
                     passToTeleOp = false;
                 }
@@ -856,7 +877,7 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        robot.intakeSubsystem.setPickupArtifactType(Vision.ColorBlobType.Purple);
+                        robot.intakeSubsystem.setPickupArtifactType(Vision.ArtifactType.Purple);
                     }
                     passToTeleOp = false;
                 }
@@ -1027,17 +1048,20 @@ public class FtcTest extends FtcTeleOp
                 robot.vision.getDetectedAprilTag(null, lineNum++);
             }
 
-            if (robot.vision.colorBlobVision != null)
+            if (robot.vision.isArtifactVisionEnabled(Vision.ArtifactType.Any))
             {
-                robot.vision.getDetectedColorBlob(Vision.ColorBlobType.Any, 0.0, lineNum++);
-                Vision.ColorBlobType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
+                robot.vision.getDetectedArtifact(Vision.ArtifactType.Any, 0.0, lineNum++);
+            }
+            else if (robot.vision.isClassifierVisionEnabled())
+            {
+                Vision.ArtifactType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
                 if (blobs != null)
                 {
                     robot.dashboard.displayPrintf(lineNum++, "Blobs=%s", Arrays.toString(blobs));
                 }
             }
 
-            if (robot.vision.vision != null)
+            if (robot.vision.ftcVision != null)
             {
                 // displayExposureSettings is only available for VisionPortal.
                 robot.vision.displayExposureSettings(lineNum++);

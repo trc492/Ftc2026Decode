@@ -68,7 +68,7 @@ public class Intake extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcRollerIntake intake;
-    private Vision.ColorBlobType pickupArtifactType = Vision.ColorBlobType.Any;
+    private Vision.ArtifactType pickupArtifactType = Vision.ArtifactType.Any;
     private String detectedArtifactName = null;
 
     /**
@@ -140,7 +140,7 @@ public class Intake extends TrcSubsystem
      *
      * @param artifactType specifies the artifact to pick up.
      */
-    public void setPickupArtifactType(Vision.ColorBlobType artifactType)
+    public void setPickupArtifactType(Vision.ArtifactType artifactType)
     {
         pickupArtifactType = artifactType;
         intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
@@ -157,12 +157,12 @@ public class Intake extends TrcSubsystem
     {
         boolean artifactDetected = false;
 
-        if (robot.vision != null && robot.vision.colorBlobVision != null &&
-            pickupArtifactType != Vision.ColorBlobType.None)
+        if (robot.vision != null && robot.vision.artifactVision != null &&
+            pickupArtifactType != Vision.ArtifactType.None)
         {
             TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
-                robot.vision.colorBlobVision.getBestDetectedTargetInfo(
-                    robot.vision::colorBlobFilter, pickupArtifactType, robot.vision::compareDistanceY, 0.0,
+                robot.vision.artifactVision.getBestDetectedTargetInfo(
+                    robot.vision::artifactFilter, pickupArtifactType, robot.vision::compareDistanceY, 0.0,
                     robot.robotInfo.webCam1.camZOffset);
             artifactDetected = artifactInfo != null;
             detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;

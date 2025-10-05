@@ -64,8 +64,9 @@ public class RobotParams
         public static final boolean useLimelightVision          = true;
         public static final boolean streamToDashboard           = true;
         public static final boolean useWebcamAprilTagVision     = false;
-        public static final boolean useColorBlobVision          = true;
-        public static final boolean useSolvePnp                 = true;
+        public static final boolean useArtifactVision           = true;
+        public static final boolean useClassifierVision         = true;
+        public static final boolean useSolvePnp                 = false;
         public static final boolean showVisionView              = !inCompetition;
         public static final boolean showVisionStat              = true;
         // Drive Base

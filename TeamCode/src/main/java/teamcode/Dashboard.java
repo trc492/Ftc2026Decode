@@ -38,7 +38,8 @@ public class Dashboard
 {
     private static Double nextDashboardUpdateTime =  null;
 
-    public static TrcOpenCvColorBlobPipeline.PipelineParams colorBlobVision = Vision.colorBlobPipelineParams;
+    public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
+    public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
     public static String tuneSubsystemName = "";
     public static double shooter1Velocity = 5000.0; // in RPM
 

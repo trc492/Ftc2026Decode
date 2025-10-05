@@ -104,7 +104,8 @@ public class Robot
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
             (RobotParams.Preferences.useWebcamAprilTagVision ||
-             RobotParams.Preferences.useColorBlobVision ||
+             RobotParams.Preferences.useArtifactVision ||
+             RobotParams.Preferences.useClassifierVision ||
              RobotParams.Preferences.useLimelightVision))
         {
             vision = new Vision(this);
@@ -214,8 +215,8 @@ public class Robot
 
         if (vision != null)
         {
-            globalTracer.traceInfo(moduleName, "Enabling WebCam ColorBlobVision.");
-            vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, true);
+            globalTracer.traceInfo(moduleName, "Enabling WebCam ArtifactVision.");
+            vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
         }
 
         TrcDigitalInput.setElapsedTimerEnabled(true);
@@ -264,11 +265,16 @@ public class Robot
                 vision.setAprilTagVisionEnabled(false);
             }
 
-            if (vision.colorBlobVision != null)
+            if (vision.artifactVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling ColorBlobVision.");
-                vision.setDashboardStreamEnabled(false);
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.Any, false);
+                globalTracer.traceInfo(moduleName, "Disabling ArtifactVision.");
+                vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
+            }
+
+            if (vision.classifierVision != null)
+            {
+                globalTracer.traceInfo(moduleName, "Disabling ClassifierVision.");
+                vision.setClassifierVisionEnabled(false);
             }
 
             if (vision.limelightVision != null)
