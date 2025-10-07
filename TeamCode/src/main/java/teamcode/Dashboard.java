@@ -24,8 +24,14 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.Shooter;
+import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
-import trclib.controller.TrcPidController;
+import trclib.drivebase.TrcDriveBase;
+import trclib.motor.TrcMotor;
+import trclib.motor.TrcServo;
+import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
@@ -33,15 +39,41 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
 /**
  * This class creates the robot object that consists of sensors, indicators, drive base and all the subsystems.
  */
-@Config
 public class Dashboard
 {
-    private static Double nextDashboardUpdateTime =  null;
+    @Config
+    public static class SubsystemVision
+    {
+        public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
+        public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
+    }   //class SubsystemVision
 
-    public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
-    public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
-    public static String tuneSubsystemName = "";
-    public static double shooter1Velocity = 5000.0; // in RPM
+    @Config
+    public static class SubsystemSpindexer
+    {
+        public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
+        public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
+        public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
+    }   //class SubsystemSpindexer
+
+    @Config
+    public static class SubsystemShooter
+    {
+        public static TrcMotor.TuneParams shootMotor1Pid = Shooter.shootMotor1PidParams;
+        public static double shootMotor1Velocity = 5000.0;    // in RPM
+        public static TrcMotor.TuneParams shootMotor2Pid = Shooter.shootMotor1PidParams;
+        public static TrcMotor.TuneParams panMotorPid = Shooter.panMotorPidParams;
+        public static TrcMotor.TuneParams tiltMotorPid = Shooter.tiltMotorPidParams;
+        public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
+    }   //class SubsystemShooter
+
+    @Config
+    public static class SubsystemDrivebase
+    {
+        public static TrcDriveBase.TuneParams robotDrive = BaseDrive.DecodeInfo.tuneParams;
+    }   //class SubsystemDrivebase
+
+    private static Double nextDashboardUpdateTime =  null;
 
     /**
      * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard
@@ -62,11 +94,6 @@ public class Dashboard
             nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
         }
 
-        if (RobotParams.Preferences.showDriveBase)
-        {
-            lineNum = robot.robotBase.updateStatus(lineNum, slowLoop);
-        }
-
         if (RobotParams.Preferences.showVision && robot.vision != null)
         {
             lineNum = robot.vision.updateStatus(lineNum, slowLoop);
@@ -79,55 +106,5 @@ public class Dashboard
 
         return lineNum;
     }   //updateDashboard
-
-    @Config
-    public static class DriveBaseTuning
-    {
-        public static double xTarget = 0.0;
-        public static double yTarget = 0.0;
-        public static double turnTarget = 0.0;
-        public static double drivePower = 1.0;
-        public static double turnPower = 1.0;
-        public static double driveTime = 0.0;
-        public static TrcPidController.PidCoefficients xPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static TrcPidController.PidCoefficients yPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static TrcPidController.PidCoefficients turnPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static double maxVelocity = 0.0;
-        public static double maxAcceleration = 0.0;
-        public static double maxDeceleration = 0.0;
-    }   //class DriveBaseTuning
-
-    @Config
-    public static class PidTuning
-    {
-        public static TrcPidController.PidCoefficients pidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static TrcPidController.FFCoefficients ffCoeffs =
-            new TrcPidController.FFCoefficients(0.0, 0.0, 0.0);
-        public static double pidTolerance = 0.0;
-        public static boolean useSoftwarePid = true;
-        public static boolean enableSquid = false;
-        public static double pidTarget = 0.0;
-        public static double gravityCompPower = 0.0;
-    }   //PidTuning
-
-    @Config
-    public static class ServoPositionTuning
-    {
-        public static double minPos = 0.0;
-        public static double maxPos = 0.0;
-        public static double activateDuration = 0.0;
-    }   //ServoPositionTuning
-
-    @Config
-    public static class TriggerThresholdsTuning
-    {
-        public static double lowThreshold = 0.0;
-        public static double highThreshold = 0.0;
-        public static double settlingPeriod = 0.0;
-    }   //TriggerThresholdsTuning
 
 }   //class Dashboard

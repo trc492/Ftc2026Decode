@@ -163,7 +163,7 @@ public class Intake extends TrcSubsystem
             TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
                 robot.vision.artifactVision.getBestDetectedTargetInfo(
                     robot.vision::artifactFilter, pickupArtifactType, robot.vision::compareDistanceY, 0.0,
-                    robot.robotInfo.webCam1.camZOffset);
+                    robot.robotInfo.webCam1.camPose.z);
             artifactDetected = artifactInfo != null;
             detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;
         }
@@ -241,25 +241,21 @@ public class Intake extends TrcSubsystem
     }   //updateStatus
 
     /**
-     * This method is called to initialize the Dashboard from subsystem parameters.
-     *
-     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     * This method is called to update subsystem parameter to the Dashboard.
      */
     @Override
-    public void initDashboardFromSubsystemParams(String subComponent)
+    public void updateParamsToDashboard()
     {
         // Intake subsystem doesn't need tuning.
-    }   //initDashboardFromSubsystemParams
+    }   //updateParamsToDashboard
 
     /**
-     * This method is called to initialize the subsystem parameters from the Dashboard for tuning.
-     *
-     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     * This method is called to update subsystem parameters from the Dashboard.
      */
     @Override
-    public void initSubsystemParamsForTuning(String subComponent)
+    public void updateParamsFromDashboard()
     {
         // Intake subsystem doesn't need tuning.
-    }   //initSubsystemParamsForTuning
+    }   //updateParamsFromDashboard
 
 }   //class Intake

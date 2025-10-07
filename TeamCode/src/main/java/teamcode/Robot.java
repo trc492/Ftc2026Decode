@@ -33,7 +33,7 @@ import teamcode.autotasks.TaskAutoPickup;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.Intake;
 import teamcode.subsystems.LEDIndicator;
-import teamcode.subsystems.RobotBase;
+import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
@@ -63,7 +63,7 @@ public class Robot
     public static FtcMatchInfo matchInfo = null;
     private static TrcPose2D endOfAutoRobotPose = null;
     // Robot Drive.
-    public RobotBase robotBase;
+    public BaseDrive baseDrive;
     public FtcRobotDrive.RobotInfo robotInfo;
     public FtcRobotDrive robotDrive;
     // Vision subsystems.
@@ -98,9 +98,9 @@ public class Robot
         dashboard = FtcDashboard.getInstance();
         speak("Init starting");
         // Create and initialize Robot Base.
-        robotBase = new RobotBase();
-        robotInfo = robotBase.getRobotInfo();
-        robotDrive = robotBase.getRobotDrive();
+        baseDrive = new BaseDrive();
+        robotInfo = baseDrive.getRobotInfo();
+        robotDrive = baseDrive.getRobotDrive();
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
             (RobotParams.Preferences.useWebcamAprilTagVision ||
@@ -112,7 +112,7 @@ public class Robot
         }
         // If robotType is VisionOnly, the robot controller is disconnected from the robot for testing vision.
         // In this case, we should not instantiate any robot hardware.
-        if (RobotParams.Preferences.robotType != RobotBase.RobotType.VisionOnly)
+        if (RobotParams.Preferences.robotType != BaseDrive.RobotType.VisionOnly)
         {
             // Create and initialize sensors and indicators.
             ledIndicator = robotInfo.indicatorNames != null? new LEDIndicator(robotInfo.indicatorNames): null;

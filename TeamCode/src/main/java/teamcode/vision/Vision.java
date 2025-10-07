@@ -28,7 +28,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,10 +46,10 @@ import teamcode.RobotParams;
 import teamcode.subsystems.LEDIndicator;
 import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
-import trclib.pathdrive.TrcPose3D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
+import trclib.vision.TrcOpenCvDetector;
 import trclib.vision.TrcVisionTargetInfo;
 
 /**
@@ -61,105 +60,43 @@ import trclib.vision.TrcVisionTargetInfo;
 public class Vision
 {
     private final String moduleName = getClass().getSimpleName();
-    // Camera lens properties.
-    private static final FtcRobotDrive.CameraInfo logitechC920At640x480 = new FtcRobotDrive.CameraInfo()
-        .setLensProperties(622.001, 622.001, 319.803, 241.251)
-        .setDistortionCoefficents(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
-    private static final FtcRobotDrive.CameraInfo logitechC270At640x480 = new FtcRobotDrive.CameraInfo()
-        .setLensProperties(822.317, 822.317, 319.495, 242.502)
-        .setDistortionCoefficents(-0.0449369, 1.17277, 0, 0, -3.63244, 0, 0, 0);
-    private static final FtcRobotDrive.CameraInfo lifeCamHD3000At640x480 = new FtcRobotDrive.CameraInfo()
-        .setLensProperties(678.154, 678.170, 318.135, 228.374)
-        .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
 
-    /**
-     * This class contains the parameters of the front camera.
-     */
-    public static class FrontCamParams extends FtcRobotDrive.VisionInfo
-    {
-        public FrontCamParams()
-        {
-            camName = "Webcam 1";
-            camImageWidth = 320;
-            camImageHeight = 240;
-            camXOffset = 0.0;                   // Inches to the right from robot center
-            camYOffset = 0.0;                   // Inches forward from robot center
-            camZOffset = 21.0;                  // Inches up from the floor
-            camYaw = 0.0;                       // degrees clockwise from robot forward
-            camPitch = -19.0;                   // degrees up from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-            camInfo = lifeCamHD3000At640x480;
-            camOrientation = OpenCvCameraRotation.UPRIGHT;
-            // Homography: cameraRect in pixels, worldRect in inches
-            cameraRect = new TrcHomographyMapper.Rectangle(
+    // Lens properties for various cameras.
+    private static final TrcOpenCvDetector.LensInfo logitechC920At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(622.001, 622.001, 319.803, 241.251)
+            .setDistortionCoefficents(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
+    private static final TrcOpenCvDetector.LensInfo logitechC270At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(822.317, 822.317, 319.495, 242.502)
+            .setDistortionCoefficents(-0.0449369, 1.17277, 0, 0, -3.63244, 0, 0, 0);
+    private static final TrcOpenCvDetector.LensInfo lifeCamHD3000At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(678.154, 678.170, 318.135, 228.374)
+            .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
+
+    // Front camera properties
+    public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Webcam 1", 320, 240)
+        .setCameraPose(0.0, 0.0, 16.0, 0.0, -19.0, 0.0)
+        .setLensProperties(lifeCamHD3000At640x480)
+        .setHomographyParams(
+            new TrcHomographyMapper.Rectangle(
                 14.0, 28.0,                     // Camera Top Left
                 612.0, 33.0,                    // Camera Top Right
                 56.0, 448.0,                    // Camera Bottom Left
-                581.0, 430.5);                  // Camera Bottom Right
-            worldRect = new TrcHomographyMapper.Rectangle(
+                581.0, 430.5),                  // Camera Bottom Right
+            new TrcHomographyMapper.Rectangle(
                 -19.0, 37.5,                    // World Top Left
                 24.0, 37.5,                     // World Top Right
                 -4.75, 9.0,                     // World Bottom Left
-                6.25, 9.0);                     // World Bottom Right
-        }   //FrontCamParams
-    }   //class FrontCamParams
-
-    /**
-     * This class contains the parameters of the back camera.
-     */
-    public static class BackCamParams extends FtcRobotDrive.VisionInfo
-    {
-        public BackCamParams()
-        {
-            camName = "Webcam 2";
-            camImageWidth = 640;
-            camImageHeight = 480;
-            camXOffset = 0.0;                   // Inches to the right from robot center
-            camYOffset = 2.0;                   // Inches forward from robot center
-            camZOffset = 9.75;                  // Inches up from the floor
-            camYaw = 0.0;                       // degrees clockwise from robot front
-            camPitch = 15.0;                    // degrees down from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-            camOrientation = OpenCvCameraRotation.UPRIGHT;
-            // Homography: cameraRect in pixels, worldRect in inches
-            cameraRect = new TrcHomographyMapper.Rectangle(
-                0.0, 120.0,                                             // Camera Top Left
-                camImageWidth -1, 120.0,                                // Camera Top Right
-                0.0, camImageHeight - 1,                                // Camera Bottom Left
-                camImageWidth - 1, camImageHeight - 1);                 // Camera Bottom Right
-            worldRect = new TrcHomographyMapper.Rectangle(
-                -12.5626, 48.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,   // World Top Left
-                11.4375, 44.75 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,   // World Top Right
-                -2.5625, 21.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,    // World Bottom Left
-                2.5626, 21.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset);    // World Bottom Right
-        }   //BackCamParams
-    }   //class BackCamParams
-
-    /**
-     * This class contains the parameters of the Limelight vision processor.
-     */
-    public static class LimelightParams extends FtcRobotDrive.VisionInfo
-    {
-        public static final int NUM_PIPELINES = 2;
-
-        public LimelightParams()
-        {
-            camName = "Limelight3a";
-            camImageWidth = 640;
-            camImageHeight = 480;
-            camHFov = 54.5;                             // in degrees
-            camVFov = 42.0;                             // in degrees
-            camXOffset = 135.47*TrcUtil.INCHES_PER_MM;  // Inches to the right from robot center
-            camYOffset = 2.073;                         // Inches forward from robot center
-            camZOffset = 10.758;                        // Inches up from the floor
-            camYaw = -3.438;                            // degrees clockwise from robot front
-            camPitch = 0.0;                             // degrees down from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-        }   //LimelightParams
-    }   //class LimelightParams
+                6.25, 9.0));                    // World Bottom Right
+    // Limelight camera properties
+    public static final int NUM_LIMELIGHT_PIPELINES = 2;
+    public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Limelight3a", 640, 480)
+        .setCameraFOV(54.5, 42.0)
+        .setCameraPose(135.47*TrcUtil.INCHES_PER_METER, 2.073, 10.758, -3.438, 0.0, 0.0);
 
     public enum ArtifactType
     {
@@ -316,14 +253,12 @@ public class Vision
                 TrcOpenCvColorBlobPipeline.SolvePnpParams solvePnpParams = null;
                 if (RobotParams.Preferences.useSolvePnp)
                 {
-                    FtcRobotDrive.CameraInfo camInfo = robot.robotInfo.webCam1.camInfo;
                     solvePnpParams =
                         new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(artifactWidth, artifactHeight);
-                    if (camInfo != null)
+                    if (robot.robotInfo.webCam1.lensInfo != null)
                     {
                         solvePnpParams.setSolvePnpParams(
-                            camInfo.fx, camInfo.fy, camInfo.cx, camInfo.cy, camInfo.distCoeffs,
-                            robot.robotInfo.webCam1.camPose);
+                            robot.robotInfo.webCam1.lensInfo, robot.robotInfo.webCam1.camPose);
                     }
                 }
 
@@ -637,8 +572,8 @@ public class Vision
                 RobotParams.Game.APRILTAG_POSES[aprilTagInfo.detectedObj.aprilTagDetection.id - 1];
             TrcPose2D cameraPose = aprilTagPose.subtractRelativePose(aprilTagInfo.objPose);
             robotPose = cameraPose.subtractRelativePose(
-                new TrcPose2D(robot.robotInfo.webCam1.camXOffset, robot.robotInfo.webCam1.camYOffset,
-                              robot.robotInfo.webCam1.camYaw));
+                new TrcPose2D(robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
+                              robot.robotInfo.webCam1.camPose.yaw));
             tracer.traceInfo(
                 moduleName,
                 "AprilTagId=" + aprilTagInfo.detectedObj.aprilTagDetection.id +
@@ -816,7 +751,7 @@ public class Vision
             artifactInfo = artifactVision == null? null:
                 artifactVision.getBestDetectedTargetInfo(
                     this::artifactFilter, artifactType, this::compareDistanceY, groundOffset,
-                    robot.robotInfo.webCam1.camZOffset);
+                    robot.robotInfo.webCam1.camPose.z);
         }
 
         if (artifactInfo != null && robot.ledIndicator != null)

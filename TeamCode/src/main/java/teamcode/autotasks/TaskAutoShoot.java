@@ -257,18 +257,18 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     robot.shooter.aimShooter(
                         owner, shootParams.shooter1Velocity, shootParams.shooter2Velocity, shootParams.tiltAngle,
                         aprilTagPose.angle, event, 0.0, robot.shooterSubsystem::shoot,
-                        Shooter.Params.SHOOTER_OFF_DELAY);
+                        Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: distance=" + aprilTagDistance + ", params=" + shootParams);
                 }
                 else
                 {
                     // We did not use vision, just shoot assuming operator manually aimed.
-                    double shooterVel = Dashboard.shooter1Velocity;
+                    double shooterVel = Dashboard.SubsystemShooter.shootMotor1Velocity;
                     // ShooterVel is in RPM, aimShooter wants RPS.
                     robot.shooter.aimShooter(
                         owner, shooterVel / 60.0, 0.0, null, null, event, 0.0,
-                        robot.shooterSubsystem::shoot, Shooter.Params.SHOOTER_OFF_DELAY);
+                        robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                     tracer.traceInfo(
                         moduleName, "***** ManualShoot: shooterVel=" + shooterVel + " RPM");
                 }

@@ -32,18 +32,22 @@ SOFTWARE.
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
             <!-- DriveBase -->
-            <goBILDA5202SeriesMotor name="rbDriveMotor" port="0"/>
-            <goBILDA5202SeriesMotor name="rfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="rfSteerServo" port="5" />
-            <ContinuousRotationServo name="rbSteerServo" port="3" />
-            <AnalogInput name="rfSteerEncoder" port="0" />
-            <AnalogInput name="rbSteerEncoder" port="1" />
+            <goBILDA5202SeriesMotor name="brDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="frDriveMotor" port="1"/>
+            <ContinuousRotationServo name="frSteerServo" port="5" />
+            <ContinuousRotationServo name="brSteerServo" port="3" />
+            <AnalogInput name="frSteerEncoder" port="0" />
+            <AnalogInput name="brSteerEncoder" port="1" />
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
             <!-- Shooter -->
             <!--
             <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="2"/>
             -->
             <Servo name="Shooter.Launcher" port="2" />
+            <!-- Spindexer -->
+            <DigitalDevice name="Spindexer.LowerLimit" port="0" />
+            <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="2" />
+            <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="3" />
 
             <!--
             <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
@@ -53,21 +57,16 @@ SOFTWARE.
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">
             <!-- DriveBase -->
-            <goBILDA5202SeriesMotor name="lbDriveMotor" port="0"/>
-            <goBILDA5202SeriesMotor name="lfDriveMotor" port="1"/>
-            <ContinuousRotationServo name="lfSteerServo" port="5" />
-            <ContinuousRotationServo name="lbSteerServo" port="3" />
-            <AnalogInput name="lfSteerEncoder" port="0" />
-            <AnalogInput name="lbSteerEncoder" port="1" />
+            <goBILDA5202SeriesMotor name="blDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="flDriveMotor" port="1"/>
+            <ContinuousRotationServo name="flSteerServo" port="5" />
+            <ContinuousRotationServo name="blSteerServo" port="3" />
+            <AnalogInput name="flSteerEncoder" port="0" />
+            <AnalogInput name="blSteerEncoder" port="1" />
             <!-- Intake -->
             <RevRobotics40HDHexMotor name="Intake.Motor" port="2"/>
             <!-- Spindexer -->
             <RevRobotics40HDHexMotor name="Spindexer.Motor" port="3" />
-            <!--
-            <DigitalDevice name="Spindexer.LowerLimit" port="0" />
-            <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="1" />
-            <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
-            -->
             <!-- LED Indicators -->
             <Servo name="Spindexer1LED" port="0" />
             <Servo name="Spindexer2LED" port="1" />

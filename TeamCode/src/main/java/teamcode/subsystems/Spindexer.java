@@ -33,12 +33,11 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.subsystem.FtcPidStorage;
-import teamcode.Dashboard;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
-import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcWarpSpace;
+import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.subsystem.TrcPidStorage;
@@ -73,10 +72,11 @@ public class Spindexer extends TrcSubsystem
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
-        public static final boolean SOFTWARE_PID_ENABLED        = true;
-        public static final TrcPidController.PidCoefficients posPidCoeffs =
-            new TrcPidController.PidCoefficients(0.01, 0.0, 0.0, 0.0, 0.0);
+        public static final double MOTOR_PID_KP                 = 0.01;
+        public static final double MOTOR_PID_KI                 = 0.0;
+        public static final double MOTOR_PID_KD                 = 0.0;
         public static final double POS_PID_TOLERANCE            = 1.0;
+        public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR_NAME            = "EntrySensor";
         public static final String EXIT_SENSOR_NAME             = "ExitSensor";
@@ -102,6 +102,16 @@ public class Spindexer extends TrcSubsystem
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
     }   //class Params
+
+    public static final TrcMotor.TuneParams motorPidParams = new TrcMotor.TuneParams()
+        .setPidCoefficients(Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD)
+        .setPidParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
+    public static final TrcTriggerThresholdRange.TriggerParams entryTriggerParams =
+        new TrcTriggerThresholdRange.TriggerParams(
+            Params.ENTRY_TRIGGER_LOW_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING);
+    public static final TrcTriggerThresholdRange.TriggerParams exitTriggerParams =
+        new TrcTriggerThresholdRange.TriggerParams(
+            Params.EXIT_TRIGGER_LOW_THRESHOLD, Params.EXIT_TRIGGER_HIGH_THRESHOLD, Params.EXIT_TRIGGER_SETTLING);
 
     private final FtcDashboard dashboard;
     private final Robot robot;
@@ -147,7 +157,7 @@ public class Spindexer extends TrcSubsystem
                 RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME);
             spindexerParams.setEntryAnalogSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME, this::getEntrySensorData,
-                Params.ENTRY_TRIGGER_LOW_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING,
+                entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold, entryTriggerParams.settlingPeriod,
                 false, this::entryTriggerCallback, null);
         }
         else
@@ -161,7 +171,7 @@ public class Spindexer extends TrcSubsystem
                 RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME);
             spindexerParams.setExitAnalogSourceTrigger(
                 Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME, this::getExitSensorData,
-                Params.EXIT_TRIGGER_LOW_THRESHOLD, Params.EXIT_TRIGGER_HIGH_THRESHOLD, Params.EXIT_TRIGGER_SETTLING,
+                exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod,
                 false, this::exitTriggerCallback, null);
         }
         else
@@ -171,7 +181,7 @@ public class Spindexer extends TrcSubsystem
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
         spindexer.motor.setPositionPidParameters(
-            Params.posPidCoeffs, Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED, null);
+            motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);
     }   //Spindexer
 
@@ -697,69 +707,44 @@ public class Spindexer extends TrcSubsystem
     }   //updateStatus
 
     /**
-     * This method is called to initialize the Dashboard from subsystem parameters.
-     *
-     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     * This method is called to update subsystem parameter to the Dashboard.
      */
     @Override
-    public void initDashboardFromSubsystemParams(String subComponent)
+    public void updateParamsToDashboard()
     {
-        if (subComponent != null)
-        {
-            if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
-            {
-                Dashboard.PidTuning.pidCoeffs = Params.posPidCoeffs;
-                Dashboard.PidTuning.pidTolerance = Params.POS_PID_TOLERANCE;
-                Dashboard.PidTuning.useSoftwarePid = Params.SOFTWARE_PID_ENABLED;
-            }
-            else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
-            {
-                Dashboard.TriggerThresholdsTuning.lowThreshold = Params.ENTRY_TRIGGER_LOW_THRESHOLD;
-                Dashboard.TriggerThresholdsTuning.highThreshold = Params.ENTRY_TRIGGER_HIGH_THRESHOLD;
-                Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.ENTRY_TRIGGER_SETTLING;
-            }
-            else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
-            {
-                Dashboard.TriggerThresholdsTuning.lowThreshold = Params.EXIT_TRIGGER_LOW_THRESHOLD;
-                Dashboard.TriggerThresholdsTuning.highThreshold = Params.EXIT_TRIGGER_HIGH_THRESHOLD;
-                Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.EXIT_TRIGGER_SETTLING;
-            }
-        }
-    }   //initDashboardFromSubsystemParams
+//        if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
+//        {
+//            Dashboard.PidTuning.pidCoeffs = Params.posPidCoeffs;
+//            Dashboard.PidTuning.pidTolerance = Params.POS_PID_TOLERANCE;
+//            Dashboard.PidTuning.useSoftwarePid = Params.SOFTWARE_PID_ENABLED;
+//        }
+//        else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
+//        {
+//            Dashboard.TriggerThresholdsTuning.lowThreshold = Params.ENTRY_TRIGGER_LOW_THRESHOLD;
+//            Dashboard.TriggerThresholdsTuning.highThreshold = Params.ENTRY_TRIGGER_HIGH_THRESHOLD;
+//            Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.ENTRY_TRIGGER_SETTLING;
+//        }
+//        else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
+//        {
+//            Dashboard.TriggerThresholdsTuning.lowThreshold = Params.EXIT_TRIGGER_LOW_THRESHOLD;
+//            Dashboard.TriggerThresholdsTuning.highThreshold = Params.EXIT_TRIGGER_HIGH_THRESHOLD;
+//            Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.EXIT_TRIGGER_SETTLING;
+//        }
+    }   //updateParamsToDashboard
 
     /**
-     * This method is called to initialize the subsystem parameters from the Dashboard for tuning.
-     *
-     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
+     * This method is called to update subsystem parameters from the Dashboard.
      */
     @Override
-    public void initSubsystemParamsForTuning(String subComponent)
+    public void updateParamsFromDashboard()
     {
-        if (subComponent != null)
-        {
-            if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
-            {
-                spindexer.motor.setPositionPidParameters(
-                    Dashboard.PidTuning.pidCoeffs,
-                    Dashboard.PidTuning.pidTolerance,
-                    Dashboard.PidTuning.useSoftwarePid,
-                    null);
-            }
-            else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
-            {
-                ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
-                    Dashboard.TriggerThresholdsTuning.lowThreshold,
-                    Dashboard.TriggerThresholdsTuning.highThreshold,
-                    Dashboard.TriggerThresholdsTuning.settlingPeriod);
-            }
-            else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
-            {
-                ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
-                    Dashboard.TriggerThresholdsTuning.lowThreshold,
-                    Dashboard.TriggerThresholdsTuning.highThreshold,
-                    Dashboard.TriggerThresholdsTuning.settlingPeriod);
-            }
-        }
-    }   //initSubsystemParamsForTuning
+        spindexer.motor.setPositionPidParameters(
+            motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
+        ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
+            entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold,
+            entryTriggerParams.settlingPeriod);
+        ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
+            exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod);
+    }   //updateParamsFromDashboard
 
 }   //class Spindexer

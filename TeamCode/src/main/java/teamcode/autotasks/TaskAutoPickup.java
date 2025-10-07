@@ -224,7 +224,7 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                 // Use vision to determine the appropriate AprilTag location.
                 TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> object =
                     robot.vision.artifactVision.getBestDetectedTargetInfo(
-                        null, null, null, 0.0, robot.robotInfo.webCam1.camZOffset);
+                        null, null, null, 0.0, robot.robotInfo.webCam1.camPose.z);
                 if (object != null)
                 {
                     objPose = object.detectedObj.getObjectPose();
