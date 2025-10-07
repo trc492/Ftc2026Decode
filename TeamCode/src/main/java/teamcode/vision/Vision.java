@@ -131,10 +131,10 @@ public class Vision
     // HSV Color Space.
     private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
         TrcOpenCvColorBlobPipeline.ColorConversion.RGBToHSV;
-    private static final double[] purpleThresholdsLow = {119.0, 45.0, 10.0};
-    private static final double[] purpleThresholdsHigh = {173.0, 255.0, 255.0};
-    private static final double[] greenThresholdsLow = {48.0, 45.0, 30.0};
-    private static final double[] greenThresholdsHigh = {78.0, 250.0, 306.0};
+    private static final double[] purpleThresholdsLow = {140.0, 20.0, 100.0};
+    private static final double[] purpleThresholdsHigh = {170.0, 160.0, 255.0};
+    private static final double[] greenThresholdsLow = {50.0, 20.0, 100.0};
+    private static final double[] greenThresholdsHigh = {100.0, 255.0, 255.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(50.0)
@@ -156,16 +156,16 @@ public class Vision
     private static final double artifactWidth = 5.0;  // inches
     private static final double artifactHeight = 5.0; // inches
 
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 10;
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 230;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 0;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 239;
     private static final double ONE_BALL_THRESHOLD = 2.5;
-    private static final double TWO_BALL_THRESHOLD = 4.5;
-    private static final double THREE_BALL_THRESHOLD = 6.5;
-    private static final double FOUR_BALL_THRESHOLD = 8.5;
-    private static final double FIVE_BALL_THRESHOLD = 10.5;
-    private static final double SIX_BALL_THRESHOLD = 12.5;
-    private static final double SEVEN_BALL_THRESHOLD = 14.5;
-    private static final double EIGHT_BALL_THRESHOLD = 16.5;
+    private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
+    private static final double THREE_BALL_THRESHOLD = 3 * ONE_BALL_THRESHOLD;
+    private static final double FOUR_BALL_THRESHOLD = 4 * ONE_BALL_THRESHOLD;
+    private static final double FIVE_BALL_THRESHOLD = 5 * ONE_BALL_THRESHOLD;
+    private static final double SIX_BALL_THRESHOLD = 6 * ONE_BALL_THRESHOLD;
+    private static final double SEVEN_BALL_THRESHOLD = 7 * ONE_BALL_THRESHOLD;
+    private static final double EIGHT_BALL_THRESHOLD = 8 * ONE_BALL_THRESHOLD;
     // Create the pipeline parameters for both purple and green artifacts here so that Dashboard can access them.
     public static final TrcOpenCvColorBlobPipeline.PipelineParams artifactPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
@@ -847,7 +847,7 @@ public class Vision
                     int count = getArtifactCount(blob);
                     tracer.traceDebug(moduleName, "[%d] %d %s", i, count, artifactType);
                     robot.dashboard.putString(
-                        "Slot" + i,
+                        "Blob" + i,
                         String.format(
                             Locale.US, "%d %s(%4.1f/%4.1f = %4.1f)",
                             count, artifactType, blob.objPixelWidth, blob.objPixelHeight, getAspectRatio(blob)));
@@ -868,10 +868,16 @@ public class Vision
                     }
                 }
 
+                for (int k = blobs.size(); k < artifacts.length; k++)
+                {
+                    robot.dashboard.putString("Blob" + k, "");
+                }
+
                 for (int k = index; k < artifacts.length; k++)
                 {
                     artifacts[k] = ArtifactType.None;
                 }
+
                 robot.dashboard.putString("Classifier", Arrays.toString(artifacts));
             }
         }

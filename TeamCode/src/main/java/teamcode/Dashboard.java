@@ -42,19 +42,17 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
 public class Dashboard
 {
     @Config
+    public static class SubsystemDrivebase
+    {
+        public static TrcDriveBase.TuneParams robotDrive = BaseDrive.DecodeInfo.tuneParams;
+    }   //class SubsystemDrivebase
+
+    @Config
     public static class SubsystemVision
     {
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
     }   //class SubsystemVision
-
-    @Config
-    public static class SubsystemSpindexer
-    {
-        public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
-        public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
-        public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
-    }   //class SubsystemSpindexer
 
     @Config
     public static class SubsystemShooter
@@ -68,10 +66,12 @@ public class Dashboard
     }   //class SubsystemShooter
 
     @Config
-    public static class SubsystemDrivebase
+    public static class SubsystemSpindexer
     {
-        public static TrcDriveBase.TuneParams robotDrive = BaseDrive.DecodeInfo.tuneParams;
-    }   //class SubsystemDrivebase
+        public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
+        public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
+        public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
+    }   //class SubsystemSpindexer
 
     private static Double nextDashboardUpdateTime =  null;
 
