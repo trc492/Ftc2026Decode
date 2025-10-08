@@ -57,11 +57,11 @@ public class Spindexer extends TrcSubsystem
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean HAS_EXIT_SENSOR             = true;
 
-        public static final String MOTOR_NAME                   = "Motor";
+        public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
         public static final boolean MOTOR_INVERTED              = true;
 
-        public static final String LOWER_LIMIT_SWITCH_NAME      = "LowerLimit";
+        public static final String LOWER_LIMIT_SWITCH_NAME      = SUBSYSTEM_NAME + ".LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_435_ENC_PPR;
@@ -78,8 +78,8 @@ public class Spindexer extends TrcSubsystem
         public static final double POS_PID_TOLERANCE            = 1.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
-        public static final String ENTRY_SENSOR_NAME            = "EntrySensor";
-        public static final String EXIT_SENSOR_NAME             = "ExitSensor";
+        public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
+        public static final String EXIT_SENSOR_NAME             = SUBSYSTEM_NAME + ".ExitSensor";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
         public static final double MOVE_POWER                   = 1.0;
@@ -142,10 +142,8 @@ public class Spindexer extends TrcSubsystem
         dashboard = FtcDashboard.getInstance();
         this.robot = robot;
         FtcPidStorage.Params spindexerParams = new FtcPidStorage.Params()
-            .setPrimaryMotor(
-                Params.SUBSYSTEM_NAME + "." + Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
-            .setLowerLimitSwitch(
-                Params.SUBSYSTEM_NAME + "." + Params.LOWER_LIMIT_SWITCH_NAME, Params.LOWER_LIMIT_SWITCH_INVERTED)
+            .setPrimaryMotor(Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
+            .setLowerLimitSwitch(Params.LOWER_LIMIT_SWITCH_NAME, Params.LOWER_LIMIT_SWITCH_INVERTED)
             .setPositionScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET)
             .setObjectDistance(Params.OBJECT_DISTANCE)
             .setMovePower(Params.MOVE_POWER)
@@ -154,11 +152,11 @@ public class Spindexer extends TrcSubsystem
         if (Params.HAS_ENTRY_SENSOR)
         {
             entryAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME);
+                RevColorSensorV3.class, Params.ENTRY_SENSOR_NAME);
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.SUBSYSTEM_NAME + "." + Params.ENTRY_SENSOR_NAME, this::getEntrySensorData,
-                entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold, entryTriggerParams.settlingPeriod,
-                false, this::entryTriggerCallback, null);
+                Params.ENTRY_SENSOR_NAME, this::getEntrySensorData, entryTriggerParams.lowThreshold,
+                entryTriggerParams.highThreshold, entryTriggerParams.settlingPeriod, false,
+                this::entryTriggerCallback, null);
         }
         else
         {
@@ -167,12 +165,11 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_SENSOR)
         {
-            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                RevColorSensorV3.class, Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME);
+            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(RevColorSensorV3.class, Params.EXIT_SENSOR_NAME);
             spindexerParams.setExitAnalogSourceTrigger(
-                Params.SUBSYSTEM_NAME + "." + Params.EXIT_SENSOR_NAME, this::getExitSensorData,
-                exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod,
-                false, this::exitTriggerCallback, null);
+                Params.EXIT_SENSOR_NAME, this::getExitSensorData, exitTriggerParams.lowThreshold,
+                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod, false,
+                this::exitTriggerCallback, null);
         }
         else
         {

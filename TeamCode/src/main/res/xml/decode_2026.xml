@@ -40,10 +40,11 @@ SOFTWARE.
             <AnalogInput name="brSteerEncoder" port="1" />
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
             <!-- Shooter -->
-            <!--
             <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="2"/>
-            -->
-            <Servo name="Shooter.Launcher" port="2" />
+            <goBILDA5202SeriesMotor name="Shooter.PanMotor" port="3"/>
+            <ContinuousRotationServo name="Shooter.TiltMotor" port="1" />
+            <AnalogInput name="Shooter.TiltEncoder" port="3" />
+            <Servo name="Shooter.Launcher" port="0" />
             <!-- Spindexer -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="2" />
@@ -51,8 +52,6 @@ SOFTWARE.
 
             <!--
             <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
-            <goBILDA5202SeriesMotor name="lbDriveMotor" port="3"/>
-            <REV_VL53L0X_RANGE_SENSOR name="ServoGrabber.sensor" port="0" bus="1"/>
             -->
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">

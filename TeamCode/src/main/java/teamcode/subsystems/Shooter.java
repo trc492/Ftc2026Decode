@@ -28,6 +28,7 @@ import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
 import ftclib.vision.FtcVisionAprilTag;
 import teamcode.Robot;
+import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -55,31 +56,31 @@ public class Shooter extends TrcSubsystem
         public static final boolean NEED_ZERO_CAL               = false;
 
         public static final boolean HAS_TWO_SHOOTER_MOTORS      = false;
-        public static final boolean HAS_PAN_MOTOR               = false;
-        public static final boolean HAS_TILT_MOTOR              = false;
+        public static final boolean HAS_PAN_MOTOR               = true;
+        public static final boolean HAS_TILT_MOTOR              = true;
         public static final boolean HAS_LAUNCHER                = true;
 
         // Shooter Motor1
-        public static final String SHOOTER_MOTOR1_NAME          = "ShooterMotor1";
+        public static final String SHOOTER_MOTOR1_NAME          = SUBSYSTEM_NAME + ".ShooterMotor1";
         public static final MotorType SHOOTER_MOTOR1_TYPE       = MotorType.DcMotor;
         public static final boolean SHOOTER_MOTOR1_INVERTED     = false;
 
         // Shooter Motor2
-        public static final String SHOOTER_MOTOR2_NAME          = "ShooterMotor2";
+        public static final String SHOOTER_MOTOR2_NAME          = SUBSYSTEM_NAME + ".ShooterMotor2";
         public static final MotorType SHOOTER_MOTOR2_TYPE       = MotorType.DcMotor;
         public static final boolean SHOOTER_MOTOR2_INVERTED     = true;
 
         // Assume shooter motor1 and motor2 are the same type and have same gear ratio but they could have different
         // PID coefficients due to different motor strengths and frictions.
-        public static final double GOBILDA6000_CPR              = 28.0;
-        public static final double SHOOT_MOTOR_GEAR_RATIO       = 24.0/36.0;
-        public static final double SHOOT_MOTOR_REV_PER_COUNT    = 1.0/(GOBILDA6000_CPR * SHOOT_MOTOR_GEAR_RATIO);
+        public static final double GOBILDA5000_CPR              = 28.0;
+        public static final double SHOOT_MOTOR_GEAR_RATIO       = 20.0/28.0;
+        public static final double SHOOT_MOTOR_REV_PER_COUNT    = 1.0/(GOBILDA5000_CPR * SHOOT_MOTOR_GEAR_RATIO);
         public static final double SHOOT_MOTOR_MAX_VEL          = 7360.0;
 
-        public static final double SHOOT_MOTOR1_PID_KP          = 0.075;
+        public static final double SHOOT_MOTOR1_PID_KP          = 1.0;
         public static final double SHOOT_MOTOR1_PID_KI          = 0.0;
         public static final double SHOOT_MOTOR1_PID_KD          = 0.0;
-        public static final double SHOOT_MOTOR1_PID_KF          = 0.008;
+        public static final double SHOOT_MOTOR1_PID_KF          = 0.0125;
 
         public static final double SHOOT_MOTOR2_PID_KP          = 0.075;
         public static final double SHOOT_MOTOR2_PID_KI          = 0.0;
@@ -91,9 +92,12 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
 
         // Pan Motor
-        public static final String PAN_MOTOR_NAME               = "PanMotor";
+        public static final String PAN_MOTOR_NAME               = SUBSYSTEM_NAME + ".PanMotor";
         public static final MotorType PAN_MOTOR_TYPE            = MotorType.DcMotor;
-        public static final boolean PAN_MOTOR_INVERTED          = false;
+        public static final boolean PAN_MOTOR_INVERTED          = true;
+        public static final String PAN_ENCODER_NAME             = null;
+        public static final boolean PAN_ENCODER_INVERTED        = false;
+        public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
 
         public static final double PAN_MOTOR_PID_KP             = 0.01;
         public static final double PAN_MOTOR_PID_KI             = 0.0;
@@ -101,7 +105,9 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_PID_TOLERANCE            = 1.0;
         public static final boolean PAN_SOFTWARE_PID_ENABLED    = true;
 
-        public static final double PAN_DEG_PER_COUNT            = 1.0;
+        public static final double PAN_GEAR_RATIO               = 75.0/26.0;
+        public static final double PAN_DEG_PER_COUNT            =
+            360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -90.0;
         public static final double PAN_MAX_POS                  = 90.0;
@@ -112,9 +118,12 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_STALL_RESET_TIMEOUT      = 0.0;
 
         // Tilt Motor
-        public static final String TILT_MOTOR_NAME              = "TiltMotor";
-        public static final MotorType TILT_MOTOR_TYPE           = MotorType.DcMotor;
+        public static final String TILT_MOTOR_NAME              = SUBSYSTEM_NAME + ".TiltMotor";
+        public static final MotorType TILT_MOTOR_TYPE           = MotorType.CRServo;
         public static final boolean TILT_MOTOR_INVERTED         = false;
+        public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
+        public static final boolean TILT_ENCODER_INVERTED       = false;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.0;
 
         public static final double TILT_MOTOR_PID_KP            = 0.01;
         public static final double TILT_MOTOR_PID_KI            = 0.0;
@@ -122,7 +131,8 @@ public class Shooter extends TrcSubsystem
         public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
-        public static final double TILT_DEG_PER_COUNT           = 1.0;
+        public static final double TILT_GEAR_RATIO              = 108.0/14.0;
+        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = 0.0;
         public static final double TILT_MAX_POS                 = 90.0;
@@ -134,7 +144,7 @@ public class Shooter extends TrcSubsystem
             .add("test6ft", 72.0, 90.0, 0.0, 60.0);
 
         // Launcher
-        public static final String LAUNCHER_SERVO_NAME          = "Launcher";
+        public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = false;
         public static double LAUNCHER_REST_POS                  = 0.0;
         public static double LAUNCHER_LAUNCH_POS                = 0.06;
@@ -183,28 +193,27 @@ public class Shooter extends TrcSubsystem
         this.robot = robot;
         FtcShooter.Params shooterParams = new FtcShooter.Params()
             .setShooterMotor1(
-                Params.SUBSYSTEM_NAME + "." + Params.SHOOTER_MOTOR1_NAME, Params.SHOOTER_MOTOR1_TYPE,
-                Params.SHOOTER_MOTOR1_INVERTED);
+                Params.SHOOTER_MOTOR1_NAME, Params.SHOOTER_MOTOR1_TYPE, Params.SHOOTER_MOTOR1_INVERTED);
 
         if (Params.HAS_TWO_SHOOTER_MOTORS)
         {
             shooterParams.setShooterMotor2(
-                Params.SUBSYSTEM_NAME + "." + Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE,
-                Params.SHOOTER_MOTOR2_INVERTED);
+                Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE, Params.SHOOTER_MOTOR2_INVERTED);
         }
 
         if (Params.HAS_PAN_MOTOR)
         {
             shooterParams.setPanMotor(
-                Params.SUBSYSTEM_NAME + "." + Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
+                Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
+                Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED, Params.PAN_ENCODER_ZERO_OFFSET,
                 new TrcShooter.PanTiltParams(Params.PAN_POWER_LIMIT, Params.PAN_MIN_POS, Params.PAN_MAX_POS));
         }
 
         if (Params.HAS_TILT_MOTOR)
         {
             shooterParams.setTiltMotor(
-                Params.SUBSYSTEM_NAME + "." + Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE,
-                Params.TILT_MOTOR_INVERTED,
+                Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE, Params.TILT_MOTOR_INVERTED,
+                Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED, Params.TILT_ENCODER_ZERO_OFFSET,
                 new TrcShooter.PanTiltParams(Params.TILT_POWER_LIMIT, Params.TILT_MIN_POS, Params.TILT_MAX_POS));
         }
 
@@ -255,8 +264,7 @@ public class Shooter extends TrcSubsystem
         if (Params.HAS_LAUNCHER)
         {
             FtcServoActuator.Params launcherParams = new FtcServoActuator.Params()
-                .setPrimaryServo(
-                    Params.SUBSYSTEM_NAME + "." + Params.LAUNCHER_SERVO_NAME, Params.LAUNCHER_SERVO_INVERTED);
+                .setPrimaryServo(Params.LAUNCHER_SERVO_NAME, Params.LAUNCHER_SERVO_INVERTED);
             launcher = new FtcServoActuator(launcherParams).getServo();
         }
         else
@@ -442,7 +450,7 @@ public class Shooter extends TrcSubsystem
             motor = shooter.getShooterMotor1();
             dashboard.displayPrintf(
                 lineNum++, "%s: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
-                Params.SUBSYSTEM_NAME + "." + Params.SHOOTER_MOTOR1_NAME, motor.getPower(), motor.getCurrent(),
+                Params.SHOOTER_MOTOR1_NAME, motor.getPower(), motor.getCurrent(),
                 shooter.getShooterMotor1RPM(), shooter.getShooterMotor1TargetRPM());
 
             motor = shooter.getShooterMotor2();
@@ -450,7 +458,7 @@ public class Shooter extends TrcSubsystem
             {
                 dashboard.displayPrintf(
                     lineNum++, "%s: power=%.3f, current=%.3f, vel=%.3f, target=%.3f",
-                    Params.SUBSYSTEM_NAME + "." + Params.SHOOTER_MOTOR2_NAME, motor.getPower(), motor.getCurrent(),
+                    Params.SHOOTER_MOTOR2_NAME, motor.getPower(), motor.getCurrent(),
                     shooter.getShooterMotor2RPM(), shooter.getShooterMotor2TargetRPM());
             }
 
@@ -459,7 +467,7 @@ public class Shooter extends TrcSubsystem
             {
                 dashboard.displayPrintf(
                     lineNum++, "%s: power=%.3f, current=%.3f, pos=%.3f/%.3f",
-                    Params.SUBSYSTEM_NAME + "." + Params.PAN_MOTOR_NAME, motor.getPower(), motor.getCurrent(),
+                    Params.PAN_MOTOR_NAME, motor.getPower(), motor.getCurrent(),
                     motor.getPosition(), motor.getPidTarget());
             }
 
@@ -467,16 +475,15 @@ public class Shooter extends TrcSubsystem
             if (motor != null)
             {
                 dashboard.displayPrintf(
-                    lineNum++, "%s: power=%.3f, current=%.3f, pos=%.3f/%.3f",
-                    Params.SUBSYSTEM_NAME + "." + Params.TILT_MOTOR_NAME, motor.getPower(), motor.getCurrent(),
-                    motor.getPosition(), motor.getPidTarget());
+                    lineNum++, "%s: power=%.3f, pos=%.3f/%.3f",
+                    Params.TILT_MOTOR_NAME, motor.getPower(), motor.getPosition(), motor.getPidTarget());
             }
 
             if (launcher != null)
             {
                 dashboard.displayPrintf(
                     lineNum++, "%s: pos=%.3f",
-                    Params.SUBSYSTEM_NAME + Params.LAUNCHER_SERVO_NAME, launcher.getPosition());
+                    Params.LAUNCHER_SERVO_NAME, launcher.getPosition());
             }
         }
         else
