@@ -759,13 +759,13 @@ public class FtcTest extends FtcTeleOp
                             if (robot.autoPickupTask.isActive())
                             {
                                 robot.autoPickupTask.cancel();
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Pickup");
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Intake");
                             }
                             else
                             {
                                 robot.autoPickupTask.autoPickup(moduleName, null, !operatorAltFunc);
                                 robot.globalTracer.traceInfo(
-                                    moduleName, ">>>>> Auto Pickup (useVision=" + !operatorAltFunc + ")");
+                                    moduleName, ">>>>> Auto Intake (useVision=" + !operatorAltFunc + ")");
                             }
                         }
                         else
