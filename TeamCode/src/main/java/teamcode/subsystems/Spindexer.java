@@ -669,6 +669,10 @@ public class Spindexer extends TrcSubsystem
     {
         autoReceivedEnabled = enabled;
         spindexer.setEntryTriggerEnabled(enabled);
+        if (!enabled)
+        {
+            spindexer.cancel();
+        }
     }   //setAutoReceiveEnabled
 
     //
