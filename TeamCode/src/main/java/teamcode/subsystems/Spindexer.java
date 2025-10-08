@@ -121,6 +121,7 @@ public class Spindexer extends TrcSubsystem
     private final TrcWarpSpace warpSpace;
 
     private final Vision.ArtifactType[] slotStates  = {null, null, null};
+    private boolean autoReceivedEnabled = false;
     private Integer entrySlot = 0;
     private Integer exitSlot = null;
     private int numPurpleArtifacts = 0;
@@ -556,10 +557,31 @@ public class Spindexer extends TrcSubsystem
         {
             double pos = warpSpace.getOptimizedTarget(
                 Params.entryPresetPositions[slot], spindexer.motor.getPosition());
-            spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+            TrcEvent callbackEvent = new TrcEvent(instanceName + ".callbackEvent");
+            callbackEvent.setCallback(this::spinCompletionCallback, null);
+            spindexer.motor.setPosition(0.0, pos, true, Params.MOVE_POWER, callbackEvent);
             entrySlot = slot;
         }
     }   //moveToNextVacantEntrySlot
+
+    /**
+     * This method is called when the Spinidexer completed spinning to the next position.
+     *
+     * @param context not used.
+     * @param canceled specifies true if canceled.
+     */
+    private void spinCompletionCallback(Object context, boolean canceled)
+    {
+        if (!canceled)
+        {
+            if (autoReceivedEnabled)
+            {
+                // We are in auto receiving mode and the spindexer has finished rotating to the next vacant slot,
+                // re-enable entry trigger.
+                spindexer.setEntryTriggerEnabled(true);
+            }
+        }
+    }   //spinCompletionCallback
 
     /**
      * This method finds the slot that contains the specified artifact type near the current exit slot and move the
@@ -638,14 +660,16 @@ public class Spindexer extends TrcSubsystem
         exitSlot = slot;
     }   //exitSlotDown
 
-    public void setRecievingMode(boolean enabled){
-        if (enabled) {
-            spindexer.setEntryTriggerEnabled(true);
-        }
-        else {
-            spindexer.setEntryTriggerEnabled(false);
-        }
-    }
+    /**
+     * This method enables/disables AutoReceive.
+     *
+     * @param enabled specifies true to enable AutoReceive, false to disable.
+     */
+    public void setAutoRecieveEnabled(boolean enabled)
+    {
+        autoReceivedEnabled = enabled;
+        spindexer.setEntryTriggerEnabled(enabled);
+    }   //setAutoReceiveEnabled
 
     //
     // Implements TrcSubsystem abstract methods.

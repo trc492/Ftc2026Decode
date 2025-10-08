@@ -114,39 +114,6 @@ public class Intake extends TrcSubsystem
     }   //getIntake
 
     /**
-     * This method is called when the front sensor is triggered.
-     * While vision kept finding correct objects, it will keep calling this method and keep enabling the spindexer
-     * entry trigger. That's okay because it does no harm enabling a trigger that's already enabled. It will just
-     * be ignored.
-     *
-     * @param context (not used).
-     * @param canceled specifies if the trigger is disabled.
-     */
-    private void frontTriggerCallback(Object context, boolean canceled)
-    {
-        // Vision found the artifact we want. Enable Spindexer entry trigger preparing to receive it.
-        intake.tracer.traceInfo(instanceName, "Vision found artifact " + detectedArtifactName);
-        if (!canceled && robot.spindexer != null)
-        {
-            robot.spindexer.setEntryTriggerEnabled(true);
-        }
-    }   //frontTriggerCallback
-
-    /**
-     * This method is called by the Spindexer to set the artifact type to pick up. This is according to what artifacts
-     * are already in the Spindexer. It will ask for Any artifact if Spindexer is empty or has one Purple artifact.
-     * It will ask for Purple if it has one or two vacant slots and already has a Green. It will ask for None if
-     * Spindexer is full.
-     *
-     * @param artifactType specifies the artifact to pick up.
-     */
-    public void setPickupArtifactType(Vision.ArtifactType artifactType)
-    {
-        pickupArtifactType = artifactType;
-        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
-    }   //setPickupArtifactType
-
-    /**
      * This method is called by the Intake front trigger periodically using vision to detect the correct artifact type
      * to be picked up. Spindexer is responsible for calling setPickupArtifactType to specify whether vision should
      * look for purple artifact, green artifact, any artifact or None.
@@ -171,17 +138,24 @@ public class Intake extends TrcSubsystem
         return artifactDetected;
     }   //visionDetectedArtifact
 
-    public void setBulldozeIntake(boolean enabled){
-        if (enabled) {
-            intake.intake(null, 0.0, 0.0, null);
-            robot.spindexerSubsystem.setRecievingMode(true);
-        }
-        else
+    /**
+     * This method is called when the front sensor is triggered.
+     * While vision kept finding correct objects, it will keep calling this method and keep enabling the spindexer
+     * entry trigger. That's okay because it does no harm enabling a trigger that's already enabled. It will just
+     * be ignored.
+     *
+     * @param context (not used).
+     * @param canceled specifies if the trigger is disabled.
+     */
+    private void frontTriggerCallback(Object context, boolean canceled)
+    {
+        // Vision found the artifact we want. Enable Spindexer entry trigger preparing to receive it.
+        intake.tracer.traceInfo(instanceName, "Vision found artifact " + detectedArtifactName);
+        if (!canceled && robot.spindexer != null)
         {
-            intake.cancel();
-            robot.spindexerSubsystem.setRecievingMode(false);
+            robot.spindexer.setEntryTriggerEnabled(true);
         }
-    }
+    }   //frontTriggerCallback
 
     /**
      * This method is called by the Intake back trigger periodically using the spindexer entry sensor to detect if the
@@ -193,6 +167,41 @@ public class Intake extends TrcSubsystem
     {
         return robot.spindexer != null && robot.spindexer.isEntrySensorActive();
     }   //spindexerEntryHasArtifact
+
+    /**
+     * This method is called by the Spindexer to set the artifact type to pick up. This is according to what artifacts
+     * are already in the Spindexer. It will ask for Any artifact if Spindexer is empty or has one Purple artifact.
+     * It will ask for Purple if it has one or two vacant slots and already has a Green. It will ask for None if
+     * Spindexer is full.
+     *
+     * @param artifactType specifies the artifact to pick up.
+     */
+    public void setPickupArtifactType(Vision.ArtifactType artifactType)
+    {
+        pickupArtifactType = artifactType;
+        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
+    }   //setPickupArtifactType
+
+    /**
+     * This method enables/disable Bulldoze intake of artifacts. When enabled, it turns on manual intake and also
+     * turns on Spindexer auto receive.
+     *
+     * @param enabled specifies true to enable and false to disable.
+     */
+    public void setBulldozeIntakeEnabled(boolean enabled)
+    {
+        if (enabled)
+        {
+            // Turn on manual intake.
+            intake.intake();
+        }
+        else
+        {
+            intake.cancel();
+        }
+        // Enable/disable Spindexder AutoReceive accordingly.
+        robot.spindexerSubsystem.setAutoRecieveEnabled(enabled);
+    }   //setBulldozeIntakeEnabled
 
     //
     // Implements TrcSubsystem abstract methods.
