@@ -196,13 +196,13 @@ public class Intake extends TrcSubsystem
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
             intake.intake();
-            robot.spindexerSubsystem.setAutoRecieveEnabled(true);
+            robot.spindexerSubsystem.setAutoReceiveEnabled(true);
         }
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
             intake.cancel();
-            robot.spindexerSubsystem.setAutoRecieveEnabled(false);
+            robot.spindexerSubsystem.setAutoReceiveEnabled(false);
         }
     }   //setBulldozeIntakeEnabled
 

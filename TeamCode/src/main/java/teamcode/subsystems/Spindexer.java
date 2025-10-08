@@ -665,7 +665,7 @@ public class Spindexer extends TrcSubsystem
      *
      * @param enabled specifies true to enable AutoReceive, false to disable.
      */
-    public void setAutoRecieveEnabled(boolean enabled)
+    public void setAutoReceiveEnabled(boolean enabled)
     {
         autoReceivedEnabled = enabled;
         spindexer.setEntryTriggerEnabled(enabled);
