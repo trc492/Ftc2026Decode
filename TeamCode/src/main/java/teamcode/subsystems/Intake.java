@@ -171,6 +171,18 @@ public class Intake extends TrcSubsystem
         return artifactDetected;
     }   //visionDetectedArtifact
 
+    public void setBulldozeIntake(boolean enabled){
+        if (enabled) {
+            intake.intake(null, 0.0, 0.0, null);
+            robot.spindexerSubsystem.setRecievingMode(true);
+        }
+        else
+        {
+            intake.cancel();
+            robot.spindexerSubsystem.setRecievingMode(false);
+        }
+    }
+
     /**
      * This method is called by the Intake back trigger periodically using the spindexer entry sensor to detect if the
      * artifact has entered the spindexer, so it can stop the Intake.

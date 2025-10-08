@@ -641,6 +641,15 @@ public class Spindexer extends TrcSubsystem
         exitSlot = slot;
     }   //exitSlotDown
 
+    public void setRecievingMode(boolean enabled){
+        if (enabled) {
+            spindexer.setEntryTriggerEnabled(true);
+        }
+        else {
+            spindexer.setEntryTriggerEnabled(false);
+        }
+    }
+
     //
     // Implements TrcSubsystem abstract methods.
     //
