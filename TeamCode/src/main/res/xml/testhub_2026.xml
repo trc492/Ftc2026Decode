@@ -35,44 +35,14 @@ SOFTWARE.
             <goBILDA5202SeriesMotor name="Intake.Motor" port="1"/>
             <!-- Spindexer -->
             <RevRobotics40HDHexMotor name="Spindexer.Motor" port="2" />
-            <!--
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="1" />
             <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
-            -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <!-- LED Indicators -->
             <RevBlinkinLedDriver name="StatusLED" port="0" />
             <Servo name="Spindexer1LED" port="1" />
             <Servo name="Spindexer2LED" port="2" />
             <Servo name="Spindexer3LED" port="3" />
-            <!--
-            <DigitalDevice name="Intake.backSensor" port="0" />
-            <RevBlinkinLedDriver name="blinkin" port="0" />
-            <Servo name="gobildaLED" port="1" />
-            <DigitalDevice name="Elbow.lowerLimit" port="1" />
-            <DigitalDevice name="Extender.lowerLimit" port="3" />
-            <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
-            <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
-            <RevColorSensorV3 name="Grabber.sensor" port="0" bus="2" />
-            <REV_VL53L0X_RANGE_SENSOR name="ServoGrabber.sensor" port="0" bus="1"/>
-            <SparkFunOTOS name="sparkfunOtos" port="0" bus="1"/>
-            <OctoQuadFTC name="octoquad" port="0" bus="1"/>
-            -->
         </LynxModule>
-        <!--
-        <LynxModule name="Expansion Hub 2" port="2">
-            <goBILDA5202SeriesMotor name="lfDriveMotor" port="1"/>
-            <goBILDA5202SeriesMotor name="lbDriveMotor" port="2"/>
-            <Servo name="Wrist.primary" port="0" />
-            <Servo name="Wrist.servo2" port="0" />
-            <Servo name="Wrist.servo1" port="3" />
-            <ContinuousRotationServo name="Grabber.primary" port="4" />
-            <ContinuousRotationServo name="Grabber.follower" port="5" />
-            <RevColorSensorV3 name="Grabber.sensor" port="0" bus="2" />
-            <Servo name="Grabber.primary" port="2" />
-            <Servo name="Grabber.follower" port="3" />
-            <LynxEmbeddedIMU name="imu" port="0" bus="0"/>
-        </LynxModule>
-        -->
     </LynxUsbDevice>
 </Robot>

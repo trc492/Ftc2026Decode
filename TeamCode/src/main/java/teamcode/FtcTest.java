@@ -774,13 +774,13 @@ public class FtcTest extends FtcTeleOp
                             {
                                 if (robot.intake.isActive())
                                 {
-                                    robot.intake.cancel();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Intake");
+                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
                                 }
                                 else
                                 {
-                                    robot.intake.intake();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Intake");
+                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
                                 }
                             }
                             else
