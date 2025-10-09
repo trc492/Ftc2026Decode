@@ -904,8 +904,16 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer.");
-                        robot.spindexer.backup(moduleName);
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotDown();
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotDown();
+                        }
                     }
                     passToTeleOp = false;
                 }
@@ -916,9 +924,16 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer.");
-                        robot.spindexer.advance(moduleName);
-
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotUp();
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotUp();
+                        }
                     }
                     passToTeleOp = false;
                 }
