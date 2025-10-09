@@ -313,7 +313,7 @@ public class Shooter extends TrcSubsystem
         }
         else if (completionEvent != null)
         {
-            TrcDbgTrace.globalTraceInfo(instanceName, "There is launcher, signal completion anyway.");
+            TrcDbgTrace.globalTraceInfo(instanceName, "There is no launcher, signal completion anyway.");
             completionEvent.signal();
         }
     }   //shoot
