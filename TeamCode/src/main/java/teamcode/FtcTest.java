@@ -900,7 +900,30 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case DpadLeft:
+                if (robot.spindexer != null)
+                {
+                    if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer.");
+                        robot.spindexer.backup(moduleName);
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case DpadRight:
+                if (robot.spindexer != null)
+                {
+                    if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer.");
+                        robot.spindexer.advance(moduleName);
+
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case Back:
             case Start:
                 break;

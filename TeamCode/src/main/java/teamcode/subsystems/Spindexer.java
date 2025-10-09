@@ -89,8 +89,8 @@ public class Spindexer extends TrcSubsystem
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 1.0;  // in inches
         public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
 
-        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.2;  // in inches
-        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 1.0;  // in inches
+        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.0;  // in inches
+        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 3.0;  // in inches
         public static final double EXIT_TRIGGER_SETTLING        = 0.1;  // in seconds
 
         public static final double PURPLE_LOW_THRESHOLD         = 200.0;

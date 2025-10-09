@@ -56,6 +56,11 @@ public class FtcTeleOp extends FtcOpMode
     private TrcPose2D robotFieldPose = null;
     private Integer savedLimelightPipeline = null;
 
+    private double intakePrevPower = 0.0;
+    private double spindexerPrevPower = 0.0;
+    private double turretPrevPower = 0.0;
+    private double tilterPrevPower = 0.0;
+
     //
     // Implements FtcOpMode abstract method.
     //
@@ -243,13 +248,21 @@ public class FtcTeleOp extends FtcOpMode
                     if (robot.intake != null)
                     {
                         double power = operatorGamepad.getLeftStickY(true);
-                        robot.intake.motor.setPower(power);
+                        if (power != intakePrevPower)
+                        {
+                            robot.intake.motor.setPower(power);
+                            intakePrevPower = power;
+                        }
                     }
 
                     if (robot.spindexer != null)
                     {
                         double power = operatorGamepad.getRightStickY(true);
-                        robot.spindexer.motor.setPower(power);
+                        if (power != spindexerPrevPower)
+                        {
+                            robot.spindexer.motor.setPower(power);
+                            spindexerPrevPower = power;
+                        }
                     }
                 }
             }
