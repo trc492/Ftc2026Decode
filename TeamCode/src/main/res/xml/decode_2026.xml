@@ -48,7 +48,7 @@ SOFTWARE.
             <!-- Spindexer -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="2" />
-            <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="3" />
+            <REV_VL53L0X_RANGE_SENSOR name="Spindexer.ExitSensor" port="0" bus="3" />
             <!--
             <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
             -->

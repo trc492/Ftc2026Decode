@@ -24,6 +24,7 @@ package teamcode.subsystems;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
@@ -115,7 +116,7 @@ public class Spindexer extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final RevColorSensorV3 entryAnalogSensor;
-    private final RevColorSensorV3 exitAnalogSensor;
+    private final Rev2mDistanceSensor exitAnalogSensor;
     public final TrcPidStorage spindexer;
     private final TrcWarpSpace warpSpace;
 
@@ -128,8 +129,6 @@ public class Spindexer extends TrcSubsystem
     private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
     private double entrySensorDistance = 10.0;
     private double entrySensorHue = 0.0;
-    private double exitSensorDistance = 10.0;
-    private double exitSensorHue = 0.0;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -164,7 +163,8 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_SENSOR)
         {
-            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(RevColorSensorV3.class, Params.EXIT_SENSOR_NAME);
+            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
+                Rev2mDistanceSensor.class, Params.EXIT_SENSOR_NAME);
             spindexerParams.setExitAnalogSourceTrigger(
                 Params.EXIT_SENSOR_NAME, this::getExitSensorData, exitTriggerParams.lowThreshold,
                 exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod, false,
@@ -277,8 +277,6 @@ public class Spindexer extends TrcSubsystem
             updateExpectedArtifactType();
             // We are done removing the exit artifact. Turn off exit trigger.
             spindexer.setExitTriggerEnabled(false);
-            exitSensorDistance = 6.0;
-            exitSensorHue = 0.0;
             spindexer.tracer.traceInfo(
                 instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
                 exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
@@ -338,7 +336,7 @@ public class Spindexer extends TrcSubsystem
         if (entryAnalogSensor != null)
         {
             double distance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
-            double hue = getSensorHue(entryAnalogSensor);
+            double hue = getEntrySensorHue();
 
             if (distance < 6.0f)
             {
@@ -367,25 +365,7 @@ public class Spindexer extends TrcSubsystem
      */
     private double getExitSensorData()
     {
-        if (exitAnalogSensor != null)
-        {
-            double distance = exitAnalogSensor.getDistance(DistanceUnit.INCH);
-
-            if (distance < 6.0f)
-            {
-                exitSensorDistance = distance;
-            }
-            else
-            {
-                spindexer.tracer.traceDebug(
-                    instanceName, "Invalid data, use previous values: Distance(sensor=%f, prev=%f)",
-                    distance, exitSensorDistance);
-            }
-
-            return exitSensorDistance;
-        }
-
-        return 0.0;
+        return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
     }   //getExitSensorData
 
     /**
@@ -409,89 +389,49 @@ public class Spindexer extends TrcSubsystem
     }   //isExitSensorActive
 
     /**
-     * This method reads the REV Color Sensor and returns the Hue value.
+     * This method reads the entry REV Color Sensor and returns the Hue value.
      *
-     * @param sensor specifies the REV color sensor object.
      * @return hue value.
      */
-    private double getSensorHue(RevColorSensorV3 sensor)
+    private double getEntrySensorHue()
     {
         double hue = 0.0;
 
-        if (sensor != null)
+        if (entryAnalogSensor != null)
         {
             float[] hsvValues = {0.0f, 0.0f, 0.0f};
-            NormalizedRGBA normalizedColors = sensor.getNormalizedColors();
+            NormalizedRGBA normalizedColors = entryAnalogSensor.getNormalizedColors();
             Color.RGBToHSV(
                 (int) (normalizedColors.red*255),
                 (int) (normalizedColors.green*255),
                 (int) (normalizedColors.blue*255),
                 hsvValues);
 
-            double sensorDistance = sensor.getDistance(DistanceUnit.INCH);
+            double sensorDistance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
             if (sensorDistance < 6.0f)
             {
                 hue = hsvValues[0];
-                if (sensor == entryAnalogSensor)
-                {
-                    entrySensorDistance = sensorDistance;
-                    entrySensorHue = hue;
-                    spindexer.tracer.traceDebug(instanceName, "Entry: distance=%f, hue=%f", sensorDistance, hue);
-                }
-                else
-                {
-                    exitSensorDistance = sensorDistance;
-                    exitSensorHue = hue;
-                    spindexer.tracer.traceDebug(instanceName, "Exit: distance=%f, hue=%f", sensorDistance, hue);
-                }
+                entrySensorDistance = sensorDistance;
+                entrySensorHue = hue;
+                spindexer.tracer.traceDebug(instanceName, "Entry: distance=%f, hue=%f", sensorDistance, hue);
             }
             else
             {
                 // When distance is 6.0f, hue value is invalid, use previous detected hue value instead.
                 String sensorName;
                 double distance;
-                if (sensor == entryAnalogSensor)
-                {
-                    sensorName = "EntrySensor";
-                    distance = entrySensorDistance;
-                    hue = entrySensorHue;
-                }
-                else
-                {
-                    sensorName = "ExitSensor";
-                    distance = exitSensorDistance;
-                    hue = exitSensorHue;
-                }
+                distance = entrySensorDistance;
+                hue = entrySensorHue;
                 spindexer.tracer.traceDebug(
                     instanceName,
-                    "Invalid sensor data, use previous values. %s: " +
+                    "Invalid entry sensor data, use previous values. " +
                     "Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
-                    sensorName, sensorDistance, distance, hsvValues[0], hue);
+                    sensorDistance, distance, hsvValues[0], hue);
             }
         }
 
         return hue;
-    }   //getSensorHue
-
-    /**
-     * This method returns the hue value read from the entry sensor.
-     *
-     * @return hue value.
-     */
-    public double getEntrySensorHue()
-    {
-        return getSensorHue(entryAnalogSensor);
     }   //getEntrySensorHue
-
-    /**
-     * This method returns the hue value read from the exit sensor.
-     *
-     * @return hue value.
-     */
-    public double getExitSensorHue()
-    {
-        return getSensorHue(exitAnalogSensor);
-    }   //getExitSensorHue
 
     /**
      * This method checks the color sensor for the color the artifact at the entry.
@@ -504,7 +444,7 @@ public class Spindexer extends TrcSubsystem
 
         if (entryAnalogSensor != null)
         {
-            double hue = getSensorHue(entryAnalogSensor);
+            double hue = getEntrySensorHue();
 
             if (hue >= Params.PURPLE_LOW_THRESHOLD && hue <= Params.PURPLE_HIGH_THRESHOLD)
             {
@@ -727,9 +667,9 @@ public class Spindexer extends TrcSubsystem
                 Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
                 spindexer.motor.getPower(), spindexer.motor.getCurrent(), spindexer.motor.isLowerLimitSwitchActive());
             dashboard.displayPrintf(
-                lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Hue/Dist/Trig)=%.3f/%.3f/%s",
+                lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
                 Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
-                getExitSensorHue(), getExitSensorData(), isExitSensorActive());
+                getExitSensorData(), isExitSensorActive());
             dashboard.displayPrintf(
                 lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
                 Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
