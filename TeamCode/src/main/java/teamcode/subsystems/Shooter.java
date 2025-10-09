@@ -97,7 +97,6 @@ public class Shooter extends TrcSubsystem
         public static final boolean PAN_MOTOR_INVERTED          = true;
         public static final String PAN_ENCODER_NAME             = null;
         public static final boolean PAN_ENCODER_INVERTED        = false;
-        public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
 
         public static final double PAN_MOTOR_PID_KP             = 0.01;
         public static final double PAN_MOTOR_PID_KI             = 0.0;
@@ -108,6 +107,8 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
+        public static final double PAN_POS_OFFSET               = 0.0;
+        public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -90.0;
         public static final double PAN_MAX_POS                  = 90.0;
@@ -123,7 +124,6 @@ public class Shooter extends TrcSubsystem
         public static final boolean TILT_MOTOR_INVERTED         = false;
         public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
         public static final boolean TILT_ENCODER_INVERTED       = false;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.0;
 
         public static final double TILT_MOTOR_PID_KP            = 0.01;
         public static final double TILT_MOTOR_PID_KI            = 0.0;
@@ -133,9 +133,11 @@ public class Shooter extends TrcSubsystem
 
         public static final double TILT_GEAR_RATIO              = 108.0/14.0;
         public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
+        public static final double TILT_POS_OFFSET              = 25.0;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.466061;
         public static final double TILT_POWER_LIMIT             = 1.0;
-        public static final double TILT_MIN_POS                 = 0.0;
-        public static final double TILT_MAX_POS                 = 90.0;
+        public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
+        public static final double TILT_MAX_POS                 = 50.0;
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
             .add("test3ft", 36.0, 60.0, 0.0, 60.0)
@@ -205,7 +207,7 @@ public class Shooter extends TrcSubsystem
         {
             shooterParams.setPanMotor(
                 Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
-                Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED, Params.PAN_ENCODER_ZERO_OFFSET,
+                Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED,
                 new TrcShooter.PanTiltParams(Params.PAN_POWER_LIMIT, Params.PAN_MIN_POS, Params.PAN_MAX_POS));
         }
 
@@ -213,7 +215,7 @@ public class Shooter extends TrcSubsystem
         {
             shooterParams.setTiltMotor(
                 Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE, Params.TILT_MOTOR_INVERTED,
-                Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED, Params.TILT_ENCODER_ZERO_OFFSET,
+                Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED,
                 new TrcShooter.PanTiltParams(Params.TILT_POWER_LIMIT, Params.TILT_MIN_POS, Params.TILT_MAX_POS));
         }
 
@@ -239,7 +241,8 @@ public class Shooter extends TrcSubsystem
         motor = shooter.getPanMotor();
         if (motor != null)
         {
-            motor.setPositionSensorScaleAndOffset(Params.PAN_DEG_PER_COUNT, 0.0);
+            motor.setPositionSensorScaleAndOffset(
+                Params.PAN_DEG_PER_COUNT, Params.PAN_POS_OFFSET, Params.PAN_ENCODER_ZERO_OFFSET);
             motor.setPositionPidParameters(
                 panMotorPidParams.pidCoeffs, panMotorPidParams.pidTolerance, panMotorPidParams.useSoftwarePid,
                 this::getPanPosition);
@@ -254,7 +257,8 @@ public class Shooter extends TrcSubsystem
         motor = shooter.getTiltMotor();
         if (motor != null)
         {
-            motor.setPositionSensorScaleAndOffset(Params.TILT_DEG_PER_COUNT, 0.0);
+            motor.setPositionSensorScaleAndOffset(
+                Params.TILT_DEG_PER_COUNT, Params.TILT_POS_OFFSET, Params.TILT_ENCODER_ZERO_OFFSET);
             motor.setPositionPidParameters(
                 tiltMotorPidParams.pidCoeffs, tiltMotorPidParams.pidTolerance, tiltMotorPidParams.useSoftwarePid,
                 null);

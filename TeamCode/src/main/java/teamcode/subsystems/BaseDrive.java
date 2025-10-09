@@ -24,6 +24,7 @@ package teamcode.subsystems;
 
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.drivebase.FtcSwerveDrive;
+import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator;
 import ftclib.sensor.GoBildaPinpointDriver;
 import teamcode.RobotParams;
@@ -127,6 +128,7 @@ public class BaseDrive extends TrcSubsystem
         }   //DecodeInfo
     }   //class DecodeInfo
 
+    private final FtcDashboard dashboard;
     private final FtcRobotDrive.RobotInfo robotInfo;
     private final FtcRobotDrive robotDrive;
 
@@ -136,6 +138,7 @@ public class BaseDrive extends TrcSubsystem
     public BaseDrive()
     {
         super(RobotParams.Robot.ROBOT_CODEBASE, false);
+        dashboard = FtcDashboard.getInstance();
         switch (RobotParams.Preferences.robotType)
         {
             case VisionOnly:
@@ -237,6 +240,43 @@ public class BaseDrive extends TrcSubsystem
         {
             if (slowLoop)
             {
+                if (RobotParams.Preferences.showDriveBase)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "DriveEnc: fl=%.0f,fr=%.0f,bl=%.0f,br=%.0f",
+                        robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
+                        robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_RIGHT].getPosition(),
+                        robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_LEFT].getPosition(),
+                        robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_RIGHT].getPosition());
+
+                    if (robotDrive instanceof FtcSwerveDrive)
+                    {
+                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
+                        dashboard.displayPrintf(
+                            lineNum++, "SteerEnc: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getScaledPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getScaledPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getScaledPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getScaledPosition());
+                        dashboard.displayPrintf(
+                            lineNum++, "SteerRaw: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getRawPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getRawPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getRawPosition(),
+                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getRawPosition());
+                    }
+
+                    if (robotDrive.gyro != null)
+                    {
+                        dashboard.displayPrintf(
+                            lineNum++, "Gyro(x,y,z): Heading=(%.1f,%.1f,%.1f), Rate=(%.3f,%.3f,%.3f)",
+                            robotDrive.gyro.getXHeading().value, robotDrive.gyro.getYHeading().value,
+                            robotDrive.gyro.getZHeading().value, robotDrive.gyro.getXRotationRate().value,
+                            robotDrive.gyro.getYRotationRate().value,
+                            robotDrive.gyro.getZRotationRate().value);
+                    }
+                }
+
                 if (RobotParams.Preferences.showPidDrive)
                 {
                     TrcPidController xPidCtrl = robotDrive.pidDrive.getXPidCtrl();

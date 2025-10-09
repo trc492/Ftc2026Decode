@@ -42,9 +42,9 @@ SOFTWARE.
             <!-- Shooter -->
             <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="2"/>
             <goBILDA5202SeriesMotor name="Shooter.PanMotor" port="3"/>
-            <ContinuousRotationServo name="Shooter.TiltMotor" port="1" />
-            <AnalogInput name="Shooter.TiltEncoder" port="3" />
-            <Servo name="Shooter.Launcher" port="0" />
+            <ContinuousRotationServo name="Shooter.TiltMotor" port="0" />
+            <AnalogInput name="Shooter.TiltEncoder" port="2" />
+            <Servo name="Shooter.Launcher" port="1" />
             <!-- Spindexer -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="2" />

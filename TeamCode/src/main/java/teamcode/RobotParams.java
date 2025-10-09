@@ -44,7 +44,7 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.VisionOnly;
+        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.DecodeRobot;
         public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
         public static final boolean useLoopPerformanceMonitor   = true;
@@ -52,6 +52,7 @@ public class RobotParams
         // Driver feedback
         // Status Update: Dashboard Update may affect robot loop time, don't do it when in competition.
         public static final boolean updateDashboard             = !inCompetition;
+        public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
         public static final boolean showVision                  = robotType == BaseDrive.RobotType.VisionOnly;
         public static final boolean showSubsystems              = true;
@@ -69,7 +70,7 @@ public class RobotParams
         public static final boolean showVisionView              = !inCompetition;
         public static final boolean showVisionStat              = true;
         // Drive Base
-        public static final boolean useDriveBase                = false;//robotType == BaseDrive.RobotType.DecodeRobot;
+        public static final boolean useDriveBase                = robotType == BaseDrive.RobotType.DecodeRobot;
         public static final boolean usePinpointOdometry         = robotType == BaseDrive.RobotType.DecodeRobot;
         public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = true;
@@ -77,7 +78,7 @@ public class RobotParams
         public static final boolean useSubsystems               = true;
         public static final boolean useIntake                   = true;
         public static final boolean useSpindexer                = true;
-        public static final boolean useShooter                  = false;
+        public static final boolean useShooter                  = true;
         // Auto Tasks.
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = false;

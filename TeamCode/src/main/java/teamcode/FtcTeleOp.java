@@ -210,7 +210,8 @@ public class FtcTeleOp extends FtcOpMode
                         robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
                     }
 
-                    if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
+                    if (RobotParams.Preferences.showDriveBase &&
+                        (RobotParams.Preferences.updateDashboard || statusUpdateOn))
                     {
                         robot.dashboard.displayPrintf(
                             lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
@@ -234,10 +235,24 @@ public class FtcTeleOp extends FtcOpMode
             //
             // Other subsystems.
             //
-//            if (RobotParams.Preferences.useSubsystems)
-//            {
-//                // Analog control of subsystems.
-//            }
+            if (RobotParams.Preferences.useSubsystems)
+            {
+                // Analog control of subsystems.
+                if (TrcRobot.getRunMode() == TrcRobot.RunMode.TEST_MODE)
+                {
+                    if (robot.intake != null)
+                    {
+                        double power = operatorGamepad.getLeftStickY(true);
+                        robot.intake.motor.setPower(power);
+                    }
+
+                    if (robot.spindexer != null)
+                    {
+                        double power = operatorGamepad.getRightStickY(true);
+                        robot.spindexer.motor.setPower(power);
+                    }
+                }
+            }
             // Display subsystem status.
             if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
             {

@@ -62,17 +62,16 @@ public class FtcTest extends FtcTeleOp
 
     private enum Test
     {
-        SENSORS_TEST,
         SUBSYSTEMS_TEST,
-        VISION_TEST,
-        DRIVE_SPEED_TEST,
+        TUNE_SUBSYSTEM,
         DRIVE_MOTORS_TEST,
+        DRIVE_SPEED_TEST,
         X_TIMED_DRIVE,
         Y_TIMED_DRIVE,
         PP_DRIVE,
         PID_DRIVE,
         TUNE_DRIVE_PID,
-        TUNE_SUBSYSTEM,
+        VISION_TEST,
         CALIBRATE_SWERVE_STEERING
     }   //enum Test
 
@@ -81,7 +80,7 @@ public class FtcTest extends FtcTeleOp
      */
     private static class TestChoices
     {
-        Test test = Test.SENSORS_TEST;
+        Test test = Test.SUBSYSTEMS_TEST;
 
         @NonNull
         @Override
@@ -161,29 +160,6 @@ public class FtcTest extends FtcTeleOp
         super.startMode(prevMode, nextMode);
         switch (testChoices.test)
         {
-            case VISION_TEST:
-                if (robot.vision != null)
-                {
-                    if (robot.vision.aprilTagVision != null)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Webcam.");
-                        robot.vision.setAprilTagVisionEnabled(true);
-                    }
-
-                    if (robot.vision.limelightVision != null)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Limelight.");
-                        robot.vision.setLimelightVisionEnabled(0, true);
-                    }
-
-                    if (robot.vision.artifactVision != null)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, "Enabling ArtifactVision.");
-                        robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
-                    }
-                }
-                break;
-
             case DRIVE_MOTORS_TEST:
                 if (robot.robotDrive != null)
                 {
@@ -245,6 +221,29 @@ public class FtcTest extends FtcTeleOp
                                       Dashboard.SubsystemDrivebase.robotDrive.yDriveTarget*12.0,
                                       Dashboard.SubsystemDrivebase.robotDrive.turnTarget));
                     robot.robotDrive.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
+                }
+                break;
+
+            case VISION_TEST:
+                if (robot.vision != null)
+                {
+                    if (robot.vision.aprilTagVision != null)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Webcam.");
+                        robot.vision.setAprilTagVisionEnabled(true);
+                    }
+
+                    if (robot.vision.limelightVision != null)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Limelight.");
+                        robot.vision.setLimelightVisionEnabled(0, true);
+                    }
+
+                    if (robot.vision.artifactVision != null)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, "Enabling ArtifactVision.");
+                        robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
+                    }
                 }
                 break;
         }
@@ -365,15 +364,6 @@ public class FtcTest extends FtcTeleOp
                 break;
         }
 
-        if (elapsedTimer != null)
-        {
-            elapsedTimer.recordPeriodTime();
-            robot.dashboard.displayPrintf(
-                15, "Period: %.3f(%.3f/%.3f)",
-                elapsedTimer.getAverageElapsedTime(), elapsedTimer.getMinElapsedTime(),
-                elapsedTimer.getMaxElapsedTime());
-        }
-
         if (slowPeriodicLoop)
         {
             if (allowTeleOp())
@@ -386,15 +376,6 @@ public class FtcTest extends FtcTeleOp
 
             switch (testChoices.test)
             {
-                case SENSORS_TEST:
-                case SUBSYSTEMS_TEST:
-                    doSensorsTest(lineNum);
-                    break;
-
-                case VISION_TEST:
-                    doVisionTest(lineNum);
-                    break;
-
                 case X_TIMED_DRIVE:
                 case Y_TIMED_DRIVE:
                     if (robot.robotDrive != null)
@@ -453,6 +434,10 @@ public class FtcTest extends FtcTeleOp
                     }
                     break;
 
+                case VISION_TEST:
+                    doVisionTest(lineNum);
+                    break;
+
                 case CALIBRATE_SWERVE_STEERING:
                     if (robot.robotDrive != null && (robot.robotDrive instanceof FtcSwerveDrive) && steerCalibrating)
                     {
@@ -465,6 +450,15 @@ public class FtcTest extends FtcTeleOp
                 default:
                     break;
             }
+        }
+
+        if (elapsedTimer != null)
+        {
+            elapsedTimer.recordPeriodTime();
+            robot.dashboard.displayPrintf(
+                15, "Period: %.3f(%.3f/%.3f)",
+                elapsedTimer.getAverageElapsedTime(), elapsedTimer.getMinElapsedTime(),
+                elapsedTimer.getMaxElapsedTime());
         }
     }   //periodic
 
@@ -932,17 +926,16 @@ public class FtcTest extends FtcTeleOp
         //
         // Populate menus.
         //
-        testMenu.addChoice("Sensors test", Test.SENSORS_TEST, true);
         testMenu.addChoice("Subsystems test", Test.SUBSYSTEMS_TEST, false);
-        testMenu.addChoice("Vision test", Test.VISION_TEST, false);
-        testMenu.addChoice("Drive speed test", Test.DRIVE_SPEED_TEST, false);
+        testMenu.addChoice("Tune Subsystem", Test.TUNE_SUBSYSTEM, false);
         testMenu.addChoice("Drive motors test", Test.DRIVE_MOTORS_TEST, false);
+        testMenu.addChoice("Drive speed test", Test.DRIVE_SPEED_TEST, false);
         testMenu.addChoice("X Timed drive", Test.X_TIMED_DRIVE, false);
         testMenu.addChoice("Y Timed drive", Test.Y_TIMED_DRIVE, false);
         testMenu.addChoice("Pure Pursuit Drive", Test.PP_DRIVE, false);
         testMenu.addChoice("PID drive", Test.PID_DRIVE, false);
         testMenu.addChoice("Tune Drive PID", Test.TUNE_DRIVE_PID, false);
-        testMenu.addChoice("Tune Subsystem", Test.TUNE_SUBSYSTEM, false);
+        testMenu.addChoice("Vision test", Test.VISION_TEST, false);
         testMenu.addChoice("Calibrate Swerve Steering", Test.CALIBRATE_SWERVE_STEERING, false);
         //
         // Traverse menus.
@@ -957,56 +950,6 @@ public class FtcTest extends FtcTeleOp
         //
         robot.dashboard.displayPrintf(1, "Test Choices: %s", testChoices);
     }   //doTestMenus
-
-    /**
-     * This method reads all sensors and prints out their values. This is a very useful diagnostic tool to check
-     * if all sensors are working properly. For encoders, since test sensor mode is also teleop mode, you can
-     * operate the gamepads to turn the motors and check the corresponding encoder counts.
-     *
-     * @param lineNum specifies the starting line number on the dashboard to display sensor states.
-     */
-    private void doSensorsTest(int lineNum)
-    {
-        //
-        // Read all sensors and display on the dashboard.
-        // Drive the robot around to sample different locations of the field.
-        //
-        if (robot.robotDrive != null)
-        {
-            robot.dashboard.displayPrintf(
-                lineNum++, "DriveEnc: fl=%.0f,fr=%.0f,bl=%.0f,br=%.0f",
-                robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
-                robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_RIGHT].getPosition(),
-                robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_LEFT].getPosition(),
-                robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_RIGHT].getPosition());
-
-            if (robot.robotDrive instanceof FtcSwerveDrive)
-            {
-                FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
-                robot.dashboard.displayPrintf(
-                    lineNum++, "SteerEnc: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getScaledPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getScaledPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getScaledPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getScaledPosition());
-                robot.dashboard.displayPrintf(
-                    lineNum++, "SteerRaw: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getRawPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getRawPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getRawPosition(),
-                    swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getRawPosition());
-            }
-
-            if (robot.robotDrive.gyro != null)
-            {
-                robot.dashboard.displayPrintf(
-                    lineNum++, "Gyro(x,y,z): Heading=(%.1f,%.1f,%.1f), Rate=(%.3f,%.3f,%.3f)",
-                    robot.robotDrive.gyro.getXHeading().value, robot.robotDrive.gyro.getYHeading().value,
-                    robot.robotDrive.gyro.getZHeading().value, robot.robotDrive.gyro.getXRotationRate().value,
-                    robot.robotDrive.gyro.getYRotationRate().value, robot.robotDrive.gyro.getZRotationRate().value);
-            }
-        }
-    }   //doSensorsTest
 
     /**
      * This method calls vision code to detect target objects and display their info.

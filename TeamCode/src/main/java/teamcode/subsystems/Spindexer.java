@@ -64,13 +64,12 @@ public class Spindexer extends TrcSubsystem
         public static final String LOWER_LIMIT_SWITCH_NAME      = SUBSYSTEM_NAME + ".LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
-        public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_435_ENC_PPR;
-//        public static final double GEAR_RATIO                   = 22.0/42.0;    // Load to Motor
-//        public static final double DEG_PER_COUNT                =
-//            360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
+        public static final double GEAR_RATIO                   = 22.0/42.0;    // Load to Motor
+        public static final double DEG_PER_COUNT                =
+            360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
         public static final double POS_OFFSET                   = 0.0;
         public static final double ZERO_OFFSET                  = 0.0;
-        public static final double ZERO_CAL_POWER               = -0.2;
+        public static final double ZERO_CAL_POWER               = 0.5;
 
         public static final double MOTOR_PID_KP                 = 0.01;
         public static final double MOTOR_PID_KI                 = 0.0;
@@ -145,7 +144,6 @@ public class Spindexer extends TrcSubsystem
         FtcPidStorage.Params spindexerParams = new FtcPidStorage.Params()
             .setPrimaryMotor(Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
             .setLowerLimitSwitch(Params.LOWER_LIMIT_SWITCH_NAME, Params.LOWER_LIMIT_SWITCH_INVERTED)
-            .setPositionScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET)
             .setObjectDistance(Params.OBJECT_DISTANCE)
             .setMovePower(Params.MOVE_POWER)
             .setMaxCapacity(Params.MAX_CAPACITY);
@@ -178,6 +176,7 @@ public class Spindexer extends TrcSubsystem
         }
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
+        spindexer.motor.setPositionSensorScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET);
         spindexer.motor.setPositionPidParameters(
             motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);
