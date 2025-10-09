@@ -507,38 +507,6 @@ public class Shooter extends TrcSubsystem
     @Override
     public void updateParamsToDashboard()
     {
-//        if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR1_NAME))
-//        {
-//            Dashboard.PidTuning.pidCoeffs = Params.shooter1PidCoeffs;
-//            Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
-//            Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
-//            Dashboard.PidTuning.pidTarget = Params.SHOOTER1_DEF_VEL;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.SHOOTER_MOTOR2_NAME))
-//        {
-//            Dashboard.PidTuning.pidCoeffs = Params.shooter2PidCoeffs;
-//            Dashboard.PidTuning.pidTolerance = Params.SHOOTER_PID_TOLERANCE*60.0;
-//            Dashboard.PidTuning.useSoftwarePid = Params.SHOOTER_SOFTWARE_PID_ENABLED;
-//            Dashboard.PidTuning.pidTarget = Params.SHOOTER2_DEF_VEL;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.PAN_MOTOR_NAME))
-//        {
-//            Dashboard.PidTuning.pidCoeffs = Params.panPidCoeffs;
-//            Dashboard.PidTuning.pidTolerance = Params.PAN_PID_TOLERANCE;
-//            Dashboard.PidTuning.useSoftwarePid = Params.PAN_SOFTWARE_PID_ENABLED;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.TILT_MOTOR_NAME))
-//        {
-//            Dashboard.PidTuning.pidCoeffs = Params.tiltPidCoeffs;
-//            Dashboard.PidTuning.pidTolerance = Params.TILT_PID_TOLERANCE;
-//            Dashboard.PidTuning.useSoftwarePid = Params.TILT_SOFTWARE_PID_ENABLED;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.LAUNCHER_SERVO_NAME))
-//        {
-//            Dashboard.ServoPositionTuning.minPos = Params.LAUNCHER_REST_POS;
-//            Dashboard.ServoPositionTuning.maxPos = Params.LAUNCHER_LAUNCH_POS;
-//            Dashboard.ServoPositionTuning.activateDuration = Params.LAUNCHER_LAUNCH_DURATION;
-//        }
     }   //updateParamsToDashboard
 
     /**
@@ -547,31 +515,6 @@ public class Shooter extends TrcSubsystem
     @Override
     public void updateParamsFromDashboard()
     {
-        shooter.getShooterMotor1().setVelocityPidParameters(
-            shootMotor1PidParams.pidCoeffs,
-            // Translate PidTolerance from RPM to RPS.
-            shootMotor1PidParams.pidTolerance/60.0,
-            shootMotor1PidParams.useSoftwarePid,
-            null);
-        shooter.getShooterMotor2().setVelocityPidParameters(
-            shootMotor2PidParams.pidCoeffs,
-            // Translate PidTolerance from RPM to RPS.
-            shootMotor2PidParams.pidTolerance/60.0,
-            shootMotor2PidParams.useSoftwarePid,
-            null);
-        shooter.getPanMotor().setPositionPidParameters(
-            panMotorPidParams.pidCoeffs,
-            panMotorPidParams.pidTolerance,
-            panMotorPidParams.useSoftwarePid,
-            this::getPanPosition);
-        shooter.getTiltMotor().setPositionPidParameters(
-            tiltMotorPidParams.pidCoeffs,
-            tiltMotorPidParams.pidTolerance,
-            tiltMotorPidParams.useSoftwarePid,
-            null);
-//        Params.LAUNCHER_REST_POS = Dashboard.ServoPositionTuning.minPos;
-//        Params.LAUNCHER_LAUNCH_POS = Dashboard.ServoPositionTuning.maxPos;
-//        Params.LAUNCHER_LAUNCH_DURATION = Dashboard.ServoPositionTuning.activateDuration;
     }   //updateParamsFromDashboard
 
 }   //class Shooter

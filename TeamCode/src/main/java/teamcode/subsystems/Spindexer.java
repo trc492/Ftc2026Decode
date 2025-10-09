@@ -745,24 +745,6 @@ public class Spindexer extends TrcSubsystem
     @Override
     public void updateParamsToDashboard()
     {
-//        if (subComponent.equalsIgnoreCase(Params.MOTOR_NAME))
-//        {
-//            Dashboard.PidTuning.pidCoeffs = Params.posPidCoeffs;
-//            Dashboard.PidTuning.pidTolerance = Params.POS_PID_TOLERANCE;
-//            Dashboard.PidTuning.useSoftwarePid = Params.SOFTWARE_PID_ENABLED;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.ENTRY_SENSOR_NAME))
-//        {
-//            Dashboard.TriggerThresholdsTuning.lowThreshold = Params.ENTRY_TRIGGER_LOW_THRESHOLD;
-//            Dashboard.TriggerThresholdsTuning.highThreshold = Params.ENTRY_TRIGGER_HIGH_THRESHOLD;
-//            Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.ENTRY_TRIGGER_SETTLING;
-//        }
-//        else if (subComponent.equalsIgnoreCase(Params.EXIT_SENSOR_NAME))
-//        {
-//            Dashboard.TriggerThresholdsTuning.lowThreshold = Params.EXIT_TRIGGER_LOW_THRESHOLD;
-//            Dashboard.TriggerThresholdsTuning.highThreshold = Params.EXIT_TRIGGER_HIGH_THRESHOLD;
-//            Dashboard.TriggerThresholdsTuning.settlingPeriod = Params.EXIT_TRIGGER_SETTLING;
-//        }
     }   //updateParamsToDashboard
 
     /**
@@ -771,8 +753,6 @@ public class Spindexer extends TrcSubsystem
     @Override
     public void updateParamsFromDashboard()
     {
-        spindexer.motor.setPositionPidParameters(
-            motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
         ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
             entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold,
             entryTriggerParams.settlingPeriod);
