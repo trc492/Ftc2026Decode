@@ -65,7 +65,7 @@ public class Spindexer extends TrcSubsystem
         public static final String LOWER_LIMIT_SWITCH_NAME      = SUBSYSTEM_NAME + ".LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
-        public static final double GEAR_RATIO                   = 22.0/42.0;    // Load to Motor
+        public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
         public static final double POS_OFFSET                   = 0.0;
@@ -240,7 +240,7 @@ public class Spindexer extends TrcSubsystem
                 robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
 
-            moveToNextVacantEntrySlot();
+            moveToNextVacantEntrySlot(instanceName);
         }
         else
         {
@@ -486,8 +486,11 @@ public class Spindexer extends TrcSubsystem
     /**
      * This method finds the vacant slot near the current entry slot and move the spindexer to that slot position at
      * the entry. If there is no vacant slots, the spindexer will not move.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void moveToNextVacantEntrySlot()
+    public void moveToNextVacantEntrySlot(String owner)
     {
         Integer slot = findSlot(null, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
 
@@ -498,7 +501,7 @@ public class Spindexer extends TrcSubsystem
                 Params.entryPresetPositions[slot], spindexer.motor.getPosition());
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".callbackEvent");
             callbackEvent.setCallback(this::spinCompletionCallback, null);
-            spindexer.motor.setPosition(0.0, pos, true, Params.MOVE_POWER, callbackEvent);
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, callbackEvent, 0.0);
             entrySlot = slot;
         }
     }   //moveToNextVacantEntrySlot
@@ -525,8 +528,11 @@ public class Spindexer extends TrcSubsystem
     /**
      * This method finds the slot that contains the specified artifact type near the current exit slot and move the
      * spindexer to that slot position at the exit. If there is no match, the spindexer will not move.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void moveToExitSlotWithArtifact(Vision.ArtifactType artifactType)
+    public void moveToExitSlotWithArtifact(String owner, Vision.ArtifactType artifactType)
     {
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
@@ -536,29 +542,35 @@ public class Spindexer extends TrcSubsystem
         {
             double pos = warpSpace.getOptimizedTarget(
                 Params.exitPresetPositions[slot], spindexer.motor.getPosition());
-            spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
             exitSlot = slot;
         }
     }   //moveToExitSlotWithArtifact
 
     /**
      * This method move the spindexer to the next entry slot up.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void entrySlotUp()
+    public void entrySlotUp(String owner)
     {
         int slot = (entrySlot != null? entrySlot + 1: exitSlot + 2)%slotStates.length;
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
         spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
-        spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         entrySlot = slot;
     }   //entrySlotUp
 
     /**
      * This method move the spindexer to the next entry slot down.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void entrySlotDown()
+    public void entrySlotDown(String owner)
     {
         int slot = (entrySlot != null? entrySlot - 1: exitSlot + 1)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
@@ -566,28 +578,34 @@ public class Spindexer extends TrcSubsystem
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
         spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
-        spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         entrySlot = slot;
     }   //entrySlotDown
 
     /**
      * This method move the spindexer to the next exit slot up.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void exitSlotUp()
+    public void exitSlotUp(String owner)
     {
         int slot = (exitSlot != null? exitSlot + 1: entrySlot + 2)%slotStates.length;
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
         spindexer.tracer.traceInfo(instanceName, "FromSlot=" + exitSlot + ", ToSlot=" + slot + ", pos=" + pos);
-        spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         exitSlot = slot;
     }   //exitSlotUp
 
     /**
      * This method move the spindexer to the next exit slot down.
+     *
+     * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
+     *        ownership aware.
      */
-    public void exitSlotDown()
+    public void exitSlotDown(String owner)
     {
         int slot = (exitSlot != null? exitSlot - 1: entrySlot + 1)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
@@ -595,7 +613,7 @@ public class Spindexer extends TrcSubsystem
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
         spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
-        spindexer.motor.setPosition(pos, true, Params.MOVE_POWER);
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         exitSlot = slot;
     }   //exitSlotDown
 

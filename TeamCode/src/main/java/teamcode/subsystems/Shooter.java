@@ -148,8 +148,8 @@ public class Shooter extends TrcSubsystem
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = false;
-        public static double LAUNCHER_REST_POS                  = 0.0;
-        public static double LAUNCHER_LAUNCH_POS                = 0.06;
+        public static double LAUNCHER_REST_POS                  = 0.45;
+        public static double LAUNCHER_LAUNCH_POS                = 0.8;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.5;  // in seconds
     }   //class Params
 
@@ -172,7 +172,8 @@ public class Shooter extends TrcSubsystem
             Params.TILT_MOTOR_PID_KP, Params.TILT_MOTOR_PID_KI, Params.TILT_MOTOR_PID_KD)
         .setPidParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
     public static final TrcServo.TuneParams launcherParams = new TrcServo.TuneParams(
-        Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS, Params.LAUNCHER_LAUNCH_DURATION);
+        Params.LAUNCHER_SERVO_INVERTED, Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS,
+        Params.LAUNCHER_LAUNCH_DURATION);
 
     private final FtcDashboard dashboard;
     private final Robot robot;
@@ -288,10 +289,28 @@ public class Shooter extends TrcSubsystem
     }   //getShooter
 
     /**
+     * This method sets the launcher servo position.
+     *
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
+     * @param launch specifies true to set servo to launch position, false to set to rest position.
+     */
+    public void setLaunchPosition(String owner, boolean launch)
+    {
+        if (launch)
+        {
+            launcher.setPosition(owner, 0.0, launcherParams.activatePos, null, 0.0);
+        }
+        else
+        {
+            launcher.setPosition(owner, 0.0, launcherParams.restPos, null, 0.0);
+        }
+    }   //setLaunchPosition
+
+    /**
      * This method is called to launch the game piece into the shooter, typically when TrcShooter has reached shooting
      * velocity and Pan/Tilt have aimed at the target and ready to shoot.
      *
-     * @param owner specifies the owner that acquired the subsystem ownerships.
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      * @param completionEvent specifies the event to signal when shooting is done, can be null.
      */
     public void shoot(String owner, TrcEvent completionEvent)
@@ -309,7 +328,7 @@ public class Shooter extends TrcSubsystem
             launchCallbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".launchCallback");
             launchCallbackEvent.setCallback(this::launchCallback, null);
             launcher.setPosition(
-                owner, 0.0, launcherParams.maxPos, launchCallbackEvent, launcherParams.activateDuration);
+                owner, 0.0, launcherParams.activatePos, launchCallbackEvent, launcherParams.activateDuration);
         }
         else if (completionEvent != null)
         {
@@ -327,7 +346,7 @@ public class Shooter extends TrcSubsystem
     private void launchCallback(Object context, boolean canceled)
     {
         // Reset launcher, fire and forget.
-        launcher.setPosition(launchOwner, 0.0, launcherParams.minPos, null, 0.0);
+        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, null, 0.0);
         if (launchCompletionEvent != null)
         {
             if (canceled)

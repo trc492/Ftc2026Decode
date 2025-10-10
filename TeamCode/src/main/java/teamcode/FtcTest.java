@@ -838,65 +838,27 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case X:
-                if (robot.intakeSubsystem != null)
+                if (robot.shooterSubsystem != null)
                 {
-                    if (pressed)
+                    if (operatorAltFunc)
                     {
-                        robot.intakeSubsystem.setPickupArtifactType(Vision.ArtifactType.Green);
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
+                        robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                    }
+                    else if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shoot");
+                        robot.shooterSubsystem.shoot(moduleName, null);
                     }
                     passToTeleOp = false;
                 }
                 break;
 
             case Y:
-                if (robot.intakeSubsystem != null)
-                {
-                    if (pressed)
-                    {
-                        robot.intakeSubsystem.setPickupArtifactType(Vision.ArtifactType.Purple);
-                    }
-                    passToTeleOp = false;
-                }
-                break;
-
             case LeftBumper:
             case RightBumper:
-                break;
-
             case DpadUp:
-                if (robot.spindexerSubsystem != null)
-                {
-                    if (pressed)
-                    {
-                        if (operatorAltFunc)
-                        {
-                            robot.spindexerSubsystem.exitSlotUp();
-                        }
-                        else
-                        {
-                            robot.spindexerSubsystem.entrySlotUp();
-                        }
-                    }
-                    passToTeleOp = false;
-                }
-                break;
-
             case DpadDown:
-                if (robot.spindexerSubsystem != null)
-                {
-                    if (pressed)
-                    {
-                        if (operatorAltFunc)
-                        {
-                            robot.spindexerSubsystem.exitSlotDown();
-                        }
-                        else
-                        {
-                            robot.spindexerSubsystem.entrySlotDown();
-                        }
-                    }
-                    passToTeleOp = false;
-                }
                 break;
 
             case DpadLeft:
@@ -907,12 +869,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotDown();
+                            robot.spindexerSubsystem.exitSlotDown(moduleName);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotDown();
+                            robot.spindexerSubsystem.entrySlotDown(moduleName);
                         }
                     }
                     passToTeleOp = false;
@@ -927,12 +889,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotUp();
+                            robot.spindexerSubsystem.exitSlotUp(moduleName);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotUp();
+                            robot.spindexerSubsystem.entrySlotUp(moduleName);
                         }
                     }
                     passToTeleOp = false;
