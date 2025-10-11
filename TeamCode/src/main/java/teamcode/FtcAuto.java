@@ -56,16 +56,44 @@ public class FtcAuto extends FtcOpMode
 
     public enum StartPos
     {
-        LEFT,
-        RIGHT
+        GOAL_ZONE,
+        LOADING_ZONE
     }   //enum StartPos
 
     public enum AutoStrategy
     {
+        FULL_AUTO,
         PID_DRIVE,
         TIMED_DRIVE,
         DO_NOTHING
     }   //enum AutoStrategy
+
+    public enum ScorePreload
+    {
+        YES,
+        NO
+    }
+
+    public enum PickupOption
+    {
+        SPIKEMARK,
+        LOADING,
+        BOTH
+    }
+
+    public enum SpikemarkCount
+    {
+        NONE,
+        ONE,
+        TWO,
+        THREE
+    }
+
+    public enum ParkOption
+    {
+        PARK,
+        NO_PARK
+    }
 
     /**
      * This class stores the autonomous menu choices.
@@ -74,8 +102,12 @@ public class FtcAuto extends FtcOpMode
     {
         public double delay = 0.0;
         public Alliance alliance = null;
-        public StartPos startPos = null;
-        public AutoStrategy strategy = null;
+        public StartPos startPos = StartPos.GOAL_ZONE;
+        public AutoStrategy strategy = AutoStrategy.FULL_AUTO;
+        public ScorePreload scorePreload = ScorePreload.YES;
+        public PickupOption pickupOption = PickupOption.SPIKEMARK;
+        public SpikemarkCount spikemarkCount = SpikemarkCount.NONE;
+        public ParkOption parkOption = ParkOption.PARK;
         public double xTarget = 0.0;
         public double yTarget = 0.0;
         public double turnTarget = 0.0;
@@ -92,12 +124,17 @@ public class FtcAuto extends FtcOpMode
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
+                "scorePreload=\"%s\" " +
+                "pickupOption=\"%s\" " +
+                "spikemarkCount=\"%s\" " +
+                "parkOption=\"%s\" " +
                 "xTarget=%.1f " +
                 "yTarget=%.1f " +
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                delay, alliance, startPos, strategy, xTarget, yTarget, turnTarget, driveTime, drivePower);
+                delay, alliance, startPos, strategy, scorePreload, pickupOption,
+                spikemarkCount, parkOption, xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
 
     }   //class AutoChoices
@@ -140,6 +177,9 @@ public class FtcAuto extends FtcOpMode
         //
         switch (autoChoices.strategy)
         {
+            case FULL_AUTO:
+                // autoCommand = new CmdDecodeAuto(robot, autoChoices);
+                break;
             case PID_DRIVE:
                 if (robot.robotDrive != null)
                 {
@@ -316,6 +356,10 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", delayMenu);
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
+        FtcChoiceMenu<ScorePreload> scorePreloadMenu = new FtcChoiceMenu<>("Score Preload:", startPosMenu);
+        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", scorePreloadMenu);
+        FtcChoiceMenu<SpikemarkCount> spikemarkCountMenu = new FtcChoiceMenu<>("Spikemark Count:", pickupOptionMenu);
+        FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", spikemarkCountMenu);
 
         FtcValueMenu xTargetMenu = new FtcValueMenu(
             "xTarget:", strategyMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
@@ -340,12 +384,28 @@ public class FtcAuto extends FtcOpMode
         allianceMenu.addChoice("Red", Alliance.RED_ALLIANCE, true, startPosMenu);
         allianceMenu.addChoice("Blue", Alliance.BLUE_ALLIANCE, false, startPosMenu);
 
-        startPosMenu.addChoice("Start Position Left", StartPos.LEFT, true, strategyMenu);
-        startPosMenu.addChoice("Start Position Right", StartPos.RIGHT, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Goal Zone", StartPos.GOAL_ZONE, true, strategyMenu);
+        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOADING_ZONE, false, strategyMenu);
 
+        strategyMenu.addChoice("Full Auto", AutoStrategy.FULL_AUTO, true, startPosMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
-        strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, true);
+        strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
+
+        scorePreloadMenu.addChoice("Yes", ScorePreload.YES, true, pickupOptionMenu);
+        scorePreloadMenu.addChoice("No", ScorePreload.NO, false, pickupOptionMenu);
+
+        pickupOptionMenu.addChoice("Spikemark", PickupOption.SPIKEMARK, true, spikemarkCountMenu);
+        pickupOptionMenu.addChoice("Loading", PickupOption.LOADING, false, parkOptionMenu);
+        pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikemarkCountMenu);
+
+        spikemarkCountMenu.addChoice("None", SpikemarkCount.NONE, true, parkOptionMenu);
+        spikemarkCountMenu.addChoice("One", SpikemarkCount.ONE, false, parkOptionMenu);
+        spikemarkCountMenu.addChoice("Two", SpikemarkCount.TWO, false, parkOptionMenu);
+        spikemarkCountMenu.addChoice("Three", SpikemarkCount.THREE, false, parkOptionMenu);
+
+        parkOptionMenu.addChoice("Park", ParkOption.PARK, true);
+        parkOptionMenu.addChoice("No Park", ParkOption.NO_PARK, false);
         //
         // Traverse menus.
         //
@@ -357,6 +417,10 @@ public class FtcAuto extends FtcOpMode
         autoChoices.alliance = allianceMenu.getCurrentChoiceObject();
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
+        autoChoices.scorePreload = scorePreloadMenu.getCurrentChoiceObject();
+        autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
+        autoChoices.spikemarkCount = spikemarkCountMenu.getCurrentChoiceObject();
+        autoChoices.parkOption = parkOptionMenu.getCurrentChoiceObject();
         autoChoices.xTarget = xTargetMenu.getCurrentValue();
         autoChoices.yTarget = yTargetMenu.getCurrentValue();
         autoChoices.turnTarget = turnTargetMenu.getCurrentValue();
