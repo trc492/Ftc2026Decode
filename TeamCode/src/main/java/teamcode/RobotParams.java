@@ -52,7 +52,7 @@ public class RobotParams
         // Driver feedback
         // Status Update: Dashboard Update may affect robot loop time, don't do it when in competition.
         public static final boolean updateDashboard             = !inCompetition;
-        public static final boolean showDriveBase               = false;
+        public static final boolean showDriveBase               = true;
         public static final boolean showPidDrive                = false;
         public static final boolean showVision                  = robotType == BaseDrive.RobotType.VisionOnly;
         public static final boolean showSubsystems              = true;
@@ -158,6 +158,10 @@ public class RobotParams
         public static final double GOBILDA_435_ENC_PPR          = (((1.0+46.0/17.0)*(1.0+46.0/17.0))*28.0);
         public static final double GOBILDA_435_MAX_RPM          = 435.0;
         public static final double GOBILDA_435_MAX_VEL_PPS      = GOBILDA_435_ENC_PPR*GOBILDA_435_MAX_RPM/60.0;
+        //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-5-2-1-ratio-24mm-length-8mm-rex-shaft-1150-rpm-3-3-5v-encoder/
+        public static final double GOBILDA_1150_ENC_PPR         = ((1.0+(46.0/11.0))*28.0);
+        public static final double GOBILDA_1150_MAX_RPM         = 1150.0;
+        public static final double GOBILDA_1150_MAX_VEL_PPS     = GOBILDA_1150_ENC_PPR*GOBILDA_1150_MAX_RPM/60.0;
         //https://www.revrobotics.com/rev-41-1300/
         public static final double REV_COREHEX_ENC_PPR          = 288.0;
         public static final double REV_COREHEX_MAX_RPM          = 125.0;

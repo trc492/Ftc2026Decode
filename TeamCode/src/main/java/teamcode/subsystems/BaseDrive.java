@@ -32,6 +32,7 @@ import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
+import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
 
@@ -77,10 +78,12 @@ public class BaseDrive extends TrcSubsystem
 //        private static final double ODWHEEL_DIAMETER_MM = 32.0;
 //        private static final double ODWHEEL_DIAMETER = ODWHEEL_DIAMETER_MM*TrcUtil.INCHES_PER_MM;
 //        private static final double ODWHEEL_CPR = 2000.0;
+        private static final double DRIVE_MOTOR_MAX_VEL = 2700.0;
+        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
         // TODO: Need to determine these.
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 1.0/100.0);
+            new TrcPidController.PidCoefficients(0.00035, 0.0, 0.0, 0.000375);
         private static final TrcPidController.PidCoefficients drivePidCoeffs =
             new TrcPidController.PidCoefficients(0.072, 0.001, 0.0065, 0.0, 2.0);
         private static final TrcPidController.PidCoefficients turnPidCoeffs =
@@ -89,7 +92,8 @@ public class BaseDrive extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0125, 0.0);
 
         public static TrcDriveBase.TuneParams tuneParams = new TrcDriveBase.TuneParams()
-//            .setDriveMotorVelocityControl(100.0, driveMotorVelPidCoeffs, 0.5, true)
+            .setDriveMotorVelocityControl(
+                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(1.0, 1.0)
             .setXPidParams(drivePidCoeffs, 1.0)
             .setYPidParams(drivePidCoeffs, 1.0)
@@ -289,6 +293,19 @@ public class BaseDrive extends TrcSubsystem
                     lineNum += 2;
                     robotDrive.pidDrive.getTurnPidCtrl().displayPidInfo(lineNum);
                     lineNum += 2;
+                }
+            }
+            else
+            {
+                if (RobotParams.Preferences.showDriveBase)
+                {
+                    for (TrcMotor motor : robotDrive.driveMotors)
+                    {
+                        dashboard.putNumber(motor.getName() + ".Velocity", motor.getVelocity());
+                        dashboard.putNumber(motor.getName() + ".TargetVel", motor.getPidTarget());
+                        dashboard.putNumber(motor.getName() + ".MaxVel", robotInfo.tuneParams.driveMotorMaxVelocity);
+                        dashboard.putNumber(motor.getName() + ".MinVel", 0.0);
+                    }
                 }
             }
         }

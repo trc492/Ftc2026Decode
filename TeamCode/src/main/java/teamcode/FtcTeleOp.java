@@ -51,6 +51,7 @@ public class FtcTeleOp extends FtcOpMode
     private double turnPowerScale;
     protected boolean driverAltFunc = false;
     protected boolean operatorAltFunc = false;
+    protected boolean allowAnalogControl = true;
     private boolean statusUpdateOn = false;
     private boolean relocalizing = false;
     private TrcPose2D robotFieldPose = null;
@@ -184,93 +185,97 @@ public class FtcTeleOp extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
-        if (slowPeriodicLoop)
-        {
-            int lineNum = 1;
-            //
-            // DriveBase subsystem.
-            //
-            if (robot.robotDrive != null)
-            {
-                // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
-                if (relocalizing)
-                {
-                    if (robotFieldPose == null)
-                    {
-                        robotFieldPose = robot.vision.getRobotFieldPose();
-                    }
-                }
-                else
-                {
-                    double[] inputs = driverGamepad.getDriveInputs(
-                        RobotParams.Robot.DRIVE_MODE, true, drivePowerScale, turnPowerScale);
+        int lineNum = 1;
 
-                    if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+        if (allowAnalogControl)
+        {
+            if (slowPeriodicLoop)
+            {
+                //
+                // DriveBase subsystem.
+                //
+                if (robot.robotDrive != null)
+                {
+                    // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
+                    if (relocalizing)
                     {
-                        robot.robotDrive.driveBase.holonomicDrive(
-                            null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                        if (robotFieldPose == null)
+                        {
+                            robotFieldPose = robot.vision.getRobotFieldPose();
+                        }
                     }
                     else
                     {
-                        robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
-                    }
+                        double[] inputs = driverGamepad.getDriveInputs(
+                            RobotParams.Robot.DRIVE_MODE, true, drivePowerScale, turnPowerScale);
 
-                    if (RobotParams.Preferences.showDriveBase &&
-                        (RobotParams.Preferences.updateDashboard || statusUpdateOn))
-                    {
-                        robot.dashboard.displayPrintf(
-                            lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
-                            inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
-                    }
-                }
-                // Check for EndGame warning.
-                if (elapsedTime > RobotParams.Game.ENDGAME_DEADLINE)
-                {
-                    if (robot.driverRumble != null)
-                    {
-                        robot.driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
-                    }
-
-                    if (robot.operatorRumble != null)
-                    {
-                        robot.operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
-                    }
-                }
-            }
-            //
-            // Other subsystems.
-            //
-            if (RobotParams.Preferences.useSubsystems)
-            {
-                // Analog control of subsystems.
-                if (TrcRobot.getRunMode() == TrcRobot.RunMode.TEST_MODE)
-                {
-                    if (robot.intake != null)
-                    {
-                        double power = operatorGamepad.getLeftStickY(true);
-                        if (power != intakePrevPower)
+                        if (robot.robotDrive.driveBase.supportsHolonomicDrive())
                         {
-                            robot.intake.motor.setPower(power);
-                            intakePrevPower = power;
+                            robot.robotDrive.driveBase.holonomicDrive(
+                                null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                        }
+                        else
+                        {
+                            robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
+                        }
+
+                        if (RobotParams.Preferences.showDriveBase &&
+                            (RobotParams.Preferences.updateDashboard || statusUpdateOn))
+                        {
+                            robot.dashboard.displayPrintf(
+                                lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
+                                inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
                         }
                     }
-
-                    if (robot.spindexer != null)
+                    // Check for EndGame warning.
+                    if (elapsedTime > RobotParams.Game.ENDGAME_DEADLINE)
                     {
-                        double power = operatorGamepad.getRightStickY(true);
-                        if (power != spindexerPrevPower)
+                        if (robot.driverRumble != null)
                         {
-                            robot.spindexer.motor.setPower(power);
-                            spindexerPrevPower = power;
+                            robot.driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                        }
+
+                        if (robot.operatorRumble != null)
+                        {
+                            robot.operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
                         }
                     }
                 }
+                //
+                // Other subsystems.
+                //
+                if (RobotParams.Preferences.useSubsystems)
+                {
+                    // Analog control of subsystems.
+                    if (TrcRobot.getRunMode() == TrcRobot.RunMode.TEST_MODE)
+                    {
+                        if (robot.intake != null)
+                        {
+                            double power = operatorGamepad.getLeftStickY(true);
+                            if (power != intakePrevPower)
+                            {
+                                robot.intake.motor.setPower(power);
+                                intakePrevPower = power;
+                            }
+                        }
+
+                        if (robot.spindexer != null)
+                        {
+                            double power = operatorGamepad.getRightStickY(true);
+                            if (power != spindexerPrevPower)
+                            {
+                                robot.spindexer.motor.setPower(power);
+                                spindexerPrevPower = power;
+                            }
+                        }
+                    }
+                }
             }
-            // Display subsystem status.
-            if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
-            {
-                Dashboard.updateDashboard(robot, lineNum);
-            }
+        }
+        // Display subsystem status.
+        if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
+        {
+            Dashboard.updateDashboard(robot, lineNum);
         }
     }   //periodic
 

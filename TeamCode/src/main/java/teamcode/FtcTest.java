@@ -41,6 +41,7 @@ import trclib.command.CmdPidDrive;
 import trclib.command.CmdTimedDrive;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcUtil;
+import trclib.motor.TrcMotor;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcRobot;
@@ -363,17 +364,14 @@ public class FtcTest extends FtcTeleOp
             default:
                 break;
         }
+        //
+        // Allow TeleOp to run so we can control the robot in subsystem test or drive speed test modes.
+        //
+        allowAnalogControl = allowTeleOp();
+        super.periodic(elapsedTime, true);
 
         if (slowPeriodicLoop)
         {
-            if (allowTeleOp())
-            {
-                //
-                // Allow TeleOp to run so we can control the robot in subsystem test or drive speed test modes.
-                //
-                super.periodic(elapsedTime, true);
-            }
-
             switch (testChoices.test)
             {
                 case X_TIMED_DRIVE:
@@ -474,6 +472,37 @@ public class FtcTest extends FtcTeleOp
                 testChoices.test == Test.VISION_TEST || testChoices.test == Test.DRIVE_SPEED_TEST);
     }   //allowTeleOp
 
+    /**
+     * This method tunes the drive motors velocity control as well as steering PID if it's a Swerve Drive Base.
+     *
+     * @param velocity specifies the velocity to be set to all drive motors.
+     * @param steerAngle specifies the steer angle if it is swerve drive. For other drive bases, steer angle 0 and 90
+     *        will turn drive motors forward, 180 and 270 will turn them backward. This allows the user to run the
+     *        robot back and forth for tuning drive motor velocity control PID. It also allows the user to tune
+     *        steer motor PID.
+     */
+    private void tuneDriveMotors(double velocity, double steerAngle)
+    {
+        if (robot.robotDrive instanceof FtcSwerveDrive)
+        {
+            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
+            swerveDrive.setSteerAngle(steerAngle, false, true);
+        }
+        else if (steerAngle == 180.0 || steerAngle == 270.0)
+        {
+            velocity = -velocity;
+        }
+
+        if (robot.robotInfo.tuneParams.driveMotorVelPidCoeffs != null)
+        {
+            // DriveMotor velocity control is enabled, let's tune DriveMotor velocity PID.
+            for (TrcMotor motor: robot.robotDrive.driveMotors)
+            {
+                motor.setVelocity(velocity);
+            }
+        }
+    }   //tuneDriveMotors
+
     //
     // Overrides TrcGameController.ButtonHandler in TeleOp.
     //
@@ -506,14 +535,18 @@ public class FtcTest extends FtcTeleOp
             case DpadUp:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
                     {
-                        // If we are moving swerve steering, make sure TeleOp doesn't interfere.
-                        teleOpControlEnabled = !pressed;
-                        if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        // We are controlling drive base motors, make sure TeleOp doesn't interfere.
+                        if (pressed)
                         {
-                            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
-                            swerveDrive.setSteerAngle(0.0, false, true);
+                            teleOpControlEnabled = false;
+                            tuneDriveMotors(robot.robotInfo.tuneParams.driveMotorMaxVelocity, 0.0);
+                        }
+                        else
+                        {
+                            robot.robotDrive.cancel();
+                            teleOpControlEnabled = true;
                         }
                     }
                     passToTeleOp = false;
@@ -549,14 +582,18 @@ public class FtcTest extends FtcTeleOp
             case DpadDown:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
                     {
-                        // If we are moving swerve steering, make sure TeleOp doesn't interfere.
-                        teleOpControlEnabled = !pressed;
-                        if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        // We are controlling drive base motors, make sure TeleOp doesn't interfere.
+                        if (pressed)
                         {
-                            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
-                            swerveDrive.setSteerAngle(180.0, false, true);
+                            teleOpControlEnabled = false;
+                            tuneDriveMotors(robot.robotInfo.tuneParams.driveMotorMaxVelocity, 180.0);
+                        }
+                        else
+                        {
+                            robot.robotDrive.cancel();
+                            teleOpControlEnabled = true;
                         }
                     }
                     passToTeleOp = false;
@@ -566,14 +603,18 @@ public class FtcTest extends FtcTeleOp
             case DpadLeft:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
                     {
-                        // If we are moving swerve steering, make sure TeleOp doesn't interfere.
-                        teleOpControlEnabled = !pressed;
-                        if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        // We are controlling drive base motors, make sure TeleOp doesn't interfere.
+                        if (pressed)
                         {
-                            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
-                            swerveDrive.setSteerAngle(270.0, false, true);
+                            teleOpControlEnabled = false;
+                            tuneDriveMotors(robot.robotInfo.tuneParams.driveMotorMaxVelocity, 270.0);
+                        }
+                        else
+                        {
+                            robot.robotDrive.cancel();
+                            teleOpControlEnabled = true;
                         }
                     }
                     passToTeleOp = false;
@@ -583,14 +624,18 @@ public class FtcTest extends FtcTeleOp
             case DpadRight:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
                     {
-                        // If we are moving swerve steering, make sure TeleOp doesn't interfere.
-                        teleOpControlEnabled = !pressed;
-                        if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        // We are controlling drive base motors, make sure TeleOp doesn't interfere.
+                        if (pressed)
                         {
-                            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
-                            swerveDrive.setSteerAngle(90.0, false, true);
+                            teleOpControlEnabled = false;
+                            tuneDriveMotors(robot.robotInfo.tuneParams.driveMotorMaxVelocity, 90.0);
+                        }
+                        else
+                        {
+                            robot.robotDrive.cancel();
+                            teleOpControlEnabled = true;
                         }
                     }
                     passToTeleOp = false;
