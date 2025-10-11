@@ -32,9 +32,9 @@ import trclib.timer.TrcTimer;
 /**
  * This class implements an autonomous strategy.
  */
-public class CmdAuto implements TrcRobot.RobotCommand
+public class CmdDecodeAuto implements TrcRobot.RobotCommand
 {
-    private static final String moduleName = CmdAuto.class.getSimpleName();
+    private static final String moduleName = CmdDecodeAuto.class.getSimpleName();
 
     private enum State
     {
@@ -54,7 +54,7 @@ public class CmdAuto implements TrcRobot.RobotCommand
      * @param robot specifies the robot object for providing access to various global objects.
      * @param autoChoices specifies the autoChoices object.
      */
-    public CmdAuto(Robot robot, FtcAuto.AutoChoices autoChoices)
+    public CmdDecodeAuto(Robot robot, FtcAuto.AutoChoices autoChoices)
     {
         this.robot = robot;
         this.autoChoices = autoChoices;
@@ -63,7 +63,7 @@ public class CmdAuto implements TrcRobot.RobotCommand
         event = new TrcEvent(moduleName);
         sm = new TrcStateMachine<>(moduleName);
         sm.start(State.START);
-    }   //CmdAuto
+    }   //CmdDecodeAuto
 
     //
     // Implements the TrcRobot.RobotCommand interface.
@@ -141,4 +141,4 @@ public class CmdAuto implements TrcRobot.RobotCommand
         return !sm.isEnabled();
     }   //cmdPeriodic
 
-}   //class CmdAuto
+}   //class CmdDecodeAuto

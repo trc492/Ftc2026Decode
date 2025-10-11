@@ -33,6 +33,8 @@ import ftclib.driverio.FtcMatchInfo;
 import ftclib.driverio.FtcMenu;
 import ftclib.driverio.FtcValueMenu;
 import ftclib.robotcore.FtcOpMode;
+import teamcode.autocommands.CmdDecodeAuto;
+import teamcode.vision.Vision;
 import trclib.command.CmdPidDrive;
 import trclib.command.CmdTimedDrive;
 import trclib.pathdrive.TrcPose2D;
@@ -62,7 +64,7 @@ public class FtcAuto extends FtcOpMode
 
     public enum AutoStrategy
     {
-        FULL_AUTO,
+        DECODE_AUTO,
         PID_DRIVE,
         TIMED_DRIVE,
         DO_NOTHING
@@ -72,14 +74,14 @@ public class FtcAuto extends FtcOpMode
     {
         YES,
         NO
-    }
+    }   //enum ScorePreload
 
     public enum PickupOption
     {
         SPIKEMARK,
         LOADING,
         BOTH
-    }
+    }   //enum PickupOption
 
     public enum SpikemarkCount
     {
@@ -87,13 +89,13 @@ public class FtcAuto extends FtcOpMode
         ONE,
         TWO,
         THREE
-    }
+    }   //enum SpikemarkCount
 
     public enum ParkOption
     {
         PARK,
         NO_PARK
-    }
+    }   //enum ParkOption
 
     /**
      * This class stores the autonomous menu choices.
@@ -103,7 +105,7 @@ public class FtcAuto extends FtcOpMode
         public double delay = 0.0;
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
-        public AutoStrategy strategy = AutoStrategy.FULL_AUTO;
+        public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
         public ScorePreload scorePreload = ScorePreload.YES;
         public PickupOption pickupOption = PickupOption.SPIKEMARK;
         public SpikemarkCount spikemarkCount = SpikemarkCount.NONE;
@@ -133,8 +135,8 @@ public class FtcAuto extends FtcOpMode
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                delay, alliance, startPos, strategy, scorePreload, pickupOption,
-                spikemarkCount, parkOption, xTarget, yTarget, turnTarget, driveTime, drivePower);
+                delay, alliance, startPos, strategy, scorePreload, pickupOption, spikemarkCount, parkOption,
+                xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
 
     }   //class AutoChoices
@@ -177,9 +179,13 @@ public class FtcAuto extends FtcOpMode
         //
         switch (autoChoices.strategy)
         {
-            case FULL_AUTO:
-                // autoCommand = new CmdDecodeAuto(robot, autoChoices);
+            case DECODE_AUTO:
+                if (robot.robotDrive != null)
+                {
+                    autoCommand = new CmdDecodeAuto(robot, autoChoices);
+                }
                 break;
+
             case PID_DRIVE:
                 if (robot.robotDrive != null)
                 {
@@ -202,28 +208,15 @@ public class FtcAuto extends FtcOpMode
                 break;
         }
 
-//        if (robot.vision != null)
-//        {
-//            // Enabling vision early so we can detect target before match starts if necessary.
-//            // Only enable the necessary vision for that purpose.
-//            if (robot.vision.aprilTagVision != null)
-//            {
-//                robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision.");
-//                robot.vision.setAprilTagVisionEnabled(true);
-//            }
-//
-//            if (robot.vision.redBlobVision != null)
-//            {
-//                robot.globalTracer.traceInfo(moduleName, "Enabling RedBlobVision.");
-//                robot.vision.setRedBlobVisionEnabled(true);
-//            }
-//
-//            if (robot.vision.blueBlobVision != null)
-//            {
-//                robot.globalTracer.traceInfo(moduleName, "Enabling BlueBlobVision.");
-//                robot.vision.setBlueBlobVisionEnabled(true);
-//            }
-//        }
+        if (robot.vision != null)
+        {
+            // Enabling vision early so we can detect Obelisk AprilTag before match starts.
+            if (robot.vision.limelightVision != null)
+            {
+                robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision.");
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG.ordinal(), true);
+            }
+        }
     }   //robotInit
 
     //
@@ -238,6 +231,10 @@ public class FtcAuto extends FtcOpMode
     @Override
     public void initPeriodic()
     {
+        // Detect Obelisk AprilTag.
+//        if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
+//        {
+//        }
     }   //initPeriodic
 
     /**
@@ -356,7 +353,7 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", delayMenu);
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
-        FtcChoiceMenu<ScorePreload> scorePreloadMenu = new FtcChoiceMenu<>("Score Preload:", startPosMenu);
+        FtcChoiceMenu<ScorePreload> scorePreloadMenu = new FtcChoiceMenu<>("Score Preload:", strategyMenu);
         FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", scorePreloadMenu);
         FtcChoiceMenu<SpikemarkCount> spikemarkCountMenu = new FtcChoiceMenu<>("Spikemark Count:", pickupOptionMenu);
         FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", spikemarkCountMenu);
@@ -387,7 +384,7 @@ public class FtcAuto extends FtcOpMode
         startPosMenu.addChoice("Start Position Goal Zone", StartPos.GOAL_ZONE, true, strategyMenu);
         startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOADING_ZONE, false, strategyMenu);
 
-        strategyMenu.addChoice("Full Auto", AutoStrategy.FULL_AUTO, true, startPosMenu);
+        strategyMenu.addChoice("Full Auto", AutoStrategy.DECODE_AUTO, true, scorePreloadMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
