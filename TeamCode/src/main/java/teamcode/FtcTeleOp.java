@@ -30,6 +30,7 @@ import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
 import teamcode.subsystems.RumbleIndicator;
+import teamcode.subsystems.Shooter;
 import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
@@ -52,15 +53,12 @@ public class FtcTeleOp extends FtcOpMode
     protected boolean driverAltFunc = false;
     protected boolean operatorAltFunc = false;
     protected boolean allowAnalogControl = true;
-    private boolean statusUpdateOn = false;
     private boolean relocalizing = false;
     private TrcPose2D robotFieldPose = null;
     private Integer savedLimelightPipeline = null;
 
-    private double intakePrevPower = 0.0;
-    private double spindexerPrevPower = 0.0;
-    private double turretPrevPower = 0.0;
-    private double tilterPrevPower = 0.0;
+    private double panPrevPower = 0.0;
+    private double tiltPrevPower = 0.0;
 
     //
     // Implements FtcOpMode abstract method.
@@ -219,8 +217,7 @@ public class FtcTeleOp extends FtcOpMode
                             robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
                         }
 
-                        if (RobotParams.Preferences.showDriveBase &&
-                            (RobotParams.Preferences.updateDashboard || statusUpdateOn))
+                        if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBase)
                         {
                             robot.dashboard.displayPrintf(
                                 lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
@@ -249,23 +246,37 @@ public class FtcTeleOp extends FtcOpMode
                     // Analog control of subsystems.
                     if (TrcRobot.getRunMode() == TrcRobot.RunMode.TEST_MODE)
                     {
-                        if (robot.intake != null)
+                        if (robot.shooter != null)
                         {
-                            double power = operatorGamepad.getLeftStickY(true);
-                            if (power != intakePrevPower)
-                            {
-                                robot.intake.motor.setPower(power);
-                                intakePrevPower = power;
-                            }
-                        }
+                            double panPower = operatorGamepad.getLeftStickX(true);
+                            double tiltPower = operatorGamepad.getRightStickY(true);
 
-                        if (robot.spindexer != null)
-                        {
-                            double power = operatorGamepad.getRightStickY(true);
-                            if (power != spindexerPrevPower)
+                            if (panPower != panPrevPower)
                             {
-                                robot.spindexer.motor.setPower(power);
-                                spindexerPrevPower = power;
+                                if (operatorAltFunc)
+                                {
+                                    robot.shooter.panMotor.setPower(panPower);
+                                }
+                                else
+                                {
+                                    robot.shooter.panMotor.setPidPower(
+                                        panPower, Shooter.Params.PAN_MIN_POS, Shooter.Params.PAN_MAX_POS, true);
+                                }
+                                panPrevPower = panPower;
+                            }
+
+                            if (tiltPower != tiltPrevPower)
+                            {
+                                if (operatorAltFunc)
+                                {
+                                    robot.shooter.tiltMotor.setPower(tiltPower);
+                                }
+                                else
+                                {
+                                    robot.shooter.tiltMotor.setPidPower(
+                                        tiltPower, Shooter.Params.TILT_MIN_POS, Shooter.Params.TILT_MAX_POS, true);
+                                }
+                                tiltPrevPower = tiltPower;
                             }
                         }
                     }
@@ -273,10 +284,7 @@ public class FtcTeleOp extends FtcOpMode
             }
         }
         // Display subsystem status.
-        if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
-        {
-            Dashboard.updateDashboard(robot, lineNum);
-        }
+        Dashboard.updateDashboard(robot, lineNum);
     }   //periodic
 
     /**
@@ -385,11 +393,7 @@ public class FtcTeleOp extends FtcOpMode
                 }
                 else if (pressed)
                 {
-                    if (!RobotParams.Preferences.updateDashboard)
-                    {
-                        // Toggle status update ON/OFF.
-                        statusUpdateOn = !statusUpdateOn;
-                    }
+                    Dashboard.setUpdateDashboardEnabled(!Dashboard.isDashboardUpdateEnabled());
                 }
                 break;
 

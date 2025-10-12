@@ -22,13 +22,8 @@ SOFTWARE.
 -->
 <Robot type="FirstInspires-FTC" name="Decode_2026">
     <!-- Cameras -->
-    <!--
+    <Webcam name="Webcam 1" serialNumber="6BC978AF" />
     <EthernetDevice name="Limelight3a" serialNumber="EthernetOverUsb:eth0:172.29.0.21" port="0" ipAddress="172.29.0.1" />
-    <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x045e|product=0x0779|connection="/>
-    -->
-    <!--
-    <Webcam name="Webcam 1" serialNumber="13F45DDF"/>
-    -->
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
             <!-- Motors -->
@@ -41,7 +36,7 @@ SOFTWARE.
             <ContinuousRotationServo name="frSteerServo" port="2" />
             <ContinuousRotationServo name="brSteerServo" port="4" />
             <ContinuousRotationServo name="Shooter.TiltMotor" port="5" />
-            <!-- Analog -->
+            <!-- Analog -->1
             <AnalogInput name="frSteerEncoder" port="0" />
             <AnalogInput name="brSteerEncoder" port="1" />
             <AnalogInput name="Shooter.TiltEncoder" port="2" />

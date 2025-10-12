@@ -809,7 +809,7 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
-                            if (operatorAltFunc)
+                            if (!operatorAltFunc)
                             {
                                 if (robot.intake.isActive())
                                 {

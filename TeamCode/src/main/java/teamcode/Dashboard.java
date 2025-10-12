@@ -73,7 +73,28 @@ public class Dashboard
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
     }   //class SubsystemSpindexer
 
+    private static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
     private static Double nextDashboardUpdateTime =  null;
+
+    /**
+     * This method enables/disables Dashboard Update.
+     *
+     * @param enabled specifies true to enable, false to disable.
+     */
+    public static void setUpdateDashboardEnabled(boolean enabled)
+    {
+        updateDashboardEnabled = enabled;
+    }   //setUpdateDashboardEnabled
+
+    /**
+     * This method checks if Dashboard Update is enabled.
+     *
+     * @return true if update is enabled, false if disabled.
+     */
+    public static boolean isDashboardUpdateEnabled()
+    {
+        return updateDashboardEnabled;
+    }   //isDashboardUpdateEnabled
 
     /**
      * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard
@@ -89,19 +110,22 @@ public class Dashboard
         double currTime = TrcTimer.getCurrentTime();
         boolean slowLoop = nextDashboardUpdateTime == null || currTime >= nextDashboardUpdateTime;
 
-        if (slowLoop)
+        if (updateDashboardEnabled)
         {
-            nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
-        }
+            if (slowLoop)
+            {
+                nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
+            }
 
-        if (RobotParams.Preferences.showVision && robot.vision != null)
-        {
-            lineNum = robot.vision.updateStatus(lineNum, slowLoop);
-        }
+            if (RobotParams.Preferences.showVision && robot.vision != null)
+            {
+                lineNum = robot.vision.updateStatus(lineNum, slowLoop);
+            }
 
-        if (RobotParams.Preferences.showSubsystems)
-        {
-            lineNum = TrcSubsystem.updateStatusAll(lineNum, slowLoop);
+            if (RobotParams.Preferences.showSubsystems)
+            {
+                lineNum = TrcSubsystem.updateStatusAll(lineNum, slowLoop);
+            }
         }
 
         return lineNum;
