@@ -37,10 +37,10 @@ SOFTWARE.
             <RevRobotics40HDHexMotor name="Shooter.PanMotor" port="2"/>
             <goBILDA5202SeriesMotor name="frDriveMotor" port="3"/>
             <!-- Servos -->
-            <ContinuousRotationServo name="Shooter.TiltMotor" port="0" />
+            <Servo name="Shooter.Launcher" port="0" />
             <ContinuousRotationServo name="frSteerServo" port="2" />
             <ContinuousRotationServo name="brSteerServo" port="4" />
-            <Servo name="Shooter.Launcher" port="5" />
+            <ContinuousRotationServo name="Shooter.TiltMotor" port="5" />
             <!-- Analog -->
             <AnalogInput name="frSteerEncoder" port="0" />
             <AnalogInput name="brSteerEncoder" port="1" />
