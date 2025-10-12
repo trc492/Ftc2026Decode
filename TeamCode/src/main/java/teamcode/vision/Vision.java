@@ -131,8 +131,8 @@ public class Vision
     // HSV Color Space.
     private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
         TrcOpenCvColorBlobPipeline.ColorConversion.RGBToHSV;
-    private static final double[] purpleThresholdsLow = {140.0, 20.0, 100.0};
-    private static final double[] purpleThresholdsHigh = {170.0, 160.0, 255.0};
+    private static final double[] purpleThresholdsLow = {120.0, 60.0, 100.0};
+    private static final double[] purpleThresholdsHigh = {170.0, 255.0, 255.0};
     private static final double[] greenThresholdsLow = {50.0, 20.0, 100.0};
     private static final double[] greenThresholdsHigh = {100.0, 255.0, 255.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterParams =
