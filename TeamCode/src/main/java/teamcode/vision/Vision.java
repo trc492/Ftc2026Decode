@@ -156,8 +156,10 @@ public class Vision
     private static final double artifactWidth = 5.0;  // inches
     private static final double artifactHeight = 5.0; // inches
 
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 0;
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 90;
+    private static final int CLASSIFIER_ROI_LEFT = 0;
+    private static final int CLASSIFIER_ROI_TOP = 0;
+    private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
+    private static final int CLASSIFIER_ROI_BOTTOM = 90;
     private static final double ONE_BALL_THRESHOLD = 2.5;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
     private static final double THREE_BALL_THRESHOLD = 3 * ONE_BALL_THRESHOLD;
@@ -180,6 +182,7 @@ public class Vision
     public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setAnnotation(true, false)
+            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
@@ -830,8 +833,7 @@ public class Vision
             // compareDistanceX is using alliance to determine the sort order of color blobs in the classifier.
             this.alliance = alliance;
             ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> blobs =
-                classifierVision.getDetectedTargetsInfo(
-                    this::classifierBlobFilter, null, this::compareDistanceX, 0.0, 0.0);
+                classifierVision.getDetectedTargetsInfo(null, null, this::compareDistanceX, 0.0, 0.0);
 
             if (blobs != null)
             {
@@ -977,22 +979,22 @@ public class Vision
         return match;
     }   //artifactFilter
 
-    /**
-     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
-     * vertical position is in the ROI of the classifier.
-     *
-     * @param blobInfo specifies the detected blob info.
-     * @param context not used.
-     * @return true if it matches expectation, false otherwise.
-     */
-    public boolean classifierBlobFilter(
-        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blobInfo, Object context)
-    {
-        return (blobInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
-                blobInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
-               blobInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
-               blobInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
-    }   //classifierBlobFilter
+//    /**
+//     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
+//     * vertical position is in the ROI of the classifier.
+//     *
+//     * @param blobInfo specifies the detected blob info.
+//     * @param context not used.
+//     * @return true if it matches expectation, false otherwise.
+//     */
+//    public boolean classifierBlobFilter(
+//        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blobInfo, Object context)
+//    {
+//        return (blobInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
+//                blobInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
+//               blobInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
+//               blobInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
+//    }   //classifierBlobFilter
 
     /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction
