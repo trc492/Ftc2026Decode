@@ -133,7 +133,7 @@ public class Vision
         TrcOpenCvColorBlobPipeline.ColorConversion.RGBToHSV;
     private static final double[] purpleThresholdsLow = {120.0, 60.0, 100.0};
     private static final double[] purpleThresholdsHigh = {170.0, 255.0, 255.0};
-    private static final double[] greenThresholdsLow = {50.0, 20.0, 100.0};
+    private static final double[] greenThresholdsLow = {50.0, 70.0, 100.0};
     private static final double[] greenThresholdsHigh = {100.0, 255.0, 255.0};
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
@@ -157,7 +157,7 @@ public class Vision
     private static final double artifactHeight = 5.0; // inches
 
     private static final int CLASSIFIER_HEIGHT_THRESHOLD_LOW = 0;
-    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 239;
+    private static final int CLASSIFIER_HEIGHT_THRESHOLD_HIGH = 90;
     private static final double ONE_BALL_THRESHOLD = 2.5;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
     private static final double THREE_BALL_THRESHOLD = 3 * ONE_BALL_THRESHOLD;
