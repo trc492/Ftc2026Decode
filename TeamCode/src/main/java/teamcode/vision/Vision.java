@@ -149,7 +149,7 @@ public class Vision
             .setMinArea(200.0)
             .setMinPerimeter(50.0)
             .setWidthRange(20.0, 250.0)
-            .setHeightRange(10.0, 30.0)
+            .setHeightRange(10.0, 60.0)
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
             .setAspectRatioRange(0.05, 20.0);
