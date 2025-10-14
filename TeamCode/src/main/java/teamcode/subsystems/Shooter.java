@@ -98,7 +98,7 @@ public class Shooter extends TrcSubsystem
         public static final String PAN_ENCODER_NAME             = null;
         public static final boolean PAN_ENCODER_INVERTED        = false;
 
-        public static final double PAN_MOTOR_PID_KP             = 0.01;
+        public static final double PAN_MOTOR_PID_KP             = 0.018;
         public static final double PAN_MOTOR_PID_KI             = 0.0;
         public static final double PAN_MOTOR_PID_KD             = 0.0;
         public static final double PAN_PID_TOLERANCE            = 1.0;
@@ -110,8 +110,12 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POS_OFFSET               = 0.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
-        public static final double PAN_MIN_POS                  = -90.0;
-        public static final double PAN_MAX_POS                  = 90.0;
+        public static final double PAN_MIN_POS                  = -135.0;
+        public static final double PAN_MAX_POS                  = 135.0;
+        public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
+        public static final double[] PAN_POS_PRESETS            =
+            {PAN_MIN_POS, -90.0, -45.0, 0.0, 45.0, 90.0, PAN_MAX_POS};
+
         public static final double PAN_ZERO_CAL_POWER           = -0.2;
         public static final double PAN_STALL_MIN_POWER          = Math.abs(PAN_ZERO_CAL_POWER);
         public static final double PAN_STALL_TOLERANCE          = 0.1;
@@ -121,11 +125,11 @@ public class Shooter extends TrcSubsystem
         // Tilt Motor
         public static final String TILT_MOTOR_NAME              = SUBSYSTEM_NAME + ".TiltMotor";
         public static final MotorType TILT_MOTOR_TYPE           = MotorType.CRServo;
-        public static final boolean TILT_MOTOR_INVERTED         = false;
+        public static final boolean TILT_MOTOR_INVERTED         = true;
         public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
         public static final boolean TILT_ENCODER_INVERTED       = false;
 
-        public static final double TILT_MOTOR_PID_KP            = 0.01;
+        public static final double TILT_MOTOR_PID_KP            = 0.03;
         public static final double TILT_MOTOR_PID_KI            = 0.0;
         public static final double TILT_MOTOR_PID_KD            = 0.0;
         public static final double TILT_PID_TOLERANCE           = 1.0;
@@ -134,10 +138,13 @@ public class Shooter extends TrcSubsystem
         public static final double TILT_GEAR_RATIO              = 108.0/14.0;
         public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_POS_OFFSET              = 25.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.466061;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.231212;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 50.0;
+        public static final double TILT_POS_PRESET_TOLERANCE    = 5.0;
+        public static final double[] TILT_POS_PRESETS           =
+            {TILT_MIN_POS, 30.0, 35.0, 40.0, 45.0, TILT_MAX_POS};
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
             .add("test3ft", 36.0, 60.0, 0.0, 60.0)
@@ -206,18 +213,22 @@ public class Shooter extends TrcSubsystem
 
         if (Params.HAS_PAN_MOTOR)
         {
-            shooterParams.setPanMotor(
-                Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
-                Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED,
-                new TrcShooter.PanTiltParams(Params.PAN_POWER_LIMIT, Params.PAN_MIN_POS, Params.PAN_MAX_POS));
+            shooterParams
+                .setPanMotor(
+                    Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
+                    Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED,
+                    new TrcShooter.PanTiltParams(Params.PAN_POWER_LIMIT, Params.PAN_MIN_POS, Params.PAN_MAX_POS))
+                .setPanMotorPosPresets(Params.PAN_POS_PRESET_TOLERANCE, Params.PAN_POS_PRESETS);
         }
 
         if (Params.HAS_TILT_MOTOR)
         {
-            shooterParams.setTiltMotor(
-                Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE, Params.TILT_MOTOR_INVERTED,
-                Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED,
-                new TrcShooter.PanTiltParams(Params.TILT_POWER_LIMIT, Params.TILT_MIN_POS, Params.TILT_MAX_POS));
+            shooterParams
+                .setTiltMotor(
+                    Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE, Params.TILT_MOTOR_INVERTED,
+                    Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED,
+                    new TrcShooter.PanTiltParams(Params.TILT_POWER_LIMIT, Params.TILT_MIN_POS, Params.TILT_MAX_POS))
+                .setTiltMotorPosPresets(Params.TILT_POS_PRESET_TOLERANCE, Params.TILT_POS_PRESETS);
         }
 
         shooter = new FtcShooter(Params.SUBSYSTEM_NAME, shooterParams).getShooter();
@@ -498,8 +509,9 @@ public class Shooter extends TrcSubsystem
             if (motor != null)
             {
                 dashboard.displayPrintf(
-                    lineNum++, "%s: power=%.3f, pos=%.3f/%.3f",
-                    Params.TILT_MOTOR_NAME, motor.getPower(), motor.getPosition(), motor.getPidTarget());
+                    lineNum++, "%s: power=%.3f, pos=%.3f/%.3f(%f)",
+                    Params.TILT_MOTOR_NAME, motor.getPower(), motor.getPosition(), motor.getPidTarget(),
+                    motor.getEncoderRawPosition());
             }
 
             if (launcher != null)

@@ -111,6 +111,7 @@ public class FtcTest extends FtcTeleOp
     private boolean steerCalibrating = false;
     private boolean teleOpControlEnabled = true;
     private boolean fpsMeterEnabled = false;
+    private String tuneSubsystemName = Shooter.Params.TILT_MOTOR_NAME;
     // Vision Test.
     private Vision.ArtifactType testVisionArtifactType = Vision.ArtifactType.Any;
 
@@ -902,8 +903,52 @@ public class FtcTest extends FtcTeleOp
             case Y:
             case LeftBumper:
             case RightBumper:
+                break;
+
             case DpadUp:
+                if (testChoices.test == Test.SUBSYSTEMS_TEST && tuneSubsystemName != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.shooter != null)
+                        {
+                            if (robot.shooter.panMotor != null &&
+                                tuneSubsystemName.equals(Shooter.Params.PAN_MOTOR_NAME))
+                            {
+                                robot.shooter.panMotor.presetPositionUp(moduleName, Shooter.Params.PAN_POWER_LIMIT);
+                            }
+                            else if (robot.shooter.tiltMotor != null &&
+                                     tuneSubsystemName.equals(Shooter.Params.TILT_MOTOR_NAME))
+                            {
+                                robot.shooter.tiltMotor.presetPositionUp(moduleName, Shooter.Params.TILT_POWER_LIMIT);
+                            }
+                        }
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case DpadDown:
+                if (testChoices.test == Test.SUBSYSTEMS_TEST && tuneSubsystemName != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.shooter != null)
+                        {
+                            if (robot.shooter.panMotor != null &&
+                                tuneSubsystemName.equals(Shooter.Params.PAN_MOTOR_NAME))
+                            {
+                                robot.shooter.panMotor.presetPositionDown(moduleName, Shooter.Params.PAN_POWER_LIMIT);
+                            }
+                            else if (robot.shooter.tiltMotor != null &&
+                                     tuneSubsystemName.equals(Shooter.Params.TILT_MOTOR_NAME))
+                            {
+                                robot.shooter.tiltMotor.presetPositionDown(moduleName, Shooter.Params.TILT_POWER_LIMIT);
+                            }
+                        }
+                    }
+                    passToTeleOp = false;
+                }
                 break;
 
             case DpadLeft:
