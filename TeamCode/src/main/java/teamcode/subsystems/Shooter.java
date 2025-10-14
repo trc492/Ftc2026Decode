@@ -87,7 +87,7 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR2_PID_KD          = 0.0;
         public static final double SHOOT_MOTOR2_PID_KF          = 0.008;
 
-        public static final double SHOOT_PID_TOLERANCE          = 1.0;      // in RPS (60 RPM)
+        public static final double SHOOT_PID_TOLERANCE_RPM      = 60.0;
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
 
@@ -142,7 +142,7 @@ public class Shooter extends TrcSubsystem
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 50.0;
-        public static final double TILT_POS_PRESET_TOLERANCE    = 5.0;
+        public static final double TILT_POS_PRESET_TOLERANCE    = 2.0;
         public static final double[] TILT_POS_PRESETS           =
             {TILT_MIN_POS, 30.0, 35.0, 40.0, 45.0, TILT_MAX_POS};
 
@@ -154,9 +154,9 @@ public class Shooter extends TrcSubsystem
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
-        public static final boolean LAUNCHER_SERVO_INVERTED     = false;
-        public static double LAUNCHER_REST_POS                  = 0.45;
-        public static double LAUNCHER_LAUNCH_POS                = 0.8;
+        public static final boolean LAUNCHER_SERVO_INVERTED     = true;
+        public static double LAUNCHER_REST_POS                  = 0.415;
+        public static double LAUNCHER_LAUNCH_POS                = 0.7;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.5;  // in seconds
     }   //class Params
 
@@ -164,12 +164,12 @@ public class Shooter extends TrcSubsystem
         .setPidCoefficients(
             Params.SHOOT_MOTOR1_PID_KP, Params.SHOOT_MOTOR1_PID_KI, Params.SHOOT_MOTOR1_PID_KD,
             Params.SHOOT_MOTOR1_PID_KF)
-        .setPidParams(Params.SHOOT_PID_TOLERANCE, Params.SHOOT_SOFTWARE_PID_ENABLED);
+        .setPidParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.TuneParams shootMotor2PidParams = new TrcMotor.TuneParams()
         .setPidCoefficients(
             Params.SHOOT_MOTOR2_PID_KP, Params.SHOOT_MOTOR2_PID_KI, Params.SHOOT_MOTOR2_PID_KD,
             Params.SHOOT_MOTOR2_PID_KF)
-        .setPidParams(Params.SHOOT_PID_TOLERANCE, Params.SHOOT_SOFTWARE_PID_ENABLED);
+        .setPidParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.TuneParams panMotorPidParams = new TrcMotor.TuneParams()
         .setPidCoefficients(
             Params.PAN_MOTOR_PID_KP, Params.PAN_MOTOR_PID_KI, Params.PAN_MOTOR_PID_KD)
@@ -236,7 +236,7 @@ public class Shooter extends TrcSubsystem
         TrcMotor motor = shooter.getShooterMotor1();
         motor.setPositionSensorScaleAndOffset(Params.SHOOT_MOTOR_REV_PER_COUNT, 0.0);
         motor.setVelocityPidParameters(
-            shootMotor1PidParams.pidCoeffs, shootMotor1PidParams.pidTolerance/60.0,
+            shootMotor1PidParams.pidCoeffs, shootMotor1PidParams.pidTolerance,
             shootMotor1PidParams.useSoftwarePid, null);
 
         motor = shooter.getShooterMotor2();
@@ -246,7 +246,7 @@ public class Shooter extends TrcSubsystem
             // If it needs to, this allows different PID coefficients for motor2 in case they are not quite identical.
             motor.setPositionSensorScaleAndOffset(Params.SHOOT_MOTOR_REV_PER_COUNT, 0.0);
             motor.setVelocityPidParameters(
-                shootMotor1PidParams.pidCoeffs, shootMotor2PidParams.pidTolerance/60.0,
+                shootMotor1PidParams.pidCoeffs, shootMotor2PidParams.pidTolerance,
                 shootMotor2PidParams.useSoftwarePid, null);
         }
 

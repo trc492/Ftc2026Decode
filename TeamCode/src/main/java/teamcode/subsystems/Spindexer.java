@@ -68,11 +68,11 @@ public class Spindexer extends TrcSubsystem
         public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
-        public static final double POS_OFFSET                   = 0.0;
+        public static final double POS_OFFSET                   = 15.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
-        public static final double MOTOR_PID_KP                 = 0.025;
+        public static final double MOTOR_PID_KP                 = 0.0265;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
         public static final double POS_PID_TOLERANCE            = 1.0;
@@ -129,6 +129,7 @@ public class Spindexer extends TrcSubsystem
     private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
     private double entrySensorDistance = 10.0;
     private double entrySensorHue = 0.0;
+    private TrcEvent zeroCalEvent = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -654,7 +655,25 @@ public class Spindexer extends TrcSubsystem
     @Override
     public void zeroCalibrate(String owner, TrcEvent event)
     {
-        spindexer.zeroCalibrate(owner, Params.ZERO_CAL_POWER, event);
+        zeroCalEvent = event;
+        TrcEvent calCompletionEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".zeroCal");
+        calCompletionEvent.setCallback(
+            (ctxt, canceled) ->
+            {
+                if (!canceled)
+                {
+                    // After zero calibration, move the Spindexer to entry slot 0.
+                    spindexer.motor.setPosition(
+                        owner, 0.0, Params.entryPresetPositions[0], true, Params.MOVE_POWER, null, 0.0);
+                    if (zeroCalEvent != null) zeroCalEvent.signal();
+                }
+                else if (zeroCalEvent != null)
+                {
+                    zeroCalEvent.cancel();
+                }
+                zeroCalEvent = null;
+            }, null);
+        spindexer.zeroCalibrate(owner, Params.ZERO_CAL_POWER, calCompletionEvent);
         entrySlot = 0;
         exitSlot = null;
     }   //zeroCalibrate
