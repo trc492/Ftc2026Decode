@@ -24,7 +24,10 @@ package teamcode;
 
 import android.annotation.SuppressLint;
 
+import com.qualcomm.robotcore.hardware.LED;
+
 import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.LEDIndicator;
 import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase.DriveOrientation;
 import trclib.driverio.TrcGameController.DriveMode;
@@ -122,6 +125,13 @@ public class RobotParams
             new TrcPose2D(0.0, 0.0, 0.0),   // TagId 3
             new TrcPose2D(0.0, 0.0, 0.0)    // TagId 4
         };
+        public static final int[] obeliskAprilTags = new int[] {21, 22, 23};
+        public static final String[][] motifPatterns = new String[][]
+            {
+                {LEDIndicator.GREEN_BLOB, LEDIndicator.PURPLE_BLOB, LEDIndicator.PURPLE_BLOB},
+                {LEDIndicator.PURPLE_BLOB, LEDIndicator.GREEN_BLOB, LEDIndicator.PURPLE_BLOB},
+                {LEDIndicator.PURPLE_BLOB, LEDIndicator.PURPLE_BLOB, LEDIndicator.GREEN_BLOB}
+            };
         // Robot start locations.
         // Game elapsed times.
         public static final double AUTO_PERIOD                      = 30.0;     // 30 seconds auto period

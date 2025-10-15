@@ -83,6 +83,7 @@ public class Robot
     // Autotasks.
     public TaskAutoPickup autoPickupTask;
     public TaskAutoShoot autoShootTask;
+    public String[] motif = null;
 
     /**
      * Constructor: Create an instance of the object.

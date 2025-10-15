@@ -435,12 +435,12 @@ public class Vision
      * This method calls Limelight vision to detect the object.
      *
      * @param resultType specifies the result type to look for.
-     * @param label specifies the detected object label, can be null to match any label.
+     * @param matchIds specifies the object ID(s) to match for, null if no matching required.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, String label, int lineNum)
+        FtcLimelightVision.ResultType resultType, Object matchIds, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
 
@@ -450,7 +450,7 @@ public class Vision
             int pipelineIndex = -1;
             Double robotHeading = robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): null;
 
-            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, label, robotHeading, null);
+            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, null);
             if (limelightInfo != null)
             {
                 pipelineIndex = limelightVision.getPipeline();

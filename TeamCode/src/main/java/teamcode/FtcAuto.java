@@ -33,6 +33,7 @@ import ftclib.driverio.FtcMatchInfo;
 import ftclib.driverio.FtcMenu;
 import ftclib.driverio.FtcValueMenu;
 import ftclib.robotcore.FtcOpMode;
+import ftclib.vision.FtcLimelightVision;
 import teamcode.autocommands.CmdDecodeAuto;
 import teamcode.vision.Vision;
 import trclib.command.CmdPidDrive;
@@ -41,6 +42,7 @@ import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcRobot;
 import trclib.timer.TrcTimer;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class contains the Autonomous Mode program.
@@ -232,9 +234,16 @@ public class FtcAuto extends FtcOpMode
     public void initPeriodic()
     {
         // Detect Obelisk AprilTag.
-//        if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
-//        {
-//        }
+        if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
+        {
+            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> detectedAprilTag =
+                robot.vision.getLimelightDetectedObject(
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, -1);
+            if (detectedAprilTag != null)
+            {
+                robot.motif = RobotParams.Game.motifPatterns[(int)detectedAprilTag.detectedObj.objId - 21];
+            }
+        }
     }   //initPeriodic
 
     /**
