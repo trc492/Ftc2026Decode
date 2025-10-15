@@ -358,6 +358,20 @@ public class Robot
      */
     public void setRobotStartPosition(FtcAuto.AutoChoices autoChoices)
     {
+        TrcPose2D START_POS;
+        if (autoChoices.startPos == FtcAuto.StartPos.LOAD_ZONE)
+        {
+            START_POS = RobotParams.Game.STARTPOS_BLUE_LOAD_ZONE;
+        }
+        else if (autoChoices.startPos == FtcAuto.StartPos.LAUNCH_ZONE)
+        {
+            START_POS = RobotParams.Game.STARTPOS_BLUE_LAUNCH_ZONE;
+        }
+        else
+        {
+            START_POS = RobotParams.Game.STARTPOS_BLUE_GOAL;
+        }
+        robotDrive.driveBase.setFieldPosition(adjustPoseByAlliance(START_POS, autoChoices.alliance, false));
     }   //setRobotStartPosition
 
     /**

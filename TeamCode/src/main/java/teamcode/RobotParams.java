@@ -24,8 +24,6 @@ package teamcode;
 
 import android.annotation.SuppressLint;
 
-import com.qualcomm.robotcore.hardware.LED;
-
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.LEDIndicator;
 import trclib.dataprocessor.TrcUtil;
@@ -133,6 +131,20 @@ public class RobotParams
                 {LEDIndicator.PURPLE_BLOB, LEDIndicator.PURPLE_BLOB, LEDIndicator.GREEN_BLOB}
             };
         // Robot start locations.
+        public static final TrcPose2D STARTPOS_BLUE_LOAD_ZONE = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D STARTPOS_BLUE_LAUNCH_ZONE = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D STARTPOS_BLUE_GOAL = new TrcPose2D(0.0, 0.0, 0.0);
+
+        public static final TrcPose2D BLUE_PRELOAD_LAUNCH_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D BLUE_PRELOAD_GOAL_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D BLUE_SPIKEMARK_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
+
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_1 = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_2 = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_3 = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D[] BLUE_SPIKEMARK_POS = {BLUE_SPIKEMARK_PICKUP_POS_1, BLUE_SPIKEMARK_PICKUP_POS_2, BLUE_SPIKEMARK_PICKUP_POS_3};
+
+        public static final TrcPose2D BLUE_PARK_POS = new TrcPose2D(0.0, 0.0, 0.0);
         // Game elapsed times.
         public static final double AUTO_PERIOD                      = 30.0;     // 30 seconds auto period
         public static final double TELEOP_PERIOD                    = 120.0;    // 2 minutes teleop period

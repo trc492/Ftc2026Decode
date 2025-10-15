@@ -24,6 +24,8 @@ package teamcode.autocommands;
 
 import teamcode.FtcAuto;
 import teamcode.Robot;
+import teamcode.RobotParams;
+import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
@@ -39,6 +41,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private enum State
     {
         START,
+        SCORE_PRELOAD,
+        PICKUP_SPIKEMARK,
+        FIND_MOTIF,
+        SHOOT_SPIKEMARK,
+        PARK,
         DONE
     }   //enum State
 
@@ -47,6 +54,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private final TrcTimer timer;
     private final TrcEvent event;
     private final TrcStateMachine<State> sm;
+
+    private int currentSpikeMarkCount = 0;
+    private int targetSpikeMarkCount = 0;
 
     /**
      * Constructor: Create an instance of the object.
@@ -114,18 +124,81 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case START:
                     // Set robot location according to auto choices.
                     robot.setRobotStartPosition(autoChoices);
+                    targetSpikeMarkCount = (int) autoChoices.spikemarkCount;
                     // Do delay if necessary.
                     if (autoChoices.delay > 0.0)
                     {
                         robot.globalTracer.traceInfo(moduleName, "***** Do delay " + autoChoices.delay + "s.");
                         timer.set(autoChoices.delay, event);
-                        sm.waitForSingleEvent(event, State.DONE);
+                        sm.waitForSingleEvent(event, State.SCORE_PRELOAD);
                     }
                     else
                     {
-                        sm.setState(State.DONE);
+                        sm.setState(State.SCORE_PRELOAD);
                     }
                     break;
+
+                case SCORE_PRELOAD:
+                    TrcPose2D PRELOAD_SHOOT_POS = robot.adjustPoseByAlliance(autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ?
+                            RobotParams.Game.BLUE_PRELOAD_GOAL_SHOOT_POS :
+                            RobotParams.Game.BLUE_PRELOAD_LAUNCH_SHOOT_POS, autoChoices.alliance);
+                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
+                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                            PRELOAD_SHOOT_POS);
+                    robot.autoShootTask.autoShoot(null, event, true, autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20: 24);
+                    sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+                    break;
+
+                case PICKUP_SPIKEMARK:
+                    int[] order = (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE) ?
+                            new int[]{0, 1, 2} : new int[]{2, 1, 0};
+                    if (currentSpikeMarkCount < targetSpikeMarkCount)
+                    {
+                        int index = order[currentSpikeMarkCount];
+                        TrcPose2D targetPose = robot.adjustPoseByAlliance(RobotParams.Game.BLUE_SPIKEMARK_POS[index], autoChoices.alliance);
+                        robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
+                                robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                                targetPose);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        robot.robotDrive.purePursuitDrive.start(event, 0.0, true,
+                                robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                                new TrcPose2D(0.0, 20.0, 0.0)); // TODO: tune
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        currentSpikeMarkCount++;
+                        sm.waitForSingleEvent(event, State.SHOOT_SPIKEMARK);
+                    }
+                    else
+                    {
+                        sm.setState(autoChoices.parkOption == FtcAuto.ParkOption.PARK ? State.PARK : State.DONE);
+                    }
+                    break;
+
+                case FIND_MOTIF:
+                    // TODO: Add code to check for motif
+                    break;
+
+                case SHOOT_SPIKEMARK:
+                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
+                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(RobotParams.Game.BLUE_SPIKEMARK_SHOOT_POS, autoChoices.alliance));
+                    robot.autoShootTask.autoShoot(null, event, true, autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20 : 24);
+                    sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+
+                case PARK:
+                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
+                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(RobotParams.Game.BLUE_PARK_POS, autoChoices.alliance));
+                    sm.waitForSingleEvent(event, State.DONE);
 
                 case DONE:
                 default:
