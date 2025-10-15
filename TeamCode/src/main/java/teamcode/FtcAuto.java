@@ -80,14 +80,6 @@ public class FtcAuto extends FtcOpMode
         BOTH
     }   //enum PickupOption
 
-    public enum SpikemarkCount
-    {
-        NONE,
-        ONE,
-        TWO,
-        THREE
-    }   //enum SpikemarkCount
-
     public enum ParkOption
     {
         PARK,
@@ -103,11 +95,11 @@ public class FtcAuto extends FtcOpMode
         public double shootDelay1 = 0.0;
         public double shootDelay2 = 0.0;
         public double shootDelay3 = 0.0;
+        public double spikemarkCount = 0.0;
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
         public PickupOption pickupOption = PickupOption.SPIKEMARK;
-        public SpikemarkCount spikemarkCount = SpikemarkCount.NONE;
         public ParkOption parkOption = ParkOption.PARK;
         public double xTarget = 0.0;
         public double yTarget = 0.0;
@@ -128,8 +120,8 @@ public class FtcAuto extends FtcOpMode
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
-                "scorePreload=\"%s\" " +
-                "pickupOption=\"%s\" " +
+                "pickupOption=\"%s\" +" +
+                "spikemarkCount=\"%s\" " +
                 "parkOption=\"%s\" " +
                 "xTarget=%.1f " +
                 "yTarget=%.1f " +
@@ -359,7 +351,7 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
         FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
-        FtcChoiceMenu<SpikemarkCount> spikemarkCountMenu = new FtcChoiceMenu<>("Spikemark Count:", pickupOptionMenu);
+        FtcValueMenu spikemarkCountMenu = new FtcValueMenu("Spikemark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 2.0, " %.0f spikemarks");
         FtcValueMenu shootDelay1Menu = new FtcValueMenu("First Shoot delay time:", spikemarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay2Menu = new FtcValueMenu("Second Shoot delay time:", shootDelay1Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay3Menu = new FtcValueMenu("Third Shoot delay time:", shootDelay2Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
@@ -404,11 +396,6 @@ public class FtcAuto extends FtcOpMode
         pickupOptionMenu.addChoice("Loading", PickupOption.LOADING, false, parkOptionMenu);
         pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikemarkCountMenu);
 
-        spikemarkCountMenu.addChoice("None", SpikemarkCount.NONE, true, shootDelay1Menu);
-        spikemarkCountMenu.addChoice("One", SpikemarkCount.ONE, false, shootDelay1Menu);
-        spikemarkCountMenu.addChoice("Two", SpikemarkCount.TWO, false, shootDelay1Menu);
-        spikemarkCountMenu.addChoice("Three", SpikemarkCount.THREE, false, shootDelay1Menu);
-
         parkOptionMenu.addChoice("Park", ParkOption.PARK, true);
         parkOptionMenu.addChoice("No Park", ParkOption.NO_PARK, false);
         //
@@ -426,7 +413,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
         autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
-        autoChoices.spikemarkCount = spikemarkCountMenu.getCurrentChoiceObject();
+        autoChoices.spikemarkCount = spikemarkCountMenu.getCurrentValue();
         autoChoices.parkOption = parkOptionMenu.getCurrentChoiceObject();
         autoChoices.xTarget = xTargetMenu.getCurrentValue();
         autoChoices.yTarget = yTargetMenu.getCurrentValue();
