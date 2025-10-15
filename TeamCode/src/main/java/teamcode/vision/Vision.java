@@ -852,7 +852,7 @@ public class Vision
                     robot.dashboard.putString(
                         "Blob" + i,
                         String.format(
-                            Locale.US, "%d %s(%4.1f/%4.1f=%4.1f, angle=%.3f)",
+                            Locale.US, "%d %s(%.1f/%.1f=%.1f, angle=%.1f)",
                             count, artifactType, blob.objPixelWidth, blob.objPixelHeight, getAspectRatio(blob),
                             blob.objRotatedRectAngle));
 
