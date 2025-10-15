@@ -160,7 +160,8 @@ public class Vision
     private static final int CLASSIFIER_ROI_TOP = 0;
     private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
     private static final int CLASSIFIER_ROI_BOTTOM = 90;
-    private static final double ONE_BALL_THRESHOLD = 2.5;
+    private static final double RECT_ANGLE_THRESHOLD = 3.0;
+    private static final double ONE_BALL_THRESHOLD = 3.0;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
     private static final double THREE_BALL_THRESHOLD = 3 * ONE_BALL_THRESHOLD;
     private static final double FOUR_BALL_THRESHOLD = 4 * ONE_BALL_THRESHOLD;
@@ -851,8 +852,9 @@ public class Vision
                     robot.dashboard.putString(
                         "Blob" + i,
                         String.format(
-                            Locale.US, "%d %s(%4.1f/%4.1f = %4.1f)",
-                            count, artifactType, blob.objPixelWidth, blob.objPixelHeight, getAspectRatio(blob)));
+                            Locale.US, "%d %s(%4.1f/%4.1f=%4.1f, angle=%.3f)",
+                            count, artifactType, blob.objPixelWidth, blob.objPixelHeight, getAspectRatio(blob),
+                            blob.objRotatedRectAngle));
 
                     for (int j = 0; j < count; j++)
                     {
@@ -911,8 +913,11 @@ public class Vision
      */
     private int getArtifactCount(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blob)
     {
+        double blobRectAngle = Math.abs(blob.objRotatedRectAngle) % 180.0;
+        if (blobRectAngle > 90.0) blobRectAngle = Math.abs(180.0 - blobRectAngle);
+        boolean firstSingleBall = blobRectAngle < RECT_ANGLE_THRESHOLD;
         double aspectRatio = getAspectRatio(blob);
-        return aspectRatio <= ONE_BALL_THRESHOLD ? 1 :
+        return firstSingleBall || aspectRatio <= ONE_BALL_THRESHOLD? 1:
                aspectRatio <= TWO_BALL_THRESHOLD ? 2 :
                aspectRatio <= THREE_BALL_THRESHOLD ? 3 :
                aspectRatio <= FOUR_BALL_THRESHOLD ? 4 :
