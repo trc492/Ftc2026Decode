@@ -191,6 +191,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.adjustPoseByAlliance(RobotParams.Game.BLUE_SPIKEMARK_SHOOT_POS, autoChoices.alliance));
                     robot.autoShootTask.autoShoot(null, event, true, autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20 : 24);
                     sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+                    break;
 
                 case PARK:
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
@@ -199,6 +200,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(RobotParams.Game.BLUE_PARK_POS, autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.DONE);
+                    break;
 
                 case DONE:
                 default:
