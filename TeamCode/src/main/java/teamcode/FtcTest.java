@@ -798,14 +798,14 @@ public class FtcTest extends FtcTeleOp
                         {
                             if (robot.autoPickupTask.isActive())
                             {
-                                robot.autoPickupTask.cancel();
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Intake");
+                                robot.autoPickupTask.cancel();
                             }
                             else
                             {
-                                robot.autoPickupTask.autoPickup(moduleName, null, !operatorAltFunc);
                                 robot.globalTracer.traceInfo(
                                     moduleName, ">>>>> Auto Intake (useVision=" + !operatorAltFunc + ")");
+                                robot.autoPickupTask.autoPickup(moduleName, null, !operatorAltFunc);
                             }
                         }
                         else
@@ -814,26 +814,26 @@ public class FtcTest extends FtcTeleOp
                             {
                                 if (robot.intake.isActive())
                                 {
-                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                                     robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                                 }
                                 else
                                 {
-                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
                                     robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
                                 }
                             }
                             else
                             {
                                 if (robot.intake.isAutoActive())
                                 {
-                                    robot.intake.cancel();
                                     robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Sensor Intake");
+                                    robot.intake.cancel();
                                 }
                                 else
                                 {
-                                    robot.intake.autoIntake(moduleName);
                                     robot.globalTracer.traceInfo(moduleName, ">>>>> Sensor Intake");
+                                    robot.intake.autoIntake(moduleName);
                                 }
                             }
                         }
@@ -852,13 +852,13 @@ public class FtcTest extends FtcTeleOp
                             // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
                             if (robot.autoShootTask.isActive())
                             {
-                                robot.autoShootTask.cancel();
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                                robot.autoShootTask.cancel();
                             }
                             else
                             {
-                                robot.autoShootTask.autoShoot(moduleName, null, !operatorAltFunc, (int[]) null);
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                                robot.autoShootTask.autoShoot(moduleName, null, !operatorAltFunc, (int[]) null);
                             }
                         }
                         else
@@ -866,16 +866,16 @@ public class FtcTest extends FtcTeleOp
                             // Auto Shoot Task is disabled, shoot manually.
                             if (robot.shooter.isActive())
                             {
-                                robot.shooter.cancel(moduleName);
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
+                                robot.shooter.cancel(moduleName);
                             }
                             else
                             {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
                                 robot.shooter.aimShooter(
                                     moduleName, Dashboard.SubsystemShooter.shootMotor1Velocity / 60.0, 0.0,
                                     null, null, null, 0.0, robot.shooterSubsystem::shoot,
                                     Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
                             }
                         }
                     }

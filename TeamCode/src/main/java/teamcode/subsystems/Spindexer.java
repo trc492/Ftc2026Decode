@@ -72,10 +72,10 @@ public class Spindexer extends TrcSubsystem
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
-        public static final double MOTOR_PID_KP                 = 0.0265;
+        public static final double MOTOR_PID_KP                 = 0.03;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
-        public static final double POS_PID_TOLERANCE            = 1.0;
+        public static final double POS_PID_TOLERANCE            = 3.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
@@ -495,7 +495,8 @@ public class Spindexer extends TrcSubsystem
     {
         Integer slot = findSlot(null, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
 
-        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot);
+        spindexer.tracer.traceInfo(
+            instanceName, "moveToNextVacantSlot: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         if (slot != null)
         {
             double pos = warpSpace.getOptimizedTarget(
@@ -515,6 +516,9 @@ public class Spindexer extends TrcSubsystem
      */
     private void spinCompletionCallback(Object context, boolean canceled)
     {
+        spindexer.tracer.traceInfo(
+            instanceName,
+            "spinCompletionCallback(autoReceive=" + autoReceivedEnabled + ", canceled=" + canceled + ")");
         if (!canceled)
         {
             if (autoReceivedEnabled)
@@ -538,7 +542,8 @@ public class Spindexer extends TrcSubsystem
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
         spindexer.tracer.traceInfo(
-            instanceName, "FromSlot=" + exitSlot + ", ToSlot=" + slot + ", artifactType=" + artifactType);
+            instanceName,
+            "MoveToExitSlot: FromSlot=" + exitSlot + ", ToSlot=" + slot + ", artifactType=" + artifactType);
         if (slot != null)
         {
             double pos = warpSpace.getOptimizedTarget(
@@ -560,7 +565,8 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
-        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
+        spindexer.tracer.traceInfo(
+            instanceName, "EntrySlotUp: FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         entrySlot = slot;
     }   //entrySlotUp
@@ -578,7 +584,8 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
 
-        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
+        spindexer.tracer.traceInfo(
+            instanceName, "EntrySlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         entrySlot = slot;
     }   //entrySlotDown
@@ -595,7 +602,8 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
-        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + exitSlot + ", ToSlot=" + slot + ", pos=" + pos);
+        spindexer.tracer.traceInfo(
+            instanceName, "ExitSlotUp: FromSlot=" + exitSlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         exitSlot = slot;
     }   //exitSlotUp
@@ -613,7 +621,8 @@ public class Spindexer extends TrcSubsystem
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
 
-        spindexer.tracer.traceInfo(instanceName, "FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
+        spindexer.tracer.traceInfo(
+            instanceName, "ExitSlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot + ", pos=" + pos);
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
         exitSlot = slot;
     }   //exitSlotDown
@@ -625,6 +634,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void setAutoReceiveEnabled(boolean enabled)
     {
+        spindexer.tracer.traceInfo(instanceName, "setAutoReceiveEnabled(enable=" + enabled + ")");
         autoReceivedEnabled = enabled;
         spindexer.setEntryTriggerEnabled(enabled);
         if (!enabled)

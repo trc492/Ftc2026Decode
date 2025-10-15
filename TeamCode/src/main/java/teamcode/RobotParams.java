@@ -24,8 +24,6 @@ package teamcode;
 
 import android.annotation.SuppressLint;
 
-import com.qualcomm.robotcore.hardware.LED;
-
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.LEDIndicator;
 import trclib.dataprocessor.TrcUtil;
@@ -57,19 +55,19 @@ public class RobotParams
         public static final boolean updateDashboard             = !inCompetition;
         public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
-        public static final boolean showVision                  = robotType == BaseDrive.RobotType.VisionOnly;
+        public static final boolean showVision                  = false;
         public static final boolean showSubsystems              = true;
         public static final boolean useRumble                   = false;
         // Vision
-        public static final boolean useVision                   = robotType == BaseDrive.RobotType.VisionOnly;
+        public static final boolean useVision                   = true;
         public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
         public static final boolean useLimelightVision          = true;
-        public static final boolean streamToDashboard           = true;
         public static final boolean useWebcamAprilTagVision     = false;
         public static final boolean useArtifactVision           = true;
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
+        public static final boolean streamToDashboard           = !inCompetition;
         public static final boolean showVisionView              = !inCompetition;
         public static final boolean showVisionStat              = true;
         // Drive Base
