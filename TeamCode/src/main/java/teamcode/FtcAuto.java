@@ -234,7 +234,7 @@ public class FtcAuto extends FtcOpMode
             if (detectedAprilTag != null)
             {
                 robot.obeliskAprilTagId = (int) detectedAprilTag.detectedObj.objId;
-                robot.motif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
+                robot.obeliskMotif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
             }
         }
     }   //initPeriodic
@@ -261,7 +261,8 @@ public class FtcAuto extends FtcOpMode
             robot.globalTracer.logInfo(moduleName, "MatchInfo", Robot.matchInfo.toString());
         }
         robot.globalTracer.logInfo(moduleName, "AutoChoices", autoChoices.toString());
-        robot.globalTracer.traceInfo(moduleName, "Obelisk AprilTag %d: %s", robot.obeliskAprilTagId, robot.motif);
+        robot.globalTracer.traceInfo(
+            moduleName, "Obelisk AprilTag %d: %s", robot.obeliskAprilTagId, robot.obeliskMotif);
         robot.dashboard.clearDisplay();
         //
         // Tell robot object opmode is about to start so it can do the necessary start initialization for the mode.

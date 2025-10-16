@@ -231,7 +231,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 }
                 else
                 {
-                    tracer.traceInfo(moduleName, "***** Using AprilTag Vision but Vision is not enabled.");
+                    tracer.traceWarn(moduleName, "***** Using Vision but Vision is not enabled.");
                     sm.setState(State.DONE);
                 }
                 break;
@@ -264,41 +264,15 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     }
                 }
 
-                if (taskParams.useClassifierVision && robot.motif != null && motifSequence == null)
+                if (taskParams.useClassifierVision && robot.obeliskMotif != null && motifSequence == null)
                 {
-                    Vision.ArtifactType[] classifierArtifacts =
-                        robot.vision.getClassifierArtifacts(taskParams.alliance);
-                    if (classifierArtifacts != null)
-                    {
-                        int noneIndex = -1;
-                        for (int i = 0; i < classifierArtifacts.length; i++)
-                        {
-                            if (classifierArtifacts[i] == Vision.ArtifactType.None)
-                            {
-                                tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
-                                noneIndex = i % robot.motif.length;
-                                break;
-                            }
-                        }
-
-                        if (noneIndex != -1)
-                        {
-                            motifSequence = new Vision.ArtifactType[3];
-                            for (int i = 0; i < motifSequence.length; i++)
-                            {
-                                motifSequence[i] = robot.motif[noneIndex];
-                                noneIndex = (noneIndex + 1) % robot.motif.length;
-                            }
-                            motifIndex = 0;
-                            tracer.traceInfo(
-                                moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
-                        }
-                    }
+                    motifSequence = robot.vision.getMotifSequence(taskParams.alliance, robot.obeliskMotif);
                 }
 
                 if (aprilTagPose != null &&
-                    (!taskParams.useClassifierVision || robot.motif == null || motifSequence != null))
+                    (!taskParams.useClassifierVision || robot.obeliskMotif == null || motifSequence != null))
                 {
+                    motifIndex = 0;
                     sm.setState(State.AIM);
                 }
                 else if (visionExpiredTime == null)

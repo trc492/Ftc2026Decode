@@ -84,7 +84,7 @@ public class Robot
     public TaskAutoPickup autoPickupTask;
     public TaskAutoShoot autoShootTask;
     public int obeliskAprilTagId = 0;
-    public Vision.ArtifactType[] motif = null;
+    public Vision.ArtifactType[] obeliskMotif = null;
 
     /**
      * Constructor: Create an instance of the object.
