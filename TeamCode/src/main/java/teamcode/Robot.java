@@ -83,7 +83,8 @@ public class Robot
     // Autotasks.
     public TaskAutoPickup autoPickupTask;
     public TaskAutoShoot autoShootTask;
-    public String[] motif = null;
+    public int obeliskAprilTagId = 0;
+    public Vision.ArtifactType[] motif = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -358,20 +359,12 @@ public class Robot
      */
     public void setRobotStartPosition(FtcAuto.AutoChoices autoChoices)
     {
-        TrcPose2D START_POS;
-        if (autoChoices.startPos == FtcAuto.StartPos.LOAD_ZONE)
-        {
-            START_POS = RobotParams.Game.STARTPOS_BLUE_LOAD_ZONE;
-        }
-        else if (autoChoices.startPos == FtcAuto.StartPos.LAUNCH_ZONE)
-        {
-            START_POS = RobotParams.Game.STARTPOS_BLUE_LAUNCH_ZONE;
-        }
-        else
-        {
-            START_POS = RobotParams.Game.STARTPOS_BLUE_GOAL;
-        }
-        robotDrive.driveBase.setFieldPosition(adjustPoseByAlliance(START_POS, autoChoices.alliance, false));
+        TrcPose2D startPose = adjustPoseByAlliance(
+            autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? RobotParams.Game.STARTPOSE_RED_GOAL_ZONE:
+            autoChoices.startPos == FtcAuto.StartPos.LOAD_CENTER? RobotParams.Game.STARTPOSE_RED_LOAD_CENTER:
+                RobotParams.Game.STARTPOSE_RED_LOAD_CORNER,
+            autoChoices.alliance, false);
+        robotDrive.driveBase.setFieldPosition(startPose);
     }   //setRobotStartPosition
 
     /**
@@ -394,14 +387,16 @@ public class Robot
             // Translate blue alliance pose to red alliance pose.
             if (RobotParams.Game.fieldIsMirrored)
             {
-                // Mirrored field.
+                // Field is mirrored on X axis.
+                // Same X, Flip Y. Heading left becomes right and right becomes left.
                 double angleDelta = (newPose.angle - 90.0)*2.0;
                 newPose.angle -= angleDelta;
                 newPose.y = -newPose.y;
             }
             else
             {
-                // Symmetrical field.
+                // Field is symmetrical.
+                // Flip X, Flip Y. Heading flips 180-degree.
                 newPose.x = -newPose.x;
                 newPose.y = -newPose.y;
                 newPose.angle = (newPose.angle + 180.0) % 360.0;

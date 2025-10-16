@@ -135,10 +135,10 @@ public class Shooter extends TrcSubsystem
         public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
-        public static final double TILT_GEAR_RATIO              = 181.0/28.0;
+        public static final double TILT_GEAR_RATIO              = 543.0/56.0;
         public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
-        public static final double TILT_POS_OFFSET              = 25.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.231212;
+        public static final double TILT_POS_OFFSET              = 27.0;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.232121;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 50.0;

@@ -241,7 +241,7 @@ public class Spindexer extends TrcSubsystem
                 robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
             }
 
-            moveToNextVacantEntrySlot(instanceName);
+            moveToNextVacantEntrySlot(instanceName, null);
         }
         else
         {
@@ -475,7 +475,8 @@ public class Spindexer extends TrcSubsystem
         {
             int slot = (startSlot + i)%slotStates.length;
 
-            if (slotStates[slot] == artifactType)
+            if (slotStates[slot] == artifactType ||
+                artifactType == Vision.ArtifactType.Any && slotStates[slot] != Vision.ArtifactType.None)
             {
                 return slot;
             }
@@ -490,8 +491,9 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void moveToNextVacantEntrySlot(String owner)
+    public void moveToNextVacantEntrySlot(String owner, TrcEvent event)
     {
         Integer slot = findSlot(null, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
 
@@ -502,7 +504,7 @@ public class Spindexer extends TrcSubsystem
             double pos = warpSpace.getOptimizedTarget(
                 Params.entryPresetPositions[slot], spindexer.motor.getPosition());
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".callbackEvent");
-            callbackEvent.setCallback(this::spinCompletionCallback, null);
+            callbackEvent.setCallback(this::spinCompletionCallback, event);
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, callbackEvent, 0.0);
             entrySlot = slot;
         }
@@ -516,6 +518,8 @@ public class Spindexer extends TrcSubsystem
      */
     private void spinCompletionCallback(Object context, boolean canceled)
     {
+        TrcEvent event = (TrcEvent) context;
+
         spindexer.tracer.traceInfo(
             instanceName,
             "spinCompletionCallback(autoReceive=" + autoReceivedEnabled + ", canceled=" + canceled + ")");
@@ -527,6 +531,15 @@ public class Spindexer extends TrcSubsystem
                 // re-enable entry trigger.
                 spindexer.setEntryTriggerEnabled(true);
             }
+
+            if (event != null)
+            {
+                event.signal();
+            }
+        }
+        else if (event != null)
+        {
+            event.cancel();
         }
     }   //spinCompletionCallback
 
@@ -536,8 +549,10 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param artifactType specifies the artifact type to look for.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void moveToExitSlotWithArtifact(String owner, Vision.ArtifactType artifactType)
+    public void moveToExitSlotWithArtifact(String owner, Vision.ArtifactType artifactType, TrcEvent event)
     {
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
@@ -548,7 +563,7 @@ public class Spindexer extends TrcSubsystem
         {
             double pos = warpSpace.getOptimizedTarget(
                 Params.exitPresetPositions[slot], spindexer.motor.getPosition());
-            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, null, 0.0);
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
             exitSlot = slot;
         }
     }   //moveToExitSlotWithArtifact

@@ -858,7 +858,8 @@ public class FtcTest extends FtcTeleOp
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
-                                robot.autoShootTask.autoShoot(moduleName, null, !operatorAltFunc, (int[]) null);
+                                robot.autoShootTask.autoShoot(
+                                    moduleName, null, null, !operatorAltFunc, false, 1, (int[]) null);
                             }
                         }
                         else

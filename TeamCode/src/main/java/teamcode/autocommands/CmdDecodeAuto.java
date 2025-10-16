@@ -41,7 +41,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private enum State
     {
         START,
-        SCORE_PRELOAD,
+        GOTO_PRELOAD_SHOOT_POS,
+        SHOOT_PRELOAD,
         PICKUP_SPIKEMARK,
         FIND_MOTIF,
         SHOOT_SPIKEMARK,
@@ -124,30 +125,39 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case START:
                     // Set robot location according to auto choices.
                     robot.setRobotStartPosition(autoChoices);
-                    targetSpikeMarkCount = (int) autoChoices.spikemarkCount;
+                    targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     // Do delay if necessary.
-                    if (autoChoices.delay > 0.0)
+                    if (autoChoices.startDelay > 0.0)
                     {
-                        robot.globalTracer.traceInfo(moduleName, "***** Do delay " + autoChoices.delay + "s.");
-                        timer.set(autoChoices.delay, event);
-                        sm.waitForSingleEvent(event, State.SCORE_PRELOAD);
+                        robot.globalTracer.traceInfo(
+                            moduleName, "***** Do Start Delay " + autoChoices.startDelay + "s.");
+                        timer.set(autoChoices.startDelay, event);
+                        sm.waitForSingleEvent(event, State.GOTO_PRELOAD_SHOOT_POS);
                     }
                     else
                     {
-                        sm.setState(State.SCORE_PRELOAD);
+                        sm.setState(State.GOTO_PRELOAD_SHOOT_POS);
                     }
                     break;
 
-                case SCORE_PRELOAD:
-                    TrcPose2D PRELOAD_SHOOT_POS = robot.adjustPoseByAlliance(autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ?
-                            RobotParams.Game.BLUE_PRELOAD_GOAL_SHOOT_POS :
-                            RobotParams.Game.BLUE_PRELOAD_LAUNCH_SHOOT_POS, autoChoices.alliance);
-                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
-                            PRELOAD_SHOOT_POS);
-                    robot.autoShootTask.autoShoot(null, event, true, autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20: 24);
+                case GOTO_PRELOAD_SHOOT_POS:
+                    robot.robotDrive.purePursuitDrive.start(
+                        event, 0.0, false,
+                        robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(
+                            autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ?
+                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE :
+                                RobotParams.Game.RED_PRELOAD_LAUNCH_SHOOT_POSE,
+                            autoChoices.alliance));
+                    sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
+                    break;
+
+                case SHOOT_PRELOAD:
+                    robot.autoShootTask.autoShoot(
+                        null, event, autoChoices.alliance, true, true, 3,
+                        autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20: 24);
                     sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     break;
 
@@ -157,7 +167,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (currentSpikeMarkCount < targetSpikeMarkCount)
                     {
                         int index = order[currentSpikeMarkCount];
-                        TrcPose2D targetPose = robot.adjustPoseByAlliance(RobotParams.Game.BLUE_SPIKEMARK_POS[index], autoChoices.alliance);
+                        TrcPose2D targetPose = robot.adjustPoseByAlliance(
+                            RobotParams.Game.RED_SPIKEMARK_POS[index], autoChoices.alliance);
                         robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                                 robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
                                 robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
@@ -188,8 +199,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
                             robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(RobotParams.Game.BLUE_SPIKEMARK_SHOOT_POS, autoChoices.alliance));
-                    robot.autoShootTask.autoShoot(null, event, true, autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20 : 24);
+                            robot.adjustPoseByAlliance(
+                                RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE, autoChoices.alliance));
+                    robot.autoShootTask.autoShoot(
+                        null, event, autoChoices.alliance, true, true, 3,
+                        autoChoices.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? 20 : 24);
                     sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     break;
 
@@ -198,7 +212,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
                             robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(RobotParams.Game.BLUE_PARK_POS, autoChoices.alliance));
+                            robot.adjustPoseByAlliance(RobotParams.Game.RED_PARK_POSE, autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.DONE);
                     break;
 

@@ -26,6 +26,7 @@ import android.annotation.SuppressLint;
 
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.LEDIndicator;
+import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase.DriveOrientation;
 import trclib.driverio.TrcGameController.DriveMode;
@@ -123,28 +124,32 @@ public class RobotParams
             new TrcPose2D(0.0, 0.0, 0.0),   // TagId 3
             new TrcPose2D(0.0, 0.0, 0.0)    // TagId 4
         };
-        public static final int[] obeliskAprilTags = new int[] {21, 22, 23};
-        public static final String[][] motifPatterns = new String[][]
+        public static final int[] obeliskAprilTags              = new int[] {21, 22, 23};
+        public static final Vision.ArtifactType[][] motifPatterns =
+            new Vision.ArtifactType[][]
             {
-                {LEDIndicator.GREEN_BLOB, LEDIndicator.PURPLE_BLOB, LEDIndicator.PURPLE_BLOB},
-                {LEDIndicator.PURPLE_BLOB, LEDIndicator.GREEN_BLOB, LEDIndicator.PURPLE_BLOB},
-                {LEDIndicator.PURPLE_BLOB, LEDIndicator.PURPLE_BLOB, LEDIndicator.GREEN_BLOB}
+                {Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple},    // AprilTag 21
+                {Vision.ArtifactType.Purple, Vision.ArtifactType.Green, Vision.ArtifactType.Purple},    // AprilTag 22
+                {Vision.ArtifactType.Purple, Vision.ArtifactType.Purple, Vision.ArtifactType.Green}     // AprilTag 23
             };
         // Robot start locations.
-        public static final TrcPose2D STARTPOS_BLUE_LOAD_ZONE = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D STARTPOS_BLUE_LAUNCH_ZONE = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D STARTPOS_BLUE_GOAL = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE =
+            new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER =
+            new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER =
+            new TrcPose2D(0.0, 0.0, 0.0);
 
-        public static final TrcPose2D BLUE_PRELOAD_LAUNCH_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D BLUE_PRELOAD_GOAL_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D BLUE_SPIKEMARK_SHOOT_POS = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_PRELOAD_LAUNCH_SHOOT_POSE = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE      = new TrcPose2D(0.0, 0.0, 0.0);
 
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_1 = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_2 = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POS_3 = new TrcPose2D(0.0, 0.0, 0.0);
-        public static final TrcPose2D[] BLUE_SPIKEMARK_POS = {BLUE_SPIKEMARK_PICKUP_POS_1, BLUE_SPIKEMARK_PICKUP_POS_2, BLUE_SPIKEMARK_PICKUP_POS_3};
-
-        public static final TrcPose2D BLUE_PARK_POS = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2   = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3   = new TrcPose2D(0.0, 0.0, 0.0);
+        public static final TrcPose2D[] RED_SPIKEMARK_POS = {
+            RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
+        public static final TrcPose2D RED_PARK_POSE                 = new TrcPose2D(0.0, 0.0, 0.0);
         // Game elapsed times.
         public static final double AUTO_PERIOD                      = 30.0;     // 30 seconds auto period
         public static final double TELEOP_PERIOD                    = 120.0;    // 2 minutes teleop period

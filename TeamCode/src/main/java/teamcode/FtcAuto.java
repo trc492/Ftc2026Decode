@@ -61,8 +61,8 @@ public class FtcAuto extends FtcOpMode
     public enum StartPos
     {
         GOAL_ZONE,
-        LOAD_ZONE,
-        LAUNCH_ZONE
+        LOAD_CENTER,
+        LOAD_CORNER
     }   //enum StartPos
 
     public enum AutoStrategy
@@ -75,8 +75,8 @@ public class FtcAuto extends FtcOpMode
 
     public enum PickupOption
     {
-        SPIKEMARK,
-        LOADING,
+        SPIKEMARKS,
+        LOADING_ZONE,
         BOTH
     }   //enum PickupOption
 
@@ -91,15 +91,15 @@ public class FtcAuto extends FtcOpMode
      */
     public static class AutoChoices
     {
-        public double delay = 0.0;
-        public double shootDelay1 = 0.0;
-        public double shootDelay2 = 0.0;
-        public double shootDelay3 = 0.0;
-        public double spikemarkCount = 0.0;
+        public double startDelay = 0.0;
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
-        public PickupOption pickupOption = PickupOption.SPIKEMARK;
+        public PickupOption pickupOption = PickupOption.SPIKEMARKS;
+        public double spikeMarkCount = 0.0;
+        public double shootDelay1 = 0.0;
+        public double shootDelay2 = 0.0;
+        public double shootDelay3 = 0.0;
         public ParkOption parkOption = ParkOption.PARK;
         public double xTarget = 0.0;
         public double yTarget = 0.0;
@@ -113,22 +113,23 @@ public class FtcAuto extends FtcOpMode
         {
             return String.format(
                 Locale.US,
-                "delay=%.0f " +
-                "shootDelay1=%.0f " +
-                "shootDelay2=%.0f " +
-                "shootDelay3=%.0f " +
+                "startDelay=%.0f " +
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
                 "pickupOption=\"%s\" +" +
-                "spikemarkCount=\"%s\" " +
+                "spikeMarkCount=\"%s\" " +
+                "shootDelay1=%.0f " +
+                "shootDelay2=%.0f " +
+                "shootDelay3=%.0f " +
                 "parkOption=\"%s\" " +
                 "xTarget=%.1f " +
                 "yTarget=%.1f " +
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                delay, shootDelay1, shootDelay2, shootDelay3, alliance, startPos, strategy, pickupOption, spikemarkCount, parkOption,
+                startDelay, alliance, startPos, strategy, pickupOption, spikeMarkCount,
+                shootDelay1, shootDelay2, shootDelay3, parkOption,
                 xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
 
@@ -190,7 +191,7 @@ public class FtcAuto extends FtcOpMode
                 if (robot.robotDrive != null)
                 {
                     autoCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, autoChoices.delay, autoChoices.driveTime,
+                        robot.robotDrive.driveBase, autoChoices.startDelay, autoChoices.driveTime,
                         0.0, autoChoices.drivePower, 0.0);
                 }
                 break;
@@ -232,7 +233,8 @@ public class FtcAuto extends FtcOpMode
                     FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {
-                robot.motif = RobotParams.Game.motifPatterns[(int)detectedAprilTag.detectedObj.objId - 21];
+                robot.obeliskAprilTagId = (int) detectedAprilTag.detectedObj.objId;
+                robot.motif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
             }
         }
     }   //initPeriodic
@@ -259,6 +261,7 @@ public class FtcAuto extends FtcOpMode
             robot.globalTracer.logInfo(moduleName, "MatchInfo", Robot.matchInfo.toString());
         }
         robot.globalTracer.logInfo(moduleName, "AutoChoices", autoChoices.toString());
+        robot.globalTracer.traceInfo(moduleName, "Obelisk AprilTag %d: %s", robot.obeliskAprilTagId, robot.motif);
         robot.dashboard.clearDisplay();
         //
         // Tell robot object opmode is about to start so it can do the necessary start initialization for the mode.
@@ -273,7 +276,7 @@ public class FtcAuto extends FtcOpMode
         if (autoChoices.strategy == AutoStrategy.PID_DRIVE && autoCommand != null)
         {
             ((CmdPidDrive) autoCommand).start(
-                autoChoices.delay, autoChoices.drivePower, null,
+                autoChoices.startDelay, autoChoices.drivePower, null,
                 new TrcPose2D(autoChoices.xTarget*12.0, autoChoices.yTarget*12.0, autoChoices.turnTarget));
         }
     }   //startMode
@@ -346,30 +349,34 @@ public class FtcAuto extends FtcOpMode
         //
         // Construct menus.
         //
-        FtcValueMenu delayMenu = new FtcValueMenu("Delay time:", null, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
-        FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", delayMenu);
+        FtcValueMenu startDelayMenu = new FtcValueMenu("Start delay:", null, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
+        FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", startDelayMenu);
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
         FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
-        FtcValueMenu spikemarkCountMenu = new FtcValueMenu("Spikemark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 2.0, " %.0f spikemarks");
-        FtcValueMenu shootDelay1Menu = new FtcValueMenu("First Shoot delay time:", spikemarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
-        FtcValueMenu shootDelay2Menu = new FtcValueMenu("Second Shoot delay time:", shootDelay1Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
-        FtcValueMenu shootDelay3Menu = new FtcValueMenu("Third Shoot delay time:", shootDelay2Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
-        FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", shootDelay3Menu);
+        FtcValueMenu spikeMarkCountMenu =
+            new FtcValueMenu("SpikeMark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 2.0, " %.0f");
+        FtcValueMenu shootDelay1Menu =
+            new FtcValueMenu("First Shoot delay:", spikeMarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
+        FtcValueMenu shootDelay2Menu =
+            new FtcValueMenu("Second Shoot delay:", shootDelay1Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
+        FtcValueMenu shootDelay3Menu =
+            new FtcValueMenu("Third Shoot delay time:", shootDelay2Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
+        FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", pickupOptionMenu);
 
-        FtcValueMenu xTargetMenu = new FtcValueMenu(
-            "xTarget:", strategyMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
-        FtcValueMenu yTargetMenu = new FtcValueMenu(
-            "yTarget:", xTargetMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
-        FtcValueMenu turnTargetMenu = new FtcValueMenu(
-            "turnTarget:", yTargetMenu, -180.0, 180.0, 5.0, 90.0, " %.0f deg");
-        FtcValueMenu driveTimeMenu = new FtcValueMenu(
-            "Drive time:", strategyMenu, 0.0, 30.0, 1.0, 5.0, " %.0f sec");
-        FtcValueMenu drivePowerMenu = new FtcValueMenu(
-            "Drive power:", strategyMenu, -1.0, 1.0, 0.1, 0.5, " %.1f");
+        FtcValueMenu xTargetMenu =
+            new FtcValueMenu("xTarget:", strategyMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
+        FtcValueMenu yTargetMenu =
+            new FtcValueMenu("yTarget:", xTargetMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
+        FtcValueMenu turnTargetMenu =
+            new FtcValueMenu("turnTarget:", yTargetMenu, -180.0, 180.0, 5.0, 90.0, " %.0f deg");
+        FtcValueMenu driveTimeMenu =
+            new FtcValueMenu("Drive time:", strategyMenu, 0.0, 30.0, 1.0, 5.0, " %.0f sec");
+        FtcValueMenu drivePowerMenu =
+            new FtcValueMenu("Drive power:", strategyMenu, -1.0, 1.0, 0.1, 0.5, " %.1f");
 
         // Link Value Menus to their children.
-        delayMenu.setChildMenu(allianceMenu);
+        startDelayMenu.setChildMenu(allianceMenu);
         shootDelay1Menu.setChildMenu(shootDelay2Menu);
         shootDelay2Menu.setChildMenu(shootDelay3Menu);
         shootDelay3Menu.setChildMenu(parkOptionMenu);
@@ -384,36 +391,36 @@ public class FtcAuto extends FtcOpMode
         allianceMenu.addChoice("Blue", Alliance.BLUE_ALLIANCE, false, startPosMenu);
 
         startPosMenu.addChoice("Start Position Goal Zone", StartPos.GOAL_ZONE, true, strategyMenu);
-        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOAD_ZONE, false, strategyMenu);
-        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LAUNCH_ZONE, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOAD_CENTER, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOAD_CORNER, false, strategyMenu);
 
-        strategyMenu.addChoice("Full Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
+        strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
 
-        pickupOptionMenu.addChoice("Spikemark", PickupOption.SPIKEMARK, true, spikemarkCountMenu);
-        pickupOptionMenu.addChoice("Loading", PickupOption.LOADING, false, parkOptionMenu);
-        pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikemarkCountMenu);
+        pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
+        pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
+        pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikeMarkCountMenu);
 
         parkOptionMenu.addChoice("Park", ParkOption.PARK, true);
         parkOptionMenu.addChoice("No Park", ParkOption.NO_PARK, false);
         //
         // Traverse menus.
         //
-        FtcMenu.walkMenuTree(delayMenu);
+        FtcMenu.walkMenuTree(startDelayMenu);
         //
         // Fetch choices.
         //
-        autoChoices.delay = delayMenu.getCurrentValue();
-        autoChoices.shootDelay1 = shootDelay1Menu.getCurrentValue();
-        autoChoices.shootDelay2 = shootDelay2Menu.getCurrentValue();
-        autoChoices.shootDelay3 = shootDelay3Menu.getCurrentValue();
+        autoChoices.startDelay = startDelayMenu.getCurrentValue();
         autoChoices.alliance = allianceMenu.getCurrentChoiceObject();
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
         autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
-        autoChoices.spikemarkCount = spikemarkCountMenu.getCurrentValue();
+        autoChoices.spikeMarkCount = spikeMarkCountMenu.getCurrentValue();
+        autoChoices.shootDelay1 = shootDelay1Menu.getCurrentValue();
+        autoChoices.shootDelay2 = shootDelay2Menu.getCurrentValue();
+        autoChoices.shootDelay3 = shootDelay3Menu.getCurrentValue();
         autoChoices.parkOption = parkOptionMenu.getCurrentChoiceObject();
         autoChoices.xTarget = xTargetMenu.getCurrentValue();
         autoChoices.yTarget = yTargetMenu.getCurrentValue();
