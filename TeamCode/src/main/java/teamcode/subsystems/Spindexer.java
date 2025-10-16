@@ -328,6 +328,19 @@ public class Spindexer extends TrcSubsystem
     }   //updateExpectedArtifactType
 
     /**
+     * This method returns the number of artifacts with the specified type in the Spindexer.
+     *
+     * @return number of artifacts with the specified type in Spindexer.
+     */
+    public int getNumArtifacts(Vision.ArtifactType artifactType)
+    {
+        return artifactType == Vision.ArtifactType.Purple? numPurpleArtifacts:
+               artifactType == Vision.ArtifactType.Green? numGreenArtifacts:
+               artifactType == Vision.ArtifactType.Any? numPurpleArtifacts + numGreenArtifacts:
+                   3 - (numPurpleArtifacts + numGreenArtifacts);
+    }   //getNumArtifacts
+
+    /**
      * This method is called by the entry sensor trigger to monitor the sensor value for triggering condition.
      *
      * @return entry sensor value.

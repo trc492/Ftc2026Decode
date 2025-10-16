@@ -313,21 +313,41 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         owner, shooterVel / 60.0, 0.0, null, null, event, 0.0, null, 0.0);
                 }
 
-                spindexerEvent.clear();
-                sm.addEvent(spindexerEvent);
-                if (motifSequence != null)
+                Vision.ArtifactType motifArtifactType = motifSequence != null? motifSequence[motifIndex++]: null;
+                Vision.ArtifactType artifactType;
+                if (motifArtifactType != null)
                 {
-                    Vision.ArtifactType artifactType = motifSequence[motifIndex++];
-                    if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent))
+                    artifactType = motifArtifactType;
+                    if (robot.spindexerSubsystem.getNumArtifacts(artifactType) == 0)
                     {
-                        tracer.traceInfo(moduleName, "***** No %s artifact found, quit!", artifactType);
-                        nextState = State.DONE;
+                        tracer.traceInfo(moduleName, "***** %s motif artifact not in Spindexer.", artifactType);
+                        // Pick another artifact type to shoot. Ideally not the same type as the next motif sequence.
+                        artifactType = motifIndex == motifSequence.length ? Vision.ArtifactType.Any :
+                            motifSequence[motifIndex] == Vision.ArtifactType.Green ?
+                                Vision.ArtifactType.Purple : Vision.ArtifactType.Green;
+                        if (robot.spindexerSubsystem.getNumArtifacts(artifactType) == 0 &&
+                            robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) == 0)
+                        {
+                            tracer.traceInfo(moduleName, "***** Spindexer is empty, quit.");
+                            artifactType = null;
+                        }
                     }
                 }
-                else if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(
-                            owner, Vision.ArtifactType.Any, spindexerEvent))
+                else
                 {
-                    tracer.traceInfo(moduleName, "***** Spindexer is empty, quit!");
+                    artifactType = Vision.ArtifactType.Any;
+                }
+
+                if (artifactType != null)
+                {
+                    tracer.traceInfo(
+                        moduleName, "***** Shooting %s artifact (MotifArtifact=%s).", artifactType, motifArtifactType);
+                    spindexerEvent.clear();
+                    sm.addEvent(spindexerEvent);
+                    robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent);
+                }
+                else
+                {
                     nextState = State.DONE;
                 }
                 sm.waitForEvents(nextState, false, true);
