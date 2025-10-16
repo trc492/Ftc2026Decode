@@ -492,10 +492,13 @@ public class Spindexer extends TrcSubsystem
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
      * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
+     * @return true if vacant slot found and spindexder spinned, false if no movement.
      */
-    public void moveToNextVacantEntrySlot(String owner, TrcEvent event)
+    public boolean moveToNextVacantEntrySlot(String owner, TrcEvent event)
     {
-        Integer slot = findSlot(null, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
+        boolean success = false;
+        Integer slot = findSlot(
+            Vision.ArtifactType.None, entrySlot != null? entrySlot: (exitSlot + 1)%slotStates.length);
 
         spindexer.tracer.traceInfo(
             instanceName, "moveToNextVacantSlot: FromSlot=" + entrySlot + ", ToSlot=" + slot);
@@ -507,7 +510,10 @@ public class Spindexer extends TrcSubsystem
             callbackEvent.setCallback(this::spinCompletionCallback, event);
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, callbackEvent, 0.0);
             entrySlot = slot;
+            success = true;
         }
+
+        return success;
     }   //moveToNextVacantEntrySlot
 
     /**
@@ -551,9 +557,11 @@ public class Spindexer extends TrcSubsystem
      *        ownership aware.
      * @param artifactType specifies the artifact type to look for.
      * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
+     * @return true if slot found and spindexder spinned, false if no movement.
      */
-    public void moveToExitSlotWithArtifact(String owner, Vision.ArtifactType artifactType, TrcEvent event)
+    public boolean moveToExitSlotWithArtifact(String owner, Vision.ArtifactType artifactType, TrcEvent event)
     {
+        boolean success = false;
         Integer slot = findSlot(artifactType, exitSlot != null? exitSlot: (entrySlot + 1)%slotStates.length);
 
         spindexer.tracer.traceInfo(
@@ -565,7 +573,10 @@ public class Spindexer extends TrcSubsystem
                 Params.exitPresetPositions[slot], spindexer.motor.getPosition());
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
             exitSlot = slot;
+            success = true;
         }
+
+        return success;
     }   //moveToExitSlotWithArtifact
 
     /**

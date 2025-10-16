@@ -294,6 +294,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 break;
 
             case AIM:
+                State nextState = State.SHOOT;
                 event.clear();
                 sm.addEvent(event);
                 if (shootParams != null)
@@ -316,14 +317,20 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 sm.addEvent(spindexerEvent);
                 if (motifSequence != null)
                 {
-                    robot.spindexerSubsystem.moveToExitSlotWithArtifact(
-                        owner, motifSequence[motifIndex++], spindexerEvent);
+                    Vision.ArtifactType artifactType = motifSequence[motifIndex++];
+                    if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent))
+                    {
+                        tracer.traceInfo(moduleName, "***** No %s artifact found, quit!", artifactType);
+                        nextState = State.DONE;
+                    }
                 }
-                else
+                else if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(
+                            owner, Vision.ArtifactType.Any, spindexerEvent))
                 {
-                    robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, Vision.ArtifactType.Any, spindexerEvent);
+                    tracer.traceInfo(moduleName, "***** Spindexer is empty, quit!");
+                    nextState = State.DONE;
                 }
-                sm.waitForEvents(State.SHOOT, false, true);
+                sm.waitForEvents(nextState, false, true);
                 break;
 
             case SHOOT:
