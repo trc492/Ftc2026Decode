@@ -96,7 +96,7 @@ public class Vision
     public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
-        .setCameraPose(135.47*TrcUtil.INCHES_PER_METER, 2.073, 10.758, -3.438, 0.0, 0.0);
+        .setCameraPose(0.0, 0.0, 16.0, 0.0, 18.0, 0.0);
 
     public enum ArtifactType
     {
@@ -481,7 +481,7 @@ public class Vision
             if (lineNum != -1)
             {
                 robot.dashboard.displayPrintf(
-                    lineNum, "%s(%d): %s",
+                    lineNum, "%s(pipeline=%d): %s",
                     objectName, pipelineIndex, limelightInfo != null? limelightInfo: "Not found.");
             }
         }
