@@ -33,7 +33,6 @@ import teamcode.Robot;
 import teamcode.subsystems.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
-import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
@@ -257,10 +256,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         }
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
-                        double aprilTagDistance = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
-                        shootParams = Shooter.Params.shootParamTable.get(aprilTagDistance, false);
+                        shootParams = Shooter.Params.shootParamTable.get(aprilTagInfo.detectedObj.targetDepth, false);
                         tracer.traceInfo(
-                            moduleName, "***** ShootParams: distance=" + aprilTagDistance + ", params=" + shootParams);
+                            moduleName,
+                            "***** ShootParams: distance=" + aprilTagInfo.detectedObj.targetDepth +
+                            ", params=" + shootParams);
                     }
                 }
 
