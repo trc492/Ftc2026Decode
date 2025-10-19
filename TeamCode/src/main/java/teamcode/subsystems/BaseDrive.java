@@ -303,8 +303,20 @@ public class BaseDrive extends TrcSubsystem
                     {
                         dashboard.putNumber(motor.getName() + ".Velocity", motor.getVelocity());
                         dashboard.putNumber(motor.getName() + ".TargetVel", motor.getPidTarget());
-                        dashboard.putNumber(motor.getName() + ".MaxVel", robotInfo.tuneParams.driveMotorMaxVelocity);
-                        dashboard.putNumber(motor.getName() + ".MinVel", 0.0);
+                    }
+                    dashboard.putNumber("DriveMotorMaxVel", robotInfo.tuneParams.driveMotorMaxVelocity);
+                    dashboard.putNumber("DriveMotorMinVel", 0.0);
+
+                    if (robotDrive instanceof FtcSwerveDrive)
+                    {
+                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
+                        for (TrcMotor motor : swerveDrive.steerMotors)
+                        {
+                            dashboard.putNumber(motor.getName() + ".Angle", motor.getPosition()%360.0);
+                            dashboard.putNumber(motor.getName() + ".TargetAngle", motor.getPidTarget()%360.0);
+                        }
+                        dashboard.putNumber("SteerMinAngle", -360.0);
+                        dashboard.putNumber("SteerMaxAngle", 360.0);
                     }
                 }
             }

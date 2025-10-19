@@ -53,7 +53,7 @@ public class Shooter extends TrcSubsystem
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Shooter";
-        public static final boolean NEED_ZERO_CAL               = false;
+        public static final boolean NEED_ZERO_CAL               = true;
 
         public static final boolean HAS_TWO_SHOOTER_MOTORS      = false;
         public static final boolean HAS_PAN_MOTOR               = true;
@@ -107,7 +107,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
-        public static final double PAN_POS_OFFSET               = 0.0;
+        public static final double PAN_POS_OFFSET               = 180.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -135.0;
@@ -116,7 +116,7 @@ public class Shooter extends TrcSubsystem
         public static final double[] PAN_POS_PRESETS            =
             {PAN_MIN_POS, -90.0, -45.0, 0.0, 45.0, 90.0, PAN_MAX_POS};
 
-        public static final double PAN_ZERO_CAL_POWER           = -0.2;
+        public static final double PAN_ZERO_CAL_POWER           = 0.3;
         public static final double PAN_STALL_MIN_POWER          = Math.abs(PAN_ZERO_CAL_POWER);
         public static final double PAN_STALL_TOLERANCE          = 0.1;
         public static final double PAN_STALL_TIMEOUT            = 0.1;
@@ -156,8 +156,8 @@ public class Shooter extends TrcSubsystem
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.415;
-        public static double LAUNCHER_LAUNCH_POS                = 0.7;
-        public static double LAUNCHER_LAUNCH_DURATION           = 0.5;  // in seconds
+        public static double LAUNCHER_LAUNCH_POS                = 0.75;
+        public static double LAUNCHER_LAUNCH_DURATION           = 1.0;  // in seconds
     }   //class Params
 
     public static final TrcMotor.TuneParams shootMotor1PidParams = new TrcMotor.TuneParams()
@@ -282,6 +282,7 @@ public class Shooter extends TrcSubsystem
             FtcServoActuator.Params launcherParams = new FtcServoActuator.Params()
                 .setPrimaryServo(Params.LAUNCHER_SERVO_NAME, Params.LAUNCHER_SERVO_INVERTED);
             launcher = new FtcServoActuator(launcherParams).getServo();
+            launcher.setPosition(Params.LAUNCHER_REST_POS);
         }
         else
         {
@@ -446,15 +447,32 @@ public class Shooter extends TrcSubsystem
      * This method starts zero calibrate of the subsystem.
      *
      * @param owner specifies the owner ID to to claim subsystem ownership, can be null if ownership not required.
-     * @param event specifies an event to signal when zero calibration is done, can be null if not provided.
+     * @param completionEvent specifies an event to signal when zero calibration is done, can be null if not provided.
      */
     @Override
-    public void zeroCalibrate(String owner, TrcEvent event)
+    public void zeroCalibrate(String owner, TrcEvent completionEvent)
     {
         // Shooter does not need zero calibration.
         // Tilter has absolute encoder and therefore no need for zero calibration.
         // Zero calibrate turret (pan).
-        shooter.panMotor.zeroCalibrate(owner, Params.PAN_ZERO_CAL_POWER, event);
+        TrcEvent callbackEvent = new TrcEvent(Params.PAN_MOTOR_NAME + ".callbackEvent");
+        callbackEvent.setCallback(
+            (ctxt, canceled) -> {
+                TrcEvent event = (TrcEvent) ctxt;
+                if (!canceled)
+                {
+                    shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                    if (event !=  null)
+                    {
+                        event.signal();
+                    }
+                }
+                else if (event != null)
+                {
+                    event.cancel();
+                }
+            }, completionEvent);
+        shooter.panMotor.zeroCalibrate(owner, Params.PAN_ZERO_CAL_POWER, callbackEvent);
     }   //zeroCalibrate
 
     /**

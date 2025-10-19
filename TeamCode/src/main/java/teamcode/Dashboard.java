@@ -24,6 +24,7 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import ftclib.drivebase.FtcSwerveDrive;
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
@@ -45,6 +46,7 @@ public class Dashboard
     public static class SubsystemDrivebase
     {
         public static TrcDriveBase.TuneParams robotDrive = BaseDrive.DecodeInfo.tuneParams;
+        public static FtcSwerveDrive.SwerveTuneParams swerveParams = FtcSwerveDrive.swerveTuneParams;
     }   //class SubsystemDrivebase
 
     @Config

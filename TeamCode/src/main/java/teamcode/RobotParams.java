@@ -56,7 +56,7 @@ public class RobotParams
         public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
         public static final boolean showVision                  = false;
-        public static final boolean showSubsystems              = false;
+        public static final boolean showSubsystems              = true;
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
@@ -68,7 +68,7 @@ public class RobotParams
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
         public static final boolean streamToDashboard           = !inCompetition;
-        public static final boolean showVisionView              = !inCompetition;
+        public static final boolean showVisionView              = false;
         public static final boolean showVisionStat              = true;
         // Drive Base
         public static final boolean useDriveBase                = robotType == BaseDrive.RobotType.DecodeRobot;

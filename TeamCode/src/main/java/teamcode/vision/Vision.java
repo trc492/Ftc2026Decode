@@ -78,7 +78,7 @@ public class Vision
     // Front camera properties
     public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
         .setCameraInfo("Webcam 1", 320, 240)
-        .setCameraPose(0.0, 0.0, 16.0, 0.0, -19.0, 0.0)
+        .setCameraPose(0.0, 8.75, 11.0, 0.0, 0.0, 0.0)
         .setLensProperties(lifeCamHD3000At640x480)
         .setHomographyParams(
             new TrcHomographyMapper.Rectangle(
