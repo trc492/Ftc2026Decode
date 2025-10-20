@@ -127,7 +127,7 @@ public class BaseDrive extends TrcSubsystem
                     FtcMotorActuator.MotorType.CRServo,
                     new String[] {"flSteerServo", "frSteerServo", "blSteerServo", "brSteerServo"},
                     new boolean[] {false, false, false, false})
-                .setSteerMotorPidParams(new TrcPidController.PidCoefficients(0.008, 0.0, 0.0002, 0.0, 0.0), 1.0)
+                .setSteerMotorPidParams(new TrcPidController.PidCoefficients(0.006, 0.0, 0.0002, 0.0, 0.0), 1.0)
                 .setSwerveModuleNames(new String[] {"flWheel", "frWheel", "blWheel", "brWheel"});
         }   //DecodeInfo
     }   //class DecodeInfo

@@ -156,8 +156,8 @@ public class Shooter extends TrcSubsystem
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.415;
-        public static double LAUNCHER_LAUNCH_POS                = 0.75;
-        public static double LAUNCHER_LAUNCH_DURATION           = 1.0;  // in seconds
+        public static double LAUNCHER_LAUNCH_POS                = 1.0;
+        public static double LAUNCHER_LAUNCH_DURATION           = 0.75;  // in seconds
     }   //class Params
 
     public static final TrcMotor.TuneParams shootMotor1PidParams = new TrcMotor.TuneParams()
