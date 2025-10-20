@@ -375,25 +375,18 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case RightBumper:
-                if (!driverAltFunc)
+                // Press and hold for slow drive.
+                if (pressed)
                 {
-                    // Press and hold for slow drive.
-                    if (pressed)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
-                        drivePowerScale = RobotParams.Robot.DRIVE_SLOW_SCALE;
-                        turnPowerScale = RobotParams.Robot.TURN_SLOW_SCALE;
-                    }
-                    else
-                    {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
-                        drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
-                        turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
-                    }
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
+                    drivePowerScale = RobotParams.Robot.DRIVE_SLOW_SCALE;
+                    turnPowerScale = RobotParams.Robot.TURN_SLOW_SCALE;
                 }
-                else if (pressed)
+                else
                 {
-                    Dashboard.setUpdateDashboardEnabled(!Dashboard.isDashboardUpdateEnabled());
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
+                    drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
+                    turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
                 }
                 break;
 
@@ -501,6 +494,17 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case RightBumper:
+                if (operatorAltFunc)
+                {
+                    if (pressed)
+                    {
+                        boolean enabled = !Dashboard.isDashboardUpdateEnabled();
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
+                        Dashboard.setUpdateDashboardEnabled(enabled);
+                    }
+                }
+                break;
+
             case DpadUp:
             case DpadDown:
             case DpadLeft:

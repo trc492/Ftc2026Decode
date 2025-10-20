@@ -24,12 +24,12 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import ftclib.drivebase.FtcSwerveDrive;
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
+import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.sensor.TrcTriggerThresholdRange;
@@ -43,21 +43,28 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
 public class Dashboard
 {
     @Config
-    public static class SubsystemDrivebase
+    public static class DashboardParams
     {
-        public static TrcDriveBase.TuneParams robotDrive = BaseDrive.DecodeInfo.tuneParams;
-        public static FtcSwerveDrive.SwerveTuneParams swerveParams = FtcSwerveDrive.swerveTuneParams;
-    }   //class SubsystemDrivebase
+        public static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
+        public static String tuneSubsystemName = "";
+    }   //class DashboardParams
 
     @Config
-    public static class SubsystemVision
+    public static class Subsystem_Drivebase
+    {
+        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
+        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
+    }   //class Subsystem_Drivebase
+
+    @Config
+    public static class Subsystem_Vision
     {
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
-    }   //class SubsystemVision
+    }   //class Subsystem_Vision
 
     @Config
-    public static class SubsystemShooter
+    public static class Subsystem_Shooter
     {
         public static TrcMotor.TuneParams shootMotor1Pid = Shooter.shootMotor1PidParams;
         public static double shootMotor1Velocity = 5000.0;    // in RPM
@@ -65,17 +72,16 @@ public class Dashboard
         public static TrcMotor.TuneParams panMotorPid = Shooter.panMotorPidParams;
         public static TrcMotor.TuneParams tiltMotorPid = Shooter.tiltMotorPidParams;
         public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
-    }   //class SubsystemShooter
+    }   //class Subsystem_Shooter
 
     @Config
-    public static class SubsystemSpindexer
+    public static class Subsystem_Spindexer
     {
         public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
         public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
-    }   //class SubsystemSpindexer
+    }   //class Subsystem_Spindexer
 
-    private static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
     private static Double nextDashboardUpdateTime =  null;
 
     /**
@@ -85,7 +91,7 @@ public class Dashboard
      */
     public static void setUpdateDashboardEnabled(boolean enabled)
     {
-        updateDashboardEnabled = enabled;
+        DashboardParams.updateDashboardEnabled = enabled;
     }   //setUpdateDashboardEnabled
 
     /**
@@ -95,7 +101,7 @@ public class Dashboard
      */
     public static boolean isDashboardUpdateEnabled()
     {
-        return updateDashboardEnabled;
+        return DashboardParams.updateDashboardEnabled;
     }   //isDashboardUpdateEnabled
 
     /**
@@ -112,7 +118,7 @@ public class Dashboard
         double currTime = TrcTimer.getCurrentTime();
         boolean slowLoop = nextDashboardUpdateTime == null || currTime >= nextDashboardUpdateTime;
 
-        if (updateDashboardEnabled)
+        if (DashboardParams.updateDashboardEnabled)
         {
             if (slowLoop)
             {

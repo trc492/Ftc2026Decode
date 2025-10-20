@@ -32,6 +32,7 @@ import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
+import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
@@ -90,8 +91,10 @@ public class BaseDrive extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.032, 0.1, 0.0025, 0.0, 5.0);
         private static final TrcPidController.PidCoefficients velPidCoeffs =
             new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0125, 0.0);
+        private static final TrcPidController.PidCoefficients steerPidCoeffs =
+            new TrcPidController.PidCoefficients(0.006, 0.0, 0.0002, 0.0, 0.0);
 
-        public static TrcDriveBase.TuneParams tuneParams = new TrcDriveBase.TuneParams()
+        public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
             .setDriveMotorVelocityControl(
                 DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(1.0, 1.0)
@@ -100,10 +103,12 @@ public class BaseDrive extends TrcSubsystem
             .setTurnPidParams(turnPidCoeffs, 0.5)
             .setVelocityPidParams(velPidCoeffs)
             .setDriveCharacteristics(80.0, 350.0, 300.0, 80.0);
+        public static TrcSwerveDriveBase.SwerveParams swerveParams = new TrcSwerveDriveBase.SwerveParams()
+            .setSteerPidParams(steerPidCoeffs, 1.0);
 
         public DecodeInfo()
         {
-            this.setTuneParams(tuneParams)
+            this.setBaseParams(baseParams)
                 .setRobotInfo(
                     "DecodeRobot", RobotParams.Robot.ROBOT_LENGTH, RobotParams.Robot.ROBOT_WIDTH,
                     336.0*TrcUtil.INCHES_PER_MM, 336.0*TrcUtil.INCHES_PER_MM)
@@ -118,7 +123,8 @@ public class BaseDrive extends TrcSubsystem
                 .setIndicators(
                     LEDIndicator.STATUS_LED_NAME, LEDIndicator.SPINDEXER1_LED_NAME, LEDIndicator.SPINDEXER2_LED_NAME,
                     LEDIndicator.SPINDEXER3_LED_NAME);
-            this.setSteerEncoderInfo(
+            this.setSwerveParams(swerveParams)
+                .setSteerEncoderInfo(
                     new String[] {"flSteerEncoder", "frSteerEncoder", "blSteerEncoder", "brSteerEncoder"},
                     new boolean[] {false, false, false, false},
                     new double[] {0.7371835041702206, 0.2867303761395389, 0.6728946779463816, 0.4929176551333184},
@@ -127,7 +133,6 @@ public class BaseDrive extends TrcSubsystem
                     FtcMotorActuator.MotorType.CRServo,
                     new String[] {"flSteerServo", "frSteerServo", "blSteerServo", "brSteerServo"},
                     new boolean[] {false, false, false, false})
-                .setSteerMotorPidParams(new TrcPidController.PidCoefficients(0.006, 0.0, 0.0002, 0.0, 0.0), 1.0)
                 .setSwerveModuleNames(new String[] {"flWheel", "frWheel", "blWheel", "brWheel"});
         }   //DecodeInfo
     }   //class DecodeInfo
@@ -304,7 +309,7 @@ public class BaseDrive extends TrcSubsystem
                         dashboard.putNumber(motor.getName() + ".Velocity", motor.getVelocity());
                         dashboard.putNumber(motor.getName() + ".TargetVel", motor.getPidTarget());
                     }
-                    dashboard.putNumber("DriveMotorMaxVel", robotInfo.tuneParams.driveMotorMaxVelocity);
+                    dashboard.putNumber("DriveMotorMaxVel", robotInfo.baseParams.driveMotorMaxVelocity);
                     dashboard.putNumber("DriveMotorMinVel", 0.0);
 
                     if (robotDrive instanceof FtcSwerveDrive)

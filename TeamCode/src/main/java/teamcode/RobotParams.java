@@ -52,7 +52,7 @@ public class RobotParams
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
         // Status Update: Dashboard Update may affect robot loop time, don't do it when in competition.
-        public static final boolean updateDashboard             = !inCompetition;
+        public static final boolean updateDashboard             = false;    // Start up default value.
         public static final boolean showDriveBase               = false;
         public static final boolean showPidDrive                = false;
         public static final boolean showVision                  = false;
@@ -71,8 +71,8 @@ public class RobotParams
         public static final boolean showVisionView              = false;
         public static final boolean showVisionStat              = true;
         // Drive Base
-        public static final boolean useDriveBase                = robotType == BaseDrive.RobotType.DecodeRobot;
-        public static final boolean usePinpointOdometry         = robotType == BaseDrive.RobotType.DecodeRobot;
+        public static final boolean useDriveBase                = true;
+        public static final boolean usePinpointOdometry         = true;
         public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = true;
         // Subsystems

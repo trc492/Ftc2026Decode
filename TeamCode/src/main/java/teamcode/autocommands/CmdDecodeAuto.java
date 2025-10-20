@@ -143,9 +143,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case GOTO_PRELOAD_SHOOT_POS:
                     robot.robotDrive.purePursuitDrive.start(
                         event, 0.0, false,
-                        robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                        robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                        robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                         robot.adjustPoseByAlliance(
                             autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ?
                                 RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE :
@@ -170,15 +170,15 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         TrcPose2D targetPose = robot.adjustPoseByAlliance(
                             RobotParams.Game.RED_SPIKEMARK_POS[index], autoChoices.alliance);
                         robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                                robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                                robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                                robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                                 targetPose);
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
                         robot.robotDrive.purePursuitDrive.start(event, 0.0, true,
-                                robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                                robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                                robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                                 new TrcPose2D(0.0, 20.0, 0.0)); // TODO: tune
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                         currentSpikeMarkCount++;
@@ -196,9 +196,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                 case SHOOT_SPIKEMARK:
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(
                                 RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE, autoChoices.alliance));
                     robot.autoShootTask.autoShoot(
@@ -209,9 +209,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                 case PARK:
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.tuneParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.tuneParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.tuneParams.profiledMaxDriveDeceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(RobotParams.Game.RED_PARK_POSE, autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.DONE);
                     break;

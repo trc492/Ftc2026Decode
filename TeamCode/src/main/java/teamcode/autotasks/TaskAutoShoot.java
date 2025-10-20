@@ -340,7 +340,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     else
                     {
                         // We did not use vision, just shoot assuming operator manually aimed.
-                        double shooterVel = Dashboard.SubsystemShooter.shootMotor1Velocity;
+                        double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
                         tracer.traceInfo(moduleName, "***** ManualShoot: vel=" + shooterVel + " RPM");
                         // ShooterVel is in RPM, aimShooter wants RPS.
                         robot.shooter.aimShooter(
