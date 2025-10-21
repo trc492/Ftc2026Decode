@@ -253,12 +253,12 @@ public class Intake extends TrcSubsystem
         if (slowLoop)
         {
             dashboard.displayPrintf(
-                lineNum++, "%s: power=%.3f, current=%.3f, hasObject=%s, front/back=%s/%s, autoActive=%s",
-                Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(),
-                intake.hasObject(), intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
-            dashboard.displayPrintf(
-                lineNum++, "%s: artifact(detected/expected)=%s/%s",
-                Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
+                lineNum++, "%s: power=%.1f, current=%.1f, front/back=%s/%s, auto=%s",
+                Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.getFrontTriggerState(),
+                intake.getBackTriggerState(), intake.isAutoActive());
+//            dashboard.displayPrintf(
+//                lineNum++, "%s: artifact(detected/expected)=%s/%s",
+//                Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
         }
 
         return lineNum;

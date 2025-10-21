@@ -29,7 +29,7 @@ SOFTWARE.
         <LynxModule name="Control Hub" port="173">
             <!-- Motors -->
             <goBILDA5202SeriesMotor name="brDriveMotor" port="0"/>
-            <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="1"/>
+            <goBILDA5202SeriesMotor name="Shooter.ShootMotor1" port="1"/>
             <RevRobotics40HDHexMotor name="Shooter.PanMotor" port="2"/>
             <goBILDA5202SeriesMotor name="frDriveMotor" port="3"/>
             <!-- Servos -->
