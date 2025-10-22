@@ -419,7 +419,7 @@ public class Shooter extends TrcSubsystem
      */
     public double getPanPosition()
     {
-        double panPosition;
+        double panPosition = shooter.panMotor.getPosition();
 
         if (trackedAprilTagId != null)
         {
@@ -427,12 +427,26 @@ public class Shooter extends TrcSubsystem
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> object =
                 robot.vision.getLimelightDetectedObject(
                     FtcLimelightVision.ResultType.Fiducial, new int[] {trackedAprilTagId}, -1);
-            panPosition = object != null ? -object.objPose.angle : 0.0;
-        }
-        else
-        {
-            // Tracking is disabled.
-            panPosition = shooter.panMotor.getPosition();
+            if (object == null)
+            {
+                // Did not see AprilTag or vision is still processing the frame, so don't move.
+                panPosition = 0.0;
+            }
+            else
+            {
+                double newPosition = panPosition + object.objPose.angle;
+                // Since we have a hard stop that the turret cannot cross over, we need to go the opposition direction
+                // to get there.
+                if (newPosition < Params.PAN_MIN_POS)
+                {
+                    newPosition += 360.0;
+                }
+                else if (newPosition > Params.PAN_MAX_POS)
+                {
+                    newPosition -= 360.0;
+                }
+                panPosition -= newPosition;
+            }
         }
 
         return panPosition;
