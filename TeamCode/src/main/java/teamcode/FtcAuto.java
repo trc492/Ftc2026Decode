@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import ftclib.driverio.FtcChoiceMenu;
@@ -262,7 +263,7 @@ public class FtcAuto extends FtcOpMode
         }
         robot.globalTracer.logInfo(moduleName, "AutoChoices", autoChoices.toString());
         robot.globalTracer.traceInfo(
-            moduleName, "Obelisk AprilTag %d: %s", robot.obeliskAprilTagId, robot.obeliskMotif);
+            moduleName, "Obelisk AprilTag %d: %s", robot.obeliskAprilTagId, Arrays.toString(robot.obeliskMotif));
         robot.dashboard.clearDisplay();
         //
         // Tell robot object opmode is about to start so it can do the necessary start initialization for the mode.

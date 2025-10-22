@@ -425,11 +425,9 @@ public class Shooter extends TrcSubsystem
         {
             // Tracking is enabled.
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> object =
-                robot.vision.limelightVision.getBestDetectedTargetInfo(
-                    FtcLimelightVision.ResultType.Fiducial, new int[] {trackedAprilTagId}, null, null);
+                robot.vision.getLimelightDetectedObject(
+                    FtcLimelightVision.ResultType.Fiducial, new int[] {trackedAprilTagId}, -1);
             panPosition = object != null ? -object.objPose.angle : 0.0;
-//            dashboard.displayPrintf(1, "obj=" + (object != null? object.toString(): "null"));
-//            dashboard.displayPrintf(2, "panPosition=" + panPosition);
         }
         else
         {

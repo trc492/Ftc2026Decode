@@ -251,6 +251,7 @@ public class BaseDrive extends TrcSubsystem
             {
                 if (RobotParams.Preferences.showDriveBase)
                 {
+                    dashboard.displayPrintf(lineNum++, "Robot: %s", robotDrive.driveBase.getFieldPosition());
                     dashboard.displayPrintf(
                         lineNum++, "DriveEnc: fl=%.0f,fr=%.0f,bl=%.0f,br=%.0f",
                         robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
