@@ -107,11 +107,11 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
-        public static final double PAN_POS_OFFSET               = 185.5;
+        public static final double PAN_POS_OFFSET               = 97.5;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
-        public static final double PAN_MIN_POS                  = -170.0;
-        public static final double PAN_MAX_POS                  = 170.0;
+        public static final double PAN_MIN_POS                  = -265.0;
+        public static final double PAN_MAX_POS                  = 85.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
             {PAN_MIN_POS, -135, -90.0, -45.0, 0.0, 45.0, 90.0, 135.0, PAN_MAX_POS};
