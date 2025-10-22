@@ -26,7 +26,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
-import ftclib.vision.FtcVisionAprilTag;
+import ftclib.vision.FtcLimelightVision;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
@@ -377,6 +377,16 @@ public class Shooter extends TrcSubsystem
     }   //launchCallback
 
     /**
+     * This method checks if AprilTag tracking is enabled.
+     *
+     * @return true if AprilTag tracking is enabled, false if disabled.
+     */
+    public boolean isAprilTagTrackingEnabled()
+    {
+        return trackedAprilTagId != null;
+    }   //isAprilTagTrackingEnabled
+
+    /**
      * This method enables AprilTag tracking with the Turret (Pan motor).
      *
      * @param aprilTagId specifies the AprilTag ID to track.
@@ -414,9 +424,12 @@ public class Shooter extends TrcSubsystem
         if (trackedAprilTagId != null)
         {
             // Tracking is enabled.
-            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> object =
-                robot.vision.aprilTagVision.getBestDetectedTargetInfo(trackedAprilTagId, null);
+            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> object =
+                robot.vision.limelightVision.getBestDetectedTargetInfo(
+                    FtcLimelightVision.ResultType.Fiducial, new int[] {trackedAprilTagId}, null, null);
             panPosition = object != null ? -object.objPose.angle : 0.0;
+//            dashboard.displayPrintf(1, "obj=" + (object != null? object.toString(): "null"));
+//            dashboard.displayPrintf(2, "panPosition=" + panPosition);
         }
         else
         {

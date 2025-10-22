@@ -47,6 +47,7 @@ public class Dashboard
     {
         public static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
         public static String tuneSubsystemName = "";
+        public static int trackedAprilTagId = 20;
     }   //class DashboardParams
 
     @Config

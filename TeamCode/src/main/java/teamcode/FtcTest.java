@@ -526,6 +526,23 @@ public class FtcTest extends FtcTeleOp
         switch (button)
         {
             case A:
+                if (robot.vision != null && robot.vision.isLimelightVisionEnabled() && robot.shooterSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        {
+                            robot.shooterSubsystem.disableAprilTagTracking();
+                        }
+                        else
+                        {
+                            robot.shooterSubsystem.enableAprilTagTracking(Dashboard.DashboardParams.trackedAprilTagId);
+                        }
+                    }
+                    passToTeleOp = false;
+                }
+                break;
+
             case B:
             case X:
             case Y:
