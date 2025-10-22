@@ -209,7 +209,7 @@ public class FtcAuto extends FtcOpMode
             if (robot.vision.limelightVision != null)
             {
                 robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision.");
-                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG.ordinal(), true);
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
             }
         }
     }   //robotInit

@@ -215,11 +215,13 @@ public class Robot
             endOfAutoRobotPose = null;
         }
 
-        if (vision != null)
-        {
-            globalTracer.traceInfo(moduleName, "Enabling WebCam ArtifactVision.");
-            vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
-        }
+//        if (vision != null)
+//        {
+//            globalTracer.traceInfo(moduleName, "Enabling LimelightVision.");
+//            vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
+//            globalTracer.traceInfo(moduleName, "Enabling WebCam ArtifactVision.");
+//            vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
+//        }
 
         TrcDigitalInput.setElapsedTimerEnabled(true);
         TrcMotor.setElapsedTimerEnabled(true);
@@ -258,7 +260,7 @@ public class Robot
             if (vision.isLimelightVisionEnabled())
             {
                 globalTracer.traceInfo(moduleName, "Disabling LimelightVision.");
-                vision.setLimelightVisionEnabled(0, false);
+                vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, false);
             }
 
             if (vision.isAprilTagVisionEnabled())
@@ -277,12 +279,6 @@ public class Robot
             {
                 globalTracer.traceInfo(moduleName, "Disabling ClassifierVision.");
                 vision.setClassifierVisionEnabled(false);
-            }
-
-            if (vision.limelightVision != null)
-            {
-                globalTracer.traceInfo(moduleName, "Disabling LimelightVision.");
-                vision.setLimelightVisionEnabled(0, false);
             }
 
             vision.close();

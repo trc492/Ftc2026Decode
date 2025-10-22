@@ -31,6 +31,7 @@ import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
 import teamcode.subsystems.RumbleIndicator;
 import teamcode.subsystems.Shooter;
+import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
@@ -142,7 +143,7 @@ public class FtcTeleOp extends FtcOpMode
             else if (robot.vision.limelightVision != null)
             {
                 robot.globalTracer.traceInfo(moduleName, "Enabling Limelight AprilTagVision.");
-                robot.vision.setLimelightVisionEnabled(0, true);
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
             }
         }
     }   //startMode
@@ -434,7 +435,7 @@ public class FtcTeleOp extends FtcOpMode
                             // Webcam AprilTag vision is not enable, enable Limelight AprilTag pipeline instead.
                             // Note: we assume pipeline 0 is the AprilTag pipeline.
                             savedLimelightPipeline = robot.vision.limelightVision.getPipeline();
-                            robot.vision.setLimelightVisionEnabled(0, true);
+                            robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                         }
                     }
 

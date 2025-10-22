@@ -111,7 +111,7 @@ public class Vision
         APRIL_TAG(0),
         ARTIFACT(1);
 
-        final int value;
+        public final int value;
         LimelightPipelineType(int value)
         {
             this.value = value;
@@ -227,6 +227,7 @@ public class Vision
         // LimelightVision (not a Vision Processor).
         if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
+            tracer.traceInfo(moduleName, "Starting LimelightVision...");
             limelightVision = new FtcLimelightVision(
                 robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
                 this::getLimelightTargetGroundOffset);
@@ -404,20 +405,20 @@ public class Vision
     /**
      * This method enables/disables Limelight vision for the specified pipeline.
      *
-     * @param pipelineIndex specifies the limelight pipeline index to be selected, ignore if disabled.
+     * @param pipelineType specifies the limelight pipeline type to be selected, ignore if disabled.
      * @param enabled specifies true to enable, false to disable.
      */
-    public void setLimelightVisionEnabled(int pipelineIndex, boolean enabled)
+    public void setLimelightVisionEnabled(LimelightPipelineType pipelineType, boolean enabled)
     {
         if (limelightVision != null)
         {
             if (enabled)
             {
-                limelightVision.setPipeline(pipelineIndex);
+                limelightVision.setPipeline(pipelineType.value);
             }
             limelightVision.setVisionEnabled(enabled);
-            tracer.traceInfo(moduleName, "Pipeline %d is %s: running=%s",
-                             pipelineIndex, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
+            tracer.traceInfo(moduleName, "Pipeline %s is %s: running=%s",
+                             pipelineType, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
         }
     }   //setLimelightVisionEnabled
 

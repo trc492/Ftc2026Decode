@@ -423,29 +423,31 @@ public class Shooter extends TrcSubsystem
 
         if (trackedAprilTagId != null)
         {
-            // Tracking is enabled.
-            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> object =
+            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, new int[] {trackedAprilTagId}, -1);
-            if (object == null)
+                    FtcLimelightVision.ResultType.Fiducial, new int[]{trackedAprilTagId}, -1);
+            if (aprilTagInfo == null)
             {
-                // Did not see AprilTag or vision is still processing the frame, so don't move.
+                // Not detecting AprilTag or vision is still processing the frame, don't move.
                 panPosition = 0.0;
+                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
             }
             else
             {
-                double newPosition = panPosition + object.objPose.angle;
-                // Since we have a hard stop that the turret cannot cross over, we need to go the opposition direction
-                // to get there.
-                if (newPosition < Params.PAN_MIN_POS)
+                double newPosition = panPosition + aprilTagInfo.objPose.angle;
+                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Panning: %f->%f", panPosition, newPosition);
+                // Check if we are crossing over the hard stop.
+                if (newPosition >= Params.PAN_MIN_POS && newPosition <= Params.PAN_MAX_POS)
                 {
-                    newPosition += 360.0;
+                    // We are moving within valid range.
+                    panPosition -= newPosition;
                 }
-                else if (newPosition > Params.PAN_MAX_POS)
+                else
                 {
-                    newPosition -= 360.0;
+                    // We are crossing over the hard stop, stop it.
+                    panPosition = 0.0;
+                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
                 }
-                panPosition -= newPosition;
             }
         }
 

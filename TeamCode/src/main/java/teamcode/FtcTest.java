@@ -237,7 +237,7 @@ public class FtcTest extends FtcTeleOp
                     if (robot.vision.limelightVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Limelight.");
-                        robot.vision.setLimelightVisionEnabled(0, true);
+                        robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                     }
 
                     if (robot.vision.artifactVision != null)
@@ -532,10 +532,14 @@ public class FtcTest extends FtcTeleOp
                     {
                         if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
                         {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
                             robot.shooterSubsystem.disableAprilTagTracking();
                         }
                         else
                         {
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
+                                Dashboard.DashboardParams.trackedAprilTagId);
                             robot.shooterSubsystem.enableAprilTagTracking(Dashboard.DashboardParams.trackedAprilTagId);
                         }
                     }
@@ -1075,7 +1079,7 @@ public class FtcTest extends FtcTeleOp
             if (robot.vision.limelightVision != null)
             {
                 robot.vision.getLimelightDetectedObject(
-                    robot.vision.limelightVision.getPipeline() == 0?
+                    robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
                         FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python,
                     null, lineNum++);
             }
