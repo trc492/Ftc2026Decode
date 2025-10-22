@@ -68,8 +68,8 @@ public class RobotParams
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
         public static final boolean streamToDashboard           = !inCompetition;
-        public static final boolean showVisionView              = false;    // For Control Hub HDMI
-        public static final boolean showVisionStat              = true;     // For Control Hub HDMI
+        public static final boolean showVisionView              = !inCompetition;   // For both HDMI and Dashboard
+        public static final boolean showVisionStat              = true;             // For HDMI
         // Drive Base
         public static final boolean useDriveBase                = true;
         public static final boolean usePinpointOdometry         = true;
