@@ -251,7 +251,7 @@ public class FtcTeleOp extends FtcOpMode
                             double panPower = operatorGamepad.getLeftStickX(true);
                             double tiltPower = operatorGamepad.getRightStickY(true);
 
-                            if (panPower != panPrevPower)
+                            if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
                             {
                                 if (operatorAltFunc)
                                 {
