@@ -544,8 +544,8 @@ public class FtcTest extends FtcTeleOp
                         {
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
-                                Dashboard.DashboardParams.trackedAprilTagId);
-                            robot.shooterSubsystem.enableAprilTagTracking(Dashboard.DashboardParams.trackedAprilTagId);
+                                Dashboard.Subsystem_Vision.trackedAprilTagId);
+                            robot.shooterSubsystem.enableAprilTagTracking(Dashboard.Subsystem_Vision.trackedAprilTagId);
                         }
                     }
                     passToTeleOp = false;
@@ -882,7 +882,11 @@ public class FtcTest extends FtcTeleOp
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
-                                    moduleName, null, null, !operatorAltFunc, false, 1, (int[]) null);
+                                    moduleName, null,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot);
                             }
                         }
                         else

@@ -24,6 +24,8 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import ftclib.driverio.FtcDashboard;
+import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
@@ -47,7 +49,7 @@ public class Dashboard
     {
         public static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
         public static String tuneSubsystemName = "";
-        public static int trackedAprilTagId = 20;
+        public static FtcAuto.AutoChoices autoChoices = FtcAuto.autoChoices;
     }   //class DashboardParams
 
     @Config
@@ -60,6 +62,7 @@ public class Dashboard
     @Config
     public static class Subsystem_Vision
     {
+        public static int trackedAprilTagId = 20;
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
     }   //class Subsystem_Vision
@@ -67,6 +70,7 @@ public class Dashboard
     @Config
     public static class Subsystem_Shooter
     {
+        public static TaskAutoShoot.TaskParams autoShootParams = TaskAutoShoot.autoShootParams;
         public static TrcMotor.TuneParams shootMotor1Pid = Shooter.shootMotor1PidParams;
         public static double shootMotor1Velocity = 5000.0;    // in RPM
         public static TrcMotor.TuneParams shootMotor2Pid = Shooter.shootMotor1PidParams;
@@ -93,6 +97,10 @@ public class Dashboard
     public static void setUpdateDashboardEnabled(boolean enabled)
     {
         DashboardParams.updateDashboardEnabled = enabled;
+        if (!enabled)
+        {
+            FtcDashboard.getInstance().clearDisplay();
+        }
     }   //setUpdateDashboardEnabled
 
     /**

@@ -74,11 +74,11 @@ public class RobotParams
         public static final boolean useDriveBase                = true;
         public static final boolean showDriveBaseStatus         = false;
         public static final boolean showPidDrive                = false;
-        public static final boolean showDriveBaseGraph          = true;
+        public static final boolean showDriveBaseGraph          = false;
 
         public static final boolean usePinpointOdometry         = true;
         public static final boolean useSparkfunOTOS             = false;
-        public static final boolean tuneDriveBase               = true;
+        public static final boolean tuneDriveBase               = false;
         // Other Subsystems
         public static final boolean useIntake                   = true;
         public static final boolean showIntakeStatus            = true;
@@ -89,7 +89,7 @@ public class RobotParams
         public static final boolean showShooterGraph            = false;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
-        public static final boolean useAutoShoot                = false;
+        public static final boolean useAutoShoot                = true;
     }   //class Preferences
 
     /**
@@ -106,7 +106,7 @@ public class RobotParams
         public static final double DASHBOARD_UPDATE_INTERVAL    = 0.2;      // in msec
         public static final String ROBOT_CODEBASE               = "Ftc2026Decode";
         // Robot Drive Parameters.
-        public static final DriveMode DRIVE_MODE                = DriveMode.HolonomicMode;
+        public static final DriveMode DRIVE_MODE                = DriveMode.ArcadeMode;
         public static final DriveOrientation DRIVE_ORIENTATION  = DriveOrientation.ROBOT;
         public static final double DRIVE_SLOW_SCALE             = 0.3;
         public static final double DRIVE_NORMAL_SCALE           = 1.0;

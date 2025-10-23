@@ -24,8 +24,6 @@ package teamcode.autotasks;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
-
 import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
@@ -60,24 +58,31 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         DONE
     }   //enum State
 
-    private static class TaskParams
+    public static class TaskParams
     {
-        FtcAuto.Alliance alliance;
-        boolean useAprilTagVision;
-        boolean useClassifierVision;
-        int numArtifactsToShoot;
-        int[] aprilTagIds;
+        public FtcAuto.Alliance alliance = FtcAuto.Alliance.RED_ALLIANCE;
+        public boolean useAprilTagVision = true;
+        public boolean useClassifierVision = false;
+        public int numArtifactsToShoot = 1;
 
-        TaskParams(
-            FtcAuto.Alliance alliance, boolean useAprilTagVision, boolean useClassifierVision, int numArtifactsToShoot,
-            int... aprilTagIds)
+        public TaskParams setAlliance(FtcAuto.Alliance alliance)
         {
             this.alliance = alliance;
+            return this;
+        }   //setAlliance
+
+        public TaskParams setVision(boolean useAprilTagVision, boolean useClassifierVision)
+        {
             this.useAprilTagVision = useAprilTagVision;
             this.useClassifierVision = useClassifierVision;
-            this.numArtifactsToShoot = numArtifactsToShoot;
-            this.aprilTagIds = aprilTagIds;
-        }   //TaskParams
+            return this;
+        }   //setVision
+
+        public TaskParams setNumArtifactsToShoot(int count)
+        {
+            this.numArtifactsToShoot = count;
+            return this;
+        }   //setNumArtifactsToShoot
 
         @NonNull
         public String toString()
@@ -85,11 +90,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return "(alliance=" + alliance +
                    ",useAprilTagVision=" + useAprilTagVision +
                    ",useClassifierVision=" + useClassifierVision +
-                   ",numArtifactsToShoot=" + numArtifactsToShoot +
-                   ",aprilTagIds=" + Arrays.toString(aprilTagIds) + ")";
+                   ",numArtifactsToShoot=" + numArtifactsToShoot + ")";
         }   //toString
     }   //class TaskParams
 
+    public static TaskParams autoShootParams = new TaskParams();
     private final Robot robot;
     private final TrcEvent event;
     private final TrcEvent spindexerEvent;
@@ -122,18 +127,19 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param useAprilTagVision specifies true to use AprilTag Vision, false otherwise.
      * @param useClassifierVision specifies true to use Classifier Vision, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
-     * @param aprilTagIds specifies multiple AprilTag IDs for vision to aim for, can be null to look for any AprilTag.
      */
     public void autoShoot(
         String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean useAprilTagVision,
-        boolean useClassifierVision, int numArtifactsToShoot, int... aprilTagIds)
+        boolean useClassifierVision, int numArtifactsToShoot)
     {
-        TaskParams taskParams =
-            new TaskParams(alliance, useAprilTagVision, useClassifierVision, numArtifactsToShoot, aprilTagIds);
+        autoShootParams
+            .setAlliance(alliance)
+            .setVision(useAprilTagVision, useClassifierVision)
+            .setNumArtifactsToShoot(numArtifactsToShoot);
         tracer.traceInfo(
             moduleName,
-            "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + taskParams + ")");
-        startAutoTask(owner, State.START, taskParams, completionEvent);
+            "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
+        startAutoTask(owner, State.START, autoShootParams, completionEvent);
     }   //autoShoot
 
     //
@@ -241,7 +247,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                         robot.vision.limelightVision.getBestDetectedTargetInfo(
-                            FtcLimelightVision.ResultType.Fiducial, taskParams.aprilTagIds, null, null);
+                            FtcLimelightVision.ResultType.Fiducial,
+                            taskParams.alliance == null? null:
+                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? new int[] {20}: new int[] {24},
+                            null,
+                            null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
