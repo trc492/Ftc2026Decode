@@ -633,7 +633,7 @@ public class Vision
      */
     public void setDashboardStreamEnabled(FtcEocvColorBlobProcessor processor, boolean enabled)
     {
-        if (RobotParams.Preferences.streamToDashboard)
+        if (RobotParams.Preferences.streamWebcamToDashboard)
         {
             if (enabled)
             {

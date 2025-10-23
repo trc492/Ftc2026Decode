@@ -343,15 +343,19 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     sm.addEvent(event);
                     if (shootParams != null)
                     {
+                        tracer.traceInfo(
+                            moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
+                            shootParams.shooter1Velocity, shootParams.tiltAngle, aprilTagPose.angle, event);
                         robot.shooter.aimShooter(
-                            owner, shootParams.shooter1Velocity, shootParams.shooter2Velocity, shootParams.tiltAngle,
-                            aprilTagPose.angle, event, 0.0, null, 0.0);
+                            owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
+                            shootParams.tiltAngle, aprilTagPose.angle, event, 0.0, null, 0.0);
                     }
                     else
                     {
                         // We did not use vision, just shoot assuming operator manually aimed.
                         double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
-                        tracer.traceInfo(moduleName, "***** ManualShoot: vel=" + shooterVel + " RPM");
+                        tracer.traceInfo(
+                            moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
                         // ShooterVel is in RPM, aimShooter wants RPS.
                         robot.shooter.aimShooter(
                             owner, shooterVel / 60.0, 0.0, null, null, event, 0.0, null, 0.0);
@@ -374,14 +378,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                if (taskParams.numArtifactsToShoot == 0)
-                {
-                    sm.setState(State.DONE);
-                }
-                else
-                {
-                    sm.setState(State.AIM);
-                }
+                sm.setState(taskParams.numArtifactsToShoot > 0? State.AIM: State.DONE);
                 break;
 
             case DONE:

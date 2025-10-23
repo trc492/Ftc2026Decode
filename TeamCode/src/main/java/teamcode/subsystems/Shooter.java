@@ -139,7 +139,7 @@ public class Shooter extends TrcSubsystem
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
         public static final double TILT_POS_OFFSET              = 26.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.237576;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.269091;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;
@@ -331,7 +331,9 @@ public class Shooter extends TrcSubsystem
     {
         if (launcher != null)
         {
-            TrcDbgTrace.globalTraceInfo(instanceName, "shoot(owner=" + owner + ", event=" + completionEvent + ")");
+            TrcDbgTrace.globalTraceInfo(
+                instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f",
+                owner, completionEvent, launcherParams.activatePos, launcherParams.activateDuration);
             if (robot.spindexer != null)
             {
                 // Enable Spindexer exit trigger.

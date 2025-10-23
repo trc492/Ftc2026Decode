@@ -64,7 +64,7 @@ public class RobotParams
         public static final boolean useArtifactVision           = true;
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
-        public static final boolean streamToDashboard           = !inCompetition;
+        public static final boolean streamWebcamToDashboard     = !inCompetition;
         public static final boolean showVisionView              = !inCompetition;   // For both HDMI and Dashboard
         public static final boolean showVisionStat              = true;             // For HDMI
         // Master switches for Subsystems
