@@ -526,6 +526,11 @@ public class FtcTest extends FtcTeleOp
         switch (button)
         {
             case A:
+            case B:
+            case X:
+                break;
+
+            case Y:
                 if (robot.vision != null && robot.vision.isLimelightVisionEnabled() && robot.shooterSubsystem != null)
                 {
                     if (pressed)
@@ -547,9 +552,6 @@ public class FtcTest extends FtcTeleOp
                 }
                 break;
 
-            case B:
-            case X:
-            case Y:
             case LeftBumper:
             case RightBumper:
                 break;

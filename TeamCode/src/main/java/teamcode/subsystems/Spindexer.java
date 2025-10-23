@@ -746,20 +746,24 @@ public class Spindexer extends TrcSubsystem
     @Override
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showSpindexerStatus)
         {
-            dashboard.displayPrintf(
-                lineNum++, "%s: pos=%.1f/%.1f, power=%.1f, current=%.1f, LimitSw=%s",
-                Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
-                spindexer.motor.getPower(), spindexer.motor.getCurrent(), spindexer.motor.isLowerLimitSwitchActive());
-            dashboard.displayPrintf(
-                lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
-                Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
-                getExitSensorData(), isExitSensorActive());
-            dashboard.displayPrintf(
-                lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
-                Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
-                slotStates[0], slotStates[1], slotStates[2]);
+            if (slowLoop)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%s: pos=%.1f/%.1f, power=%.1f, current=%.1f, LimitSw=%s",
+                    Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
+                    spindexer.motor.getPower(), spindexer.motor.getCurrent(),
+                    spindexer.motor.isLowerLimitSwitchActive());
+                dashboard.displayPrintf(
+                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
+                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
+                    getExitSensorData(), isExitSensorActive());
+                dashboard.displayPrintf(
+                    lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
+                    Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
+                    slotStates[0], slotStates[1], slotStates[2]);
+            }
         }
 
         return lineNum;

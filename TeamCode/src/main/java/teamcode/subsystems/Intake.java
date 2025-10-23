@@ -26,6 +26,7 @@ import teamcode.Robot;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
+import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTrigger;
@@ -250,15 +251,18 @@ public class Intake extends TrcSubsystem
     @Override
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showIntakeStatus)
         {
-            dashboard.displayPrintf(
-                lineNum++, "%s: power=%.1f, current=%.1f, front/back=%s/%s, auto=%s",
-                Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.getFrontTriggerState(),
-                intake.getBackTriggerState(), intake.isAutoActive());
-//            dashboard.displayPrintf(
-//                lineNum++, "%s: artifact(detected/expected)=%s/%s",
-//                Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
+            if (slowLoop)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%s: power=%.1f, current=%.1f, front/back=%s/%s, auto=%s",
+                    Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.getFrontTriggerState(),
+                    intake.getBackTriggerState(), intake.isAutoActive());
+//                dashboard.displayPrintf(
+//                    lineNum++, "%s: artifact(detected/expected)=%s/%s",
+//                    Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
+            }
         }
 
         return lineNum;

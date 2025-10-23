@@ -52,14 +52,11 @@ public class RobotParams
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
         // Status Update: Dashboard Update may affect robot loop time, don't do it when in competition.
-        public static final boolean updateDashboard             = false;    // Start up default value.
-        public static final boolean showDriveBase               = false;
-        public static final boolean showPidDrive                = false;
-        public static final boolean showVision                  = false;
-        public static final boolean showSubsystems              = true;
+        public static final boolean updateDashboard             = !inCompetition;   // Start up default value.
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
+        public static final boolean showVision                  = false;
         public static final boolean useWebCam                   = true;     // false to use Android phone camera.
         public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
         public static final boolean useLimelightVision          = true;
@@ -70,17 +67,27 @@ public class RobotParams
         public static final boolean streamToDashboard           = !inCompetition;
         public static final boolean showVisionView              = !inCompetition;   // For both HDMI and Dashboard
         public static final boolean showVisionStat              = true;             // For HDMI
-        // Drive Base
+        // Master switches for Subsystems
+        public static final boolean useSubsystems               = true;
+        public static final boolean showSubsystems              = true;
+        // Drive Base Subsystem
         public static final boolean useDriveBase                = true;
+        public static final boolean showDriveBaseStatus         = false;
+        public static final boolean showPidDrive                = false;
+        public static final boolean showDriveBaseGraph          = true;
+
         public static final boolean usePinpointOdometry         = true;
         public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = true;
-        // Subsystems
-        public static final boolean useSubsystems               = true;
+        // Other Subsystems
         public static final boolean useIntake                   = true;
+        public static final boolean showIntakeStatus            = true;
         public static final boolean useSpindexer                = true;
+        public static final boolean showSpindexerStatus         = true;
         public static final boolean useShooter                  = true;
-        // Auto Tasks.
+        public static final boolean showShooterStatus           = true;
+        public static final boolean showShooterGraph            = false;
+        // Auto Tasks
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = false;
     }   //class Preferences
@@ -99,7 +106,7 @@ public class RobotParams
         public static final double DASHBOARD_UPDATE_INTERVAL    = 0.2;      // in msec
         public static final String ROBOT_CODEBASE               = "Ftc2026Decode";
         // Robot Drive Parameters.
-        public static final DriveMode DRIVE_MODE                = DriveMode.ArcadeMode;
+        public static final DriveMode DRIVE_MODE                = DriveMode.HolonomicMode;
         public static final DriveOrientation DRIVE_ORIENTATION  = DriveOrientation.ROBOT;
         public static final double DRIVE_SLOW_SCALE             = 0.3;
         public static final double DRIVE_NORMAL_SCALE           = 1.0;

@@ -95,8 +95,8 @@ public class BaseDrive extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.006, 0.0, 0.0002, 0.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-            .setDriveMotorVelocityControl(
-                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+//            .setDriveMotorVelocityControl(
+//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(1.0, 1.0)
             .setXPidParams(drivePidCoeffs, 1.0)
             .setYPidParams(drivePidCoeffs, 1.0)
@@ -245,46 +245,48 @@ public class BaseDrive extends TrcSubsystem
     @Override
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (robotDrive != null)
+        if (robotDrive == null)
+        {
+            return lineNum;
+        }
+
+        if (RobotParams.Preferences.showDriveBaseStatus)
         {
             if (slowLoop)
             {
-                if (RobotParams.Preferences.showDriveBase)
+                dashboard.displayPrintf(lineNum++, "Robot: %s", robotDrive.driveBase.getFieldPosition());
+                dashboard.displayPrintf(
+                    lineNum++, "DriveEnc: fl=%.0f,fr=%.0f,bl=%.0f,br=%.0f",
+                    robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
+                    robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_RIGHT].getPosition(),
+                    robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_LEFT].getPosition(),
+                    robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_RIGHT].getPosition());
+
+                if (robotDrive instanceof FtcSwerveDrive)
                 {
-                    dashboard.displayPrintf(lineNum++, "Robot: %s", robotDrive.driveBase.getFieldPosition());
+                    FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
                     dashboard.displayPrintf(
-                        lineNum++, "DriveEnc: fl=%.0f,fr=%.0f,bl=%.0f,br=%.0f",
-                        robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
-                        robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_RIGHT].getPosition(),
-                        robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_LEFT].getPosition(),
-                        robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_RIGHT].getPosition());
+                        lineNum++, "SteerEnc: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getScaledPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getScaledPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getScaledPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getScaledPosition());
+                    dashboard.displayPrintf(
+                        lineNum++, "SteerRaw: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getRawPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getRawPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getRawPosition(),
+                        swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getRawPosition());
+                }
 
-                    if (robotDrive instanceof FtcSwerveDrive)
-                    {
-                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
-                        dashboard.displayPrintf(
-                            lineNum++, "SteerEnc: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getScaledPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getScaledPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getScaledPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getScaledPosition());
-                        dashboard.displayPrintf(
-                            lineNum++, "SteerRaw: fl=%.2f, fr=%.2f, bl=%.2f, br=%.2f",
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_LEFT].getRawPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_FRONT_RIGHT].getRawPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_LEFT].getRawPosition(),
-                            swerveDrive.steerEncoders[FtcRobotDrive.INDEX_BACK_RIGHT].getRawPosition());
-                    }
-
-                    if (robotDrive.gyro != null)
-                    {
-                        dashboard.displayPrintf(
-                            lineNum++, "Gyro(x,y,z): Heading=(%.1f,%.1f,%.1f), Rate=(%.3f,%.3f,%.3f)",
-                            robotDrive.gyro.getXHeading().value, robotDrive.gyro.getYHeading().value,
-                            robotDrive.gyro.getZHeading().value, robotDrive.gyro.getXRotationRate().value,
-                            robotDrive.gyro.getYRotationRate().value,
-                            robotDrive.gyro.getZRotationRate().value);
-                    }
+                if (robotDrive.gyro != null)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "Gyro(x,y,z): Heading=(%.1f,%.1f,%.1f), Rate=(%.3f,%.3f,%.3f)",
+                        robotDrive.gyro.getXHeading().value, robotDrive.gyro.getYHeading().value,
+                        robotDrive.gyro.getZHeading().value, robotDrive.gyro.getXRotationRate().value,
+                        robotDrive.gyro.getYRotationRate().value,
+                        robotDrive.gyro.getZRotationRate().value);
                 }
 
                 if (RobotParams.Preferences.showPidDrive)
@@ -301,30 +303,28 @@ public class BaseDrive extends TrcSubsystem
                     lineNum += 2;
                 }
             }
-            else
-            {
-                if (RobotParams.Preferences.showDriveBase)
-                {
-                    for (TrcMotor motor : robotDrive.driveMotors)
-                    {
-                        dashboard.putNumber(motor.getName() + ".Velocity", motor.getVelocity());
-                        dashboard.putNumber(motor.getName() + ".TargetVel", motor.getPidTarget());
-                    }
-                    dashboard.putNumber("DriveMotorMaxVel", robotInfo.baseParams.driveMotorMaxVelocity);
-                    dashboard.putNumber("DriveMotorMinVel", 0.0);
+        }
 
-                    if (robotDrive instanceof FtcSwerveDrive)
-                    {
-                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
-                        for (TrcMotor motor : swerveDrive.steerMotors)
-                        {
-                            dashboard.putNumber(motor.getName() + ".Angle", motor.getPosition()%360.0);
-                            dashboard.putNumber(motor.getName() + ".TargetAngle", motor.getPidTarget()%360.0);
-                        }
-                        dashboard.putNumber("SteerMinAngle", -360.0);
-                        dashboard.putNumber("SteerMaxAngle", 360.0);
-                    }
+        if (RobotParams.Preferences.showDriveBaseGraph)
+        {
+            for (TrcMotor motor : robotDrive.driveMotors)
+            {
+                dashboard.putNumber(motor.getName() + ".Velocity", motor.getVelocity());
+                dashboard.putNumber(motor.getName() + ".TargetVel", motor.getPidTarget());
+            }
+            dashboard.putNumber("DriveMotorMaxVel", robotInfo.baseParams.driveMotorMaxVelocity);
+            dashboard.putNumber("DriveMotorMinVel", 0.0);
+
+            if (robotDrive instanceof FtcSwerveDrive)
+            {
+                FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robotDrive;
+                for (TrcMotor motor : swerveDrive.steerMotors)
+                {
+                    dashboard.putNumber(motor.getName() + ".Angle", motor.getPosition()%360.0);
+                    dashboard.putNumber(motor.getName() + ".TargetAngle", motor.getPidTarget()%360.0);
                 }
+                dashboard.putNumber("SteerMinAngle", 0.0);
+                dashboard.putNumber("SteerMaxAngle", 360.0);
             }
         }
 

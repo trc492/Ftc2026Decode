@@ -218,7 +218,7 @@ public class FtcTeleOp extends FtcOpMode
                             robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
                         }
 
-                        if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBase)
+                        if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
                                 lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",

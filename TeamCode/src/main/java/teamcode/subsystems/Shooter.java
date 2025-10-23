@@ -523,51 +523,55 @@ public class Shooter extends TrcSubsystem
     @Override
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showShooterStatus)
         {
-            TrcMotor motor;
-
-            motor = shooter.getShooterMotor1();
-            dashboard.displayPrintf(
-                lineNum++, "%s: power=%.1f, current=%.1f, vel=%.1f, target=%.1f",
-                Params.SUBSYSTEM_NAME + ".Motor", motor.getPower(), motor.getCurrent(),
-                shooter.getShooterMotor1RPM(), shooter.getShooterMotor1TargetRPM());
-
-            motor = shooter.getShooterMotor2();
-            if (motor != null)
+            if (slowLoop)
             {
+                TrcMotor motor;
+
+                motor = shooter.getShooterMotor1();
                 dashboard.displayPrintf(
                     lineNum++, "%s: power=%.1f, current=%.1f, vel=%.1f, target=%.1f",
-                    Params.SUBSYSTEM_NAME + ".Motor2", motor.getPower(), motor.getCurrent(),
-                    shooter.getShooterMotor2RPM(), shooter.getShooterMotor2TargetRPM());
-            }
+                    Params.SUBSYSTEM_NAME + ".Motor", motor.getPower(), motor.getCurrent(),
+                    shooter.getShooterMotor1RPM(), shooter.getShooterMotor1TargetRPM());
 
-            motor = shooter.getPanMotor();
-            if (motor != null)
-            {
-                dashboard.displayPrintf(
-                    lineNum++, "%s: power=%.1f, current=%.1f, pos=%.1f/%.1f",
-                    Params.SUBSYSTEM_NAME + ".Pan", motor.getPower(), motor.getCurrent(),
-                    motor.getPosition(), motor.getPidTarget());
-            }
+                motor = shooter.getShooterMotor2();
+                if (motor != null)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "%s: power=%.1f, current=%.1f, vel=%.1f, target=%.1f",
+                        Params.SUBSYSTEM_NAME + ".Motor2", motor.getPower(), motor.getCurrent(),
+                        shooter.getShooterMotor2RPM(), shooter.getShooterMotor2TargetRPM());
+                }
 
-            motor = shooter.getTiltMotor();
-            if (motor != null)
-            {
-                dashboard.displayPrintf(
-                    lineNum++, "%s: power=%.1f, pos=%.1f/%.1f(%f)",
-                    Params.SUBSYSTEM_NAME + ".Tilt", motor.getPower(), motor.getPosition(), motor.getPidTarget(),
-                    motor.getEncoderRawPosition());
-            }
+                motor = shooter.getPanMotor();
+                if (motor != null)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "%s: power=%.1f, current=%.1f, pos=%.1f/%.1f",
+                        Params.SUBSYSTEM_NAME + ".Pan", motor.getPower(), motor.getCurrent(),
+                        motor.getPosition(), motor.getPidTarget());
+                }
 
-            if (launcher != null)
-            {
-                dashboard.displayPrintf(
-                    lineNum++, "%s: pos=%.3f",
-                    Params.SUBSYSTEM_NAME + ".Launcher", launcher.getPosition());
+                motor = shooter.getTiltMotor();
+                if (motor != null)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "%s: power=%.1f, pos=%.1f/%.1f(%f)",
+                        Params.SUBSYSTEM_NAME + ".Tilt", motor.getPower(), motor.getPosition(), motor.getPidTarget(),
+                        motor.getEncoderRawPosition());
+                }
+
+                if (launcher != null)
+                {
+                    dashboard.displayPrintf(
+                        lineNum++, "%s: pos=%.3f",
+                        Params.SUBSYSTEM_NAME + ".Launcher", launcher.getPosition());
+                }
             }
         }
-        else
+
+        if (RobotParams.Preferences.showShooterGraph)
         {
             dashboard.putObject("Shooter1MotorRPM", shooter.getShooterMotor1RPM());
             dashboard.putObject("ShooterMotor1TargetRPM", shooter.getShooterMotor1TargetRPM());
