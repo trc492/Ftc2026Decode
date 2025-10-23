@@ -36,6 +36,7 @@ import ftclib.driverio.FtcValueMenu;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcLimelightVision;
 import teamcode.autocommands.CmdDecodeAuto;
+import teamcode.autotasks.TaskAutoShoot;
 import teamcode.vision.Vision;
 import trclib.command.CmdPidDrive;
 import trclib.command.CmdTimedDrive;
@@ -429,6 +430,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.turnTarget = turnTargetMenu.getCurrentValue();
         autoChoices.driveTime = driveTimeMenu.getCurrentValue();
         autoChoices.drivePower = drivePowerMenu.getCurrentValue();
+        TaskAutoShoot.autoShootParams.alliance = autoChoices.alliance;
         //
         // Show choices.
         //
