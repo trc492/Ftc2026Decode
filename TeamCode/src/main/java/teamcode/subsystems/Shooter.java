@@ -148,10 +148,11 @@ public class Shooter extends TrcSubsystem
             {TILT_MIN_POS, 30.0, 35.0, 40.0, TILT_MAX_POS};
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
-            .add("Target_2.67ft",   32.06,  3600.0,     0.0,    26.0)
-            .add("Target_4.33ft",   52.64,  3950.0,     0.0,    26.0)
-            .add("Target_5.78ft",   69.38,  4180.0,     0.0,    26.0)
-            .add("Target_7.22ft",   86.72,  4475.0,     0.0,    26.0);
+            //   entry_name,        dist,   shoot1_vel, shoot2_vel, tilt_angle
+            .add("Target_2.67ft",   32.06,  3600.0,     0.0,        26.0)
+            .add("Target_4.33ft",   52.64,  3950.0,     0.0,        26.0)
+            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
+            .add("Target_7.22ft",   86.72,  4475.0,     0.0,        26.0);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
@@ -393,9 +394,9 @@ public class Shooter extends TrcSubsystem
      */
     public void enableAprilTagTracking(int aprilTagId)
     {
-        if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
+        if (robot.vision != null)
         {
-            robot.vision.limelightVision.setPipeline(Vision.LimelightPipelineType.APRIL_TAG.ordinal());
+            robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
             this.trackedAprilTagId = aprilTagId;
             shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
         }
