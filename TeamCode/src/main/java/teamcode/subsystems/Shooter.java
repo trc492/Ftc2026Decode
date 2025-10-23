@@ -148,10 +148,14 @@ public class Shooter extends TrcSubsystem
             {TILT_MIN_POS, 30.0, 35.0, 40.0, TILT_MAX_POS};
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
-            .add("test3ft", 36.0, 60.0, 0.0, 60.0)
-            .add("test4ft", 48.0, 70.0, 0.0, 60.0)
-            .add("test5ft", 60.0, 80.0, 0.0, 60.0)
-            .add("test6ft", 72.0, 90.0, 0.0, 60.0);
+                .add("test2.67ft",32.06,3600.0,0.0,26.0)
+                .add("test4.33ft", 52.64, 3950.0, 0.0, 26.0)
+                .add("test5.78ft", 69.38, 4180.0, 0.0, 26.0)
+                .add("test7.22ft", 86.72,4475.0, 0.0, 26.0);
+//            .add("test3ft", 36.0, 60.0, 0.0, 60.0)
+//            .add("test4ft", 48.0, 70.0, 0.0, 60.0)
+//            .add("test5ft", 60.0, 80.0, 0.0, 60.0)
+//            .add("test6ft", 72.0, 90.0, 0.0, 60.0);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
