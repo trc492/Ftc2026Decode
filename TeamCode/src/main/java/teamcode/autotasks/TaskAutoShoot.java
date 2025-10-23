@@ -94,7 +94,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         }   //toString
     }   //class TaskParams
 
-    public static TaskParams autoShootParams = new TaskParams();
+    public static final TaskParams autoShootParams = new TaskParams();
     private final Robot robot;
     private final TrcEvent event;
     private final TrcEvent spindexerEvent;
