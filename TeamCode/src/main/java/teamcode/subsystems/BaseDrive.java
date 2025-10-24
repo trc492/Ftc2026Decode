@@ -28,6 +28,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator;
 import ftclib.sensor.GoBildaPinpointDriver;
 import teamcode.RobotParams;
+import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcUtil;

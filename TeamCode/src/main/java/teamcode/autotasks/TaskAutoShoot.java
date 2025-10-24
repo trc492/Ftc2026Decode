@@ -28,7 +28,7 @@ import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
-import teamcode.subsystems.LEDIndicator;
+import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;

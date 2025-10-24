@@ -29,7 +29,7 @@ import java.util.Locale;
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
-import teamcode.subsystems.RumbleIndicator;
+import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;

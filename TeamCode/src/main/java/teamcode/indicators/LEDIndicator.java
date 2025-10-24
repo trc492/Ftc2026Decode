@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package teamcode.subsystems;
+package teamcode.indicators;
 
 import ftclib.driverio.FtcGobildaIndicatorLight;
 import ftclib.driverio.FtcRevBlinkin;

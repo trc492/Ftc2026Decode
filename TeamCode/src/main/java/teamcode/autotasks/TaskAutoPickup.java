@@ -25,7 +25,7 @@ package teamcode.autotasks;
 import androidx.annotation.NonNull;
 
 import teamcode.Robot;
-import teamcode.subsystems.LEDIndicator;
+import teamcode.indicators.LEDIndicator;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
