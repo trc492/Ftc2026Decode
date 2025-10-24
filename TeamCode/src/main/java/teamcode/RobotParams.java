@@ -141,28 +141,28 @@ public class RobotParams
             };
         // Robot start locations.
         public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE       =
-            new TrcPose2D(2.0*Field.FULL_TILE_INCHES, -2.0*Field.FULL_TILE_INCHES, 135.0);
+            new TrcPose2D(-2.0*Field.FULL_TILE_INCHES, 2.0*Field.FULL_TILE_INCHES, -35.5);
         public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER     =
-            new TrcPose2D(-Field.HALF_FIELD_INCHES + Robot.ROBOT_LENGTH/2.0, -0.5*Field.FULL_TILE_INCHES, 90.0);
+            new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, -90.0);
         public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER     =
-            new TrcPose2D(-Field.HALF_FIELD_INCHES + Robot.ROBOT_LENGTH/2.0,
-                          -1.0*Field.FULL_TILE_INCHES - Robot.ROBOT_WIDTH/2.0,
-                          90.0);
+            new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0,
+                          1.0*Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0,
+                          -90.0);
 
         public static final TrcPose2D RED_PRELOAD_LAUNCH_SHOOT_POSE =
             new TrcPose2D(0.0, 0.0, 0.0); // TODO: Determine if we can shoot from starting position
         public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   =
-            new TrcPose2D(1.0*Field.FULL_TILE_INCHES, -1.0*Field.FULL_TILE_INCHES, 180.0); //TODO: Can be changed to 1
+            new TrcPose2D(-1.0*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0); //TODO: Can be changed to 1
         // .0 if using motif vision for preload
         public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE      =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, -0.5*Field.FULL_TILE_INCHES, 180.0);
+            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
 
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, -1.0*Field.FULL_TILE_INCHES, 180.0);
+            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2   =
-            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, -1.0*Field.FULL_TILE_INCHES, 180.0);
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3   =
-            new TrcPose2D(-1.5*Field.FULL_TILE_INCHES, -1.0*Field.FULL_TILE_INCHES, 180.0);
+            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POS           =
             {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
         public static final TrcPose2D RED_PARK_POSE                 = new TrcPose2D(0.0, 0.0, 0.0); //TODO: Not sure about this
