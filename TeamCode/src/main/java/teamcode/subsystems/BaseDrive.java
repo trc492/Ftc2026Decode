@@ -95,8 +95,8 @@ public class BaseDrive extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.0065, 0.0, 0.00035, 0.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-//            .setDriveMotorVelocityControl(
-//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+            .setDriveMotorVelocityControl(
+                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(1.0, 1.0)
             .setXPidParams(drivePidCoeffs, 1.0)
             .setYPidParams(drivePidCoeffs, 1.0)
@@ -116,6 +116,9 @@ public class BaseDrive extends TrcSubsystem
                     FtcMotorActuator.MotorType.DcMotor,
                     new String[] {"flDriveMotor", "frDriveMotor", "blDriveMotor", "brDriveMotor"},
                     new boolean[] {true, false, true, false})
+                .setPinpointOdometry(
+                    "pinpointOdo", 0.0, -24.0 * 8, GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD,
+                    true, false, -180.0, 180.0)
                 .setPidStallDetectionEnabled(true)
                 .setPidDriveParams(false)
                 .setPurePursuitDriveParams(6.0, true, false)
@@ -127,7 +130,7 @@ public class BaseDrive extends TrcSubsystem
                 .setSteerEncoderInfo(
                     new String[] {"flSteerEncoder", "frSteerEncoder", "blSteerEncoder", "brSteerEncoder"},
                     new boolean[] {false, false, false, false},
-                    new double[] {0.7371835041702206, 0.2867303761395389, 0.6728946779463816, 0.4929176551333184},
+                    new double[] {0.7333581066135926, 0.244980314089807, 0.1889143994691428, 0.49038870456389433},
                     RobotParams.Robot.STEER_ZERO_CAL_FILE)
                 .setSteerMotorInfo(
                     FtcMotorActuator.MotorType.CRServo,
