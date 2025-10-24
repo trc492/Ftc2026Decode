@@ -125,11 +125,11 @@ public class RobotParams
         public static final boolean fieldIsMirrored             = true;
         // AprilTag locations.
         public static final TrcPose2D[] APRILTAG_POSES          = new TrcPose2D[] {
-            new TrcPose2D(0.0, 0.0, 0.0),   // TagId 20
-            new TrcPose2D(0.0, 0.0, 0.0),   // TagId 21
-            new TrcPose2D(0.0, 0.0, 0.0),   // TagId 22
-            new TrcPose2D(0.0, 0.0, 0.0),   // TagId 23
-            new TrcPose2D(0.0, 0.0, 0.0)    // TagId 24
+            new TrcPose2D(-58.3727, -55.6425, 215.5),   // TagId 20: z = 29.5 in
+            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 21: z =
+            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 22: z =
+            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 23: z =
+            new TrcPose2D(-58.3727, 55.6425, -35.5)     // TagId 24: z = 29.5 in
         };
         public static final int[] obeliskAprilTags              = new int[] {21, 22, 23};
         public static final Vision.ArtifactType[][] motifPatterns =
