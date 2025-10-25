@@ -245,40 +245,37 @@ public class FtcTeleOp extends FtcOpMode
                 if (RobotParams.Preferences.useSubsystems)
                 {
                     // Analog control of subsystems.
-                    if (TrcRobot.getRunMode() == TrcRobot.RunMode.TEST_MODE)
+                    if (robot.shooterSubsystem != null)
                     {
-                        if (robot.shooter != null)
+                        double panPower = operatorGamepad.getLeftStickX(true);
+                        double tiltPower = operatorGamepad.getRightStickY(true);
+
+                        if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
                         {
-                            double panPower = operatorGamepad.getLeftStickX(true);
-                            double tiltPower = operatorGamepad.getRightStickY(true);
-
-                            if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                            if (operatorAltFunc)
                             {
-                                if (operatorAltFunc)
-                                {
-                                    robot.shooter.panMotor.setPower(panPower);
-                                }
-                                else
-                                {
-                                    robot.shooter.panMotor.setPidPower(
-                                        panPower, Shooter.Params.PAN_MIN_POS, Shooter.Params.PAN_MAX_POS, true);
-                                }
-                                panPrevPower = panPower;
+                                robot.shooter.panMotor.setPower(panPower);
                             }
-
-                            if (tiltPower != tiltPrevPower)
+                            else
                             {
-                                if (operatorAltFunc)
-                                {
-                                    robot.shooter.tiltMotor.setPower(tiltPower);
-                                }
-                                else
-                                {
-                                    robot.shooter.tiltMotor.setPidPower(
-                                        tiltPower, Shooter.Params.TILT_MIN_POS, Shooter.Params.TILT_MAX_POS, true);
-                                }
-                                tiltPrevPower = tiltPower;
+                                robot.shooter.panMotor.setPidPower(
+                                    panPower, Shooter.Params.PAN_MIN_POS, Shooter.Params.PAN_MAX_POS, true);
                             }
+                            panPrevPower = panPower;
+                        }
+
+                        if (tiltPower != tiltPrevPower)
+                        {
+                            if (operatorAltFunc)
+                            {
+                                robot.shooter.tiltMotor.setPower(tiltPower);
+                            }
+                            else
+                            {
+                                robot.shooter.tiltMotor.setPidPower(
+                                    tiltPower, Shooter.Params.TILT_MIN_POS, Shooter.Params.TILT_MAX_POS, true);
+                            }
+                            tiltPrevPower = tiltPower;
                         }
                     }
                 }
@@ -368,6 +365,24 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case Y:
+                if (robot.vision != null && robot.vision.isLimelightVisionEnabled() && robot.shooterSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
+                            robot.shooterSubsystem.disableAprilTagTracking();
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
+                                Dashboard.Subsystem_Vision.trackedAprilTagId);
+                            robot.shooterSubsystem.enableAprilTagTracking(Dashboard.Subsystem_Vision.trackedAprilTagId);
+                        }
+                    }
+                }
                 break;
 
             case LeftBumper:
@@ -484,8 +499,74 @@ public class FtcTeleOp extends FtcOpMode
         switch (button)
         {
             case A:
+                if (robot.intakeSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.intake.isActive())
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        }
+                    }
+                }
+                break;
+
             case B:
+                if (robot.shooterSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (!operatorAltFunc && robot.autoShootTask != null)
+                        {
+                            // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
+                            if (robot.autoShootTask.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                                robot.autoShootTask.cancel();
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                                robot.autoShootTask.autoShoot(
+                                    moduleName, null,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1);
+                            }
+                        }
+                        else
+                        {
+                            if (robot.shooter.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
+                                robot.shooter.cancel(moduleName);
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
+                                robot.shooterSubsystem.shoot(moduleName, null);
+                            }
+                        }
+                    }
+                }
+                break;
+
             case X:
+                if (robot.shooterSubsystem != null)
+                {
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
+                    robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                }
+                break;
+
             case Y:
                 break;
 
@@ -509,7 +590,41 @@ public class FtcTeleOp extends FtcOpMode
             case DpadUp:
             case DpadDown:
             case DpadLeft:
+                if (robot.spindexer != null)
+                {
+                    if (pressed)
+                    {
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotDown(moduleName);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotDown(moduleName);
+                        }
+                    }
+                }
+                break;
+
             case DpadRight:
+                if (robot.spindexer != null)
+                {
+                    if (pressed)
+                    {
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotUp(moduleName);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotUp(moduleName);
+                        }
+                    }
+                }
                 break;
 
             case Back:

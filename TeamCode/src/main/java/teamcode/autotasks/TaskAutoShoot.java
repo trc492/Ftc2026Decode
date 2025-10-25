@@ -61,7 +61,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
     public static class TaskParams
     {
-        public FtcAuto.Alliance alliance = FtcAuto.Alliance.RED_ALLIANCE;
+        public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
         public boolean useAprilTagVision = true;
         public boolean useClassifierVision = false;
         public int numArtifactsToShoot = 1;
