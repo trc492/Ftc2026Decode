@@ -903,8 +903,8 @@ public class FtcTest extends FtcTeleOp
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
                                 robot.shooter.aimShooter(
                                     moduleName, Dashboard.Subsystem_Shooter.shootMotor1Velocity / 60.0, 0.0,
-                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
-                                    Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
+                                    Dashboard.Subsystem_Shooter.tiltAngle, null, null, 0.0,
+                                    robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
                     }
