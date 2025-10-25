@@ -71,6 +71,7 @@ public class Intake extends TrcSubsystem
     private final TrcRollerIntake intake;
     private Vision.ArtifactType pickupArtifactType = Vision.ArtifactType.Any;
     private String detectedArtifactName = null;
+    private boolean bulldozeEnabled = false;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -198,14 +199,26 @@ public class Intake extends TrcSubsystem
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
             intake.intake();
             robot.spindexerSubsystem.setAutoReceiveEnabled(true);
+            bulldozeEnabled = true;
         }
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
             intake.cancel();
             robot.spindexerSubsystem.setAutoReceiveEnabled(false);
+            bulldozeEnabled = false;
         }
     }   //setBulldozeIntakeEnabled
+
+    /**
+     * This method checks if Bulldoze mode is enabled.
+     *
+     * @return true if bulldoze mode is enabled, false if disabled.
+     */
+    public boolean isBulldozeEnabled()
+    {
+        return bulldozeEnabled;
+    }   //isBulldozeEnabled
 
     //
     // Implements TrcSubsystem abstract methods.

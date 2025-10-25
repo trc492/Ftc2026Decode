@@ -24,7 +24,6 @@ package teamcode.subsystems;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
@@ -33,13 +32,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
+import ftclib.sensor.FtcSensorTrigger;
 import ftclib.subsystem.FtcPidStorage;
 import teamcode.Robot;
 import teamcode.RobotParams;
+import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
+import trclib.sensor.TrcTrigger;
 import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.subsystem.TrcPidStorage;
 import trclib.subsystem.TrcSubsystem;
@@ -68,7 +71,7 @@ public class Spindexer extends TrcSubsystem
         public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
-        public static final double POS_OFFSET                   = 25.0;
+        public static final double POS_OFFSET                   = 30.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
@@ -89,15 +92,16 @@ public class Spindexer extends TrcSubsystem
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 1.0;  // in inches
         public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
 
-        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 0.0;  // in inches
-        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 4.0;  // in inches
-        public static final double EXIT_TRIGGER_SETTLING        = 0.1;  // in seconds
+        public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
+        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
+        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 6000.0;   // in RPM
+        public static final double EXIT_TRIGGER_SETTLING        = 0.01;     // in seconds
 
-        public static final double PURPLE_LOW_THRESHOLD         = 210.0;
+        public static final double PURPLE_LOW_THRESHOLD         = 220.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 240.0;
 
-        public static final double GREEN_LOW_THRESHOLD          = 120.0;
-        public static final double GREEN_HIGH_THRESHOLD         = 160.0;
+        public static final double GREEN_LOW_THRESHOLD          = 150.0;
+        public static final double GREEN_HIGH_THRESHOLD         = 180.0;
 
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
@@ -116,11 +120,13 @@ public class Spindexer extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final RevColorSensorV3 entryAnalogSensor;
-    private final Rev2mDistanceSensor exitAnalogSensor;
+//    private final Rev2mDistanceSensor exitAnalogSensor;
+    private final TrcTrigger shootVelTrigger;
     public final TrcPidStorage spindexer;
     private final TrcWarpSpace warpSpace;
 
-    private final Vision.ArtifactType[] slotStates  = {null, null, null};
+    private final Vision.ArtifactType[] slotStates  =
+        {Vision.ArtifactType.None, Vision.ArtifactType.None, Vision.ArtifactType.None};
     private boolean autoReceivedEnabled = false;
     private Integer entrySlot = 0;
     private Integer exitSlot = null;
@@ -130,6 +136,7 @@ public class Spindexer extends TrcSubsystem
     private double entrySensorDistance = 10.0;
     private double entrySensorHue = 0.0;
     private TrcEvent zeroCalEvent = null;
+    private TrcEvent.Callback exitTriggerCallback = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -164,16 +171,28 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_SENSOR)
         {
-            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                Rev2mDistanceSensor.class, Params.EXIT_SENSOR_NAME);
-            spindexerParams.setExitAnalogSourceTrigger(
-                Params.EXIT_SENSOR_NAME, this::getExitSensorData, exitTriggerParams.lowThreshold,
-                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod, false,
-                this::exitTriggerCallback, null);
+//            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
+//                Rev2mDistanceSensor.class, Params.EXIT_SENSOR_NAME);
+//            spindexerParams.setExitAnalogSourceTrigger(
+//                Params.EXIT_SENSOR_NAME, this::getExitSensorData, exitTriggerParams.lowThreshold,
+//                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod, false,
+//                this::exitTriggerCallback, null);
+            shootVelTrigger = new FtcSensorTrigger()
+                .setAnalogSourceTrigger(
+                    Params.EXIT_TRIGGER_NAME,
+                    () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelVelocity(): 0.0,
+                    exitTriggerParams.lowThreshold,
+                    exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod)
+                .getTrigger();
+//            shootVelTrigger = (TrcTriggerThresholdRange) trigger;
+//            shootVelTrigger = (TrcTriggerThresholdRange) (new FtcSensorTrigger().setAnalogSourceTrigger(
+//                Params.EXIT_TRIGGER_NAME, robot.shooterSubsystem::getFlywheelVelocity, exitTriggerParams.lowThreshold,
+//                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod).getTrigger());
         }
         else
         {
-            exitAnalogSensor = null;
+//            exitAnalogSensor = null;
+            shootVelTrigger = null;
         }
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
@@ -192,6 +211,16 @@ public class Spindexer extends TrcSubsystem
     {
         return spindexer;
     }   //getPidStorage
+
+    /**
+     * This method gets the Flywheel velocity from the shooter.
+     *
+     * @return shooter flywheel velocity.
+     */
+    private double getFlywheelVelocity()
+    {
+        return robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelVelocity(): 0.0;
+    }   //getFlywheelVelocity;
 
     /**
      * This method is called when the entry sensor is triggered, it will update the entry slot state according to the
@@ -252,39 +281,88 @@ public class Spindexer extends TrcSubsystem
     }   //entryTriggerCallback
 
     /**
-     * This method is called when the exit sensor is triggered, it will update the exit slot state according to the
-     * sensor state.
+     * This method enables the Flywheel Velocity Trigger with the given threshold ranges.
+     *
+     * @param lowThreshold specifies the low threshold value of the range in RPM.
+     * @param highThreshold specifies the high threshold value of the range in RPM.
+     * @param callback specifies the method to call when the trigger occurs.
+     */
+    public void enableExitTrigger(double lowThreshold, double highThreshold, TrcEvent.Callback callback)
+    {
+        if (shootVelTrigger != null)
+        {
+            spindexer.tracer.traceInfo(
+                instanceName,
+                "Enabling exit trigger: lowThreshold=%f, highThreshold=%f", lowThreshold, highThreshold);
+            exitTriggerCallback = callback;
+            ((TrcTriggerThresholdRange) shootVelTrigger).setTrigger(
+                lowThreshold, highThreshold, Params.EXIT_TRIGGER_SETTLING);
+            shootVelTrigger.enableTrigger(TrcTrigger.TriggerMode.OnInactive, this::velTriggerCallback);
+        }
+    }   //enableExitTrigger
+
+    /**
+     * This method disables the Flywheel Velocity Trigger.
+     */
+    public void disableExitTrigger()
+    {
+        if (shootVelTrigger != null)
+        {
+            spindexer.tracer.traceInfo(instanceName, "Disabling exit trigger.");
+            shootVelTrigger.disableTrigger();
+        }
+    }   //disableExitTrigger
+
+    /**
+     * This method is called when the shooter velocity trigger occurred, it will update the exit slot state according
+     * to the sensor state.
      *
      * @param context (not used).
      * @param canceled specifies true is the trigger is disabled, false otherwise.
      */
-    private void exitTriggerCallback(Object context, boolean canceled)
+    private void velTriggerCallback(Object context, boolean canceled)
     {
-        if (!canceled && exitSlot != null)
+        if (!canceled)
         {
-            // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
-            // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
-            // just left the exit slot of the Spindexer.
-            Vision.ArtifactType artifactType = slotStates[exitSlot];
-            slotStates[exitSlot] = null;
-            if (artifactType == Vision.ArtifactType.Purple)
+            if (exitSlot != null)
             {
-                numPurpleArtifacts--;
-            }
-            else if (artifactType == Vision.ArtifactType.Green)
-            {
-                numGreenArtifacts--;
-            }
-            updateExpectedArtifactType();
-            // We are done removing the exit artifact. Turn off exit trigger.
-            spindexer.setExitTriggerEnabled(false);
-            spindexer.tracer.traceInfo(
-                instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
-                exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
+                // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
+                // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
+                // just left the exit slot of the Spindexer.
+                Vision.ArtifactType artifactType = slotStates[exitSlot];
+                slotStates[exitSlot] = null;
+                if (artifactType == Vision.ArtifactType.Purple)
+                {
+                    numPurpleArtifacts--;
+                }
+                else if (artifactType == Vision.ArtifactType.Green)
+                {
+                    numGreenArtifacts--;
+                }
+                updateExpectedArtifactType();
+                // We are done removing the exit artifact. Turn off exit trigger.
+                spindexer.setExitTriggerEnabled(false);
+                spindexer.tracer.traceInfo(
+                    instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
+                    exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
 
-            if (robot.ledIndicator != null)
+                if (robot.ledIndicator != null)
+                {
+                    robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
+                }
+
+                if (exitTriggerCallback != null)
+                {
+                    // Shooter is on the same thread, it's safe to call back on this thread.
+                    exitTriggerCallback.notify(null, false);
+                    exitTriggerCallback = null;
+                }
+            }
+            else
             {
-                robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
+                // If we are shooting, Spindexer better be aligned with the exit. If not, somebody did not set up
+                // the Spindexer correctly.
+                spindexer.tracer.traceWarn(instanceName, "Sanity check, should never come here!");
             }
         }
         else
@@ -293,7 +371,7 @@ public class Spindexer extends TrcSubsystem
                 instanceName, "Exit[%s]: exitSensor=%s, canceled=%s",
                 exitSlot, spindexer.isExitSensorActive(), canceled);
         }
-    }   //exitTriggerCallback
+    }   //velTriggerCallback
 
     /**
      * This method checks the next artifact type to pick up by examining the number of purple and green artifacts
@@ -372,15 +450,15 @@ public class Spindexer extends TrcSubsystem
         return 0.0;
     }   //getEntrySensorData
 
-    /**
-     * This method is called by the exit sensor trigger to monitor the sensor value for triggering condition.
-     *
-     * @return entry sensor value.
-     */
-    private double getExitSensorData()
-    {
-        return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
-    }   //getExitSensorData
+//    /**
+//     * This method is called by the exit sensor trigger to monitor the sensor value for triggering condition.
+//     *
+//     * @return entry sensor value.
+//     */
+//    private double getExitSensorData()
+//    {
+//        return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
+//    }   //getExitSensorData
 
     /**
      * This method checks if the entry sensor is triggered.
@@ -392,15 +470,15 @@ public class Spindexer extends TrcSubsystem
         return spindexer.isEntrySensorActive();
     }   //isEntrySensorActive
 
-    /**
-     * This method checks if the exit sensor is triggered.
-     *
-     * @return true if exit sensor is in triggered state, false otherwise.
-     */
-    public boolean isExitSensorActive()
-    {
-        return spindexer.isExitSensorActive();
-    }   //isExitSensorActive
+//    /**
+//     * This method checks if the exit sensor is triggered.
+//     *
+//     * @return true if exit sensor is in triggered state, false otherwise.
+//     */
+//    public boolean isExitSensorActive()
+//    {
+//        return spindexer.isExitSensorActive();
+//    }   //isExitSensorActive
 
     /**
      * This method reads the entry REV Color Sensor and returns the Hue value.
@@ -488,6 +566,7 @@ public class Spindexer extends TrcSubsystem
         {
             int slot = (startSlot + i)%slotStates.length;
 
+            spindexer.tracer.traceInfo(instanceName, "checking slot %d=%s", slot, slotStates[slot]);
             if (slotStates[slot] == artifactType ||
                 artifactType == Vision.ArtifactType.Any && slotStates[slot] != Vision.ArtifactType.None)
             {
@@ -517,6 +596,8 @@ public class Spindexer extends TrcSubsystem
             instanceName, "moveToNextVacantSlot: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         if (slot != null)
         {
+            // Turn on intake to keep the artifacts in while spinning the Spindexer.
+            robot.intake.intake(null, 0.0, null);
             double pos = warpSpace.getOptimizedTarget(
                 Params.entryPresetPositions[slot], spindexer.motor.getPosition());
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".callbackEvent");
@@ -544,6 +625,12 @@ public class Spindexer extends TrcSubsystem
             "spinCompletionCallback(autoReceive=" + autoReceivedEnabled + ", canceled=" + canceled + ")");
         if (!canceled)
         {
+            // Finish spinning Spindexer, turn off intake now.
+            if (!robot.intakeSubsystem.isBulldozeEnabled())
+            {
+                robot.intake.cancel();
+            }
+
             if (autoReceivedEnabled)
             {
                 // We are in auto receiving mode and the spindexer has finished rotating to the next vacant slot,
@@ -709,6 +796,7 @@ public class Spindexer extends TrcSubsystem
         calCompletionEvent.setCallback(
             (ctxt, canceled) ->
             {
+                spindexer.tracer.traceInfo(instanceName, "ZeroCalibrateCompletion: canceled=%s", canceled);
                 if (!canceled)
                 {
                     // After zero calibration, move the Spindexer to entry slot 0.
@@ -755,10 +843,13 @@ public class Spindexer extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
                     spindexer.motor.getPower(), spindexer.motor.getCurrent(),
                     spindexer.motor.isLowerLimitSwitchActive());
+//                dashboard.displayPrintf(
+//                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
+//                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
+//                    getExitSensorData(), isExitSensorActive());
                 dashboard.displayPrintf(
-                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
-                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
-                    getExitSensorData(), isExitSensorActive());
+                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s",
+                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive());
                 dashboard.displayPrintf(
                     lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
                     Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
@@ -786,8 +877,8 @@ public class Spindexer extends TrcSubsystem
         ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
             entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold,
             entryTriggerParams.settlingPeriod);
-        ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
-            exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod);
+//        ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
+//            exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod);
     }   //updateParamsFromDashboard
 
 }   //class Spindexer

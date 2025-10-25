@@ -28,6 +28,7 @@ import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
+import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
@@ -100,7 +101,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     private final TrcEvent spindexerEvent;
 
     private Double visionExpiredTime = null;
-    TrcPose2D aprilTagPose = null;
+    TrcPose2D targetPose = null;
     TrcShootParamTable.Params shootParams = null;
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
@@ -219,18 +220,22 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         switch (state)
         {
             case START:
-                aprilTagPose = null;
+                targetPose = null;
                 if (!taskParams.useAprilTagVision)
                 {
-                    // Not using AprilTag vision, skip vision and just score at current positon assuming operator
-                    // has manually aimed at target.
-                    tracer.traceInfo(moduleName, "***** Not using AprilTag Vision.");
+                    tracer.traceInfo(moduleName, "***** Not using AprilTag Vision, aim at AprilTag using odometry.");
+                    int aprilTagIndex = taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? 0: 4;
+                    TrcPose2D robotPose = robot.robotDrive.driveBase.getFieldPosition();
+                    targetPose = RobotParams.Game.APRILTAG_POSES[aprilTagIndex].subtractRelativePose(robotPose);
+                    tracer.traceInfo(
+                        moduleName, "robotPose=%s, aprilTagPose=%s, targetPose=%s",
+                        robotPose, RobotParams.Game.APRILTAG_POSES[aprilTagIndex], targetPose);
                     sm.setState(State.AIM);
                 }
                 else if (robot.vision != null && robot.vision.isLimelightVisionEnabled() &&
                          (!taskParams.useClassifierVision || robot.vision.isClassifierVisionEnabled()))
                 {
-                    tracer.traceInfo(moduleName, "***** Using Vision.");
+                    tracer.traceInfo(moduleName, "***** Using AprilTag Vision.");
                     visionExpiredTime = null;
                     sm.setState(State.DO_VISION);
                 }
@@ -243,7 +248,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case DO_VISION:
                 // Use vision to determine the appropriate AprilTag location.
-                if (aprilTagPose == null)
+                if (targetPose == null)
                 {
                     TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                         robot.vision.limelightVision.getBestDetectedTargetInfo(
@@ -255,10 +260,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
-                        aprilTagPose = aprilTagInfo.detectedObj.getObjectPose();
+                        targetPose = aprilTagInfo.detectedObj.getObjectPose();
                         tracer.traceInfo(
                             moduleName,
-                            "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + aprilTagPose);
+                            "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + targetPose);
                         if (robot.ledIndicator != null)
                         {
                             // Indicate we timed out and found nothing.
@@ -279,7 +284,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     motifSequence = robot.vision.getMotifSequence(taskParams.alliance, robot.obeliskMotif);
                 }
 
-                if (aprilTagPose != null &&
+                if (targetPose != null &&
                     (!taskParams.useClassifierVision || robot.obeliskMotif == null || motifSequence != null))
                 {
                     motifIndex = 0;
@@ -345,10 +350,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     {
                         tracer.traceInfo(
                             moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
-                            shootParams.shooter1Velocity, shootParams.tiltAngle, aprilTagPose.angle, event);
+                            shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
                         robot.shooter.aimShooter(
                             owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                            shootParams.tiltAngle, aprilTagPose.angle, event, 0.0, null, 0.0);
+                            shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
                     }
                     else
                     {

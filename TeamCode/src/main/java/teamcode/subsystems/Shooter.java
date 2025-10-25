@@ -190,7 +190,7 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-    private TrcEvent launchCallbackEvent = null;
+//    private TrcEvent launchCallbackEvent = null;
     private Integer trackedAprilTagId = null;
 
     /**
@@ -303,6 +303,16 @@ public class Shooter extends TrcSubsystem
     }   //getShooter
 
     /**
+     * This method returns the current flywheel velocity in RPM.
+     *
+     * @return current flywheel velocity in RPM.
+     */
+    public double getFlywheelVelocity()
+    {
+        return shooter.shooterMotor1.getVelocity()*60.0;
+    }   //getFlywheelVelocity
+
+    /**
      * This method sets the launcher servo position.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
@@ -334,17 +344,22 @@ public class Shooter extends TrcSubsystem
             TrcDbgTrace.globalTraceInfo(
                 instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f",
                 owner, completionEvent, launcherParams.activatePos, launcherParams.activateDuration);
-            if (robot.spindexer != null)
+            if (robot.spindexerSubsystem != null)
             {
                 // Enable Spindexer exit trigger.
-                robot.spindexer.setExitTriggerEnabled(true);
+//                robot.spindexer.setExitTriggerEnabled(true);
+                double currFlywheelVel = getFlywheelVelocity();
+//                TrcEvent callbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".shootCallback");
+//                callbackEvent.setCallback(this::launchCallback, null);
+                robot.spindexerSubsystem.enableExitTrigger(
+                    currFlywheelVel - 120.0, currFlywheelVel + 120.0, this::launchCallback);
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-            launchCallbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".launchCallback");
-            launchCallbackEvent.setCallback(this::launchCallback, null);
+//            launchCallbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".launchCallback");
+//            launchCallbackEvent.setCallback(this::launchCallback, null);
             launcher.setPosition(
-                owner, 0.0, launcherParams.activatePos, launchCallbackEvent, launcherParams.activateDuration);
+                owner, 0.0, launcherParams.activatePos, null, launcherParams.activateDuration);
         }
         else if (completionEvent != null)
         {
@@ -361,6 +376,10 @@ public class Shooter extends TrcSubsystem
      */
     private void launchCallback(Object context, boolean canceled)
     {
+        if (robot.spindexerSubsystem != null)
+        {
+            robot.spindexerSubsystem.disableExitTrigger();
+        }
         // Reset launcher, fire and forget.
         launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, null, 0.0);
         if (launchCompletionEvent != null)
@@ -376,7 +395,7 @@ public class Shooter extends TrcSubsystem
             launchCompletionEvent = null;
         }
         launchOwner = null;
-        launchCallbackEvent = null;
+//        launchCallbackEvent = null;
     }   //launchCallback
 
     /**
