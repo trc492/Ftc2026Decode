@@ -70,6 +70,7 @@ public class Dashboard
     @Config
     public static class Subsystem_Shooter
     {
+        public static boolean tuneShootingTable = false;
         public static TaskAutoShoot.TaskParams autoShootParams = TaskAutoShoot.autoShootParams;
         public static TrcMotor.TuneParams shootMotor1Pid = Shooter.shootMotor1PidParams;
         public static double shootMotor1Velocity = 5000.0;    // in RPM

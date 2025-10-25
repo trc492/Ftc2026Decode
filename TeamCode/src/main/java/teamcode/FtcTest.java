@@ -870,7 +870,7 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (robot.autoShootTask != null)
+                        if (!Dashboard.Subsystem_Shooter.tuneShootingTable && robot.autoShootTask != null)
                         {
                             // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
                             if (robot.autoShootTask.isActive())
