@@ -139,7 +139,7 @@ public class Shooter extends TrcSubsystem
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
         public static final double TILT_POS_OFFSET              = 26.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.269091;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.168182;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;
@@ -150,9 +150,15 @@ public class Shooter extends TrcSubsystem
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
             //   entry_name,        dist,   shoot1_vel, shoot2_vel, tilt_angle
             .add("Target_2.67ft",   32.06,  3600.0,     0.0,        26.0)
+            .add("Target_3.52ft",   42.22,  3700.0,     0.0,        26.0)
             .add("Target_4.33ft",   52.64,  3950.0,     0.0,        26.0)
-            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
-            .add("Target_7.22ft",   86.72,  4475.0,     0.0,        26.0);
+            .add("Target_5.22ft_1",   62.65,  4125.0,     0.0,        26.0)
+            .add("Target_5.22ft_2",   62.65001,  4000.0,     0.0,        28.1)
+//            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
+             .add("Target_6.04ft",   72.45,  4200.0,     0.0,        28.1)
+             .add("Target_6.55ft",   78.67,  4350.0,     0.0,        28.1)
+             .add("Target_7.02ft",   84.23,  4575.0,     0.0,        28.1);
+//            .add("Target_7.22ft",   86.72,  4475.0,     0.0,        26.0);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
