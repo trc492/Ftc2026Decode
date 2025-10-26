@@ -46,7 +46,6 @@ import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcRobot;
 import trclib.subsystem.TrcSubsystem;
-import trclib.timer.TrcElapsedTimer;
 import trclib.timer.TrcTimer;
 
 /**
@@ -92,8 +91,6 @@ public class FtcTest extends FtcTeleOp
     }   //class TestChoices
 
     private final TestChoices testChoices = new TestChoices();
-    private TrcElapsedTimer elapsedTimer = null;
-
     private TrcRobot.RobotCommand testCommand = null;
     // Drive Speed Test.
     private double maxDriveVelocity = 0.0;
@@ -128,10 +125,6 @@ public class FtcTest extends FtcTeleOp
         // TeleOp initialization.
         //
         super.robotInit();
-        if (RobotParams.Preferences.useLoopPerformanceMonitor)
-        {
-            elapsedTimer = new TrcElapsedTimer("TestLoopMonitor", 2.0);
-        }
         //
         // Test menus.
         //
@@ -213,13 +206,7 @@ public class FtcTest extends FtcTeleOp
             case PID_DRIVE:
                 if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
                 {
-                    robot.robotDrive.driveBase.resetOdometry();
                     testCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
-                    ((CmdPidDrive) testCommand).start(
-                        0.0, Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit, null,
-                        new TrcPose2D(Dashboard.Subsystem_Drivebase.driveBaseParams.xDriveTarget*12.0,
-                                      Dashboard.Subsystem_Drivebase.driveBaseParams.yDriveTarget*12.0,
-                                      Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
                     robot.robotDrive.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
                 }
                 break;
@@ -349,13 +336,13 @@ public class FtcTest extends FtcTeleOp
             case TUNE_DRIVE_PID:
                 if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
                 {
-                    robot.dashboard.putObject(
+                    robot.dashboard.putNumber(
                         "robotVelocity", robot.robotDrive.purePursuitDrive.getPathRobotVelocity());
-                    robot.dashboard.putObject(
+                    robot.dashboard.putNumber(
                         "targetVelocity", robot.robotDrive.purePursuitDrive.getPathTargetVelocity());
-                    robot.dashboard.putObject(
+                    robot.dashboard.putNumber(
                         "robotPosition", robot.robotDrive.purePursuitDrive.getPathRelativePosition());
-                    robot.dashboard.putObject(
+                    robot.dashboard.putNumber(
                         "targetPosition", robot.robotDrive.purePursuitDrive.getPathPositionTarget());
                 }
                 break;
@@ -415,16 +402,22 @@ public class FtcTest extends FtcTeleOp
 
                         if (xPidCtrl != null)
                         {
+                            robot.dashboard.putNumber("xPidPos", xPidCtrl.getCurrentInput());
+                            robot.dashboard.putNumber("xPidTarget", xPidCtrl.getPositionSetpoint());
                             xPidCtrl.displayPidInfo(lineNum);
                             lineNum += 2;
                         }
                         if (yPidCtrl != null)
                         {
+                            robot.dashboard.putNumber("yPidPos", yPidCtrl.getCurrentInput());
+                            robot.dashboard.putNumber("yPidTarget", yPidCtrl.getPositionSetpoint());
                             yPidCtrl.displayPidInfo(lineNum);
                             lineNum += 2;
                         }
                         if (turnPidCtrl != null)
                         {
+                            robot.dashboard.putNumber("turnPidPos", turnPidCtrl.getCurrentInput());
+                            robot.dashboard.putNumber("turnPidTarget", turnPidCtrl.getPositionSetpoint());
                             turnPidCtrl.displayPidInfo(lineNum);
                             lineNum += 2;
                         }
@@ -447,15 +440,6 @@ public class FtcTest extends FtcTeleOp
                 default:
                     break;
             }
-        }
-
-        if (elapsedTimer != null)
-        {
-            elapsedTimer.recordPeriodTime();
-            robot.dashboard.displayPrintf(
-                15, "Period: %.3f(%.3f/%.3f)",
-                elapsedTimer.getAverageElapsedTime(), elapsedTimer.getMinElapsedTime(),
-                elapsedTimer.getMaxElapsedTime());
         }
     }   //periodic
 
@@ -722,7 +706,6 @@ public class FtcTest extends FtcTeleOp
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.xDriveTarget*12.0,
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.yDriveTarget*12.0,
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
-                                tuneDriveAtEndPoint = false;
                             }
                             robot.robotDrive.purePursuitDrive.setXPositionPidCoefficients(
                                 Dashboard.Subsystem_Drivebase.driveBaseParams.xDrivePidCoeffs);
@@ -743,6 +726,22 @@ public class FtcTest extends FtcTeleOp
                             tuneDriveAtEndPoint = !tuneDriveAtEndPoint;
                         }
                         passToTeleOp = false;
+                    }
+                }
+                else if (testChoices.test == Test.PID_DRIVE)
+                {
+                    if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
+                    {
+                        if (pressed)
+                        {
+                            robot.robotDrive.driveBase.resetOdometry();
+                            ((CmdPidDrive) testCommand).start(
+                                0.0, Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit, null,
+                                new TrcPose2D(
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.xDriveTarget*12.0,
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.yDriveTarget*12.0,
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
+                        }
                     }
                 }
                 else if (testChoices.test == Test.SUBSYSTEMS_TEST)
@@ -1100,7 +1099,7 @@ public class FtcTest extends FtcTeleOp
                 Vision.ArtifactType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
                 if (blobs != null)
                 {
-                    robot.dashboard.displayPrintf(14, "Blobs=%s", Arrays.toString(blobs));
+                    robot.dashboard.displayPrintf(15, "Blobs=%s", Arrays.toString(blobs));
                 }
             }
         }

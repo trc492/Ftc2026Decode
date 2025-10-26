@@ -48,7 +48,6 @@ public class RobotParams
         public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.DecodeRobot;
         public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
-        public static final boolean useLoopPerformanceMonitor   = true;
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
         // Status Update: Dashboard Update may affect robot loop time, don't do it when in competition.
@@ -64,8 +63,8 @@ public class RobotParams
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
         public static final boolean streamWebcamToDashboard     = false;
-        public static final boolean showVisionView              = !inCompetition;   // For both HDMI and Dashboard
-        public static final boolean showVisionStat              = false;            // For HDMI
+        public static final boolean showVisionView              = false;    // For both HDMI and Dashboard
+        public static final boolean showVisionStat              = false;    // For HDMI
         // Master switches for Subsystems
         public static final boolean useSubsystems               = true;
         public static final boolean showSubsystems              = true;

@@ -350,6 +350,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     sm.addEvent(event);
                     if (shootParams != null)
                     {
+                        targetPose.angle += robot.shooter.getPanAngle();
                         tracer.traceInfo(
                             moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
                             shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
