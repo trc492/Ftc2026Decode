@@ -243,7 +243,7 @@ public class Spindexer extends TrcSubsystem
 
             if (robot.ledIndicator != null)
             {
-                robot.ledIndicator.setSpindexerPattern(entrySlot, artifactName);
+                robot.ledIndicator.setSpindexerPatternOn(entrySlot, artifactName);
             }
 
             moveToNextVacantEntrySlot(null, null);
@@ -324,7 +324,7 @@ public class Spindexer extends TrcSubsystem
 
                 if (robot.ledIndicator != null)
                 {
-                    robot.ledIndicator.setSpindexerPattern(exitSlot, LEDIndicator.OFF_PATTERN);
+                    robot.ledIndicator.setSpindexerPatternOff(exitSlot);
                 }
 
                 if (exitTriggerCallback != null)

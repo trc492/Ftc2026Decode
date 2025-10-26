@@ -188,30 +188,58 @@ public class LEDIndicator
     }   //setDriveOrientation
 
     /**
-     * This method sets the statusLED pattern ON for a period of time and turns off automatically afterwards.
+     * This method sets the statusLED pattern ON or OFF.
      *
      * @param patternName specifies the name of the LED pattern to turn on.
      */
-    public void setStatusPattern(String patternName)
+    public void setStatusPattern(String patternName, boolean on)
     {
         if (statusIndicator != null)
         {
-            statusIndicator.setPatternState(patternName, true);
+            statusIndicator.setPatternState(patternName, on);
         }
     }   //setStatusPattern
 
     /**
-     * This method sets the spindexerLED pattern ON for a period of time and turns off automatically afterwards.
+     * This method clears all vision detected states.
+     */
+    public void setStatusVisionPatternsOff()
+    {
+        if (statusIndicator != null)
+        {
+            statusIndicator.setPatternState(PURPLE_BLOB, false);
+            statusIndicator.setPatternState(GREEN_BLOB, false);
+            statusIndicator.setPatternState(RED_APRILTAG, false);
+            statusIndicator.setPatternState(BLUE_APRILTAG, false);
+            statusIndicator.setPatternState(NOT_FOUND, false);
+        }
+    }   //setStatusVisionPatternsOff
+
+    /**
+     * This method sets the spindexerLED pattern ON for the specified slot.
      *
      * @param slot specifies the Spindexer slot.
      * @param patternName specifies the name of the LED pattern to turn on.
      */
-    public void setSpindexerPattern(int slot, String patternName)
+    public void setSpindexerPatternOn(int slot, String patternName)
     {
         if (spindexerIndicators[slot] != null)
         {
             spindexerIndicators[slot].setPatternState(patternName, true);
         }
-    }   //setSpindexerPattern
+    }   //setSpindexerPatternOn
+
+    /**
+     * This method turns off the spindexeerLED for the specified slot.
+     *
+     * @param slot specifies the Spindexer slot.
+     */
+    public void setSpindexerPatternOff(int slot)
+    {
+        if (spindexerIndicators[slot] != null)
+        {
+            spindexerIndicators[slot].setPatternState(spindexerIndicators[slot].getPattern(), false);
+        }
+    }   //setSpindexerPatternOff
 
 }   //class LEDIndicator

@@ -244,7 +244,8 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND);
+                        robot.ledIndicator.setStatusVisionPatternsOff();
+                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
                     }
                     sm.setState(State.DONE);
                 }

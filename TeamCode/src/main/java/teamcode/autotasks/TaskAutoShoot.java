@@ -266,8 +266,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + targetPose);
                         if (robot.ledIndicator != null)
                         {
+                            robot.ledIndicator.setStatusVisionPatternsOff();
                             robot.ledIndicator.setStatusPattern(
-                                aprilTagId == 20? LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG);
+                                aprilTagId == 20? LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG, true);
                         }
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
@@ -302,7 +303,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND);
+                        robot.ledIndicator.setStatusVisionPatternsOff();
+                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
                     }
                     sm.setState(State.DONE);
                 }

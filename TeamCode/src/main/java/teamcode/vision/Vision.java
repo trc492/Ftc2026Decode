@@ -470,7 +470,8 @@ public class Vision
 
             if (objectName != null && robot.ledIndicator != null)
             {
-                robot.ledIndicator.setStatusPattern(objectName);
+                robot.ledIndicator.setStatusVisionPatternsOff();
+                robot.ledIndicator.setStatusPattern(objectName, true);
             }
 
             if (lineNum != -1)
@@ -543,9 +544,10 @@ public class Vision
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
+            robot.ledIndicator.setStatusVisionPatternsOff();
             robot.ledIndicator.setStatusPattern(
                 aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
-                    LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG);
+                    LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG, true);
         }
 
         if (lineNum != -1)
@@ -757,7 +759,8 @@ public class Vision
 
         if (artifactInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusPattern(artifactInfo.detectedObj.label);
+            robot.ledIndicator.setStatusVisionPatternsOff();
+            robot.ledIndicator.setStatusPattern(artifactInfo.detectedObj.label, true);
         }
 
         if (lineNum != -1)
