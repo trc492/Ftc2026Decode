@@ -136,14 +136,14 @@ public class Dashboard
                 nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
             }
 
-            if (RobotParams.Preferences.showVision && robot.vision != null)
-            {
-                lineNum = robot.vision.updateStatus(lineNum, slowLoop);
-            }
-
             if (RobotParams.Preferences.showSubsystems)
             {
                 lineNum = TrcSubsystem.updateStatusAll(lineNum, slowLoop);
+            }
+
+            if (RobotParams.Preferences.showVisionStatus && robot.vision != null)
+            {
+                lineNum = robot.vision.updateStatus(lineNum, slowLoop);
             }
         }
 

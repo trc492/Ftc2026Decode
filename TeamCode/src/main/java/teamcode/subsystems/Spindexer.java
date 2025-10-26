@@ -40,7 +40,6 @@ import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTrigger;
 import trclib.sensor.TrcTriggerThresholdRange;
@@ -71,7 +70,7 @@ public class Spindexer extends TrcSubsystem
         public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
-        public static final double POS_OFFSET                   = 30.0;
+        public static final double POS_OFFSET                   = 18.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
@@ -82,14 +81,13 @@ public class Spindexer extends TrcSubsystem
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
-        public static final String EXIT_SENSOR_NAME             = SUBSYSTEM_NAME + ".ExitSensor";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
         public static final double MOVE_POWER                   = 1.0;
         public static final int MAX_CAPACITY                    = 3;
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.0;  // in inches
-        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 1.0;  // in inches
+        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 2.5;  // in inches
         public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
 
         public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
@@ -120,7 +118,6 @@ public class Spindexer extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final RevColorSensorV3 entryAnalogSensor;
-//    private final Rev2mDistanceSensor exitAnalogSensor;
     private final TrcTrigger shootVelTrigger;
     public final TrcPidStorage spindexer;
     private final TrcWarpSpace warpSpace;
@@ -171,12 +168,6 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_SENSOR)
         {
-//            exitAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-//                Rev2mDistanceSensor.class, Params.EXIT_SENSOR_NAME);
-//            spindexerParams.setExitAnalogSourceTrigger(
-//                Params.EXIT_SENSOR_NAME, this::getExitSensorData, exitTriggerParams.lowThreshold,
-//                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod, false,
-//                this::exitTriggerCallback, null);
             shootVelTrigger = new FtcSensorTrigger()
                 .setAnalogSourceTrigger(
                     Params.EXIT_TRIGGER_NAME,
@@ -184,14 +175,9 @@ public class Spindexer extends TrcSubsystem
                     exitTriggerParams.lowThreshold,
                     exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod)
                 .getTrigger();
-//            shootVelTrigger = (TrcTriggerThresholdRange) trigger;
-//            shootVelTrigger = (TrcTriggerThresholdRange) (new FtcSensorTrigger().setAnalogSourceTrigger(
-//                Params.EXIT_TRIGGER_NAME, robot.shooterSubsystem::getFlywheelVelocity, exitTriggerParams.lowThreshold,
-//                exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod).getTrigger());
         }
         else
         {
-//            exitAnalogSensor = null;
             shootVelTrigger = null;
         }
 
@@ -211,16 +197,6 @@ public class Spindexer extends TrcSubsystem
     {
         return spindexer;
     }   //getPidStorage
-
-    /**
-     * This method gets the Flywheel velocity from the shooter.
-     *
-     * @return shooter flywheel velocity.
-     */
-    private double getFlywheelVelocity()
-    {
-        return robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelVelocity(): 0.0;
-    }   //getFlywheelVelocity;
 
     /**
      * This method is called when the entry sensor is triggered, it will update the entry slot state according to the
@@ -450,16 +426,6 @@ public class Spindexer extends TrcSubsystem
         return 0.0;
     }   //getEntrySensorData
 
-//    /**
-//     * This method is called by the exit sensor trigger to monitor the sensor value for triggering condition.
-//     *
-//     * @return entry sensor value.
-//     */
-//    private double getExitSensorData()
-//    {
-//        return exitAnalogSensor != null? exitAnalogSensor.getDistance(DistanceUnit.INCH): 0.0;
-//    }   //getExitSensorData
-
     /**
      * This method checks if the entry sensor is triggered.
      *
@@ -469,16 +435,6 @@ public class Spindexer extends TrcSubsystem
     {
         return spindexer.isEntrySensorActive();
     }   //isEntrySensorActive
-
-//    /**
-//     * This method checks if the exit sensor is triggered.
-//     *
-//     * @return true if exit sensor is in triggered state, false otherwise.
-//     */
-//    public boolean isExitSensorActive()
-//    {
-//        return spindexer.isExitSensorActive();
-//    }   //isExitSensorActive
 
     /**
      * This method reads the entry REV Color Sensor and returns the Hue value.
@@ -843,10 +799,6 @@ public class Spindexer extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, spindexer.motor.getPosition(), spindexer.motor.getPidTarget(),
                     spindexer.motor.getPower(), spindexer.motor.getCurrent(),
                     spindexer.motor.isLowerLimitSwitchActive());
-//                dashboard.displayPrintf(
-//                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s, Exit(Dist/Trig)=%.3f/%s",
-//                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive(),
-//                    getExitSensorData(), isExitSensorActive());
                 dashboard.displayPrintf(
                     lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s",
                     Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive());
@@ -877,8 +829,6 @@ public class Spindexer extends TrcSubsystem
         ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
             entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold,
             entryTriggerParams.settlingPeriod);
-//        ((TrcTriggerThresholdRange) spindexer.getExitTrigger()).setTrigger(
-//            exitTriggerParams.lowThreshold, exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod);
     }   //updateParamsFromDashboard
 
 }   //class Spindexer

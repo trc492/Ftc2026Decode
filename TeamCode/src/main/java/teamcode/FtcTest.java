@@ -64,7 +64,6 @@ public class FtcTest extends FtcTeleOp
     private enum Test
     {
         SUBSYSTEMS_TEST,
-        TUNE_SUBSYSTEM,
         DRIVE_MOTORS_TEST,
         DRIVE_SPEED_TEST,
         X_TIMED_DRIVE,
@@ -138,7 +137,7 @@ public class FtcTest extends FtcTeleOp
         //
         doTestMenus();
         // We are tuning subsystems, update Dashboard with the parameters from each subsystem.
-        if (testChoices.test == Test.TUNE_SUBSYSTEM)
+        if (testChoices.test == Test.SUBSYSTEMS_TEST)
         {
             TrcSubsystem.updateSubsystemParamsToDashboard();
         }
@@ -368,7 +367,7 @@ public class FtcTest extends FtcTeleOp
         // Allow TeleOp to run so we can control the robot in subsystem test or drive speed test modes.
         //
         allowAnalogControl = allowTeleOp();
-        super.periodic(elapsedTime, true);
+        super.periodic(elapsedTime, slowPeriodicLoop);
 
         if (slowPeriodicLoop)
         {
@@ -433,7 +432,7 @@ public class FtcTest extends FtcTeleOp
                     break;
 
                 case VISION_TEST:
-                    doVisionTest(lineNum);
+                    doVisionTest();
                     break;
 
                 case CALIBRATE_SWERVE_STEERING:
@@ -468,8 +467,8 @@ public class FtcTest extends FtcTeleOp
     private boolean allowTeleOp()
     {
         return teleOpControlEnabled &&
-               (testChoices.test == Test.SUBSYSTEMS_TEST || testChoices.test == Test.TUNE_SUBSYSTEM  ||
-                testChoices.test == Test.VISION_TEST || testChoices.test == Test.DRIVE_SPEED_TEST);
+               (testChoices.test == Test.SUBSYSTEMS_TEST || testChoices.test == Test.VISION_TEST ||
+                testChoices.test == Test.DRIVE_SPEED_TEST);
     }   //allowTeleOp
 
     /**
@@ -746,7 +745,7 @@ public class FtcTest extends FtcTeleOp
                         passToTeleOp = false;
                     }
                 }
-                else if (testChoices.test == Test.TUNE_SUBSYSTEM)
+                else if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
                     if (pressed)
                     {
@@ -1050,7 +1049,6 @@ public class FtcTest extends FtcTeleOp
         // Populate menus.
         //
         testMenu.addChoice("Subsystems test", Test.SUBSYSTEMS_TEST, false);
-        testMenu.addChoice("Tune Subsystem", Test.TUNE_SUBSYSTEM, false);
         testMenu.addChoice("Drive motors test", Test.DRIVE_MOTORS_TEST, false);
         testMenu.addChoice("Drive speed test", Test.DRIVE_SPEED_TEST, false);
         testMenu.addChoice("X Timed drive", Test.X_TIMED_DRIVE, false);
@@ -1076,10 +1074,8 @@ public class FtcTest extends FtcTeleOp
 
     /**
      * This method calls vision code to detect target objects and display their info.
-     *
-     * @param lineNum specifies the starting line number on the dashboard to display vision info.
      */
-    private void doVisionTest(int lineNum)
+    private void doVisionTest()
     {
         if (robot.vision != null)
         {
@@ -1087,32 +1083,25 @@ public class FtcTest extends FtcTeleOp
             {
                 robot.vision.getLimelightDetectedObject(
                     robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
-                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python,
-                    null, lineNum++);
+                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python, null, -1);
             }
 
             if (robot.vision.aprilTagVision != null)
             {
-                robot.vision.getDetectedAprilTag(null, lineNum++);
+                robot.vision.getDetectedAprilTag(null, -1);
             }
 
             if (robot.vision.isArtifactVisionEnabled(Vision.ArtifactType.Any))
             {
-                robot.vision.getDetectedArtifact(Vision.ArtifactType.Any, 0.0, lineNum++);
+                robot.vision.getDetectedArtifact(Vision.ArtifactType.Any, 0.0, -1);
             }
             else if (robot.vision.isClassifierVisionEnabled())
             {
                 Vision.ArtifactType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
                 if (blobs != null)
                 {
-                    robot.dashboard.displayPrintf(lineNum++, "Blobs=%s", Arrays.toString(blobs));
+                    robot.dashboard.displayPrintf(14, "Blobs=%s", Arrays.toString(blobs));
                 }
-            }
-
-            if (robot.vision.ftcVision != null)
-            {
-                // displayExposureSettings is only available for VisionPortal.
-                robot.vision.displayExposureSettings(lineNum++);
             }
         }
     }   //doVisionTest

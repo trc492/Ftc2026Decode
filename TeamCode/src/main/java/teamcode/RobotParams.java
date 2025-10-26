@@ -56,17 +56,16 @@ public class RobotParams
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
-        public static final boolean showVision                  = false;
-        public static final boolean useWebCam                   = true;     // false to use Android phone camera.
-        public static final boolean useBuiltinCamBack           = false;    // For Android Phone as Robot Controller.
+        public static final boolean showVisionStatus            = false;
         public static final boolean useLimelightVision          = true;
+        public static final boolean useWebCam                   = false;    // false to use Android phone camera.
         public static final boolean useWebcamAprilTagVision     = false;
         public static final boolean useArtifactVision           = true;
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
-        public static final boolean streamWebcamToDashboard     = !inCompetition;
+        public static final boolean streamWebcamToDashboard     = false;
         public static final boolean showVisionView              = !inCompetition;   // For both HDMI and Dashboard
-        public static final boolean showVisionStat              = true;             // For HDMI
+        public static final boolean showVisionStat              = false;            // For HDMI
         // Master switches for Subsystems
         public static final boolean useSubsystems               = true;
         public static final boolean showSubsystems              = true;

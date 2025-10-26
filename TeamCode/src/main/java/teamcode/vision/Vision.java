@@ -22,9 +22,6 @@
 
 package teamcode.vision;
 
-import com.qualcomm.robotcore.hardware.LED;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -97,7 +94,7 @@ public class Vision
     public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
-        .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
+        .setCameraPose(0.0, 0.0, 16.361, 0.0, 19.0, 0.0);
 
     public enum ArtifactType
     {
@@ -221,9 +218,9 @@ public class Vision
         this.tracer = new TrcDbgTrace();
         this.robot = robot;
 
-        webcam1 = robot.robotInfo.webCam1 != null?
+        webcam1 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
-        webcam2 = robot.robotInfo.webCam2 != null?
+        webcam2 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam2 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
         // LimelightVision (not a Vision Processor).
         if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
@@ -234,87 +231,82 @@ public class Vision
                 this::getLimelightTargetGroundOffset);
             limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
         }
-        // Creating Vision Processors for VisionPortal.
-        ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
 
-        if (RobotParams.Preferences.useWebcamAprilTagVision)
+        if (webcam1 != null || webcam2 != null)
         {
-            tracer.traceInfo(moduleName, "Starting Webcam AprilTagVision...");
-            FtcVisionAprilTag.Parameters aprilTagParams = new FtcVisionAprilTag.Parameters()
-                .setDrawTagIdEnabled(true)
-                .setDrawTagOutlineEnabled(true)
-                .setDrawAxesEnabled(false)
-                .setDrawCubeProjectionEnabled(false)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
-            aprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
-            aprilTagProcessor = aprilTagVision.getVisionProcessor();
-            visionProcessorsList.add(aprilTagProcessor);
-        }
+            // Creating Vision Processors for VisionPortal.
+            ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
 
-        if (robot.robotInfo.webCam1 != null)
-        {
-            if (RobotParams.Preferences.useArtifactVision)
+            if (RobotParams.Preferences.useWebcamAprilTagVision)
             {
-                tracer.traceInfo(moduleName, "Starting Webcam ArtifactVision...");
-                TrcOpenCvColorBlobPipeline.SolvePnpParams solvePnpParams = null;
-                if (RobotParams.Preferences.useSolvePnp)
+                tracer.traceInfo(moduleName, "Starting Webcam AprilTagVision...");
+                FtcVisionAprilTag.Parameters aprilTagParams = new FtcVisionAprilTag.Parameters()
+                    .setDrawTagIdEnabled(true)
+                    .setDrawTagOutlineEnabled(true)
+                    .setDrawAxesEnabled(false)
+                    .setDrawCubeProjectionEnabled(false)
+                    .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
+                aprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
+                aprilTagProcessor = aprilTagVision.getVisionProcessor();
+                visionProcessorsList.add(aprilTagProcessor);
+            }
+
+            if (robot.robotInfo.webCam1 != null)
+            {
+                if (RobotParams.Preferences.useArtifactVision)
                 {
-                    solvePnpParams =
-                        new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(artifactWidth, artifactHeight);
-                    if (robot.robotInfo.webCam1.lensInfo != null)
+                    tracer.traceInfo(moduleName, "Starting Webcam ArtifactVision...");
+                    TrcOpenCvColorBlobPipeline.SolvePnpParams solvePnpParams = null;
+                    if (RobotParams.Preferences.useSolvePnp)
                     {
-                        solvePnpParams.setSolvePnpParams(
-                            robot.robotInfo.webCam1.lensInfo, robot.robotInfo.webCam1.camPose);
+                        solvePnpParams =
+                            new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(
+                                artifactWidth, artifactHeight);
+                        if (robot.robotInfo.webCam1.lensInfo != null)
+                        {
+                            solvePnpParams.setSolvePnpParams(
+                                robot.robotInfo.webCam1.lensInfo, robot.robotInfo.webCam1.camPose);
+                        }
                     }
+
+                    artifactVision = new FtcVisionEocvColorBlob(
+                        "ArtifactVision", artifactPipelineParams, solvePnpParams,
+                        robot.robotInfo.webCam1.cameraRect, robot.robotInfo.webCam1.worldRect);
+                    artifactProcessor = artifactVision.getVisionProcessor();
+                    visionProcessorsList.add(artifactProcessor);
+                    //                artifactProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
                 }
 
-                artifactVision = new FtcVisionEocvColorBlob(
-                    "ArtifactVision", artifactPipelineParams, solvePnpParams,
-                    robot.robotInfo.webCam1.cameraRect, robot.robotInfo.webCam1.worldRect);
-                artifactProcessor = artifactVision.getVisionProcessor();
-                visionProcessorsList.add(artifactProcessor);
-//                artifactProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
+                if (RobotParams.Preferences.useClassifierVision)
+                {
+                    tracer.traceInfo(moduleName, "Starting Webcam ClassifierVision...");
+                    classifierVision = new FtcVisionEocvColorBlob(
+                        "ClassifierVision", classifierPipelineParams, null, robot.robotInfo.webCam1.cameraRect,
+                        robot.robotInfo.webCam1.worldRect);
+                    classifierProcessor = classifierVision.getVisionProcessor();
+                    visionProcessorsList.add(classifierProcessor);
+                    //                classifierProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
+                }
             }
 
-            if (RobotParams.Preferences.useClassifierVision)
+            if (!visionProcessorsList.isEmpty())
             {
-                tracer.traceInfo(moduleName, "Starting Webcam ClassifierVision...");
-                classifierVision = new FtcVisionEocvColorBlob(
-                    "ClassifierVision", classifierPipelineParams, null, robot.robotInfo.webCam1.cameraRect,
-                    robot.robotInfo.webCam1.worldRect);
-                classifierProcessor = classifierVision.getVisionProcessor();
-                visionProcessorsList.add(classifierProcessor);
-//                classifierProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
-            }
-        }
+                VisionProcessor[] visionProcessors = new VisionProcessor[visionProcessorsList.size()];
+                visionProcessorsList.toArray(visionProcessors);
+                if (RobotParams.Preferences.useWebCam)
+                {
+                    // Use USB webcams.
+                    ftcVision = new FtcVision(
+                        webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
+                        RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
+                        visionProcessors);
+                }
 
-        if (!visionProcessorsList.isEmpty())
-        {
-            VisionProcessor[] visionProcessors = new VisionProcessor[visionProcessorsList.size()];
-            visionProcessorsList.toArray(visionProcessors);
-            if (RobotParams.Preferences.useWebCam)
-            {
-                // Use USB webcams.
-                ftcVision = new FtcVision(
-                    webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                    RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
-                    visionProcessors);
-            }
-            else
-            {
-                // Use phone camera.
-                ftcVision = new FtcVision(
-                    RobotParams.Preferences.useBuiltinCamBack?
-                        BuiltinCameraDirection.BACK: BuiltinCameraDirection.FRONT,
-                    robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                    RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
-                    visionProcessors);
-            }
-
-            // Disable all vision until they are needed.
-            for (VisionProcessor processor: visionProcessors)
-            {
-                ftcVision.setProcessorEnabled(processor, false);
+                // Disable all vision until they are needed.
+                for (VisionProcessor processor : visionProcessors)
+                {
+                    ftcVision.setProcessorEnabled(processor, false);
+                }
             }
         }
     }   //Vision
@@ -1089,26 +1081,29 @@ public class Vision
      */
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showVisionStatus)
         {
-            if (limelightVision != null)
+            if (slowLoop)
             {
-                lineNum = limelightVision.updateStatus(lineNum);
-            }
+                if (limelightVision != null)
+                {
+                    lineNum = limelightVision.updateStatus(lineNum);
+                }
 
-            if (aprilTagVision != null)
-            {
-                lineNum = aprilTagVision.updateStatus(lineNum);
-            }
+                if (aprilTagVision != null)
+                {
+                    lineNum = aprilTagVision.updateStatus(lineNum);
+                }
 
-            if (artifactVision != null)
-            {
-                lineNum = artifactVision.updateStatus(lineNum);
-            }
+                if (artifactVision != null)
+                {
+                    lineNum = artifactVision.updateStatus(lineNum);
+                }
 
-            if (classifierVision != null)
-            {
-                lineNum = classifierVision.updateStatus(lineNum);
+                if (classifierVision != null)
+                {
+                    lineNum = classifierVision.updateStatus(lineNum);
+                }
             }
         }
 

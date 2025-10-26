@@ -98,7 +98,7 @@ public class Shooter extends TrcSubsystem
         public static final String PAN_ENCODER_NAME             = null;
         public static final boolean PAN_ENCODER_INVERTED        = false;
 
-        public static final double PAN_MOTOR_PID_KP             = 0.018;
+        public static final double PAN_MOTOR_PID_KP             = 0.03;
         public static final double PAN_MOTOR_PID_KI             = 0.0;
         public static final double PAN_MOTOR_PID_KD             = 0.0;
         public static final double PAN_PID_TOLERANCE            = 1.0;
@@ -107,14 +107,17 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
-        public static final double PAN_POS_OFFSET               = 97.5;
+        public static final double PAN_POS_OFFSET               = 92.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
-        public static final double PAN_MIN_POS                  = -265.0;
-        public static final double PAN_MAX_POS                  = 85.0;
+        public static final double PAN_MIN_POS                  = -345.0;
+        public static final double PAN_MAX_POS                  = PAN_POS_OFFSET;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
-            {PAN_MIN_POS, -135, -90.0, -45.0, 0.0, 45.0, 90.0, 135.0, PAN_MAX_POS};
+            {
+                PAN_MIN_POS, -330.0, -300.0, -270.0, -240.0, -210.0, -180.0, -150.0, -120.0, -90.0, -60.0, -30.0,
+                0.0, 30.0, 60.0, PAN_MAX_POS
+            };
 
         public static final double PAN_ZERO_CAL_POWER           = 0.3;
         public static final double PAN_STALL_MIN_POWER          = Math.abs(PAN_ZERO_CAL_POWER);
@@ -132,14 +135,14 @@ public class Shooter extends TrcSubsystem
         public static final double TILT_MOTOR_PID_KP            = 0.045;
         public static final double TILT_MOTOR_PID_KI            = 0.0;
         public static final double TILT_MOTOR_PID_KD            = 0.0;
-        public static final double TILT_PID_TOLERANCE           = 1.0;
+        public static final double TILT_PID_TOLERANCE           = 0.5;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
 //        public static final double TILT_GEAR_RATIO              = 543.0/56.0;   // Not accurate???
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
-        public static final double TILT_POS_OFFSET              = 26.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.168182;
+        public static final double TILT_POS_OFFSET              = 25.0;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.153939;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;
@@ -152,19 +155,18 @@ public class Shooter extends TrcSubsystem
             .add("Target_2.67ft",   32.06,  3600.0,     0.0,        26.0)
             .add("Target_3.52ft",   42.22,  3700.0,     0.0,        26.0)
             .add("Target_4.33ft",   52.64,  3950.0,     0.0,        26.0)
-            .add("Target_5.22ft_1",   62.65,  4125.0,     0.0,        26.0)
-            .add("Target_5.22ft_2",   62.65001,  4000.0,     0.0,        28.1)
+            .add("Target_5.22ft_1", 62.65,  4125.0,     0.0,        26.0)
+            .add("Target_5.22ft_2", 62.65001,4000.0,    0.0,        28.1)
 //            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
-             .add("Target_6.04ft",   72.45,  4200.0,     0.0,        28.1)
-             .add("Target_6.55ft",   78.67,  4350.0,     0.0,        28.1)
-             .add("Target_7.02ft",   84.23,  4575.0,     0.0,        28.1);
-//            .add("Target_7.22ft",   86.72,  4475.0,     0.0,        26.0);
+             .add("Target_6.04ft",  72.45,  4200.0,     0.0,        28.1)
+             .add("Target_6.55ft",  78.67,  4350.0,     0.0,        28.1)
+             .add("Target_7.02ft",  84.23,  4575.0,     0.0,        28.1);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
-        public static double LAUNCHER_REST_POS                  = 0.53;
-        public static double LAUNCHER_LAUNCH_POS                = 1.0;
+        public static double LAUNCHER_REST_POS                  = 0.48;
+        public static double LAUNCHER_LAUNCH_POS                = 0.78;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.75;  // in seconds
     }   //class Params
 

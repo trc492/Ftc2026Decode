@@ -69,8 +69,8 @@ SOFTWARE.
             <AnalogInput name="blSteerEncoder" port="1" />
             <!-- Digital -->
             <!-- I2C -->
-            <REV_VL53L0X_RANGE_SENSOR name="Spindexer.ExitSensor" port="0" bus="1" />
             <!--
+            <REV_VL53L0X_RANGE_SENSOR name="Spindexer.ExitSensor" port="0" bus="1" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0"/>
             -->
         </LynxModule>
