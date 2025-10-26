@@ -22,6 +22,8 @@
 
 package teamcode.vision;
 
+import com.qualcomm.robotcore.hardware.LED;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -457,7 +459,8 @@ public class Vision
                 switch (pipelineIndex)
                 {
                     case 0:
-                        objectName = LEDIndicator.APRIL_TAG;
+                        objectName = (int)limelightInfo.detectedObj.objId == 20?
+                            LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
                         break;
 
                     case 1:
@@ -548,13 +551,15 @@ public class Vision
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusPattern(LEDIndicator.APRIL_TAG);
+            robot.ledIndicator.setStatusPattern(
+                aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
+                    LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG);
         }
 
         if (lineNum != -1)
         {
             robot.dashboard.displayPrintf(
-                lineNum, "%s: %s", LEDIndicator.APRIL_TAG, aprilTagInfo != null? aprilTagInfo : "Not found.");
+                lineNum, "AprilTag[%s]: %s", id, aprilTagInfo != null ? aprilTagInfo : "Not found.");
         }
 
         return aprilTagInfo;

@@ -41,20 +41,48 @@ public class LEDIndicator
     public static final String SPINDEXER1_LED_NAME = "Spindexer1LED";
     public static final String SPINDEXER2_LED_NAME = "Spindexer2LED";
     public static final String SPINDEXER3_LED_NAME = "Spindexer3LED";
-
     // LED pattern names.
     public static final String PURPLE_BLOB = "Purple";
     public static final String GREEN_BLOB = "Green";
+    public static final String RED_APRILTAG = "RedAprilTag";
+    public static final String BLUE_APRILTAG = "BlueAprilTag";
+    public static final String SEARCHING_RED_APRILTAG = "SearchingRedAprilTag";
+    public static final String SEARCHING_BLUE_APRILTAG = "SearchingBlueAprilTag";
     public static final String NOT_FOUND = "NotFound";
-    public static final String APRIL_TAG = "AprilTag";
-    public static final String DRIVE_ORIENTATION_FIELD = "FieldMode";
-    public static final String DRIVE_ORIENTATION_ROBOT = "RobotMode";
-    public static final String DRIVE_ORIENTATION_INVERTED = "InvertedMode";
+    public static final String DRIVE_FIELD_MODE = "FieldMode";
+    public static final String DRIVE_ROBOT_MODE = "RobotMode";
+    public static final String DRIVE_INVERTED_MODE = "InvertedMode";
     public static final String OFF_PATTERN = "Off";
 
+    public final TrcPriorityIndicator.Pattern[] statusLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
+    {
+        // Highest priority.
+        new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcRevBlinkin.RevLedPattern.SolidViolet),
+        new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcRevBlinkin.RevLedPattern.SolidGreen),
+        new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed),
+        new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue),
+        new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.5),
+        new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.5),
+        new TrcPriorityIndicator.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcRevBlinkin.RevLedPattern.SolidBlack)
+        // Lowest priority.
+    };
+
+    public final TrcPriorityIndicator.Pattern[] spindexerLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
+    {
+        // Highest priority.
+        new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
+        new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
+        new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
+        // Lowest priority.
+    };
+
     public final TrcDbgTrace tracer;
-    private TrcPriorityIndicator<?> statusIndicator = null;
-    private final TrcPriorityIndicator<?>[] spindexerIndicators = new TrcPriorityIndicator[3];
+    private TrcPriorityIndicator statusIndicator = null;
+    private final TrcPriorityIndicator[] spindexerIndicators = new TrcPriorityIndicator[3];
 
     /**
      * Constructor: Create an instance of the object.
@@ -63,26 +91,6 @@ public class LEDIndicator
      */
     public LEDIndicator(String[] indicatorNames)
     {
-        final TrcRevBlinkin.Pattern[] statusLEDPatternPriorities = {
-            // Highest priority.
-            new TrcRevBlinkin.Pattern(PURPLE_BLOB, TrcRevBlinkin.RevLedPattern.SolidViolet),
-            new TrcRevBlinkin.Pattern(GREEN_BLOB, TrcRevBlinkin.RevLedPattern.SolidGreen),
-            new TrcRevBlinkin.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidRed),
-            new TrcRevBlinkin.Pattern(APRIL_TAG, TrcRevBlinkin.RevLedPattern.SolidAqua),
-            new TrcRevBlinkin.Pattern(DRIVE_ORIENTATION_FIELD, TrcRevBlinkin.RevLedPattern.SolidBlue),
-            new TrcRevBlinkin.Pattern(DRIVE_ORIENTATION_ROBOT, TrcRevBlinkin.RevLedPattern.SolidWhite),
-            new TrcRevBlinkin.Pattern(DRIVE_ORIENTATION_INVERTED, TrcRevBlinkin.RevLedPattern.SolidOrange),
-            new TrcRevBlinkin.Pattern(OFF_PATTERN, TrcRevBlinkin.RevLedPattern.SolidBlack)
-            // Lowest priority.
-        };
-        final TrcGobildaIndicatorLight.Pattern[] spindexerLEDPatternPriorities = {
-            // Highest priority.
-            new TrcGobildaIndicatorLight.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.Color.Violet),
-            new TrcGobildaIndicatorLight.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.Color.Green),
-            new TrcGobildaIndicatorLight.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.Color.Black)
-            // Lowest priority.
-        };
-
         tracer = new TrcDbgTrace();
         for (String indicatorName: indicatorNames)
         {
@@ -97,7 +105,7 @@ public class LEDIndicator
                     {
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         statusIndicator = new FtcRevBlinkin(indicatorName);
-                        ((FtcRevBlinkin) statusIndicator).setPatternPriorities(statusLEDPatternPriorities);
+                        statusIndicator.setPatternPriorities(statusLEDPatternPriorities);
                         statusIndicator.setPatternState(OFF_PATTERN, true);
                     }
                     break;
@@ -111,8 +119,7 @@ public class LEDIndicator
                     {
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[0] = new FtcGobildaIndicatorLight(indicatorName);
-                        ((FtcGobildaIndicatorLight) spindexerIndicators[0]).setPatternPriorities(
-                            spindexerLEDPatternPriorities);
+                        spindexerIndicators[0].setPatternPriorities(spindexerLEDPatternPriorities);
                         spindexerIndicators[0].setPatternState(OFF_PATTERN, true);
                     }
                     break;
@@ -126,8 +133,7 @@ public class LEDIndicator
                     {
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[1] = new FtcGobildaIndicatorLight(indicatorName);
-                        ((FtcGobildaIndicatorLight) spindexerIndicators[1]).setPatternPriorities(
-                            spindexerLEDPatternPriorities);
+                        spindexerIndicators[1].setPatternPriorities(spindexerLEDPatternPriorities);
                         spindexerIndicators[1].setPatternState(OFF_PATTERN, true);
                     }
                     break;
@@ -141,8 +147,7 @@ public class LEDIndicator
                     {
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[2] = new FtcGobildaIndicatorLight(indicatorName);
-                        ((FtcGobildaIndicatorLight) spindexerIndicators[2]).setPatternPriorities(
-                            spindexerLEDPatternPriorities);
+                        spindexerIndicators[2].setPatternPriorities(spindexerLEDPatternPriorities);
                         spindexerIndicators[2].setPatternState(OFF_PATTERN, true);
                     }
                     break;
@@ -162,21 +167,21 @@ public class LEDIndicator
             switch (orientation)
             {
                 case INVERTED:
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_INVERTED, true);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_ROBOT, false);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_FIELD, false);
+                    statusIndicator.setPatternState(DRIVE_INVERTED_MODE, true);
+                    statusIndicator.setPatternState(DRIVE_ROBOT_MODE, false);
+                    statusIndicator.setPatternState(DRIVE_FIELD_MODE, false);
                     break;
 
                 case ROBOT:
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_INVERTED, false);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_ROBOT, true);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_FIELD, false);
+                    statusIndicator.setPatternState(DRIVE_INVERTED_MODE, false);
+                    statusIndicator.setPatternState(DRIVE_ROBOT_MODE, true);
+                    statusIndicator.setPatternState(DRIVE_FIELD_MODE, false);
                     break;
 
                 case FIELD:
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_INVERTED, false);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_ROBOT, false);
-                    statusIndicator.setPatternState(DRIVE_ORIENTATION_FIELD, true);
+                    statusIndicator.setPatternState(DRIVE_INVERTED_MODE, false);
+                    statusIndicator.setPatternState(DRIVE_ROBOT_MODE, false);
+                    statusIndicator.setPatternState(DRIVE_FIELD_MODE, true);
                     break;
             }
         }
@@ -191,7 +196,7 @@ public class LEDIndicator
     {
         if (statusIndicator != null)
         {
-            statusIndicator.setPatternState(patternName, true, 0.5);
+            statusIndicator.setPatternState(patternName, true);
         }
     }   //setStatusPattern
 
