@@ -54,7 +54,7 @@ public class RobotParams
         public static final boolean updateDashboard             = !inCompetition;   // Start up default value.
         public static final boolean useRumble                   = false;
         // Vision
-        public static final boolean useVision                   = true;
+        public static final boolean useVision                   = false;
         public static final boolean showVisionStatus            = false;
         public static final boolean useLimelightVision          = true;
         public static final boolean useWebCam                   = false;    // false to use Android phone camera.
@@ -78,16 +78,16 @@ public class RobotParams
         public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = false;
         // Other Subsystems
-        public static final boolean useIntake                   = true;
+        public static final boolean useIntake                   = false;
         public static final boolean showIntakeStatus            = true;
-        public static final boolean useSpindexer                = true;
+        public static final boolean useSpindexer                = false;
         public static final boolean showSpindexerStatus         = true;
-        public static final boolean useShooter                  = true;
+        public static final boolean useShooter                  = false;
         public static final boolean showShooterStatus           = true;
         public static final boolean showShooterGraph            = false;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
-        public static final boolean useAutoShoot                = true;
+        public static final boolean useAutoShoot                = false;
     }   //class Preferences
 
     /**

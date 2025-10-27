@@ -69,7 +69,8 @@ public class FtcTest extends FtcTeleOp
         Y_TIMED_DRIVE,
         PP_DRIVE,
         PID_DRIVE,
-        TUNE_DRIVE_PID,
+        TUNE_PP_DRIVE,
+        TUNE_PID_DRIVE,
         VISION_TEST,
         CALIBRATE_SWERVE_STEERING
     }   //enum Test
@@ -333,7 +334,7 @@ public class FtcTest extends FtcTeleOp
                 }
                 break;
 
-            case TUNE_DRIVE_PID:
+            case TUNE_PP_DRIVE:
                 if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
                 {
                     robot.dashboard.putNumber(
@@ -379,18 +380,21 @@ public class FtcTest extends FtcTeleOp
 
                 case PP_DRIVE:
                 case PID_DRIVE:
-                case TUNE_DRIVE_PID:
+                case TUNE_PP_DRIVE:
+                case TUNE_PID_DRIVE:
                     if (robot.robotDrive != null)
                     {
                         TrcPidController xPidCtrl = null, yPidCtrl = null, turnPidCtrl = null;
 
-                        if (testChoices.test == Test.PID_DRIVE && robot.robotDrive.pidDrive != null)
+                        if ((testChoices.test == Test.PID_DRIVE || testChoices.test == Test.TUNE_PID_DRIVE) &&
+                            robot.robotDrive.pidDrive != null)
                         {
                             xPidCtrl = robot.robotDrive.pidDrive.getXPidCtrl();
                             yPidCtrl = robot.robotDrive.pidDrive.getYPidCtrl();
                             turnPidCtrl = robot.robotDrive.pidDrive.getTurnPidCtrl();
                         }
-                        else if (robot.robotDrive.purePursuitDrive != null)
+                        else if ((testChoices.test == Test.PP_DRIVE || testChoices.test == Test.TUNE_PP_DRIVE) &&
+                                 robot.robotDrive.purePursuitDrive != null)
                         {
                             xPidCtrl = robot.robotDrive.purePursuitDrive.getXPosPidCtrl();
                             yPidCtrl = robot.robotDrive.purePursuitDrive.getYPosPidCtrl();
@@ -691,14 +695,16 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case Start:
-                if (testChoices.test == Test.TUNE_DRIVE_PID)
+                if (testChoices.test == Test.TUNE_PP_DRIVE || testChoices.test == Test.TUNE_PID_DRIVE)
                 {
-                    if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
+                    if (robot.robotDrive != null &&
+                        (robot.robotDrive.purePursuitDrive != null || robot.robotDrive.pidDrive != null))
                     {
                         if (pressed)
                         {
                             if (!tuneDriveAtEndPoint)
                             {
+                                // At starting point.
                                 robot.robotDrive.driveBase.resetOdometry();
                                 tuneDriveStartPoint = robot.robotDrive.driveBase.getFieldPosition();
                                 tuneDriveEndPoint = tuneDriveStartPoint.addRelativePose(
@@ -707,23 +713,29 @@ public class FtcTest extends FtcTeleOp
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.yDriveTarget*12.0,
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
                             }
-                            robot.robotDrive.purePursuitDrive.setXPositionPidCoefficients(
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.xDrivePidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setYPositionPidCoefficients(
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setTurnPidCoefficients(
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.turnPidCoeffs);
-                            robot.robotDrive.purePursuitDrive.setMoveOutputLimit(
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit);
-                            robot.robotDrive.purePursuitDrive.setRotOutputLimit(
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.turnPowerLimit);
-                            robot.robotDrive.purePursuitDrive.start(
-                                false,
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
-                                Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
-                                tuneDriveAtEndPoint? tuneDriveStartPoint: tuneDriveEndPoint);
+
+                            if (testChoices.test == Test.TUNE_PP_DRIVE)
+                            {
+                                robot.robotDrive.purePursuitDrive.start(
+                                    false,
+                                    (Double) null, (Double) null, (Double) null,
+//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
+//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
+//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
+                                    tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint);
+                            }
+                            else
+                            {
+                                robot.robotDrive.pidDrive.setAbsoluteTarget(
+                                    tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint, true);
+                                TrcDbgTrace.globalTraceInfo(
+                                    moduleName, "PidDrivePose=" + robot.robotDrive.pidDrive.getAbsoluteTargetPose());
+                            }
                             tuneDriveAtEndPoint = !tuneDriveAtEndPoint;
+                        }
+                        else
+                        {
+                            robot.robotDrive.cancel();
                         }
                         passToTeleOp = false;
                     }
@@ -1054,7 +1066,8 @@ public class FtcTest extends FtcTeleOp
         testMenu.addChoice("Y Timed drive", Test.Y_TIMED_DRIVE, false);
         testMenu.addChoice("Pure Pursuit Drive", Test.PP_DRIVE, false);
         testMenu.addChoice("PID drive", Test.PID_DRIVE, false);
-        testMenu.addChoice("Tune Drive PID", Test.TUNE_DRIVE_PID, false);
+        testMenu.addChoice("Tune PurePursuit Drive", Test.TUNE_PP_DRIVE, false);
+        testMenu.addChoice("Tune PID Drive", Test.TUNE_PID_DRIVE, false);
         testMenu.addChoice("Vision test", Test.VISION_TEST, false);
         testMenu.addChoice("Calibrate Swerve Steering", Test.CALIBRATE_SWERVE_STEERING, false);
         //
