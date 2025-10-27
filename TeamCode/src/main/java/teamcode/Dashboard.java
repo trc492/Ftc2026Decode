@@ -57,6 +57,7 @@ public class Dashboard
     {
         public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
         public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
+        public static double steerPowerCompConstant = 0.0;
     }   //class Subsystem_Drivebase
 
     @Config

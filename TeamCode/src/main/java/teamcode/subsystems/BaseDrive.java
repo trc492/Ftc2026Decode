@@ -27,6 +27,7 @@ import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator;
 import ftclib.sensor.GoBildaPinpointDriver;
+import teamcode.Dashboard;
 import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
@@ -35,6 +36,7 @@ import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
 import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.motor.TrcMotor;
+import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
 
@@ -161,17 +163,15 @@ public class BaseDrive extends TrcSubsystem
 
             case DecodeRobot:
                 robotInfo = new DecodeInfo();
-                robotDrive = RobotParams.Preferences.useDriveBase? new FtcSwerveDrive((DecodeInfo) robotInfo): null;
-                if (RobotParams.Preferences.usePinpointOdometry)
+                FtcSwerveDrive swerveDrive =
+                    RobotParams.Preferences.useDriveBase? new FtcSwerveDrive((DecodeInfo) robotInfo): null;
+                robotDrive = swerveDrive;
+                if (swerveDrive != null)
                 {
-                    robotInfo.setPinpointOdometry(
-                        "pinpointOdo", 0.0, -192.0, GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD,
-                        false, false, -180.0, 180.0);
-                }
-                else if (RobotParams.Preferences.useSparkfunOTOS)
-                {
-                    robotInfo.setSparkfunOTOS(
-                        "sparkfunOtos", -4.0 * TrcUtil.INCHES_PER_MM, 24.0 * TrcUtil.INCHES_PER_MM, 0.0, 1.0, 1.0);
+                    for (TrcMotor steerMotor : swerveDrive.steerMotors)
+                    {
+                        steerMotor.setPositionPidPowerComp(this::getSteerPowerComp);
+                    }
                 }
                 break;
 
@@ -201,6 +201,18 @@ public class BaseDrive extends TrcSubsystem
     {
         return robotDrive;
     }   //getRobotDrive
+
+    /**
+     * This method calculates the power compensation for the Swerve Steering motor.
+     *
+     * @param power current steer motor power.
+     * @return power compensation.
+     */
+    private double getSteerPowerComp(double power)
+    {
+        TrcPose2D acceleration = robotDrive.driveBase.getFieldAcceleration();
+        return Dashboard.Subsystem_Drivebase.steerPowerCompConstant*TrcUtil.magnitude(acceleration.x, acceleration.y);
+    }   //getSteerPowerComp
 
     //
     // Implements TrcSubsystem abstract methods.

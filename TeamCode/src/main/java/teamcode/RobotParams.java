@@ -73,9 +73,6 @@ public class RobotParams
         public static final boolean showDriveBaseStatus         = false;
         public static final boolean showPidDrive                = false;
         public static final boolean showDriveBaseGraph          = false;
-
-        public static final boolean usePinpointOdometry         = true;
-        public static final boolean useSparkfunOTOS             = false;
         public static final boolean tuneDriveBase               = false;
         // Other Subsystems
         public static final boolean useIntake                   = true;
