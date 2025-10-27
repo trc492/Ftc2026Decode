@@ -71,7 +71,7 @@ public class Spindexer extends TrcSubsystem
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
         public static final double POS_OFFSET                   = 18.0;
-        public static final double ZERO_OFFSET                  = 0.0;
+        public static final double ZERO_OFFSET                  = -7.5;
         public static final double ZERO_CAL_POWER               = 0.5;
 
         public static final double MOTOR_PID_KP                 = 0.036;

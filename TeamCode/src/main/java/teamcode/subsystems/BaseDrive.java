@@ -89,15 +89,15 @@ public class BaseDrive extends TrcSubsystem
         private static final TrcPidController.PidCoefficients drivePidCoeffs =
             new TrcPidController.PidCoefficients(0.072, 0.001, 0.0065, 0.0, 2.0);
         private static final TrcPidController.PidCoefficients turnPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0055, 0.0, 0.00001, 0.0, 0.0);
+            new TrcPidController.PidCoefficients(0.000075, 0.0, 0.000005, 0.0, 0.0);
         private static final TrcPidController.PidCoefficients velPidCoeffs =
             new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0125, 0.0);
         private static final TrcPidController.PidCoefficients steerPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0065, 0.0, 0.00035, 0.0, 0.0);
+            new TrcPidController.PidCoefficients(0.0054, 0.0, 0.00039, 0.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-//            .setDriveMotorVelocityControl(
-//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+            .setDriveMotorVelocityControl(
+                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(1.0, 1.0)
             .setXPidParams(drivePidCoeffs, 1.0)
             .setYPidParams(drivePidCoeffs, 1.0)
