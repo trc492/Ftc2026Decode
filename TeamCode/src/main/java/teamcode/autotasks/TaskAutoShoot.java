@@ -56,6 +56,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         AIM,
         SHOOT,
         SHOOT_NEXT,
+        NEXT_EXIT_SLOT,
         DONE
     }   //enum State
 
@@ -65,6 +66,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public boolean useAprilTagVision = true;
         public boolean useClassifierVision = false;
         public int numArtifactsToShoot = 1;
+        public boolean moveToNextExitSlot = true;
 
         public TaskParams setAlliance(FtcAuto.Alliance alliance)
         {
@@ -79,9 +81,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return this;
         }   //setVision
 
-        public TaskParams setNumArtifactsToShoot(int count)
+        public TaskParams setNumArtifactsToShoot(int count, boolean moveToNextExitSlot)
         {
             this.numArtifactsToShoot = count;
+            this.moveToNextExitSlot = moveToNextExitSlot;
             return this;
         }   //setNumArtifactsToShoot
 
@@ -91,7 +94,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return "(alliance=" + alliance +
                    ",useAprilTagVision=" + useAprilTagVision +
                    ",useClassifierVision=" + useClassifierVision +
-                   ",numArtifactsToShoot=" + numArtifactsToShoot + ")";
+                   ",numArtifactsToShoot=" + numArtifactsToShoot +
+                   ",moveToNextExitSlot=" + moveToNextExitSlot + ")";
         }   //toString
     }   //class TaskParams
 
@@ -128,15 +132,16 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param useAprilTagVision specifies true to use AprilTag Vision, false otherwise.
      * @param useClassifierVision specifies true to use Classifier Vision, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
+     * @param moveToNextExitSlot specifies true to move to next Exit slot after shooting is done.
      */
     public void autoShoot(
         String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean useAprilTagVision,
-        boolean useClassifierVision, int numArtifactsToShoot)
+        boolean useClassifierVision, int numArtifactsToShoot, boolean moveToNextExitSlot)
     {
         autoShootParams
             .setAlliance(alliance)
             .setVision(useAprilTagVision, useClassifierVision)
-            .setNumArtifactsToShoot(numArtifactsToShoot);
+            .setNumArtifactsToShoot(numArtifactsToShoot, moveToNextExitSlot);
         tracer.traceInfo(
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
@@ -344,32 +349,40 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // Move Spindexer to the slot that has the correct artifact type.
                     spindexerEvent.clear();
                     sm.addEvent(spindexerEvent);
-                    robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent);
-                    // Spin the shooter flywheel up to speed and the turret pointing to the target.
-                    event.clear();
-                    sm.addEvent(event);
-                    if (shootParams != null)
+                    if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent))
                     {
-                        targetPose.angle += robot.shooter.getPanAngle();
-                        tracer.traceInfo(
-                            moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
-                            shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
-                        robot.shooter.aimShooter(
-                            owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                            shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
+                        // No more artifact in the Spindexer, quit.
+                        tracer.traceInfo(moduleName, "***** No more artifact, done.");
+                        sm.setState(State.DONE);
                     }
                     else
                     {
-                        // We did not use vision, just shoot assuming operator manually aimed.
-                        double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
-                        tracer.traceInfo(
-                            moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
-                        // ShooterVel is in RPM, aimShooter wants RPS.
-                        robot.shooter.aimShooter(
-                            owner, shooterVel / 60.0, 0.0, null, null, event, 0.0, null, 0.0);
+                        // Spin the shooter flywheel up to speed and the turret pointing to the target.
+                        event.clear();
+                        sm.addEvent(event);
+                        if (shootParams != null)
+                        {
+                            targetPose.angle += robot.shooter.getPanAngle();
+                            tracer.traceInfo(
+                                moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
+                                shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
+                            robot.shooter.aimShooter(
+                                owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
+                                shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
+                        }
+                        else
+                        {
+                            // We did not use vision, just shoot assuming operator manually aimed.
+                            double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
+                            tracer.traceInfo(
+                                moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
+                            // ShooterVel is in RPM, aimShooter wants RPS.
+                            robot.shooter.aimShooter(
+                                owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
+                        }
+                        // Wait for Spindexer and Shooter to be ready before shooting.
+                        sm.waitForEvents(State.SHOOT, false, true);
                     }
-                    // Wait for Spindexer and Shooter to be ready before shooting.
-                    sm.waitForEvents(State.SHOOT, false, true);
                 }
                 else
                 {
@@ -386,7 +399,20 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                sm.setState(taskParams.numArtifactsToShoot > 0? State.AIM: State.DONE);
+                sm.setState(taskParams.numArtifactsToShoot > 0? State.AIM: State.NEXT_EXIT_SLOT);
+                break;
+
+            case NEXT_EXIT_SLOT:
+                if (taskParams.moveToNextExitSlot)
+                {
+                    tracer.traceInfo(moduleName, "***** Move to the next exit slot.");
+                    robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, Vision.ArtifactType.Any, event);
+                    sm.waitForSingleEvent(event, State.DONE);
+                }
+                else
+                {
+                    sm.setState(State.DONE);
+                }
                 break;
 
             case DONE:

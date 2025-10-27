@@ -897,7 +897,8 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
-                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1);
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }
                         else

@@ -562,6 +562,11 @@ public class Spindexer extends TrcSubsystem
             entrySlot = slot;
             success = true;
         }
+        else if (event != null)
+        {
+            // Can't find the next slot, signal completion anyway.
+            event.signal();
+        }
 
         return success;
     }   //moveToNextVacantEntrySlot
@@ -630,6 +635,11 @@ public class Spindexer extends TrcSubsystem
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
             exitSlot = slot;
             success = true;
+        }
+        else if (event != null)
+        {
+            // Can't find the next slot, signal completion anyway.
+            event.signal();
         }
 
         return success;
@@ -712,16 +722,42 @@ public class Spindexer extends TrcSubsystem
     /**
      * This method enables/disables AutoReceive.
      *
+     * @param context specifies true to enable AutoReceive, false to disable.
+     * @param canceled specifies if the callback is canceled.
+     */
+    private void performAutoReceiveEnabled(Object context, boolean canceled)
+    {
+        if (!canceled)
+        {
+            boolean enabled = (boolean) context;
+            spindexer.tracer.traceInfo(instanceName, "performAutoReceiveEnabled(enable=" + enabled + ")");
+            autoReceivedEnabled = enabled;
+            spindexer.setEntryTriggerEnabled(enabled);
+            if (!enabled)
+            {
+                spindexer.cancel();
+            }
+        }
+    }   //performAutoReceiveEnabled
+
+    /**
+     * This method enables/disables AutoReceive.
+     *
      * @param enabled specifies true to enable AutoReceive, false to disable.
      */
     public void setAutoReceiveEnabled(boolean enabled)
     {
-        spindexer.tracer.traceInfo(instanceName, "setAutoReceiveEnabled(enable=" + enabled + ")");
-        autoReceivedEnabled = enabled;
-        spindexer.setEntryTriggerEnabled(enabled);
-        if (!enabled)
+        if (enabled && (entrySlot == null || slotStates[entrySlot] != Vision.ArtifactType.None))
         {
-            spindexer.cancel();
+            // Entry slot is not aligned or entry slot is not vacant, find the next vacant slot.
+            spindexer.tracer.traceInfo(instanceName, "Entry is not at a vacant slot, find one.");
+            TrcEvent event = new TrcEvent(Params.SUBSYSTEM_NAME + ".autoReceiveEnabled");
+            event.setCallback(this::performAutoReceiveEnabled, enabled);
+            moveToNextVacantEntrySlot(null, event);
+        }
+        else
+        {
+            performAutoReceiveEnabled(enabled, false);
         }
     }   //setAutoReceiveEnabled
 
