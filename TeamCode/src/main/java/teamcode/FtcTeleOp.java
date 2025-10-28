@@ -372,14 +372,15 @@ public class FtcTeleOp extends FtcOpMode
                         if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
-                            robot.shooterSubsystem.disableAprilTagTracking();
+                            robot.shooterSubsystem.disableAprilTagTracking(moduleName);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
                                 Dashboard.Subsystem_Vision.trackedAprilTagId);
-                            robot.shooterSubsystem.enableAprilTagTracking(Dashboard.Subsystem_Vision.trackedAprilTagId);
+                            robot.shooterSubsystem.enableAprilTagTracking(
+                                moduleName, Dashboard.Subsystem_Vision.trackedAprilTagId);
                         }
                     }
                 }
@@ -534,7 +535,7 @@ public class FtcTeleOp extends FtcOpMode
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
-                                    moduleName, null,
+                                    moduleName + ".autoShoot", null,
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,

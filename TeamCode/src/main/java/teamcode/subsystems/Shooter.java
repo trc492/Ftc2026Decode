@@ -158,9 +158,9 @@ public class Shooter extends TrcSubsystem
             .add("Target_5.22ft_1", 62.65,  4125.0,     0.0,        26.0)
             .add("Target_5.22ft_2", 62.65001,4000.0,    0.0,        28.1)
 //            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
-             .add("Target_6.04ft",  72.45,  4200.0,     0.0,        28.1)
-             .add("Target_6.55ft",  78.67,  4350.0,     0.0,        28.1)
-             .add("Target_7.02ft",  84.23,  4575.0,     0.0,        28.1);
+            .add("Target_6.04ft",   72.45,  4200.0,     0.0,        28.1)
+            .add("Target_6.55ft",   78.67,  4350.0,     0.0,        28.1)
+            .add("Target_7.02ft",   84.23,  4575.0,     0.0,        28.1);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
@@ -198,7 +198,6 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-//    private TrcEvent launchCallbackEvent = null;
     private Integer trackedAprilTagId = null;
 
     /**
@@ -355,17 +354,12 @@ public class Shooter extends TrcSubsystem
             if (robot.spindexerSubsystem != null)
             {
                 // Enable Spindexer exit trigger.
-//                robot.spindexer.setExitTriggerEnabled(true);
                 double currFlywheelVel = getFlywheelVelocity();
-//                TrcEvent callbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".shootCallback");
-//                callbackEvent.setCallback(this::launchCallback, null);
                 robot.spindexerSubsystem.enableExitTrigger(
                     currFlywheelVel - 120.0, currFlywheelVel + 120.0, this::launchCallback);
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-//            launchCallbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".launchCallback");
-//            launchCallbackEvent.setCallback(this::launchCallback, null);
             launcher.setPosition(
                 owner, 0.0, launcherParams.activatePos, null, launcherParams.activateDuration);
         }
@@ -403,7 +397,6 @@ public class Shooter extends TrcSubsystem
             launchCompletionEvent = null;
         }
         launchOwner = null;
-//        launchCallbackEvent = null;
     }   //launchCallback
 
     /**
@@ -419,25 +412,34 @@ public class Shooter extends TrcSubsystem
     /**
      * This method enables AprilTag tracking with the Turret (Pan motor).
      *
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      * @param aprilTagId specifies the AprilTag ID to track.
      */
-    public void enableAprilTagTracking(int aprilTagId)
+    public void enableAprilTagTracking(String owner, int aprilTagId)
     {
         if (robot.vision != null)
         {
-            robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
-            this.trackedAprilTagId = aprilTagId;
-            shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+            if (shooter.acquireExclusiveAccess(owner))
+            {
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
+                this.trackedAprilTagId = aprilTagId;
+                shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+            }
         }
     }   //enableAprilTagTracking
 
     /**
      * This method disables AprilTag tracking.
+     *
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void disableAprilTagTracking()
+    public void disableAprilTagTracking(String owner)
     {
-        shooter.panMotor.cancel();
-        this.trackedAprilTagId = null;
+        if (shooter.releaseExclusiveAccess(owner))
+        {
+            shooter.panMotor.cancel();
+            this.trackedAprilTagId = null;
+        }
     }   //disableAprilTagTracking
 
     /**
@@ -447,7 +449,7 @@ public class Shooter extends TrcSubsystem
      * @return angle distance between the current position and the AprilTag target if tracking is ON, angle position
      *         of the target relative to robot heading if tracking is OFF.
      */
-    public double getPanPosition()
+    private double getPanPosition()
     {
         double panPosition = shooter.panMotor.getPosition();
 

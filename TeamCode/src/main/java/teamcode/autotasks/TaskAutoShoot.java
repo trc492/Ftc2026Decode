@@ -32,6 +32,7 @@ import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
@@ -235,6 +236,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     tracer.traceInfo(
                         moduleName, "robotPose=%s, aprilTagPose=%s, targetPose=%s",
                         robotPose, RobotParams.Game.APRILTAG_POSES[aprilTagIndex], targetPose);
+                    // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
+                    // Use vision distance to look up shooter parameters.
+                    double shootDistance = TrcUtil.magnitude(targetPose.x, targetPose.y);
+                    shootParams = Shooter.Params.shootParamTable.get(shootDistance, false);
+                    tracer.traceInfo(
+                        moduleName, "***** ShootParams: distance=" + shootDistance + ", params=" + shootParams);
                     sm.setState(State.AIM);
                 }
                 else if (robot.vision != null && robot.vision.isLimelightVisionEnabled() &&
@@ -275,6 +282,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             robot.ledIndicator.setStatusPattern(
                                 aprilTagId == 20? LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG, true);
                         }
+                        // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
+                        targetPose.angle += robot.shooter.getPanAngle();
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
                         shootParams = Shooter.Params.shootParamTable.get(aprilTagInfo.detectedObj.targetDepth, false);
@@ -362,7 +371,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         sm.addEvent(event);
                         if (shootParams != null)
                         {
-                            targetPose.angle += robot.shooter.getPanAngle();
                             tracer.traceInfo(
                                 moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
                                 shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);

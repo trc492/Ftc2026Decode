@@ -230,6 +230,11 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     objPose = object.detectedObj.getObjectPose();
                     tracer.traceInfo(
                         moduleName, "***** Vision found object: objPose=" + objPose);
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setStatusVisionPatternsOff();
+                        robot.ledIndicator.setStatusPattern(object.detectedObj.label, true);
+                    }
                     sm.setState(State.PICKUP_OBJ);
                 }
                 else if (visionExpiredTime == null)

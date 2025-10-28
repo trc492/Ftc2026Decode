@@ -47,9 +47,9 @@ public class LEDIndicator
     public static final String UNKNOWN_BLOB = "Unknown";
     public static final String RED_APRILTAG = "RedAprilTag";
     public static final String BLUE_APRILTAG = "BlueAprilTag";
+    public static final String NOT_FOUND = "NotFound";
     public static final String SEARCHING_RED_APRILTAG = "SearchingRedAprilTag";
     public static final String SEARCHING_BLUE_APRILTAG = "SearchingBlueAprilTag";
-    public static final String NOT_FOUND = "NotFound";
     public static final String DRIVE_FIELD_MODE = "FieldMode";
     public static final String DRIVE_ROBOT_MODE = "RobotMode";
     public static final String DRIVE_INVERTED_MODE = "InvertedMode";
@@ -63,9 +63,9 @@ public class LEDIndicator
         new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcRevBlinkin.RevLedPattern.SolidYellow),
         new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed),
         new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue),
+        new TrcPriorityIndicator.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.5),
         new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.5),
-        new TrcPriorityIndicator.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),
@@ -109,7 +109,7 @@ public class LEDIndicator
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         statusIndicator = new FtcRevBlinkin(indicatorName);
                         statusIndicator.setPatternPriorities(statusLEDPatternPriorities);
-                        statusIndicator.setPatternState(OFF_PATTERN, true);
+                        statusIndicator.reset();
                     }
                     break;
 
@@ -123,7 +123,7 @@ public class LEDIndicator
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[0] = new FtcGobildaIndicatorLight(indicatorName);
                         spindexerIndicators[0].setPatternPriorities(spindexerLEDPatternPriorities);
-                        spindexerIndicators[0].setPatternState(OFF_PATTERN, true);
+                        spindexerIndicators[0].reset();
                     }
                     break;
 
@@ -137,7 +137,7 @@ public class LEDIndicator
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[1] = new FtcGobildaIndicatorLight(indicatorName);
                         spindexerIndicators[1].setPatternPriorities(spindexerLEDPatternPriorities);
-                        spindexerIndicators[1].setPatternState(OFF_PATTERN, true);
+                        spindexerIndicators[1].reset();
                     }
                     break;
 
@@ -151,7 +151,7 @@ public class LEDIndicator
                         tracer.traceInfo(moduleName, "Creating " + indicatorName);
                         spindexerIndicators[2] = new FtcGobildaIndicatorLight(indicatorName);
                         spindexerIndicators[2].setPatternPriorities(spindexerLEDPatternPriorities);
-                        spindexerIndicators[2].setPatternState(OFF_PATTERN, true);
+                        spindexerIndicators[2].reset();
                     }
                     break;
             }
