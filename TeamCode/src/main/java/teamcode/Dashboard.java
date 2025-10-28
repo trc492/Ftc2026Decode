@@ -86,7 +86,8 @@ public class Dashboard
     public static class Subsystem_Spindexer
     {
         public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
-        public static double[] entryTriggerPoints = Spindexer.entryTriggerThresholdPoints;
+//        public static double[] entryTriggerPoints = Spindexer.entryTriggerThresholdPoints;
+        public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
     }   //class Subsystem_Spindexer
 
