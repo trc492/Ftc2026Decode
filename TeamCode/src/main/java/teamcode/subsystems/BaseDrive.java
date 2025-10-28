@@ -108,7 +108,7 @@ public class BaseDrive extends TrcSubsystem
             .setYPidParams(drivePidCoeffs, 1.0)
             .setTurnPidParams(turnPidCoeffs, 0.5)
             .setVelocityPidParams(velPidCoeffs)
-            .setDriveCharacteristics(80.0, 350.0, 300.0, 80.0);
+            .setDriveCharacteristics(80.0, 8000.0, 8000.0,  150.0);
         public static TrcSwerveDriveBase.SwerveParams swerveParams = new TrcSwerveDriveBase.SwerveParams()
             .setSteerPidParams(steerPidCoeffs, 1.0);
 

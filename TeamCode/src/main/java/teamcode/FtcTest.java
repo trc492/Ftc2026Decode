@@ -718,10 +718,9 @@ public class FtcTest extends FtcTeleOp
                             {
                                 robot.robotDrive.purePursuitDrive.start(
                                     false,
-                                    (Double) null, (Double) null, (Double) null,
-//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
-//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
-//                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
+                                    Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
                                     tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint);
                             }
                             else
