@@ -44,6 +44,7 @@ public class LEDIndicator
     // LED pattern names.
     public static final String PURPLE_BLOB = "Purple";
     public static final String GREEN_BLOB = "Green";
+    public static final String UNKNOWN_BLOB = "Unknown";
     public static final String RED_APRILTAG = "RedAprilTag";
     public static final String BLUE_APRILTAG = "BlueAprilTag";
     public static final String SEARCHING_RED_APRILTAG = "SearchingRedAprilTag";
@@ -59,6 +60,7 @@ public class LEDIndicator
         // Highest priority.
         new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcRevBlinkin.RevLedPattern.SolidViolet),
         new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcRevBlinkin.RevLedPattern.SolidGreen),
+        new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcRevBlinkin.RevLedPattern.SolidYellow),
         new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed),
         new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue),
         new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.5),
@@ -76,6 +78,7 @@ public class LEDIndicator
         // Highest priority.
         new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
         new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
+        new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow),
         new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
         // Lowest priority.
     };
@@ -209,6 +212,7 @@ public class LEDIndicator
         {
             statusIndicator.setPatternState(PURPLE_BLOB, false);
             statusIndicator.setPatternState(GREEN_BLOB, false);
+            statusIndicator.setPatternState(UNKNOWN_BLOB, false);
             statusIndicator.setPatternState(RED_APRILTAG, false);
             statusIndicator.setPatternState(BLUE_APRILTAG, false);
             statusIndicator.setPatternState(NOT_FOUND, false);

@@ -38,6 +38,7 @@ import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
 import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.motor.TrcMotor;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
@@ -206,7 +207,7 @@ public class BaseDrive extends TrcSubsystem
         return robotDrive;
     }   //getRobotDrive
 
-    private final double[] prevDriveMotorTimestamp = new double[4] {0, 0, 0, 0};
+    private final double[] prevDriveMotorTimestamp = new double[] {0, 0, 0, 0};
     private final double[] prevDriveMotorVel = new double[4];
 
     /**
@@ -239,6 +240,7 @@ public class BaseDrive extends TrcSubsystem
         double acceleration = (driveMotorVel - prevDriveMotorVel[motorIndex])/deltaTime;
         prevDriveMotorVel[motorIndex] = driveMotorVel;
 
+        TrcDbgTrace.globalTraceInfo(moduleName, "[" + motorIndex + "] steerPowerCompAccel=" + acceleration);
         return Dashboard.Subsystem_Drivebase.steerPowerCompConstant*acceleration;
     }   //getSteerPowerComp
 

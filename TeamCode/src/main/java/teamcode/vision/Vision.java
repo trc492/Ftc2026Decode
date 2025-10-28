@@ -101,6 +101,7 @@ public class Vision
         None,
         Purple,
         Green,
+        Unknown,
         Any
     }   //enum ArtifactType
 

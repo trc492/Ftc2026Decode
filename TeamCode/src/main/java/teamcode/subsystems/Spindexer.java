@@ -101,7 +101,7 @@ public class Spindexer extends TrcSubsystem
         public static final double PURPLE_LOW_THRESHOLD         = 220.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 240.0;
 
-        public static final double GREEN_LOW_THRESHOLD          = 150.0;
+        public static final double GREEN_LOW_THRESHOLD          = 120.0;
         public static final double GREEN_HIGH_THRESHOLD         = 180.0;
 
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
@@ -143,6 +143,7 @@ public class Spindexer extends TrcSubsystem
     private Integer exitSlot = null;
     private int numPurpleArtifacts = 0;
     private int numGreenArtifacts = 0;
+    private int numUnknownArtifacts = 0;
     private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
     private double entrySensorDistance = 10.0;
     private double entrySensorHue = 0.0;
@@ -248,7 +249,10 @@ public class Spindexer extends TrcSubsystem
             }
             else
             {
-                artifactName = null;
+                spindexer.tracer.traceWarn(instanceName, "Unknown artifact, threshold value out of range.");
+                artifactType = Vision.ArtifactType.Unknown;
+                numUnknownArtifacts++;
+                artifactName = LEDIndicator.UNKNOWN_BLOB;
             }
 
             slotStates[entrySlot] = artifactType;
@@ -259,8 +263,9 @@ public class Spindexer extends TrcSubsystem
             entrySensorDistance = 6.0;
             entrySensorHue = 0.0;
             spindexer.tracer.traceInfo(
-                instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
-                entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
+                instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
+                entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
+                expectedArtifactType);
 
             if (robot.ledIndicator != null)
             {
@@ -336,12 +341,17 @@ public class Spindexer extends TrcSubsystem
                 {
                     numGreenArtifacts--;
                 }
+                else if (artifactType == Vision.ArtifactType.Unknown)
+                {
+                    numUnknownArtifacts--;
+                }
                 updateExpectedArtifactType();
                 // We are done removing the exit artifact. Turn off exit trigger.
                 spindexer.setExitTriggerEnabled(false);
                 spindexer.tracer.traceInfo(
-                    instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, expectedNext=%s",
-                    exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, expectedArtifactType);
+                    instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
+                    exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
+                    expectedArtifactType);
 
                 if (robot.ledIndicator != null)
                 {
@@ -763,7 +773,7 @@ public class Spindexer extends TrcSubsystem
     /**
      * This method examines all the Spindexer slots and update their states.
      */
-    public void examineSlotStates()
+    public void refreshSlotStates()
     {
         if (!sm.isEnabled())
         {
@@ -773,7 +783,7 @@ public class Spindexer extends TrcSubsystem
             sm.start(State.MOVE_TO_NEXT_SLOT);
             examineSlotsTaskObj.registerTask(TrcTaskMgr.TaskType.POST_PERIODIC_TASK);
         }
-    }   //examineSlotStates
+    }   //refreshSlotStates
 
     /**
      * This method enables/disables AutoReceive.

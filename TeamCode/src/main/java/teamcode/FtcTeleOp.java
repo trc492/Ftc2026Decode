@@ -569,6 +569,14 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case Y:
+                if (robot.spindexerSubsystem != null && robot.intakeSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> refreshSlotStates");
+                        robot.spindexerSubsystem.refreshSlotStates();
+                    }
+                }
                 break;
 
             case LeftBumper:
