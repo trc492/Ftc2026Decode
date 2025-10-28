@@ -22,6 +22,8 @@
 
 package teamcode.subsystems;
 
+import java.util.HashMap;
+
 import ftclib.drivebase.FtcRobotDrive;
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcDashboard;
@@ -36,9 +38,9 @@ import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
 import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.motor.TrcMotor;
-import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
+import trclib.timer.TrcTimer;
 
 /**
  * This class creates the appropriate Robot Drive Base according to the specified robot type.
@@ -143,6 +145,7 @@ public class BaseDrive extends TrcSubsystem
         }   //DecodeInfo
     }   //class DecodeInfo
 
+    private final HashMap<TrcMotor, Integer> motorIndexMap = new HashMap<>();
     private final FtcDashboard dashboard;
     private final FtcRobotDrive.RobotInfo robotInfo;
     private final FtcRobotDrive robotDrive;
@@ -168,9 +171,10 @@ public class BaseDrive extends TrcSubsystem
                 robotDrive = swerveDrive;
                 if (swerveDrive != null)
                 {
-                    for (TrcMotor steerMotor : swerveDrive.steerMotors)
+                    for (int i = 0; i < swerveDrive.steerMotors.length; i++)
                     {
-                        steerMotor.setPositionPidPowerComp(this::getSteerPowerComp);
+                        motorIndexMap.put(swerveDrive.steerMotors[i], i);
+                        swerveDrive.steerMotors[i].setPositionPidPowerComp(this::getSteerPowerComp);
                     }
                 }
                 break;
@@ -202,16 +206,40 @@ public class BaseDrive extends TrcSubsystem
         return robotDrive;
     }   //getRobotDrive
 
+    private final double[] prevDriveMotorTimestamp = new double[4] {0, 0, 0, 0};
+    private final double[] prevDriveMotorVel = new double[4];
+
     /**
      * This method calculates the power compensation for the Swerve Steering motor.
      *
-     * @param power current steer motor power.
+     * @param motor specifies the steer motor to get compensation for.
+     * @param power specifies current steer motor power before compensation.
      * @return power compensation.
      */
-    private double getSteerPowerComp(double power)
+    private double getSteerPowerComp(TrcMotor motor, double power)
     {
-        TrcPose2D acceleration = robotDrive.driveBase.getFieldAcceleration();
-        return Dashboard.Subsystem_Drivebase.steerPowerCompConstant*TrcUtil.magnitude(acceleration.x, acceleration.y);
+        Integer motorIndex = motorIndexMap.get(motor);
+        if (motorIndex == null || prevDriveMotorTimestamp[motorIndex] == 0.0)
+        {
+            return 0.0;
+        }
+
+        double currTime = TrcTimer.getCurrentTime();
+        double deltaTime = currTime - prevDriveMotorTimestamp[motorIndex];
+
+        if (deltaTime > 1.0)
+        {
+            // It's been over 1 second pass the previous powerComp call, start over again.
+            prevDriveMotorTimestamp[motorIndex] = 0.0;
+            return 0.0;
+        }
+
+        prevDriveMotorTimestamp[motorIndex] = currTime;
+        double driveMotorVel = robotDrive.driveMotors[motorIndex].getVelocity();
+        double acceleration = (driveMotorVel - prevDriveMotorVel[motorIndex])/deltaTime;
+        prevDriveMotorVel[motorIndex] = driveMotorVel;
+
+        return Dashboard.Subsystem_Drivebase.steerPowerCompConstant*acceleration;
     }   //getSteerPowerComp
 
     //
