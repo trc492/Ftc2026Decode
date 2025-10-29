@@ -27,8 +27,6 @@ import android.graphics.Color;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
@@ -77,7 +75,7 @@ public class Spindexer extends TrcSubsystem
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
-        public static final double MOTOR_PID_KP                 = 0.036;
+        public static final double MOTOR_PID_KP                 = 0.05;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
         public static final double POS_PID_TOLERANCE            = 5.0;
@@ -86,23 +84,22 @@ public class Spindexer extends TrcSubsystem
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
-        public static final double MOVE_POWER                   = 1.0;
+        public static final double MOVE_POWER                   = 0.6;
         public static final int MAX_CAPACITY                    = 3;
-
-        public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = 0.0;  // in inches
-        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = 2.5;  // in inches
-        public static final double ENTRY_TRIGGER_SETTLING       = 0.1;  // in seconds
-
-        public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
-        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
-        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 6000.0;   // in RPM
-        public static final double EXIT_TRIGGER_SETTLING        = 0.01;     // in seconds
 
         public static final double GREEN_LOW_THRESHOLD          = 100.0;
         public static final double GREEN_HIGH_THRESHOLD         = 180.0;
         public static final double PURPLE_LOW_THRESHOLD         = 200.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 240.0;
 
+        public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = GREEN_LOW_THRESHOLD;
+        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = PURPLE_HIGH_THRESHOLD;
+        public static final double ENTRY_TRIGGER_SETTLING       = 0.15;     // in seconds
+
+        public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
+        public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
+        public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 6000.0;   // in RPM
+        public static final double EXIT_TRIGGER_SETTLING        = 0.01;     // in seconds
 
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
@@ -135,6 +132,7 @@ public class Spindexer extends TrcSubsystem
     private final TrcTaskMgr.TaskObject refreshSlotStatesTaskObj;
     private final TrcStateMachine<State> sm;
     private final TrcEvent event;
+    private final TrcTriggerThresholdRange entryTrigger;
 
     private final Vision.ArtifactType[] slotStates  =
         {Vision.ArtifactType.None, Vision.ArtifactType.None, Vision.ArtifactType.None};
@@ -145,8 +143,6 @@ public class Spindexer extends TrcSubsystem
     private int numGreenArtifacts = 0;
     private int numUnknownArtifacts = 0;
     private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
-    private double entrySensorDistance = 10.0;
-    private double entrySensorHue = 0.0;
     private TrcEvent zeroCalEvent = null;
     private TrcEvent.Callback exitTriggerCallback = null;
     private int examinedSlotIndex = 0;
@@ -174,7 +170,7 @@ public class Spindexer extends TrcSubsystem
             entryAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
                 RevColorSensorV3.class, Params.ENTRY_SENSOR_NAME);
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.ENTRY_SENSOR_NAME, this::getEntrySensorData, entryTriggerParams, false,
+                Params.ENTRY_SENSOR_NAME, this::getEntrySensorHue, entryTriggerParams, false,
                 this::entryTriggerCallback, entryTriggerEvent);
         }
         else
@@ -205,6 +201,7 @@ public class Spindexer extends TrcSubsystem
             Params.SUBSYSTEM_NAME + ".refreshSlotStatesTask", this::refreshSlotStatesTask);
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
+        entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
     }   //Spindexer
 
     /**
@@ -232,7 +229,8 @@ public class Spindexer extends TrcSubsystem
             // In other words, if this gets called, it is guaranteed that the Intake is active and an artifact has
             // just entered the entry slot of the Spindexer.
             TrcEvent triggerEvent = (TrcEvent) context;
-            Vision.ArtifactType artifactType = getEntryArtifactType();
+            double hue = entryTrigger.getLastTriggeredValue();
+            Vision.ArtifactType artifactType = getEntryArtifactType(hue);
             String artifactName = null;
 
             if (artifactType == Vision.ArtifactType.Purple)
@@ -256,11 +254,10 @@ public class Spindexer extends TrcSubsystem
             // We are done adding the entry artifact. Turn off entry trigger so we can move the Spindexer without it
             // triggering.
             spindexer.setEntryTriggerEnabled(false);
-            entrySensorDistance = 6.0;
-            entrySensorHue = 0.0;
             spindexer.tracer.traceInfo(
-                instanceName, "Entry[%d]: artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
-                entrySlot, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
+                instanceName,
+                "Entry[%d]: value=%f, artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
+                entrySlot, hue, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
                 expectedArtifactType);
 
             if (robot.ledIndicator != null && artifactName != null)
@@ -326,7 +323,8 @@ public class Spindexer extends TrcSubsystem
             {
                 // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
                 // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
-                // just left the exit slot of the Spindexer.
+                //
+                double vel = ((TrcTriggerThresholdRange) shootVelTrigger).getLastTriggeredValue();
                 Vision.ArtifactType artifactType = slotStates[exitSlot];
                 slotStates[exitSlot] = Vision.ArtifactType.None;
                 if (artifactType == Vision.ArtifactType.Purple)
@@ -345,8 +343,9 @@ public class Spindexer extends TrcSubsystem
                 // We are done removing the exit artifact. Turn off exit trigger.
                 spindexer.setExitTriggerEnabled(false);
                 spindexer.tracer.traceInfo(
-                    instanceName, "Exit[%d]: artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
-                    exitSlot, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
+                    instanceName,
+                    "Exit[%d]: vel=%f, artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
+                    exitSlot, vel, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
                     expectedArtifactType);
 
                 if (robot.ledIndicator != null)
@@ -418,41 +417,10 @@ public class Spindexer extends TrcSubsystem
         return artifactType == Vision.ArtifactType.Purple? numPurpleArtifacts:
                artifactType == Vision.ArtifactType.Green? numGreenArtifacts:
                artifactType == Vision.ArtifactType.Unknown? numUnknownArtifacts:
-               artifactType == Vision.ArtifactType.Any? numPurpleArtifacts + numGreenArtifacts + numUnknownArtifacts:
+               artifactType == Vision.ArtifactType.Any?
+                   numPurpleArtifacts + numGreenArtifacts + numUnknownArtifacts:
                    3 - (numPurpleArtifacts + numGreenArtifacts + numUnknownArtifacts);
     }   //getNumArtifacts
-
-    /**
-     * This method is called by the entry sensor trigger to monitor the sensor value for triggering condition.
-     *
-     * @return entry sensor value.
-     */
-    public double getEntrySensorData()
-    {
-        if (entryAnalogSensor != null)
-        {
-            double distance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
-            double hue = getEntrySensorHue();
-
-            if (distance < 6.0f)
-            {
-                // Since getEntrySensorData is called periodically, use it to update hue value as well.
-                entrySensorDistance = distance;
-                entrySensorHue = hue;
-            }
-            else
-            {
-                spindexer.tracer.traceDebug(
-                    instanceName,
-                    "Invalid data, use previous values: Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
-                    distance, entrySensorDistance, hue, entrySensorHue);
-            }
-
-            return entrySensorDistance;
-        }
-
-        return 0.0;
-    }   //getEntrySensorData
 
     /**
      * This method checks if the entry sensor is triggered.
@@ -475,7 +443,6 @@ public class Spindexer extends TrcSubsystem
 
         if (entryAnalogSensor != null)
         {
-            double sensorDistance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
             float[] hsvValues = {0.0f, 0.0f, 0.0f};
             NormalizedRGBA normalizedColors = entryAnalogSensor.getNormalizedColors();
             Color.RGBToHSV(
@@ -483,24 +450,7 @@ public class Spindexer extends TrcSubsystem
                 (int) (normalizedColors.green*255),
                 (int) (normalizedColors.blue*255),
                 hsvValues);
-            // Check if data is valid. If not, use previous values.
-            if (sensorDistance < 6.0f && hsvValues[0] >= Params.GREEN_LOW_THRESHOLD)
-            {
-                entrySensorDistance = sensorDistance;
-                entrySensorHue = hue;
-                hue = hsvValues[0];
-                spindexer.tracer.traceDebug(instanceName, "Entry: distance=%f, hue=%f", sensorDistance, hue);
-            }
-            else
-            {
-                // When distance is 6.0f, hue value is invalid, use previous detected hue value instead.
-                hue = entrySensorHue;
-                spindexer.tracer.traceDebug(
-                    instanceName,
-                    "Invalid entry sensor data, use previous values. " +
-                    "Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
-                    sensorDistance, entrySensorDistance, hsvValues[0], entrySensorHue);
-            }
+            hue = hsvValues[0];
         }
 
         return hue;
@@ -509,16 +459,15 @@ public class Spindexer extends TrcSubsystem
     /**
      * This method checks the color sensor for the color the artifact at the entry.
      *
+     * @param hue specifies the detected hue value.
      * @return detected artifact type at the entry.
      */
-    public Vision.ArtifactType getEntryArtifactType()
+    public Vision.ArtifactType getEntryArtifactType(double hue)
     {
         Vision.ArtifactType artifactType = null;
 
         if (entryAnalogSensor != null)
         {
-            double hue = getEntrySensorHue();
-
             if (hue >= Params.PURPLE_LOW_THRESHOLD)
             {
                 artifactType = Vision.ArtifactType.Purple;
@@ -948,8 +897,8 @@ public class Spindexer extends TrcSubsystem
                     spindexer.motor.getPower(), spindexer.motor.getCurrent(),
                     spindexer.motor.isLowerLimitSwitchActive());
                 dashboard.displayPrintf(
-                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s",
-                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorData(), isEntrySensorActive());
+                    lineNum++, "%s: Entry(Hue/Trig)=%.3f/%s",
+                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), isEntrySensorActive());
                 dashboard.displayPrintf(
                     lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
                     Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,

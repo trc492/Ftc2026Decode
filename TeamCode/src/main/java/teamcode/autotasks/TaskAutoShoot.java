@@ -251,6 +251,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     visionExpiredTime = null;
                     if (robot.ledIndicator != null)
                     {
+                        robot.ledIndicator.setStatusVisionPatternsOff();
                         robot.ledIndicator.setStatusPattern(
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
