@@ -98,11 +98,11 @@ public class Spindexer extends TrcSubsystem
         public static final double EXIT_TRIGGER_HIGH_THRESHOLD  = 6000.0;   // in RPM
         public static final double EXIT_TRIGGER_SETTLING        = 0.01;     // in seconds
 
-        public static final double PURPLE_LOW_THRESHOLD         = 220.0;
+        public static final double GREEN_LOW_THRESHOLD          = 100.0;
+        public static final double GREEN_HIGH_THRESHOLD         = 180.0;
+        public static final double PURPLE_LOW_THRESHOLD         = 200.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 240.0;
 
-        public static final double GREEN_LOW_THRESHOLD          = 120.0;
-        public static final double GREEN_HIGH_THRESHOLD         = 180.0;
 
         public static final double[] entryPresetPositions       = {0.0, 120.0, 240.0};
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
@@ -149,7 +149,7 @@ public class Spindexer extends TrcSubsystem
     private double entrySensorHue = 0.0;
     private TrcEvent zeroCalEvent = null;
     private TrcEvent.Callback exitTriggerCallback = null;
-    private int examinedSlotCount = 0;
+    private int examinedSlotIndex = 0;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -174,8 +174,7 @@ public class Spindexer extends TrcSubsystem
             entryAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
                 RevColorSensorV3.class, Params.ENTRY_SENSOR_NAME);
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.ENTRY_SENSOR_NAME, this::getEntrySensorData, entryTriggerParams.lowThreshold,
-                entryTriggerParams.highThreshold, entryTriggerParams.settlingPeriod, false,
+                Params.ENTRY_SENSOR_NAME, this::getEntrySensorData, entryTriggerParams, false,
                 this::entryTriggerCallback, entryTriggerEvent);
         }
         else
@@ -190,9 +189,7 @@ public class Spindexer extends TrcSubsystem
                 .setAnalogSourceTrigger(
                     Params.EXIT_TRIGGER_NAME,
                     () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelVelocity(): 0.0,
-                    exitTriggerParams.lowThreshold,
-                    exitTriggerParams.highThreshold, exitTriggerParams.settlingPeriod)
-                .getTrigger();
+                    exitTriggerParams).getTrigger();
         }
         else
         {
@@ -478,6 +475,7 @@ public class Spindexer extends TrcSubsystem
 
         if (entryAnalogSensor != null)
         {
+            double sensorDistance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
             float[] hsvValues = {0.0f, 0.0f, 0.0f};
             NormalizedRGBA normalizedColors = entryAnalogSensor.getNormalizedColors();
             Color.RGBToHSV(
@@ -485,27 +483,23 @@ public class Spindexer extends TrcSubsystem
                 (int) (normalizedColors.green*255),
                 (int) (normalizedColors.blue*255),
                 hsvValues);
-
-            double sensorDistance = entryAnalogSensor.getDistance(DistanceUnit.INCH);
-            if (sensorDistance < 6.0f)
+            // Check if data is valid. If not, use previous values.
+            if (sensorDistance < 6.0f && hsvValues[0] >= Params.GREEN_LOW_THRESHOLD)
             {
-                hue = hsvValues[0];
                 entrySensorDistance = sensorDistance;
                 entrySensorHue = hue;
+                hue = hsvValues[0];
                 spindexer.tracer.traceDebug(instanceName, "Entry: distance=%f, hue=%f", sensorDistance, hue);
             }
             else
             {
                 // When distance is 6.0f, hue value is invalid, use previous detected hue value instead.
-                String sensorName;
-                double distance;
-                distance = entrySensorDistance;
                 hue = entrySensorHue;
                 spindexer.tracer.traceDebug(
                     instanceName,
                     "Invalid entry sensor data, use previous values. " +
                     "Distance(sensor=%f, prev=%f), Hue(sensor=%f, prev=%f)",
-                    sensorDistance, distance, hsvValues[0], hue);
+                    sensorDistance, entrySensorDistance, hsvValues[0], entrySensorHue);
             }
         }
 
@@ -525,11 +519,11 @@ public class Spindexer extends TrcSubsystem
         {
             double hue = getEntrySensorHue();
 
-            if (hue >= Params.PURPLE_LOW_THRESHOLD && hue <= Params.PURPLE_HIGH_THRESHOLD)
+            if (hue >= Params.PURPLE_LOW_THRESHOLD)
             {
                 artifactType = Vision.ArtifactType.Purple;
             }
-            else if (hue >= Params.GREEN_LOW_THRESHOLD && hue <= Params.GREEN_HIGH_THRESHOLD)
+            else if (hue >= Params.GREEN_LOW_THRESHOLD)
             {
                 artifactType = Vision.ArtifactType.Green;
             }
@@ -560,7 +554,8 @@ public class Spindexer extends TrcSubsystem
             if (slotStates[slot] == artifactType ||
                 artifactType == Vision.ArtifactType.Any && slotStates[slot] != Vision.ArtifactType.None)
             {
-                spindexer.tracer.traceInfo(instanceName, "found slot %d=%s", slot, slotStates[slot]);
+                spindexer.tracer.traceInfo(
+                    instanceName, "find slot for %s (%d=%s)", artifactType, slot, slotStates[slot]);
                 return slot;
             }
         }
@@ -783,7 +778,7 @@ public class Spindexer extends TrcSubsystem
         {
             clearSlotStates();
             robot.intake.intake();
-            examinedSlotCount = 0;
+            examinedSlotIndex = 0;
             sm.start(State.MOVE_TO_NEXT_SLOT);
             refreshSlotStatesTaskObj.registerTask(TrcTaskMgr.TaskType.POST_PERIODIC_TASK);
         }
@@ -849,11 +844,11 @@ public class Spindexer extends TrcSubsystem
             switch (state)
             {
                 case MOVE_TO_NEXT_SLOT:
-                    if (examinedSlotCount < slotStates.length)
+                    if (examinedSlotIndex < slotStates.length)
                     {
                         // Turn off entry trigger before moving Spindexer.
                         spindexer.setEntryTriggerEnabled(false);
-                        moveToNextVacantEntrySlot(null, event);
+                        moveToEntrySlot(null, examinedSlotIndex, event);
                         sm.waitForSingleEvent(event, State.EXAMINE_SLOT);
                     }
                     else
@@ -863,7 +858,7 @@ public class Spindexer extends TrcSubsystem
                     break;
 
                 case EXAMINE_SLOT:
-                    examinedSlotCount++;
+                    examinedSlotIndex++;
                     spindexer.setEntryTriggerEnabled(true);
                     sm.waitForSingleEvent(entryTriggerEvent, State.MOVE_TO_NEXT_SLOT, 1.0);
                     break;

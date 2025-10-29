@@ -333,6 +333,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case AIM:
                 // Determine what artifact type to shoot and check if Spindexer has it.
+                sm.clearEventList();
                 Vision.ArtifactType motifArtifactType = motifSequence != null? motifSequence[motifIndex++]: null;
                 Vision.ArtifactType artifactType;
                 if (motifArtifactType != null)
@@ -348,8 +349,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         if (robot.spindexerSubsystem.getNumArtifacts(artifactType) == 0 &&
                             robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) == 0)
                         {
-                            tracer.traceInfo(moduleName, "***** Spindexer is empty, quit.");
-                            artifactType = null;
+                            tracer.traceInfo(
+                                moduleName, "***** Spindexer is empty, shoot any just in case sensor is wrong.");
+                            artifactType = Vision.ArtifactType.Any;
                         }
                     }
                 }
@@ -358,52 +360,37 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     artifactType = Vision.ArtifactType.Any;
                 }
 
-                if (artifactType != null)
+                tracer.traceInfo(
+                    moduleName, "***** Shooting %s artifact (MotifArtifact=%s).", artifactType, motifArtifactType);
+                // Move Spindexer to the slot that has the correct artifact type.
+                spindexerEvent.clear();
+                sm.addEvent(spindexerEvent);
+                robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent);
+
+                // Spin the shooter flywheel up to speed and the turret pointing to the target.
+                event.clear();
+                sm.addEvent(event);
+                if (shootParams != null)
                 {
                     tracer.traceInfo(
-                        moduleName, "***** Shooting %s artifact (MotifArtifact=%s).", artifactType, motifArtifactType);
-                    // Move Spindexer to the slot that has the correct artifact type.
-                    spindexerEvent.clear();
-                    sm.addEvent(spindexerEvent);
-                    if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent))
-                    {
-                        // No more artifact in the Spindexer, quit.
-                        tracer.traceInfo(moduleName, "***** No more artifact, done.");
-                        sm.setState(State.DONE);
-                    }
-                    else
-                    {
-                        // Spin the shooter flywheel up to speed and the turret pointing to the target.
-                        event.clear();
-                        sm.addEvent(event);
-                        if (shootParams != null)
-                        {
-                            tracer.traceInfo(
-                                moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
-                                shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
-                            robot.shooter.aimShooter(
-                                owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                                shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
-                        }
-                        else
-                        {
-                            // We did not use vision, just shoot assuming operator manually aimed.
-                            double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
-                            tracer.traceInfo(
-                                moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
-                            // ShooterVel is in RPM, aimShooter wants RPS.
-                            robot.shooter.aimShooter(
-                                owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
-                        }
-                        // Wait for Spindexer and Shooter to be ready before shooting.
-                        sm.waitForEvents(State.SHOOT, false, true);
-                    }
+                        moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
+                        shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
+                    robot.shooter.aimShooter(
+                        owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
+                        shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
                 }
                 else
                 {
-                    // Nothing to shoot because Spindexer is empty, we are done.
-                    sm.setState(State.DONE);
+                    // We did not use vision, just shoot assuming operator manually aimed.
+                    double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
+                    tracer.traceInfo(
+                        moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
+                    // ShooterVel is in RPM, aimShooter wants RPS.
+                    robot.shooter.aimShooter(
+                        owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
                 }
+                // Wait for Spindexer and Shooter to be ready before shooting.
+                sm.waitForEvents(State.SHOOT, false, true);
                 break;
 
             case SHOOT:

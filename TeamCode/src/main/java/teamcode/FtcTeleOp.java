@@ -184,7 +184,7 @@ public class FtcTeleOp extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
-        int lineNum = 1;
+        int lineNum = Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus? 2: 1;
 
         if (allowAnalogControl)
         {
@@ -221,7 +221,7 @@ public class FtcTeleOp extends FtcOpMode
                         if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
-                                lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
+                                1, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
                                 inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
                         }
                     }
