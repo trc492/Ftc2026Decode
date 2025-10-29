@@ -110,6 +110,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     TrcShootParamTable.Params shootParams = null;
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
+    Integer autoTrackAprilTagId = null;
+
 
     /**
      * Constructor: Create an instance of the object.
@@ -146,6 +148,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
+        autoTrackAprilTagId = robot.shooterSubsystem.getTrackedAprilTagId();
+        // Turn off AprilTag tracking if it was ON.
+        if (autoTrackAprilTagId != null)
+        {
+            tracer.traceInfo(
+                moduleName, "AprilTag tracking is ON (Id=%d), turning it OFF.", autoTrackAprilTagId);
+            robot.shooterSubsystem.disableAprilTagTracking(null);
+        }
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
     }   //autoShoot
 
@@ -188,6 +198,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 "\n\tspindexer=" + ownershipMgr.getOwner(robot.spindexer));
             robot.shooter.releaseExclusiveAccess(owner);
             robot.spindexer.releaseExclusiveAccess(owner);
+        }
+
+        if (autoTrackAprilTagId != null)
+        {
+            tracer.traceInfo(
+                moduleName, "AprilTag tracking was ON (Id=%d), turning it back ON.", autoTrackAprilTagId);
+            robot.shooterSubsystem.enableAprilTagTracking(null, autoTrackAprilTagId);
+            autoTrackAprilTagId = null;
         }
     }   //releaseSubsystemsOwnership
 

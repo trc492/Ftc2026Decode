@@ -421,6 +421,8 @@ public class Shooter extends TrcSubsystem
         {
             if (shooter.acquireExclusiveAccess(owner))
             {
+                shooter.tracer.traceInfo(
+                    instanceName, "Enabling AprilTag Tracking (owner=" + owner + ", Id=" + aprilTagId + ")");
                 robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                 this.trackedAprilTagId = aprilTagId;
                 shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
@@ -435,12 +437,22 @@ public class Shooter extends TrcSubsystem
      */
     public void disableAprilTagTracking(String owner)
     {
-        if (shooter.releaseExclusiveAccess(owner))
-        {
-            shooter.panMotor.cancel();
-            this.trackedAprilTagId = null;
-        }
+        shooter.releaseExclusiveAccess(owner);
+        shooter.panMotor.cancel();
+        this.trackedAprilTagId = null;
+        shooter.tracer.traceInfo(
+            instanceName, "Disabling AprilTag Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
     }   //disableAprilTagTracking
+
+    /**
+     * This method returns the tracked AprilTag ID.
+     *
+     * @return tracked AprilTag ID.
+     */
+    public Integer getTrackedAprilTagId()
+    {
+        return trackedAprilTagId;
+    }   //getTrackedArpilTagId
 
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this

@@ -525,7 +525,7 @@ public class FtcTest extends FtcTeleOp
                         if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
-                            robot.shooterSubsystem.disableAprilTagTracking(moduleName);
+                            robot.shooterSubsystem.disableAprilTagTracking(null);
                         }
                         else
                         {
@@ -533,7 +533,7 @@ public class FtcTest extends FtcTeleOp
                                 moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
                                 Dashboard.Subsystem_Vision.trackedAprilTagId);
                             robot.shooterSubsystem.enableAprilTagTracking(
-                                moduleName, Dashboard.Subsystem_Vision.trackedAprilTagId);
+                                null, Dashboard.Subsystem_Vision.trackedAprilTagId);
                         }
                     }
                     passToTeleOp = false;
