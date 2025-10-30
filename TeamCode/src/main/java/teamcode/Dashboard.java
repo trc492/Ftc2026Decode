@@ -32,6 +32,7 @@ import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
 import trclib.drivebase.TrcSwerveDriveBase;
+import trclib.driverio.TrcGameController;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.sensor.TrcTriggerThresholdRange;
@@ -57,6 +58,12 @@ public class Dashboard
     {
         public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
         public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
+        public static final TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
+        public static final TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
+        public static final double driveSlowScale = 0.3;
+        public static final double driveNormalScale = 1.0;
+        public static final double turnSlowScale = 0.3;
+        public static final double turnNormalScale = 0.6;
         public static double steerPowerCompConstant = 0.0;
     }   //class Subsystem_Drivebase
 
@@ -86,7 +93,6 @@ public class Dashboard
     public static class Subsystem_Spindexer
     {
         public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
-//        public static double[] entryTriggerPoints = Spindexer.entryTriggerThresholdPoints;
         public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
     }   //class Subsystem_Spindexer

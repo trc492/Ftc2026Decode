@@ -27,8 +27,6 @@ import android.annotation.SuppressLint;
 import teamcode.subsystems.BaseDrive;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcUtil;
-import trclib.drivebase.TrcDriveBase.DriveOrientation;
-import trclib.driverio.TrcGameController.DriveMode;
 import trclib.pathdrive.TrcPose2D;
 
 /**
@@ -74,7 +72,7 @@ public class RobotParams
         public static final boolean showPidDrive                = false;
         public static final boolean showDriveBaseGraph          = false;
         public static final boolean tuneDriveBase               = false;
-        public static final boolean tuneSteerPowerComp          = true;
+        public static final boolean tuneSteerPowerComp          = false;
         // Other Subsystems
         public static final boolean useIntake                   = true;
         public static final boolean showIntakeStatus            = true;
@@ -101,13 +99,6 @@ public class RobotParams
         public static final String STEER_ZERO_CAL_FILE          = TEAM_FOLDER_PATH + "/SteerZeroCalibration.txt";
         public static final double DASHBOARD_UPDATE_INTERVAL    = 0.2;      // in msec
         public static final String ROBOT_CODEBASE               = "Ftc2026Decode";
-        // Robot Drive Parameters.
-        public static final DriveMode DRIVE_MODE                = DriveMode.ArcadeMode;
-        public static final DriveOrientation DRIVE_ORIENTATION  = DriveOrientation.ROBOT;
-        public static final double DRIVE_SLOW_SCALE             = 0.3;
-        public static final double DRIVE_NORMAL_SCALE           = 1.0;
-        public static final double TURN_SLOW_SCALE              = 0.3;
-        public static final double TURN_NORMAL_SCALE            = 0.6;
         //TODO: Needs adjustment with Shooter and side plates mounted.
         public static final double ROBOT_LENGTH                 = 432.0*TrcUtil.INCHES_PER_MM;
         public static final double ROBOT_WIDTH                  = 384.0*TrcUtil.INCHES_PER_MM;

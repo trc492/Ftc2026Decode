@@ -80,6 +80,9 @@ public class Spindexer extends TrcSubsystem
         public static final double MOTOR_PID_KD                 = 0.0;
         public static final double POS_PID_TOLERANCE            = 5.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
+//        public static final double MOTION_PROFILED_MAX_VEL      = 100.0;
+//        public static final double MOTION_PROFILED_MAX_ACCEL    = 1000.0;
+//        public static final double MOTION_PROFILED_MAX_DECEL    = 1000.0;
 
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
 
@@ -196,6 +199,8 @@ public class Spindexer extends TrcSubsystem
         spindexer.motor.setPositionSensorScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET);
         spindexer.motor.setPositionPidParameters(
             motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
+//        spindexer.motor.enableMotionProfile(
+//            Params.MOTION_PROFILED_MAX_VEL, Params.MOTION_PROFILED_MAX_ACCEL, Params.MOTION_PROFILED_MAX_DECEL, 0.0);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);
         refreshSlotStatesTaskObj = TrcTaskMgr.createTask(
             Params.SUBSYSTEM_NAME + ".refreshSlotStatesTask", this::refreshSlotStatesTask);
@@ -821,7 +826,7 @@ public class Spindexer extends TrcSubsystem
             }
             spindexer.tracer.tracePostStateInfo(sm.toString(), state, null);
         }
-    }   //examineSlotsTask
+    }   //refreshSlotStatesTask
 
     //
     // Implements TrcSubsystem abstract methods.

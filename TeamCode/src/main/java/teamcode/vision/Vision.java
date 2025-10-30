@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import ftclib.drivebase.FtcRobotDrive;
+import ftclib.driverio.FtcDashboard;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcEocvColorBlobProcessor;
 import ftclib.vision.FtcLimelightVision;
@@ -310,6 +311,7 @@ public class Vision
                 }
             }
         }
+//        FtcDashboard.getInstance().addStatusUpdate(moduleName, this::updateStatus);
     }   //Vision
 
     /**

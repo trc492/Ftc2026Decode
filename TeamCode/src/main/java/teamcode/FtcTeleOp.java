@@ -100,9 +100,9 @@ public class FtcTeleOp extends FtcOpMode
             robot.operatorRumble = new RumbleIndicator("OperatorRumble", operatorGamepad);
         }
 
-        drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
-        turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
-        setDriveOrientation(RobotParams.Robot.DRIVE_ORIENTATION);
+        drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
+        turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
+        setDriveOrientation(Dashboard.Subsystem_Drivebase.driveOrientation);
     }   //robotInit
 
     //
@@ -185,8 +185,6 @@ public class FtcTeleOp extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
-        int lineNum = Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus? 2: 1;
-
         if (allowAnalogControl)
         {
             if (slowPeriodicLoop)
@@ -207,7 +205,7 @@ public class FtcTeleOp extends FtcOpMode
                     else
                     {
                         double[] inputs = driverGamepad.getDriveInputs(
-                            RobotParams.Robot.DRIVE_MODE, true, drivePowerScale, turnPowerScale);
+                            Dashboard.Subsystem_Drivebase.driveMode, true, drivePowerScale, turnPowerScale);
 
                         if (robot.robotDrive.driveBase.supportsHolonomicDrive())
                         {
@@ -222,7 +220,7 @@ public class FtcTeleOp extends FtcOpMode
                         if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
-                                1, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
+                                14, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
                                 inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
                         }
                     }
@@ -283,7 +281,7 @@ public class FtcTeleOp extends FtcOpMode
             }
         }
         // Display subsystem status.
-        Dashboard.updateDashboard(robot, lineNum);
+        Dashboard.updateDashboard(robot, 1);
     }   //periodic
 
     /**
@@ -317,7 +315,7 @@ public class FtcTeleOp extends FtcOpMode
      */
     public void driverButtonEvent(FtcGamepad.ButtonType button, boolean pressed)
     {
-        robot.dashboard.displayPrintf(8, "Driver: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Driver: %s=%s", button, pressed? "Pressed": "Released");
 
         switch (button)
         {
@@ -450,14 +448,14 @@ public class FtcTeleOp extends FtcOpMode
                 if (pressed)
                 {
                     robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
-                    drivePowerScale = RobotParams.Robot.DRIVE_SLOW_SCALE;
-                    turnPowerScale = RobotParams.Robot.TURN_SLOW_SCALE;
+                    drivePowerScale = Dashboard.Subsystem_Drivebase.driveSlowScale;
+                    turnPowerScale = Dashboard.Subsystem_Drivebase.turnSlowScale;
                 }
                 else
                 {
                     robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
-                    drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
-                    turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
+                    drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
+                    turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
                 }
                 break;
 
@@ -549,7 +547,7 @@ public class FtcTeleOp extends FtcOpMode
      */
     public void operatorButtonEvent(FtcGamepad.ButtonType button, boolean pressed)
     {
-        robot.dashboard.displayPrintf(8, "Operator: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Operator: %s=%s", button, pressed? "Pressed": "Released");
 
         switch (button)
         {
