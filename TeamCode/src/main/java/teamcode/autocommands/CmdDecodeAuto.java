@@ -155,7 +155,6 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 RobotParams.Game.RED_PRELOAD_LAUNCH_SHOOT_POSE,
                             autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
-//                    sm.waitForSingleEvent(event, State.DONE);
                     break;
 
                 case SHOOT_PRELOAD:
