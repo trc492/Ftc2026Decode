@@ -78,11 +78,14 @@ public class Spindexer extends TrcSubsystem
         public static final double MOTOR_PID_KP                 = 0.035;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
+//        public static final double MOTOR_FF_KS                  = 0.0;
+//        public static final double MOTOR_FF_KV                  = 0.0;
+//        public static final double MOTOR_FF_KA                  = 0.0;
         public static final double POS_PID_TOLERANCE            = 5.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 //        public static final double MOTION_PROFILED_MAX_VEL      = 100.0;
-//        public static final double MOTION_PROFILED_MAX_ACCEL    = 1000.0;
-//        public static final double MOTION_PROFILED_MAX_DECEL    = 1000.0;
+//        public static final double MOTION_PROFILED_MAX_ACCEL    = 500.0;
+//        public static final double MOTION_PROFILED_MAX_DECEL    = 500.0;
 
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
 
@@ -110,6 +113,7 @@ public class Spindexer extends TrcSubsystem
 
     public static final TrcMotor.TuneParams motorPidParams = new TrcMotor.TuneParams()
         .setPidCoefficients(Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD)
+//        .setFFCoefficients(Params.MOTOR_FF_KS, Params.MOTOR_FF_KV, Params.MOTOR_FF_KA)
         .setPidParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
     public static final TrcTriggerThresholdRange.TriggerParams entryTriggerParams =
         new TrcTriggerThresholdRange.TriggerParams(
@@ -199,6 +203,9 @@ public class Spindexer extends TrcSubsystem
         spindexer.motor.setPositionSensorScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET);
         spindexer.motor.setPositionPidParameters(
             motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
+//        spindexer.motor.setPositionPidParameters(
+//            motorPidParams.pidCoeffs, motorPidParams.ffCoeffs, motorPidParams.pidTolerance,
+//            motorPidParams.useSoftwarePid, false, null);
 //        spindexer.motor.enableMotionProfile(
 //            Params.MOTION_PROFILED_MAX_VEL, Params.MOTION_PROFILED_MAX_ACCEL, Params.MOTION_PROFILED_MAX_DECEL, 0.0);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);
@@ -882,6 +889,10 @@ public class Spindexer extends TrcSubsystem
         // Spindexer doesn't do anything in Turtle mode.
     }   //resetState
 
+//    private Double prevTimestamp = null;
+//    private double prevVel = 0.0;
+//    private double maxVel = Double.MIN_VALUE;
+//    private double maxAccel = Double.MIN_VALUE;
     /**
      * This method update the dashboard with the subsystem status.
      *
@@ -909,6 +920,29 @@ public class Spindexer extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
                     slotStates[0], slotStates[1], slotStates[2]);
             }
+//            else
+//            {
+//                double currTime = TrcTimer.getCurrentTime();
+//                double currVel = Math.abs(spindexer.motor.getVelocity());
+//                if (prevTimestamp == null)
+//                {
+//                    prevTimestamp = currTime;
+//                    prevVel = currVel;
+//                }
+//                else
+//                {
+//                    double deltaTime = currTime - prevTimestamp;
+//                    double accel = (currVel - prevVel) / deltaTime;
+//                    prevTimestamp = currTime;
+//                    prevVel = currVel;
+//                    if (currVel > maxVel) maxVel = currVel;
+//                    if (accel > maxAccel) maxAccel = accel;
+//                    dashboard.putNumber(Params.SUBSYSTEM_NAME + ".vel", currVel);
+//                    dashboard.putNumber(Params.SUBSYSTEM_NAME + ".accel", accel);
+//                    dashboard.putNumber(Params.SUBSYSTEM_NAME + ".maxVel", maxVel);
+//                    dashboard.putNumber(Params.SUBSYSTEM_NAME + ".maxAccel", maxAccel);
+//                }
+//            }
         }
 
         return lineNum;
@@ -928,9 +962,6 @@ public class Spindexer extends TrcSubsystem
     @Override
     public void updateParamsFromDashboard()
     {
-        ((TrcTriggerThresholdRange) spindexer.getEntryTrigger()).setTrigger(
-            entryTriggerParams.lowThreshold, entryTriggerParams.highThreshold,
-            entryTriggerParams.settlingPeriod);
     }   //updateParamsFromDashboard
 
 }   //class Spindexer

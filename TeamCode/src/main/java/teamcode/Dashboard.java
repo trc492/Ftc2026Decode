@@ -58,12 +58,12 @@ public class Dashboard
     {
         public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
         public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
-        public static final TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
-        public static final TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
-        public static final double driveSlowScale = 0.3;
-        public static final double driveNormalScale = 1.0;
-        public static final double turnSlowScale = 0.3;
-        public static final double turnNormalScale = 0.6;
+        public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
+        public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
+        public static double driveSlowScale = 0.3;
+        public static double driveNormalScale = 1.0;
+        public static double turnSlowScale = 0.3;
+        public static double turnNormalScale = 0.6;
         public static double steerPowerCompConstant = 0.0;
     }   //class Subsystem_Drivebase
 
