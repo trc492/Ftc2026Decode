@@ -75,7 +75,7 @@ public class Spindexer extends TrcSubsystem
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
-        public static final double MOTOR_PID_KP                 = 0.05;
+        public static final double MOTOR_PID_KP                 = 0.035;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
         public static final double POS_PID_TOLERANCE            = 5.0;
@@ -84,7 +84,7 @@ public class Spindexer extends TrcSubsystem
         public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
-        public static final double MOVE_POWER                   = 0.6;
+        public static final double MOVE_POWER                   = 1.0;
         public static final int MAX_CAPACITY                    = 3;
 
         public static final double GREEN_LOW_THRESHOLD          = 100.0;

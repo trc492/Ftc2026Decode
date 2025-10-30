@@ -137,7 +137,7 @@ public class RobotParams
             };
         // Robot start locations.
         public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE       =
-            new TrcPose2D(-2.0*Field.FULL_TILE_INCHES, 2.0*Field.FULL_TILE_INCHES, -35.5);
+            new TrcPose2D(-2.0*Field.FULL_TILE_INCHES, 2.0*Field.FULL_TILE_INCHES, 144.5);
         public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER     =
             new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, -90.0);
         public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER     =

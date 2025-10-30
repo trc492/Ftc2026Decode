@@ -25,6 +25,7 @@ package teamcode.autocommands;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
+import teamcode.subsystems.Shooter;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
@@ -141,6 +142,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_PRELOAD_SHOOT_POS:
+                    robot.shooter.panMotor.setPosition(
+                            null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
                     robot.robotDrive.purePursuitDrive.start(
                         event, 0.0, false,
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,
@@ -152,10 +155,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 RobotParams.Game.RED_PRELOAD_LAUNCH_SHOOT_POSE,
                             autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
+//                    sm.waitForSingleEvent(event, State.DONE);
                     break;
 
                 case SHOOT_PRELOAD:
-                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, 3, false);
+                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, false, 3, false);
                     sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     break;
 
