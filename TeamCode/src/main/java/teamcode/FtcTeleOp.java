@@ -366,16 +366,15 @@ public class FtcTeleOp extends FtcOpMode
                         }
                         else
                         {
-                            if (!preSpinOn)
+                            preSpinOn = !preSpinOn;
+                            if (preSpinOn)
                             {
-                                robot.shooter.shooterMotor1.setVelocity(4000.0);
-                                preSpinOn = true;
-
+                                robot.shooter.shooterMotor1.setVelocity(
+                                    Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                             }
                             else
                             {
-                                robot.shooter.shooterMotor1.setVelocity(0);
-                                preSpinOn = false;
+                                robot.shooter.shooterMotor1.cancel();
                             }
                         }
                     }
@@ -383,7 +382,6 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case X:
-
                 if (robot.robotDrive != null && pressed)
                 {
                     if (driverAltFunc)
@@ -444,18 +442,30 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case RightBumper:
-                // Press and hold for slow drive.
-                if (pressed)
+                if (!driverAltFunc)
                 {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
-                    drivePowerScale = Dashboard.Subsystem_Drivebase.driveSlowScale;
-                    turnPowerScale = Dashboard.Subsystem_Drivebase.turnSlowScale;
+                    // Press and hold for slow drive.
+                    if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
+                        drivePowerScale = Dashboard.Subsystem_Drivebase.driveSlowScale;
+                        turnPowerScale = Dashboard.Subsystem_Drivebase.turnSlowScale;
+                    }
+                    else
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
+                        drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
+                        turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
+                    }
                 }
                 else
                 {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
-                    drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
-                    turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
+                    if (pressed)
+                    {
+                        boolean enabled = !Dashboard.isDashboardUpdateEnabled();
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
+                        Dashboard.setUpdateDashboardEnabled(enabled);
+                    }
                 }
                 break;
 
