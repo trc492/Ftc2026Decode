@@ -90,6 +90,7 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_PID_TOLERANCE_RPM      = 60.0;
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
+        public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 120.0;    // in RPM
 
         // Pan Motor
         public static final String PAN_MOTOR_NAME               = SUBSYSTEM_NAME + ".PanMotor";
@@ -349,14 +350,16 @@ public class Shooter extends TrcSubsystem
         if (launcher != null)
         {
             TrcDbgTrace.globalTraceInfo(
-                instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f",
+                instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f)",
                 owner, completionEvent, launcherParams.activatePos, launcherParams.activateDuration);
             if (robot.spindexerSubsystem != null)
             {
                 // Enable Spindexer exit trigger.
                 double currFlywheelVel = getFlywheelVelocity();
                 robot.spindexerSubsystem.enableExitTrigger(
-                    currFlywheelVel - 120.0, currFlywheelVel + 120.0, this::launchCallback);
+                    currFlywheelVel - Params.SHOOT_VEL_TRIGGER_THRESHOLD,
+                    currFlywheelVel + Params.SHOOT_VEL_TRIGGER_THRESHOLD,
+                    this::launchCallback);
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
