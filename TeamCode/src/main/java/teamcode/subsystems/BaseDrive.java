@@ -88,7 +88,6 @@ public class BaseDrive extends TrcSubsystem
         private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
         private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
-        // TODO: Need to determine these.
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
             new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
         private static final TrcPidController.PidCoefficients drivePidCoeffs =
@@ -219,29 +218,36 @@ public class BaseDrive extends TrcSubsystem
      */
     private double getSteerPowerComp(TrcMotor motor, double power)
     {
+        double powerComp = 0.0;
         Integer motorIndex = motorIndexMap.get(motor);
-        if (motorIndex == null || prevDriveMotorTimestamp[motorIndex] == 0.0)
+        // motorIndex should never be null. This is to make the compiler happy.
+        if (motorIndex != null)
         {
-            return 0.0;
+            double currTime = TrcTimer.getCurrentTime();
+            double driveMotorVel = robotDrive.driveMotors[motorIndex].getVelocity();
+
+            if (prevDriveMotorTimestamp[motorIndex] == 0.0)
+            {
+                // This is the first time we are called, init the states.
+                prevDriveMotorTimestamp[motorIndex] = currTime;
+                prevDriveMotorVel[motorIndex] = driveMotorVel;
+            }
+            else
+            {
+                double deltaTime = currTime - prevDriveMotorTimestamp[motorIndex];
+                double acceleration = (driveMotorVel - prevDriveMotorVel[motorIndex])/deltaTime;
+                powerComp = Dashboard.Subsystem_Drivebase.steerPowerCompConstant*acceleration;
+                if (RobotParams.Preferences.tuneSteerPowerComp)
+                {
+                    dashboard.putNumber(motorIndex + "_SteerAngle", motor.getPosition() % 360.0);
+                    dashboard.putNumber(motorIndex + "_SteerAngleTarget", motor.getPidTarget() % 360.0);
+                    dashboard.putNumber(motorIndex + "_DriveMotorAccel", acceleration);
+                    dashboard.putNumber(motorIndex + "_SteerMotorPowerComp", powerComp);
+                }
+            }
         }
 
-        double currTime = TrcTimer.getCurrentTime();
-        double deltaTime = currTime - prevDriveMotorTimestamp[motorIndex];
-
-        if (deltaTime > 1.0)
-        {
-            // It's been over 1 second pass the previous powerComp call, start over again.
-            prevDriveMotorTimestamp[motorIndex] = 0.0;
-            return 0.0;
-        }
-
-        prevDriveMotorTimestamp[motorIndex] = currTime;
-        double driveMotorVel = robotDrive.driveMotors[motorIndex].getVelocity();
-        double acceleration = (driveMotorVel - prevDriveMotorVel[motorIndex])/deltaTime;
-        prevDriveMotorVel[motorIndex] = driveMotorVel;
-
-        TrcDbgTrace.globalTraceInfo(moduleName, "[" + motorIndex + "] steerPowerCompAccel=" + acceleration);
-        return Dashboard.Subsystem_Drivebase.steerPowerCompConstant*acceleration;
+        return powerComp;
     }   //getSteerPowerComp
 
     //
