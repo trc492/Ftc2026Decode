@@ -125,6 +125,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_STALL_TOLERANCE          = 0.1;
         public static final double PAN_STALL_TIMEOUT            = 0.1;
         public static final double PAN_STALL_RESET_TIMEOUT      = 0.0;
+        private static final double HARD_STOP_TIMEOUT = 0.5; // seconds
 
         // Tilt Motor
         public static final String TILT_MOTOR_NAME              = SUBSYSTEM_NAME + ".TiltMotor";
@@ -200,6 +201,9 @@ public class Shooter extends TrcSubsystem
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private Integer trackedAprilTagId = null;
+    private double hardStopAttemptStartTime = 0.0;
+    private boolean attemptingToPassHardStop = false;
+
 
     /**
      * Constructor: Creates an instance of the object.
@@ -443,6 +447,7 @@ public class Shooter extends TrcSubsystem
         shooter.releaseExclusiveAccess(owner);
         shooter.panMotor.cancel();
         this.trackedAprilTagId = null;
+        this.attemptingToPassHardStop = false;
         shooter.tracer.traceInfo(
             instanceName, "Disabling AprilTag Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
     }   //disableAprilTagTracking
@@ -477,6 +482,7 @@ public class Shooter extends TrcSubsystem
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.
                 panPosition = 0.0;
+                attemptingToPassHardStop = false;
                 shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
             }
             else
@@ -488,14 +494,60 @@ public class Shooter extends TrcSubsystem
                 {
                     // We are moving within valid range.
                     panPosition -= newPosition;
+                    attemptingToPassHardStop = false;
                 }
                 else
                 {
-                    // We are crossing over the hard stop, stop it.
-                    panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
+                    // We are trying to cross over the hard stop.
+                    double currentTime = trclib.timer.TrcTimer.getCurrentTime();
+                    
+                    if (!attemptingToPassHardStop)
+                    {
+                        // Just started attempting to pass hard stop, start timer.
+                        attemptingToPassHardStop = true;
+                        hardStopAttemptStartTime = currentTime;
+                        panPosition = 0.0;
+                        shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Starting hard stop attempt timer.");
+                    }
+                    else if (currentTime - hardStopAttemptStartTime >= Params.HARD_STOP_TIMEOUT)
+                    {
+                        // Calculate the wrap-around position.
+                        double wrapAroundPosition;
+                        if (newPosition < Params.PAN_MIN_POS)
+                        {
+                            // Wrapping from min to max side
+                            wrapAroundPosition = Params.PAN_MAX_POS - (Params.PAN_MIN_POS - newPosition);
+                        }
+                        else
+                        {
+                            // Wrapping from max to min side
+                            wrapAroundPosition = Params.PAN_MIN_POS + (newPosition - Params.PAN_MAX_POS);
+                        }
+                        
+                        shooter.tracer.traceInfo(
+                            Params.SUBSYSTEM_NAME, 
+                            "Hard stop timeout reached. Wrapping around: %f -> %f", 
+                            panPosition, wrapAroundPosition);
+
+                        shooter.panMotor.setPosition(wrapAroundPosition, true, Params.PAN_POWER_LIMIT);
+                        attemptingToPassHardStop = false;
+                        panPosition = 0.0;
+                    }
+                    else
+                    {
+                        // Still waiting for timeout, don't move.
+                        panPosition = 0.0;
+                        shooter.tracer.traceDebug(
+                            Params.SUBSYSTEM_NAME, 
+                            "Waiting at hard stop (%.2f/%.2f sec).", 
+                            currentTime - hardStopAttemptStartTime, Params.HARD_STOP_TIMEOUT);
+                    }
                 }
             }
+        }
+        else
+        {
+            attemptingToPassHardStop = false;
         }
 
         return panPosition;

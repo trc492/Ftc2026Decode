@@ -60,6 +60,7 @@ public class FtcTeleOp extends FtcOpMode
 
     private double panPrevPower = 0.0;
     private double tiltPrevPower = 0.0;
+    private boolean preSpinOn = false;
 
     //
     // Implements FtcOpMode abstract method.
@@ -321,6 +322,70 @@ public class FtcTeleOp extends FtcOpMode
         switch (button)
         {
             case A:
+                if (robot.intakeSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.intake.isActive())
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        }
+                    }
+                }
+                break;
+
+            case B:
+                if (robot.shooterSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (!operatorAltFunc && robot.autoShootTask != null)
+                        {
+                            // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
+                            if (robot.autoShootTask.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                                robot.autoShootTask.cancel();
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                                robot.autoShootTask.autoShoot(
+                                        moduleName + ".autoShoot", null,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
+                            }
+                        }
+                        else
+                        {
+                            if (!preSpinOn)
+                            {
+                                robot.shooter.shooterMotor1.setVelocity(4000.0);
+                                preSpinOn = true;
+
+                            }
+                            else
+                            {
+                                robot.shooter.shooterMotor1.setVelocity(0);
+                                preSpinOn = false;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case X:
+
                 if (robot.robotDrive != null && pressed)
                 {
                     if (driverAltFunc)
@@ -350,17 +415,6 @@ public class FtcTeleOp extends FtcOpMode
                             setDriveOrientation(TrcDriveBase.DriveOrientation.ROBOT);
                         }
                     }
-                }
-                break;
-
-            case B:
-                break;
-
-            case X:
-                if (pressed)
-                {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> Turtle mode.");
-                    robot.turtle();
                 }
                 break;
 
