@@ -111,10 +111,10 @@ public class Spindexer extends TrcSubsystem
         public static final double[] exitPresetPositions        = {180.0, 300.0, 60.0};
     }   //class Params
 
-    public static final TrcMotor.TuneParams motorPidParams = new TrcMotor.TuneParams()
+    public static final TrcMotor.PidParams motorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD)
 //        .setFFCoefficients(Params.MOTOR_FF_KS, Params.MOTOR_FF_KV, Params.MOTOR_FF_KA)
-        .setPidParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
+        .setPidControlParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
     public static final TrcTriggerThresholdRange.TriggerParams entryTriggerParams =
         new TrcTriggerThresholdRange.TriggerParams(
             Params.ENTRY_TRIGGER_LOW_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING);
@@ -141,7 +141,7 @@ public class Spindexer extends TrcSubsystem
     private final TrcEvent event;
     private final TrcTriggerThresholdRange entryTrigger;
 
-    private Vision.ArtifactType[] slotStates =
+    private final Vision.ArtifactType[] slotStates =
         {Vision.ArtifactType.None, Vision.ArtifactType.None, Vision.ArtifactType.None};
     private boolean autoReceivedEnabled = false;
     private Integer entrySlot = null;
@@ -201,11 +201,7 @@ public class Spindexer extends TrcSubsystem
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
         spindexer.motor.setPositionSensorScaleAndOffset(Params.DEG_PER_COUNT, Params.POS_OFFSET, Params.ZERO_OFFSET);
-        spindexer.motor.setPositionPidParameters(
-            motorPidParams.pidCoeffs, motorPidParams.pidTolerance, motorPidParams.useSoftwarePid, null);
-//        spindexer.motor.setPositionPidParameters(
-//            motorPidParams.pidCoeffs, motorPidParams.ffCoeffs, motorPidParams.pidTolerance,
-//            motorPidParams.useSoftwarePid, false, null);
+        spindexer.motor.setPositionPidParameters(motorPidParams, null);
 //        spindexer.motor.enableMotionProfile(
 //            Params.MOTION_PROFILED_MAX_VEL, Params.MOTION_PROFILED_MAX_ACCEL, Params.MOTION_PROFILED_MAX_DECEL, 0.0);
         warpSpace = new TrcWarpSpace(Params.SUBSYSTEM_NAME + ".warpSpace", 0.0, 360.0);

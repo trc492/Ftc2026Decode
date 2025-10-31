@@ -172,24 +172,24 @@ public class Shooter extends TrcSubsystem
         public static double LAUNCHER_RETRACT_TIME              = 0.25; // in seconds
     }   //class Params
 
-    public static final TrcMotor.TuneParams shootMotor1PidParams = new TrcMotor.TuneParams()
+    public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.SHOOT_MOTOR1_PID_KP, Params.SHOOT_MOTOR1_PID_KI, Params.SHOOT_MOTOR1_PID_KD,
             Params.SHOOT_MOTOR1_PID_KF)
-        .setPidParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
-    public static final TrcMotor.TuneParams shootMotor2PidParams = new TrcMotor.TuneParams()
+        .setPidControlParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
+    public static final TrcMotor.PidParams shootMotor2PidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.SHOOT_MOTOR2_PID_KP, Params.SHOOT_MOTOR2_PID_KI, Params.SHOOT_MOTOR2_PID_KD,
             Params.SHOOT_MOTOR2_PID_KF)
-        .setPidParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
-    public static final TrcMotor.TuneParams panMotorPidParams = new TrcMotor.TuneParams()
+        .setPidControlParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
+    public static final TrcMotor.PidParams panMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.PAN_MOTOR_PID_KP, Params.PAN_MOTOR_PID_KI, Params.PAN_MOTOR_PID_KD)
-        .setPidParams(Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
-    public static final TrcMotor.TuneParams tiltMotorPidParams = new TrcMotor.TuneParams()
+        .setPidControlParams(Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
+    public static final TrcMotor.PidParams tiltMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.TILT_MOTOR_PID_KP, Params.TILT_MOTOR_PID_KI, Params.TILT_MOTOR_PID_KD)
-        .setPidParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
+        .setPidControlParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
     public static final TrcServo.TuneParams launcherParams = new TrcServo.TuneParams(
         Params.LAUNCHER_SERVO_INVERTED, Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS,
         Params.LAUNCHER_LAUNCH_DURATION, Params.LAUNCHER_RETRACT_TIME);
@@ -246,9 +246,7 @@ public class Shooter extends TrcSubsystem
 
         TrcMotor motor = shooter.getShooterMotor1();
         motor.setPositionSensorScaleAndOffset(Params.SHOOT_MOTOR_REV_PER_COUNT, 0.0);
-        motor.setVelocityPidParameters(
-            shootMotor1PidParams.pidCoeffs, shootMotor1PidParams.pidTolerance,
-            shootMotor1PidParams.useSoftwarePid, null);
+        motor.setVelocityPidParameters(shootMotor1PidParams, null);
 
         motor = shooter.getShooterMotor2();
         if (motor != null)
@@ -256,9 +254,7 @@ public class Shooter extends TrcSubsystem
             // Assuming motor2 is the same type of motor as motor1 and has the same gear ratio.
             // If it needs to, this allows different PID coefficients for motor2 in case they are not quite identical.
             motor.setPositionSensorScaleAndOffset(Params.SHOOT_MOTOR_REV_PER_COUNT, 0.0);
-            motor.setVelocityPidParameters(
-                shootMotor1PidParams.pidCoeffs, shootMotor2PidParams.pidTolerance,
-                shootMotor2PidParams.useSoftwarePid, null);
+            motor.setVelocityPidParameters(shootMotor2PidParams, null);
         }
 
         motor = shooter.getPanMotor();
@@ -266,9 +262,7 @@ public class Shooter extends TrcSubsystem
         {
             motor.setPositionSensorScaleAndOffset(
                 Params.PAN_DEG_PER_COUNT, Params.PAN_POS_OFFSET, Params.PAN_ENCODER_ZERO_OFFSET);
-            motor.setPositionPidParameters(
-                panMotorPidParams.pidCoeffs, panMotorPidParams.pidTolerance, panMotorPidParams.useSoftwarePid,
-                this::getPanPosition);
+            motor.setPositionPidParameters(panMotorPidParams, this::getPanPosition);
             // There is no lower limit switch, enable stall detection for zero calibration and soft limits for
             // protection.
             motor.setStallProtection(
@@ -282,9 +276,7 @@ public class Shooter extends TrcSubsystem
         {
             motor.setPositionSensorScaleAndOffset(
                 Params.TILT_DEG_PER_COUNT, Params.TILT_POS_OFFSET, Params.TILT_ENCODER_ZERO_OFFSET);
-            motor.setPositionPidParameters(
-                tiltMotorPidParams.pidCoeffs, tiltMotorPidParams.pidTolerance, tiltMotorPidParams.useSoftwarePid,
-                null);
+            motor.setPositionPidParameters(tiltMotorPidParams, null);
             motor.setSoftPositionLimits(Params.TILT_MIN_POS, Params.TILT_MAX_POS, false);
         }
 

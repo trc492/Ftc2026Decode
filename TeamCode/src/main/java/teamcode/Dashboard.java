@@ -79,17 +79,17 @@ public class Dashboard
         public static double shootMotor1Velocity = 4000.0;  // in RPM
         public static double tiltAngle = 26.0;              // in degrees
         public static TaskAutoShoot.TaskParams autoShootParams = TaskAutoShoot.autoShootParams;
-        public static TrcMotor.TuneParams shootMotor1Pid = Shooter.shootMotor1PidParams;
-        public static TrcMotor.TuneParams shootMotor2Pid = Shooter.shootMotor1PidParams;
-        public static TrcMotor.TuneParams panMotorPid = Shooter.panMotorPidParams;
-        public static TrcMotor.TuneParams tiltMotorPid = Shooter.tiltMotorPidParams;
+        public static TrcMotor.PidParams shootMotor1Pid = Shooter.shootMotor1PidParams;
+        public static TrcMotor.PidParams shootMotor2Pid = Shooter.shootMotor1PidParams;
+        public static TrcMotor.PidParams panMotorPid = Shooter.panMotorPidParams;
+        public static TrcMotor.PidParams tiltMotorPid = Shooter.tiltMotorPidParams;
         public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
     }   //class Subsystem_Shooter
 
     @Config
     public static class Subsystem_Spindexer
     {
-        public static TrcMotor.TuneParams motorPid = Spindexer.motorPidParams;
+        public static TrcMotor.PidParams motorPid = Spindexer.motorPidParams;
         public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
     }   //class Subsystem_Spindexer
