@@ -71,11 +71,11 @@ public class Spindexer extends TrcSubsystem
         public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
         public static final double DEG_PER_COUNT                =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
-        public static final double POS_OFFSET                   = 24.0;
+        public static final double POS_OFFSET                   = 26.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = 0.5;
 
-        public static final double MOTOR_PID_KP                 = 0.035;
+        public static final double MOTOR_PID_KP                 = 0.065;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
 //        public static final double MOTOR_FF_KS                  = 0.0;

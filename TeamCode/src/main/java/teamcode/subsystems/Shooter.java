@@ -90,7 +90,7 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_PID_TOLERANCE_RPM      = 60.0;
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
-        public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 120.0;    // in RPM
+        public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 200.0;    // in RPM
 
         // Pan Motor
         public static final String PAN_MOTOR_NAME               = SUBSYSTEM_NAME + ".PanMotor";
