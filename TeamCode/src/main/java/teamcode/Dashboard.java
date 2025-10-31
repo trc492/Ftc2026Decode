@@ -24,7 +24,6 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import ftclib.driverio.FtcDashboard;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
@@ -36,8 +35,6 @@ import trclib.driverio.TrcGameController;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.sensor.TrcTriggerThresholdRange;
-import trclib.subsystem.TrcSubsystem;
-import trclib.timer.TrcTimer;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 
 /**
@@ -96,66 +93,5 @@ public class Dashboard
         public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
         public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
     }   //class Subsystem_Spindexer
-
-    private static Double nextDashboardUpdateTime =  null;
-
-    /**
-     * This method enables/disables Dashboard Update.
-     *
-     * @param enabled specifies true to enable, false to disable.
-     */
-    public static void setUpdateDashboardEnabled(boolean enabled)
-    {
-        DashboardParams.updateDashboardEnabled = enabled;
-        if (!enabled)
-        {
-            FtcDashboard.getInstance().clearDisplay();
-        }
-    }   //setUpdateDashboardEnabled
-
-    /**
-     * This method checks if Dashboard Update is enabled.
-     *
-     * @return true if update is enabled, false if disabled.
-     */
-    public static boolean isDashboardUpdateEnabled()
-    {
-        return DashboardParams.updateDashboardEnabled;
-    }   //isDashboardUpdateEnabled
-
-    /**
-     * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard
-     * and trace log. In order to lower the potential impact these updates, this method will only update the dashboard
-     * at DASHBOARD_UPDATE_INTERVAL.
-     *
-     * @param robot specifies the robot object.
-     * @param lineNum specifies the first Dashboard line for printing status.
-     * @return next available dashboard line.
-     */
-    public static int updateDashboard(Robot robot, int lineNum)
-    {
-        double currTime = TrcTimer.getCurrentTime();
-        boolean slowLoop = nextDashboardUpdateTime == null || currTime >= nextDashboardUpdateTime;
-
-        if (DashboardParams.updateDashboardEnabled)
-        {
-            if (slowLoop)
-            {
-                nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
-            }
-
-            if (RobotParams.Preferences.showSubsystems)
-            {
-                lineNum = TrcSubsystem.updateStatusAll(lineNum, slowLoop);
-            }
-
-            if (RobotParams.Preferences.showVisionStatus && robot.vision != null)
-            {
-                lineNum = robot.vision.updateStatus(lineNum, slowLoop);
-            }
-        }
-
-        return lineNum;
-    }   //updateDashboard
 
 }   //class Dashboard

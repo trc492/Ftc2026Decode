@@ -65,7 +65,6 @@ public class RobotParams
         public static final boolean showVisionStat              = false;    // For HDMI
         // Master switches for Subsystems
         public static final boolean useSubsystems               = true;
-        public static final boolean showSubsystems              = true;
         // Drive Base Subsystem
         public static final boolean useDriveBase                = true;
         public static final boolean showDriveBaseStatus         = false;

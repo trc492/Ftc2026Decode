@@ -217,7 +217,7 @@ public class FtcTeleOp extends FtcOpMode
                             robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
                         }
 
-                        if (Dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
+                        if (robot.dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
                                 14, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
@@ -280,8 +280,6 @@ public class FtcTeleOp extends FtcOpMode
                 }
             }
         }
-        // Display subsystem status.
-        Dashboard.updateDashboard(robot, 1);
     }   //periodic
 
     /**
@@ -462,9 +460,16 @@ public class FtcTeleOp extends FtcOpMode
                 {
                     if (pressed)
                     {
-                        boolean enabled = !Dashboard.isDashboardUpdateEnabled();
+                        boolean enabled = !robot.dashboard.isDashboardUpdateEnabled();
                         robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
-                        Dashboard.setUpdateDashboardEnabled(enabled);
+                        if (enabled)
+                        {
+                            robot.dashboard.enableDashboardUpdate(1, true);
+                        }
+                        else
+                        {
+                            robot.dashboard.disableDashboardUpdate();
+                        }
                     }
                 }
                 break;
@@ -652,9 +657,16 @@ public class FtcTeleOp extends FtcOpMode
                 {
                     if (pressed)
                     {
-                        boolean enabled = !Dashboard.isDashboardUpdateEnabled();
+                        boolean enabled = !robot.dashboard.isDashboardUpdateEnabled();
                         robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
-                        Dashboard.setUpdateDashboardEnabled(enabled);
+                        if (enabled)
+                        {
+                            robot.dashboard.enableDashboardUpdate(1, true);
+                        }
+                        else
+                        {
+                            robot.dashboard.disableDashboardUpdate();
+                        }
                     }
                 }
                 break;

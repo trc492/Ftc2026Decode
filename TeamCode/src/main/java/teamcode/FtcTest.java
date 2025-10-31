@@ -170,6 +170,7 @@ public class FtcTest extends FtcTeleOp
                         robot.robotDrive.driveBase, 0.0,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.driveTime,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.xDrivePowerLimit, 0.0, 0.0);
+                    robot.dashboard.disableDashboardUpdate();
                 }
                 break;
 
@@ -181,6 +182,7 @@ public class FtcTest extends FtcTeleOp
                         robot.robotDrive.driveBase, 0.0,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.driveTime,
                         0.0, Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit, 0.0);
+                    robot.dashboard.disableDashboardUpdate();
                 }
                 break;
 
@@ -201,6 +203,7 @@ public class FtcTest extends FtcTeleOp
                                       Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
                     robot.robotDrive.purePursuitDrive.setTraceLevel(
                         TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
+                    robot.dashboard.disableDashboardUpdate();
                 }
                 break;
 
@@ -209,6 +212,7 @@ public class FtcTest extends FtcTeleOp
                 {
                     testCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
                     robot.robotDrive.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
+                    robot.dashboard.disableDashboardUpdate();
                 }
                 break;
 
@@ -233,6 +237,12 @@ public class FtcTest extends FtcTeleOp
                         robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
                     }
                 }
+                break;
+
+            case DRIVE_SPEED_TEST:
+            case TUNE_PP_DRIVE:
+            case TUNE_PID_DRIVE:
+                robot.dashboard.disableDashboardUpdate();
                 break;
         }
     }   //startMode
@@ -509,7 +519,7 @@ public class FtcTest extends FtcTeleOp
         // In addition to or instead of the gamepad controls handled by FtcTeleOp, we can add to or override the
         // FtcTeleOp gamepad actions.
         //
-        robot.dashboard.displayPrintf(8, "Driver: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Driver: %s=%s", button, pressed? "Pressed": "Released");
         switch (button)
         {
             case A:
@@ -715,7 +725,7 @@ public class FtcTest extends FtcTeleOp
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
                             }
 
-                            if (testChoices.test == Test.TUNE_PP_DRIVE)
+                            if (testChoices.test == Test.TUNE_PP_DRIVE && robot.robotDrive.purePursuitDrive != null)
                             {
                                 robot.robotDrive.purePursuitDrive.start(
                                     false,
@@ -724,7 +734,7 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
                                     tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint);
                             }
-                            else
+                            else if (robot.robotDrive.pidDrive != null)
                             {
                                 robot.robotDrive.pidDrive.setAbsoluteTarget(
                                     tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint, true);
@@ -819,7 +829,7 @@ public class FtcTest extends FtcTeleOp
         // In addition to or instead of the gamepad controls handled by FtcTeleOp, we can add to or override the
         // FtcTeleOp gamepad actions.
         //
-        robot.dashboard.displayPrintf(8, "Operator: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Operator: %s=%s", button, pressed? "Pressed": "Released");
         switch (button)
         {
             case A:

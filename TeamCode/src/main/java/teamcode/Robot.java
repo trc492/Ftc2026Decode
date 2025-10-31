@@ -162,8 +162,12 @@ public class Robot
                 }
             }
         }
-
         speak("Init complete");
+        Dashboard.DashboardParams.updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
+        if (Dashboard.DashboardParams.updateDashboardEnabled)
+        {
+            dashboard.enableDashboardUpdate(1, true);
+        }
     }   //Robot
 
     /**
