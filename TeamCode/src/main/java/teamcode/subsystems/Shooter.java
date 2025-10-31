@@ -168,7 +168,8 @@ public class Shooter extends TrcSubsystem
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.48;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
-        public static double LAUNCHER_LAUNCH_DURATION           = 0.75;  // in seconds
+        public static double LAUNCHER_LAUNCH_DURATION           = 0.75; // in seconds
+        public static double LAUNCHER_RETRACT_TIME              = 0.25; // in seconds
     }   //class Params
 
     public static final TrcMotor.TuneParams shootMotor1PidParams = new TrcMotor.TuneParams()
@@ -191,7 +192,7 @@ public class Shooter extends TrcSubsystem
         .setPidParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
     public static final TrcServo.TuneParams launcherParams = new TrcServo.TuneParams(
         Params.LAUNCHER_SERVO_INVERTED, Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS,
-        Params.LAUNCHER_LAUNCH_DURATION);
+        Params.LAUNCHER_LAUNCH_DURATION, Params.LAUNCHER_RETRACT_TIME);
 
     private final FtcDashboard dashboard;
     private final Robot robot;
@@ -387,7 +388,7 @@ public class Shooter extends TrcSubsystem
         // Reset launcher, fire and forget.
         TrcEvent callbackEvent = new TrcEvent("Launcher.retractCallback");
         callbackEvent.setCallback(this::retractCallback, null);
-        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, callbackEvent, 0.25);
+        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, callbackEvent, launcherParams.retractTime);
     }   //launchCallback
 
     /**
