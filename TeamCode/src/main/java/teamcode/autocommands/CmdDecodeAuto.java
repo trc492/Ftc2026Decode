@@ -26,6 +26,7 @@ import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.subsystems.Shooter;
+import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
@@ -126,6 +127,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case START:
                     // Set robot location according to auto choices.
                     robot.setRobotStartPosition(autoChoices);
+                    robot.spindexerSubsystem.setPreloadedArtifacts(
+                        Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)

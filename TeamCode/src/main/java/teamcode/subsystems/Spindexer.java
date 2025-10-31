@@ -141,7 +141,7 @@ public class Spindexer extends TrcSubsystem
     private final TrcEvent event;
     private final TrcTriggerThresholdRange entryTrigger;
 
-    private final Vision.ArtifactType[] slotStates  =
+    private Vision.ArtifactType[] slotStates =
         {Vision.ArtifactType.None, Vision.ArtifactType.None, Vision.ArtifactType.None};
     private boolean autoReceivedEnabled = false;
     private Integer entrySlot = null;
@@ -713,6 +713,48 @@ public class Spindexer extends TrcSubsystem
         spindexer.tracer.traceInfo(instanceName, "ExitSlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToExitSlot(owner, slot, null);
     }   //exitSlotDown
+
+    /**
+     * This method sets the preloaded artifacts to each slots of the Spindexer.
+     *
+     * @param preloadedArtifacts specifies an array of artifacts loaded into the slots of the Spindexer.
+     */
+    public void setPreloadedArtifacts(Vision.ArtifactType... preloadedArtifacts)
+    {
+        if (slotStates.length != preloadedArtifacts.length)
+        {
+            throw new IllegalArgumentException("Must provide three Artifact types.");
+        }
+
+        numPurpleArtifacts = numGreenArtifacts = numUnknownArtifacts = 0;
+        for (int i = 0; i < preloadedArtifacts.length; i++)
+        {
+            slotStates[i] = preloadedArtifacts[i];
+            switch (preloadedArtifacts[i])
+            {
+                case Purple:
+                    numPurpleArtifacts++;
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setSpindexerPatternOff(i);
+                        robot.ledIndicator.setSpindexerPatternOn(i, LEDIndicator.PURPLE_BLOB);
+                    }
+                    break;
+
+                case Green:
+                    numGreenArtifacts++;
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setSpindexerPatternOff(i);
+                        robot.ledIndicator.setSpindexerPatternOn(i, LEDIndicator.GREEN_BLOB);
+                    }
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("You cannot preload " + preloadedArtifacts[i] + " artifact.");
+            }
+        }
+    }   //setPreloadedArtifacts
 
     /**
      * This method clears the states of all Spindexer slots.
