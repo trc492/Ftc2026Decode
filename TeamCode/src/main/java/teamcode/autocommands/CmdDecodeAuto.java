@@ -22,6 +22,7 @@
 
 package teamcode.autocommands;
 
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -147,6 +148,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case GOTO_PRELOAD_SHOOT_POS:
                     robot.shooter.panMotor.setPosition(
                             null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                     robot.robotDrive.purePursuitDrive.start(
                         event, 0.0, false,
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,
