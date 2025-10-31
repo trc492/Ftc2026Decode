@@ -715,6 +715,22 @@ public class Spindexer extends TrcSubsystem
     }   //exitSlotDown
 
     /**
+     * This method clears the states of all Spindexer slots.
+     */
+    public void clearSlotStates()
+    {
+        for (int i = 0; i < slotStates.length; i++)
+        {
+            slotStates[i] = Vision.ArtifactType.None;
+            if (robot.ledIndicator != null)
+            {
+                robot.ledIndicator.setSpindexerPatternOff(i);
+            }
+        }
+        numPurpleArtifacts = numGreenArtifacts = numUnknownArtifacts = 0;
+    }   //clearSlotStates
+
+    /**
      * This method sets the preloaded artifacts to each slots of the Spindexer.
      *
      * @param preloadedArtifacts specifies an array of artifacts loaded into the slots of the Spindexer.
@@ -757,22 +773,6 @@ public class Spindexer extends TrcSubsystem
     }   //setPreloadedArtifacts
 
     /**
-     * This method clears the states of all Spindexer slots.
-     */
-    public void clearSlotStates()
-    {
-        for (int i = 0; i < slotStates.length; i++)
-        {
-            slotStates[i] = Vision.ArtifactType.None;
-            if (robot.ledIndicator != null)
-            {
-                robot.ledIndicator.setSpindexerPatternOff(i);
-            }
-        }
-        numPurpleArtifacts = numGreenArtifacts = 0;
-    }   //clearSlotStates
-
-    /**
      * This method examines all the Spindexer slots and update their states.
      */
     public void refreshSlotStates()
@@ -786,6 +786,19 @@ public class Spindexer extends TrcSubsystem
             refreshSlotStatesTaskObj.registerTask(TrcTaskMgr.TaskType.POST_PERIODIC_TASK);
         }
     }   //refreshSlotStates
+
+    /**
+     * This method cancels the task that refreshes the slot states.
+     */
+    public void cancelSlotStatesTask()
+    {
+        if (sm.isEnabled())
+        {
+            robot.intake.cancel();
+            sm.stop();
+            refreshSlotStatesTaskObj.unregisterTask();
+        }
+    }   //cancelSlotStatesTask
 
     /**
      * This method enables/disables AutoReceive.
@@ -868,9 +881,7 @@ public class Spindexer extends TrcSubsystem
 
                 case DONE:
                 default:
-                    robot.intake.cancel();
-                    sm.stop();
-                    refreshSlotStatesTaskObj.unregisterTask();
+                    cancelSlotStatesTask();
                     break;
             }
             spindexer.tracer.tracePostStateInfo(sm.toString(), state, null);
