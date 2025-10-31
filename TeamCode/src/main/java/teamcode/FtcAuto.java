@@ -119,8 +119,8 @@ public class FtcAuto extends FtcOpMode
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
-                "pickupOption=\"%s\" +" +
-                "spikeMarkCount=\"%s\" " +
+                "pickupOption=\"%s\" " +
+                "spikeMarkCount=%.0f " +
                 "shootDelay1=%.0f " +
                 "shootDelay2=%.0f " +
                 "shootDelay3=%.0f " +
