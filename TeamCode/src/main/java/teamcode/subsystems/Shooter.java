@@ -363,8 +363,7 @@ public class Shooter extends TrcSubsystem
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-            launcher.setPosition(
-                owner, 0.0, launcherParams.activatePos, null, launcherParams.activateDuration);
+            launcher.setPosition(owner, 0.0, launcherParams.activatePos, null, 0.0);
         }
         else if (completionEvent != null)
         {
@@ -386,7 +385,19 @@ public class Shooter extends TrcSubsystem
             robot.spindexerSubsystem.disableExitTrigger();
         }
         // Reset launcher, fire and forget.
-        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, null, 0.0);
+        TrcEvent callbackEvent = new TrcEvent("Launcher.retractCallback");
+        callbackEvent.setCallback(this::retractCallback, null);
+        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, callbackEvent, 0.25);
+    }   //launchCallback
+
+    /**
+     * This method is called when the launcher finished retracting.
+     *
+     * @param context not used.
+     * @param canceled specifies true if the callback was canceled, false otherwise.
+     */
+    private void retractCallback(Object context, boolean canceled)
+    {
         if (launchCompletionEvent != null)
         {
             if (canceled)
@@ -400,7 +411,7 @@ public class Shooter extends TrcSubsystem
             launchCompletionEvent = null;
         }
         launchOwner = null;
-    }   //launchCallback
+    }   //retractCallback
 
     /**
      * This method checks if AprilTag tracking is enabled.
