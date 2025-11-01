@@ -231,7 +231,7 @@ public class Vision
             limelightVision = new FtcLimelightVision(
                 robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
                 this::getLimelightTargetGroundOffset);
-            limelightVision.setPipeline(LimelightPipelineType.APRIL_TAG.value);
+            setLimelightPipeline(LimelightPipelineType.APRIL_TAG);
         }
 
         if (webcam1 != null || webcam2 != null)
@@ -410,7 +410,7 @@ public class Vision
         {
             if (enabled)
             {
-                limelightVision.setPipeline(pipelineType.value);
+                setLimelightPipeline(pipelineType);
             }
             limelightVision.setVisionEnabled(enabled);
             tracer.traceInfo(moduleName, "Pipeline %s is %s: running=%s",
@@ -427,6 +427,22 @@ public class Vision
     {
         return limelightVision != null && limelightVision.isVisionEnabled();
     }   //isLimelightVisionEnabled
+
+    /**
+     * This method sets the Limelight pipeline.
+     *
+     * @param pipelineType specifies the pipeline type.
+     */
+    public void setLimelightPipeline(LimelightPipelineType pipelineType)
+    {
+        if (limelightVision != null && limelightVision.isVisionEnabled())
+        {
+            limelightVision.setPipeline(pipelineType.value);
+            limelightVision.setStatusResultType(
+                pipelineType == LimelightPipelineType.APRIL_TAG? FtcLimelightVision.ResultType.Fiducial:
+                pipelineType == LimelightPipelineType.ARTIFACT? FtcLimelightVision.ResultType.Python: null);
+        }
+    }   //setLimelightPipeline
 
     /**
      * This method calls Limelight vision to detect the object.
