@@ -358,7 +358,7 @@ public class Spindexer extends TrcSubsystem
 
                 if (robot.ledIndicator != null)
                 {
-                    robot.ledIndicator.setSpindexerPatternOff(exitSlot);
+                    robot.ledIndicator.setSpindexerPatternOff(exitSlot, false);
                 }
 
                 if (exitTriggerCallback != null)
@@ -532,6 +532,10 @@ public class Spindexer extends TrcSubsystem
     {
         spindexer.tracer.traceInfo(
             instanceName, "MoveToEntrySlot: Slot=" + slot + ", event=" + event);
+        if (exitSlot != null && robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
+        }
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
@@ -551,10 +555,18 @@ public class Spindexer extends TrcSubsystem
     {
         spindexer.tracer.traceInfo(
             instanceName, "MoveToExitSlot: Slot=" + slot + ", event=" + event);
+        if (exitSlot != null && robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
+        }
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
         spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
         exitSlot = slot;
+        if (robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setSpindexerPatternOn(exitSlot, slotStates[exitSlot], true);
+        }
         entrySlot = null;
     }   //moveToExitSlot
 
@@ -720,7 +732,7 @@ public class Spindexer extends TrcSubsystem
             slotStates[i] = Vision.ArtifactType.None;
             if (robot.ledIndicator != null)
             {
-                robot.ledIndicator.setSpindexerPatternOff(i);
+                robot.ledIndicator.setSpindexerPatternOff(i, false);
             }
         }
         numPurpleArtifacts = numGreenArtifacts = numUnknownArtifacts = 0;
@@ -748,7 +760,7 @@ public class Spindexer extends TrcSubsystem
                     numPurpleArtifacts++;
                     if (robot.ledIndicator != null)
                     {
-                        robot.ledIndicator.setSpindexerPatternOff(i);
+                        robot.ledIndicator.setSpindexerPatternOff(i, false);
                         robot.ledIndicator.setSpindexerPatternOn(i, LEDIndicator.PURPLE_BLOB);
                     }
                     break;
@@ -757,7 +769,7 @@ public class Spindexer extends TrcSubsystem
                     numGreenArtifacts++;
                     if (robot.ledIndicator != null)
                     {
-                        robot.ledIndicator.setSpindexerPatternOff(i);
+                        robot.ledIndicator.setSpindexerPatternOff(i, false);
                         robot.ledIndicator.setSpindexerPatternOn(i, LEDIndicator.GREEN_BLOB);
                     }
                     break;

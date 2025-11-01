@@ -24,6 +24,8 @@ package teamcode.indicators;
 
 import ftclib.driverio.FtcGobildaIndicatorLight;
 import ftclib.driverio.FtcRevBlinkin;
+import teamcode.subsystems.BaseDrive;
+import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
 import trclib.driverio.TrcGobildaIndicatorLight;
 import trclib.driverio.TrcPriorityIndicator;
@@ -42,8 +44,11 @@ public class LEDIndicator
     public static final String SPINDEXER2_LED_NAME = "Spindexer2LED";
     public static final String SPINDEXER3_LED_NAME = "Spindexer3LED";
     // LED pattern names.
+    public static final String PURPLE_SELECTED = "PurpleSelected";
     public static final String PURPLE_BLOB = "Purple";
+    public static final String GREEN_SELECTED = "GreenSelected";
     public static final String GREEN_BLOB = "Green";
+    public static final String UNKNOWN_SELECTED = "UnknownSelected";
     public static final String UNKNOWN_BLOB = "Unknown";
     public static final String RED_APRILTAG = "RedAprilTag";
     public static final String BLUE_APRILTAG = "BlueAprilTag";
@@ -64,8 +69,8 @@ public class LEDIndicator
         new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed),
         new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue),
         new TrcPriorityIndicator.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
-        new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.5),
-        new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.5),
+        new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),
@@ -76,8 +81,11 @@ public class LEDIndicator
     public final TrcPriorityIndicator.Pattern[] spindexerLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
     {
         // Highest priority.
+        new TrcPriorityIndicator.Pattern(PURPLE_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Violet, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
+        new TrcPriorityIndicator.Pattern(GREEN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Green, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
+        new TrcPriorityIndicator.Pattern(UNKNOWN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow),
         new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
         // Lowest priority.
@@ -223,6 +231,41 @@ public class LEDIndicator
      * This method sets the spindexerLED pattern ON for the specified slot.
      *
      * @param slot specifies the Spindexer slot.
+     * @param artifactType specifies the artifact type.
+     * @param selected specifies true to turn on SELECTED pattern, false otherwise.
+     */
+    public void setSpindexerPatternOn(int slot, Vision.ArtifactType artifactType, boolean selected)
+    {
+        if (spindexerIndicators[slot] != null)
+        {
+            String patternName;
+
+            switch (artifactType)
+            {
+                case Purple:
+                    patternName = selected? PURPLE_SELECTED: PURPLE_BLOB;
+                    break;
+
+                case Green:
+                    patternName = selected? GREEN_SELECTED: GREEN_BLOB;
+                    break;
+
+                default:
+                    patternName = null;
+                    break;
+            }
+
+            if (patternName != null)
+            {
+                spindexerIndicators[slot].setPatternState(patternName, true);
+            }
+        }
+    }   //setSpindexerPatternOn
+
+    /**
+     * This method sets the spindexerLED pattern ON for the specified slot.
+     *
+     * @param slot specifies the Spindexer slot.
      * @param patternName specifies the name of the LED pattern to turn on.
      */
     public void setSpindexerPatternOn(int slot, String patternName)
@@ -237,12 +280,22 @@ public class LEDIndicator
      * This method turns off the spindexeerLED for the specified slot.
      *
      * @param slot specifies the Spindexer slot.
+     * @param selectedOffOnly specifies true if only turning selected off.
      */
-    public void setSpindexerPatternOff(int slot)
+    public void setSpindexerPatternOff(int slot, boolean selectedOffOnly)
     {
         if (spindexerIndicators[slot] != null)
         {
-            spindexerIndicators[slot].setPatternState(spindexerIndicators[slot].getPattern(), false);
+            if (selectedOffOnly)
+            {
+                spindexerIndicators[slot].setPatternState(PURPLE_SELECTED, false);
+                spindexerIndicators[slot].setPatternState(GREEN_SELECTED, false);
+                spindexerIndicators[slot].setPatternState(UNKNOWN_SELECTED, false);
+            }
+            else
+            {
+                spindexerIndicators[slot].resetAllPatternStates();
+            }
         }
     }   //setSpindexerPatternOff
 
