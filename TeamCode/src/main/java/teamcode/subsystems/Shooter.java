@@ -624,10 +624,16 @@ public class Shooter extends TrcSubsystem
 
         if (RobotParams.Preferences.showShooterGraph)
         {
-            dashboard.putObject("Shooter1MotorRPM", shooter.getShooterMotor1RPM());
-            dashboard.putObject("ShooterMotor1TargetRPM", shooter.getShooterMotor1TargetRPM());
-            dashboard.putObject("ShooterMotor1RangeMin", 0.0);
-            dashboard.putObject("ShooterMotor1RangeMax", Params.SHOOT_MOTOR_MAX_VEL);
+            dashboard.putNumber("Shooter1MotorRPM", shooter.getShooterMotor1RPM());
+            dashboard.putNumber("ShooterMotor1TargetRPM", shooter.getShooterMotor1TargetRPM());
+            dashboard.putNumber("ShooterMotor1RangeMin", 0.0);
+            dashboard.putNumber("ShooterMotor1RangeMax", Params.SHOOT_MOTOR_MAX_VEL);
+            dashboard.putNumber("PanTarget", shooter.getPanAngleTarget());
+            dashboard.putNumber("PanAngle", shooter.getPanAngle());
+            dashboard.putNumber("TiltTarget", shooter.getTiltAngleTarget());
+            dashboard.putNumber("TiltAngle", shooter.getTiltAngle());
+            dashboard.putNumber("SpindexTarget", robot.spindexer.motor.getPidTarget());
+            dashboard.putNumber("SpindexPos", robot.spindexer.motor.getPosition());
         }
 
         return lineNum;

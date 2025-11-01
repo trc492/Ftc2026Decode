@@ -79,7 +79,7 @@ public class RobotParams
         public static final boolean showSpindexerStatus         = true;
         public static final boolean useShooter                  = true;
         public static final boolean showShooterStatus           = true;
-        public static final boolean showShooterGraph            = false;
+        public static final boolean showShooterGraph            = true;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = true;
