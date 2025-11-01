@@ -311,7 +311,7 @@ public class Vision
                 }
             }
         }
-//        FtcDashboard.getInstance().addStatusUpdate(moduleName, this::updateStatus);
+        FtcDashboard.getInstance().addStatusUpdate(moduleName, this::updateStatus);
     }   //Vision
 
     /**
