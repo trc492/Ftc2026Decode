@@ -153,22 +153,27 @@ public class Shooter extends TrcSubsystem
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
             //   entry_name,        dist,   shoot1_vel, shoot2_vel, tilt_angle
-            .add("Target_2.67ft",   32.06,  3600.0,     0.0,        26.0)
-            .add("Target_3.52ft",   42.22,  3700.0,     0.0,        26.0)
-            .add("Target_4.33ft",   52.64,  3950.0,     0.0,        26.0)
-            .add("Target_5.22ft_1", 62.65,  4125.0,     0.0,        26.0)
-            .add("Target_5.22ft_2", 62.65001,4000.0,    0.0,        28.1)
-//            .add("Target_5.78ft",   69.38,  4180.0,     0.0,        26.0)
-            .add("Target_6.04ft",   72.45,  4200.0,     0.0,        28.1)
-            .add("Target_6.55ft",   78.67,  4350.0,     0.0,        28.1)
-            .add("Target_7.02ft",   84.23,  4575.0,     0.0,        28.1);
+            .add("Target_2.14ft",   25.7,  3500.0,     0.0,        26.0)
+            .add("Target_2.49ft",   29.9,  3600.0,     0.0,        26.0)
+            .add("Target_2.93_ft_1",   35.25,  3650.0,     0.0,        26.0)
+            .add("Target_2.93ft_2",   35.25000001,  3600.0,     0.0,        30.0)
+            .add("Target_3.67ft",   44.0,  3650.0,     0.0,        30.0)
+            .add("Target_3.67ft",   44.000001,  3700.0,     0.0,        33.0)
+            .add("Target_4.42ft", 53.0,  3950.0,     0.0,        33.0)
+            .add("Target_5.43ft_1", 65.2,4125.0,    0.0,        33.0)
+            .add("Target_5.43ft_2",   65.2000001,  4025.0,     0.0,        38.0)
+            .add("Target_8.29ft",   85.4,  4300.0,     0.0,        38.0)
+            .add("Target_8.29ft",   99.5,  4600.0,     0.0,        38.0)
+            .add("Target_9.44ft_1",   111.3,  4760,     0.0,        38.0)
+            .add("Target_9.44ft_2",   111.3000001,  4750.0,     0.0,        42.0)
+            .add("Target_10.65ft",   127.8,  5000.0,     0.0,        42.0);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.48;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
-        public static double LAUNCHER_LAUNCH_DURATION           = 0.75; // in seconds
+        public static double LAUNCHER_LAUNCH_DURATION           = 0.9; // in seconds
         public static double LAUNCHER_RETRACT_TIME              = 0.25; // in seconds
     }   //class Params
 
