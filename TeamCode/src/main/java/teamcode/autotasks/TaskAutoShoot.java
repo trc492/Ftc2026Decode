@@ -66,7 +66,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
         public boolean useAprilTagVision = true;
         public boolean useClassifierVision = false;
-        public int numArtifactsToShoot = 1;
+        public int numArtifactsToShoot = 3;
         public boolean moveToNextExitSlot = true;
 
         public TaskParams setAlliance(FtcAuto.Alliance alliance)

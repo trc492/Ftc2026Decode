@@ -81,11 +81,11 @@ public class LEDIndicator
     public final TrcPriorityIndicator.Pattern[] spindexerLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
     {
         // Highest priority.
-        new TrcPriorityIndicator.Pattern(PURPLE_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Violet, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(PURPLE_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Violet, 0.25, 0.25),
         new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
-        new TrcPriorityIndicator.Pattern(GREEN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Green, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(GREEN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Green, 0.25, 0.25),
         new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
-        new TrcPriorityIndicator.Pattern(UNKNOWN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(UNKNOWN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow, 0.25, 0.25),
         new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow),
         new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
         // Lowest priority.

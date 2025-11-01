@@ -173,7 +173,7 @@ public class Shooter extends TrcSubsystem
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.48;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
-        public static double LAUNCHER_LAUNCH_DURATION           = 0.9; // in seconds
+        public static double LAUNCHER_LAUNCH_DURATION           = 0.75; // in seconds
         public static double LAUNCHER_RETRACT_TIME              = 0.25; // in seconds
     }   //class Params
 
