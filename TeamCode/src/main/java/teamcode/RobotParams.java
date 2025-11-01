@@ -53,9 +53,9 @@ public class RobotParams
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
-        public static final boolean showVisionStatus            = true;
+        public static final boolean showVisionStatus            = false;
         public static final boolean useLimelightVision          = true;
-        public static final boolean useWebCam                   = false;    // false to use Android phone camera.
+        public static final boolean useWebCam                   = true;
         public static final boolean useWebcamAprilTagVision     = false;
         public static final boolean useArtifactVision           = true;
         public static final boolean useClassifierVision         = true;
@@ -79,7 +79,7 @@ public class RobotParams
         public static final boolean showSpindexerStatus         = true;
         public static final boolean useShooter                  = true;
         public static final boolean showShooterStatus           = true;
-        public static final boolean showShooterGraph            = true;
+        public static final boolean showShooterGraph            = false;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = true;
