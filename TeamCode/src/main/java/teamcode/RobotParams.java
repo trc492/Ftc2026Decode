@@ -117,6 +117,12 @@ public class RobotParams
             new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 23: z =
             new TrcPose2D(-58.3727, 55.6425, -35.5)     // TagId 24: z = 29.5 in
         };
+        public static final TrcPose2D BLUE_CORNER               =
+            new TrcPose2D(-Field.HALF_FIELD_INCHES, -Field.HALF_FIELD_INCHES, 0.0);
+        public static final TrcPose2D RED_CORNER                =
+            new TrcPose2D(-Field.HALF_FIELD_INCHES, Field.HALF_FIELD_INCHES, 0.0);
+        public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER.subtractRelativePose(APRILTAG_POSES[0]);
+        public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER.subtractRelativePose(APRILTAG_POSES[4]);
         public static final int[] obeliskAprilTags              = new int[] {21, 22, 23};
         public static final Vision.ArtifactType[][] motifPatterns =
             new Vision.ArtifactType[][]
