@@ -328,13 +328,17 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
                 if (robot.obeliskMotif != null && motifSequence == null)
                 {
-                    motifSequence = robot.vision.getMotifSequence(taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
+                    // If we saw the obelisk and haven't determined the motif sequence, determine it now.
+                    motifSequence = robot.vision.getMotifSequence(
+                        taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
+                    motifIndex = 0;
                 }
 
-                if (targetPose != null &&
-                    (robot.obeliskMotif == null || motifSequence != null))
+                if (targetPose != null && (robot.obeliskMotif == null || motifSequence != null))
                 {
-                    motifIndex = 0;
+                    // Vision found the target AprilTag and either we don't see obelisk or we have determined
+                    // the motif sequence, go ahead and shoot. If vision saw the obelisk but it may take time
+                    // to determine the motif sequence if we are using Classifier Vision, then we wait for it.
                     sm.setState(State.AIM);
                 }
                 else if (visionExpiredTime == null)

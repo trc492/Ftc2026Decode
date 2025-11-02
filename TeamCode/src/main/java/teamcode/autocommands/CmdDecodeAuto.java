@@ -27,7 +27,6 @@ import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
-import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;
@@ -48,8 +47,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         START,
         GOTO_PRELOAD_SHOOT_POS,
         SHOOT_PRELOAD,
+        LEAVE_LAUNCH_ZONE,
         PICKUP_SPIKEMARK,
-        FIND_MOTIF,
         SHOOT_SPIKEMARK,
         PARK,
         DONE
@@ -151,7 +150,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case GOTO_PRELOAD_SHOOT_POS:
                     robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                     robot.shooter.panMotor.setPosition(
-                            null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                        null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
                     {
                         sm.setState(State.SHOOT_PRELOAD);
@@ -161,13 +160,12 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.5);
                         robot.robotDrive.purePursuitDrive.setRotOutputLimit(0.1);
                         robot.robotDrive.purePursuitDrive.start(
-                                event, 2.5, false,
-                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                                robot.adjustPoseByAlliance(
-                                        RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE,
-                                        autoChoices.alliance));
+                            event, 2.5, false,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(
+                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE, autoChoices.alliance));
 //                        robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
 //                        robot.robotDrive.driveBase.holonomicDrive(0.0, 0.5, 0.0, 4, event);
                         sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
@@ -176,6 +174,18 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                 case SHOOT_PRELOAD:
                     robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, false, 3, false);
+                    sm.waitForSingleEvent(event, State.LEAVE_LAUNCH_ZONE);
+                    break;
+
+                case LEAVE_LAUNCH_ZONE:
+                    TrcPose2D parkingPose = robot.robotDrive.driveBase.getFieldPosition();
+                    parkingPose.x += autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? 24.0: -24.0;
+                    robot.robotDrive.purePursuitDrive.start(
+                        event, 1.0, false,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        parkingPose);
                     sm.waitForSingleEvent(event, State.DONE);
                     break;
 

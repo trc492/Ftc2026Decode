@@ -546,7 +546,9 @@ public class Shooter extends TrcSubsystem
                 TrcEvent event = (TrcEvent) ctxt;
                 if (!canceled)
                 {
-                    if (FtcAuto.autoChoices.alliance == null) {
+                    if (FtcAuto.autoChoices.alliance == null)
+                    {
+                        // Autonomous was not run, so we don't know the alliance color.
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
                     else
@@ -558,13 +560,13 @@ public class Shooter extends TrcSubsystem
                         else
                         {
                             shooter.panMotor.setPosition(
-                                    owner, 0.0,
-                                    FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE
-                                            ? 45.0 : -45.0,
-                                    true, Params.PAN_POWER_LIMIT, null, 0.0);
+                                owner, 0.0,
+                                FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? 45.0 : -45.0,
+                                true, Params.PAN_POWER_LIMIT, null, 0.0);
                         }
                     }
-                     if (event !=  null)
+
+                    if (event !=  null)
                     {
                         event.signal();
                     }
