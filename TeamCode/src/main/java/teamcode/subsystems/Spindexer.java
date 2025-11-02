@@ -538,10 +538,10 @@ public class Spindexer extends TrcSubsystem
         }
         double pos = warpSpace.getOptimizedTarget(
             Params.entryPresetPositions[slot], spindexer.motor.getPosition());
-//        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-//        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-//        robot.intake.intake();
-        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
+        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
+        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
+        robot.intake.intake();
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
         entrySlot = slot;
         exitSlot = null;
     }   //moveToEntrySlot
@@ -564,10 +564,10 @@ public class Spindexer extends TrcSubsystem
         }
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
-//        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-//        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-//        robot.intake.intake();
-        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
+        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
+        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
+        robot.intake.intake();
+        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
         exitSlot = slot;
         if (robot.ledIndicator != null)
         {
@@ -576,27 +576,31 @@ public class Spindexer extends TrcSubsystem
         entrySlot = null;
     }   //moveToExitSlot
 
-//    private void moveCompletionCallback(Object context, boolean canceled)
-//    {
-//        TrcEvent event = (TrcEvent) context;
-//
-//        spindexer.tracer.traceInfo(
-//            instanceName,
-//            "intakeCompletionCallback(canceled=" + canceled + ")");
-//        if (!canceled)
-//        {
-//            robot.intake.cancel();
-//            if (event != null)
-//            {
-//                event.signal();
-//            }
-//        }
-//        else if (event != null)
-//        {
-//            event.cancel();
-//        }
-//    }   //moveCompletionCallback
-//
+    private void moveCompletionCallback(Object context, boolean canceled)
+    {
+        TrcEvent event = (TrcEvent) context;
+
+        spindexer.tracer.traceInfo(
+            instanceName,
+            "intakeCompletionCallback(canceled=" + canceled + ")");
+
+        if (!canceled)
+        {
+            if (!robot.intakeSubsystem.isBulldozeEnabled() && !sm.isEnabled())
+            {
+                robot.intake.cancel();
+            }
+            if (event != null)
+            {
+                event.signal();
+            }
+        }
+        else if (event != null)
+        {
+            event.cancel();
+        }
+    }   //moveCompletionCallback
+
     /**
      * This method finds the vacant slot near the current entry slot and move the spindexer to that slot position at
      * the entry. If there is no vacant slots, the spindexer will not move.
