@@ -326,13 +326,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     }
                 }
 
-                if (taskParams.useClassifierVision && robot.obeliskMotif != null && motifSequence == null)
+                if (robot.obeliskMotif != null && motifSequence == null)
                 {
-                    motifSequence = robot.vision.getMotifSequence(taskParams.alliance, robot.obeliskMotif);
+                    motifSequence = robot.vision.getMotifSequence(taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
                 }
 
                 if (targetPose != null &&
-                    (!taskParams.useClassifierVision || robot.obeliskMotif == null || motifSequence != null))
+                    (robot.obeliskMotif == null || motifSequence != null))
                 {
                     motifIndex = 0;
                     sm.setState(State.AIM);
