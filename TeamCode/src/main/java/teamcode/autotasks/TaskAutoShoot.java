@@ -428,7 +428,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                sm.setState(taskParams.numArtifactsToShoot > 0? State.AIM: State.NEXT_EXIT_SLOT);
+                sm.setState(taskParams.numArtifactsToShoot > 0? State.START: State.NEXT_EXIT_SLOT);
                 break;
 
             case NEXT_EXIT_SLOT:

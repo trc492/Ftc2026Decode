@@ -22,10 +22,12 @@
 
 package teamcode.autocommands;
 
+import ftclib.drivebase.FtcSwerveDrive;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
+import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;
@@ -132,6 +134,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     // Do delay if necessary.
+                    ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
                     if (autoChoices.startDelay > 0.0)
                     {
                         robot.globalTracer.traceInfo(
@@ -155,21 +158,25 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
+                        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.5);
+                        robot.robotDrive.purePursuitDrive.setRotOutputLimit(0.1);
                         robot.robotDrive.purePursuitDrive.start(
-                            event, 0.0, false,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(
-                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE,
-                                autoChoices.alliance));
+                                event, 2.5, false,
+                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                                robot.adjustPoseByAlliance(
+                                        RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE,
+                                        autoChoices.alliance));
+//                        robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
+//                        robot.robotDrive.driveBase.holonomicDrive(0.0, 0.5, 0.0, 4, event);
                         sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
                     }
                     break;
 
                 case SHOOT_PRELOAD:
                     robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, false, 3, false);
-                    sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+                    sm.waitForSingleEvent(event, State.DONE);
                     break;
 
                 case PICKUP_SPIKEMARK:
