@@ -146,20 +146,25 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_PRELOAD_SHOOT_POS:
+                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                     robot.shooter.panMotor.setPosition(
                             null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
-                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
-                    robot.robotDrive.purePursuitDrive.start(
-                        event, 0.0, false,
-                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                        robot.adjustPoseByAlliance(
-                            autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ?
-                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE :
-                                RobotParams.Game.RED_PRELOAD_LAUNCH_SHOOT_POSE,
-                            autoChoices.alliance));
-                    sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
+                    if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                    {
+                        sm.setState(State.SHOOT_PRELOAD);
+                    }
+                    else
+                    {
+                        robot.robotDrive.purePursuitDrive.start(
+                            event, 0.0, false,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(
+                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE,
+                                autoChoices.alliance));
+                        sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
+                    }
                     break;
 
                 case SHOOT_PRELOAD:

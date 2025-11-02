@@ -672,7 +672,11 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case DpadUp:
+                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 3;
+                break;
             case DpadDown:
+                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 1;
+                break;
             case DpadLeft:
                 if (robot.spindexer != null)
                 {
