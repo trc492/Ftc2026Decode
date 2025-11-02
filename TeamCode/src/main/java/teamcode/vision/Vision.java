@@ -914,37 +914,46 @@ public class Vision
      *
      * @param alliance specifies the alliance color.
      * @param obeliskMotif specifies the obelisk motif pattern.
+     * @param useVision specifies true to use Classifier Vision, false otherwise.
      * @return the motif sequence for shooting, null if data not ready or not detecting classifier artifacts.
      */
-    public ArtifactType[] getMotifSequence(FtcAuto.Alliance alliance, ArtifactType[] obeliskMotif)
+    public ArtifactType[] getMotifSequence(FtcAuto.Alliance alliance, ArtifactType[] obeliskMotif, boolean useVision)
     {
         ArtifactType[] motifSequence = null;
-        ArtifactType[] classifierArtifacts = getClassifierArtifacts(alliance);
 
-        if (classifierArtifacts != null)
+        if (useVision)
         {
-            int noneIndex = -1;
-            for (int i = 0; i < classifierArtifacts.length; i++)
-            {
-                if (classifierArtifacts[i] == Vision.ArtifactType.None)
-                {
-                    tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
-                    noneIndex = i % obeliskMotif.length;
-                    break;
-                }
-            }
+            ArtifactType[] classifierArtifacts = getClassifierArtifacts(alliance);
 
-            if (noneIndex != -1)
+            if (classifierArtifacts != null)
             {
-                motifSequence = new Vision.ArtifactType[3];
-                for (int i = 0; i < motifSequence.length; i++)
+                int noneIndex = -1;
+                for (int i = 0; i < classifierArtifacts.length; i++)
                 {
-                    motifSequence[i] = obeliskMotif[noneIndex];
-                    noneIndex = (noneIndex + 1) % obeliskMotif.length;
+                    if (classifierArtifacts[i] == Vision.ArtifactType.None)
+                    {
+                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
+                        noneIndex = i%obeliskMotif.length;
+                        break;
+                    }
                 }
-                tracer.traceInfo(
-                    moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
+
+                if (noneIndex != -1)
+                {
+                    motifSequence = new Vision.ArtifactType[3];
+                    for (int i = 0; i < motifSequence.length; i++)
+                    {
+                        motifSequence[i] = obeliskMotif[noneIndex];
+                        noneIndex = (noneIndex + 1)%obeliskMotif.length;
+                    }
+                    tracer.traceInfo(
+                        moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
+                }
             }
+        }
+        else
+        {
+            motifSequence = obeliskMotif.clone();
         }
 
         return motifSequence;
