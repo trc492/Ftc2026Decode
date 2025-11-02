@@ -24,6 +24,7 @@ package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import ftclib.drivebase.FtcSwerveDrive;
@@ -427,10 +428,10 @@ public class FtcTeleOp extends FtcOpMode
                         else
                         {
                             robot.globalTracer.traceInfo(
-                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedId=%d).",
-                                Dashboard.Subsystem_Vision.trackedAprilTagId);
+                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedIds=%s).",
+                                Arrays.toString(Dashboard.Subsystem_Vision.trackedAprilTagIds));
                             robot.shooterSubsystem.enableAprilTagTracking(
-                                null, Dashboard.Subsystem_Vision.trackedAprilTagId);
+                                null, Dashboard.Subsystem_Vision.trackedAprilTagIds);
                         }
                     }
                 }

@@ -24,6 +24,8 @@ package teamcode.autotasks;
 
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
+
 import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
@@ -119,7 +121,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     TrcShootParamTable.Params shootParams = null;
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
-    Integer autoTrackAprilTagId = null;
+    int[] autoTrackAprilTagIds = null;
 
 
     /**
@@ -159,12 +161,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
-        autoTrackAprilTagId = robot.shooterSubsystem.getTrackedAprilTagId();
+        autoTrackAprilTagIds = robot.shooterSubsystem.getTrackedAprilTagIds();
         // Turn off AprilTag tracking if it was ON.
-        if (autoTrackAprilTagId != null)
+        if (autoTrackAprilTagIds != null)
         {
             tracer.traceInfo(
-                moduleName, "AprilTag tracking is ON (Id=%d), turning it OFF.", autoTrackAprilTagId);
+                moduleName,
+                "AprilTag tracking is ON (Ids=%s), turning it OFF.", Arrays.toString(autoTrackAprilTagIds));
             robot.shooterSubsystem.disableAprilTagTracking(null);
         }
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
@@ -211,12 +214,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             robot.spindexer.releaseExclusiveAccess(owner);
         }
 
-        if (autoTrackAprilTagId != null)
+        if (autoTrackAprilTagIds != null)
         {
             tracer.traceInfo(
-                moduleName, "AprilTag tracking was ON (Id=%d), turning it back ON.", autoTrackAprilTagId);
-            robot.shooterSubsystem.enableAprilTagTracking(null, autoTrackAprilTagId);
-            autoTrackAprilTagId = null;
+                moduleName,
+                "AprilTag tracking was ON (Id=%s), turning it back ON.", Arrays.toString(autoTrackAprilTagIds));
+            robot.shooterSubsystem.enableAprilTagTracking(null, autoTrackAprilTagIds);
+            autoTrackAprilTagIds = null;
         }
     }   //releaseSubsystemsOwnership
 

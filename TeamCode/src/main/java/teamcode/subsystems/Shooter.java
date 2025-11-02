@@ -22,6 +22,8 @@
 
 package teamcode.subsystems;
 
+import java.util.Arrays;
+
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
@@ -206,7 +208,7 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-    private Integer trackedAprilTagId = null;
+    private int[] trackedAprilTagIds = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -419,25 +421,27 @@ public class Shooter extends TrcSubsystem
      */
     public boolean isAprilTagTrackingEnabled()
     {
-        return trackedAprilTagId != null;
+        return trackedAprilTagIds != null;
     }   //isAprilTagTrackingEnabled
 
     /**
      * This method enables AprilTag tracking with the Turret (Pan motor).
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
-     * @param aprilTagId specifies the AprilTag ID to track.
+     * @param aprilTagIds specifies the AprilTag IDs to track.
      */
-    public void enableAprilTagTracking(String owner, int aprilTagId)
+    public void enableAprilTagTracking(String owner, int[] aprilTagIds)
     {
         if (robot.vision != null)
         {
             if (shooter.acquireExclusiveAccess(owner))
             {
                 shooter.tracer.traceInfo(
-                    instanceName, "Enabling AprilTag Tracking (owner=" + owner + ", Id=" + aprilTagId + ")");
+                    instanceName,
+                    "Enabling AprilTag Tracking (owner=" + owner +
+                    ", Ids=" + Arrays.toString(aprilTagIds) + ")");
                 robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
-                this.trackedAprilTagId = aprilTagId;
+                this.trackedAprilTagIds = aprilTagIds;
                 shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
             }
         }
@@ -452,20 +456,20 @@ public class Shooter extends TrcSubsystem
     {
         shooter.releaseExclusiveAccess(owner);
         shooter.panMotor.cancel();
-        this.trackedAprilTagId = null;
+        this.trackedAprilTagIds = null;
         shooter.tracer.traceInfo(
             instanceName, "Disabling AprilTag Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
     }   //disableAprilTagTracking
 
     /**
-     * This method returns the tracked AprilTag ID.
+     * This method returns the array of tracked AprilTag IDs.
      *
-     * @return tracked AprilTag ID.
+     * @return tracked AprilTag IDs.
      */
-    public Integer getTrackedAprilTagId()
+    public int[] getTrackedAprilTagIds()
     {
-        return trackedAprilTagId;
-    }   //getTrackedArpilTagId
+        return trackedAprilTagIds;
+    }   //getTrackedArpilTagIds
 
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
@@ -478,11 +482,11 @@ public class Shooter extends TrcSubsystem
     {
         double panPosition = shooter.panMotor.getPosition();
 
-        if (trackedAprilTagId != null)
+        if (trackedAprilTagIds != null)
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, new int[]{trackedAprilTagId}, -1);
+                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, -1);
             if (aprilTagInfo == null)
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.

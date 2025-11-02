@@ -67,7 +67,7 @@ public class Dashboard
     @Config
     public static class Subsystem_Vision
     {
-        public static int trackedAprilTagId = 20;
+        public static int[] trackedAprilTagIds = new int[] {20, 24};
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
     }   //class Subsystem_Vision
