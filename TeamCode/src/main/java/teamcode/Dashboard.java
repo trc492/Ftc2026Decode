@@ -76,7 +76,7 @@ public class Dashboard
     public static class Subsystem_Shooter
     {
         public static boolean tuneShootingTable = false;
-        public static double shootMotor1Velocity = 3000.0;  // in RPM
+        public static double shootMotor1Velocity = 2000.0;  // in RPM
         public static double tiltAngle = 26.0;              // in degrees
         public static TaskAutoShoot.TaskParams autoShootParams = TaskAutoShoot.autoShootParams;
         public static TrcMotor.PidParams shootMotor1Pid = Shooter.shootMotor1PidParams;

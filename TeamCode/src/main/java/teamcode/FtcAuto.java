@@ -235,7 +235,16 @@ public class FtcAuto extends FtcOpMode
                     FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {
-                robot.obeliskAprilTagId = (int) detectedAprilTag.detectedObj.objId;
+                int tagId = (int) detectedAprilTag.detectedObj.objId;
+                if (FtcAuto.autoChoices.alliance == Alliance.BLUE_ALLIANCE)
+                {
+                    // We are Blue Alliance
+                    tagId -= 1;
+                    if (tagId <= 20) {
+                        tagId = 23;
+                    }
+                }
+                robot.obeliskAprilTagId = tagId;
                 robot.obeliskMotif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
             }
         }

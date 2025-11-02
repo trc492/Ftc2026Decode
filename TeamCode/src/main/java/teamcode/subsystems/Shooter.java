@@ -27,6 +27,7 @@ import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
 import ftclib.vision.FtcLimelightVision;
+import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
@@ -545,8 +546,25 @@ public class Shooter extends TrcSubsystem
                 TrcEvent event = (TrcEvent) ctxt;
                 if (!canceled)
                 {
-                    shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
-                    if (event !=  null)
+                    if (FtcAuto.autoChoices.alliance == null) {
+                        shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                    }
+                    else
+                    {
+                        if (FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shooter.panMotor.setPosition(owner, 0.0, -180.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                        }
+                        else
+                        {
+                            shooter.panMotor.setPosition(
+                                    owner, 0.0,
+                                    FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE
+                                            ? 45.0 : -45.0,
+                                    true, Params.PAN_POWER_LIMIT, null, 0.0);
+                        }
+                    }
+                     if (event !=  null)
                     {
                         event.signal();
                     }

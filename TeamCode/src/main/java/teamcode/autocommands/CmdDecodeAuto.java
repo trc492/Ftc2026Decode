@@ -208,10 +208,6 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     break;
 
-                case FIND_MOTIF:
-                    // TODO: Add code to check for motif
-                    break;
-
                 case SHOOT_SPIKEMARK:
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
