@@ -35,6 +35,7 @@ import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcOwnershipMgr;
 import trclib.robotcore.TrcRobot;
@@ -288,10 +289,15 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 // Use vision to determine the appropriate AprilTag location.
                 if (targetPose == null)
                 {
+                    if (taskParams.alliance == null)
+                    {
+                        TrcDbgTrace.globalTraceErr(moduleName, "Alliance is NULL!!!!!");
+                        TrcDbgTrace.printThreadStack();
+                    }
                     TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                         robot.vision.limelightVision.getBestDetectedTargetInfo(
                             FtcLimelightVision.ResultType.Fiducial,
-                            taskParams.alliance == null? null:
+                            taskParams.alliance == null? new int[] {20, 24}:
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? new int[] {20}: new int[] {24},
                             null,
                             null);

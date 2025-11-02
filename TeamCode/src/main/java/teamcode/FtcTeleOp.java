@@ -36,6 +36,7 @@ import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcRobot;
+import trclib.subsystem.TrcShootParamTable;
 import trclib.timer.TrcTimer;
 
 /**
@@ -569,17 +570,33 @@ public class FtcTeleOp extends FtcOpMode
             case A:
                 if (robot.intakeSubsystem != null && robot.spindexerSubsystem != null)
                 {
-                    if (pressed)
+                    if (!operatorAltFunc)
                     {
-                        if (robot.intake.isActive())
+                        if (pressed)
                         {
-                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                            if (robot.intake.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (pressed)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Start Intake Eject");
+                            robot.intake.eject();
                         }
                         else
                         {
-                            robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Intake Eject");
+                            robot.intake.cancel();
                         }
                     }
                 }
@@ -621,7 +638,15 @@ public class FtcTeleOp extends FtcOpMode
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
-                                robot.shooterSubsystem.shoot(moduleName, null);
+                                TrcShootParamTable.Params manualShootParams = Shooter.Params.shootParamTable.get("Target_9.44ft_2");
+                                robot.spindexerSubsystem.moveToExitSlotWithArtifact(null, Vision.ArtifactType.Any, null);
+                                robot.shooter.tiltMotor.setPosition(
+                                        moduleName, 0.0, manualShootParams.tiltAngle, true,
+                                        Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
+                                robot.shooter.aimShooter(
+                                        moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
+                                        null, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                        Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
                     }
@@ -672,10 +697,18 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case DpadUp:
-                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 3;
+                if (pressed)
+                {
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 3");
+                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 3;
+                }
                 break;
             case DpadDown:
-                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 1;
+                if (pressed)
+                {
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 1");
+                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 1;
+                }
                 break;
             case DpadLeft:
                 if (robot.spindexer != null)
