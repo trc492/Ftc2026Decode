@@ -356,6 +356,7 @@ public class FtcTeleOp extends FtcOpMode
                                 robot.autoShootTask.autoShoot(
                                         moduleName + ".autoShoot", null,
                                         Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                        false,
                                         Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                         Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
@@ -621,6 +622,7 @@ public class FtcTeleOp extends FtcOpMode
                                 robot.autoShootTask.autoShoot(
                                     moduleName + ".autoShoot", null,
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?

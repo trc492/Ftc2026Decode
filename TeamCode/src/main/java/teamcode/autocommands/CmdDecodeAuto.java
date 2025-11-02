@@ -173,7 +173,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case SHOOT_PRELOAD:
-                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, false, 3, false);
+                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
                     sm.waitForSingleEvent(event, State.LEAVE_LAUNCH_ZONE);
                     break;
 
@@ -225,7 +225,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(
                                 RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE, autoChoices.alliance));
-                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, 3, false);
+                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, true, 3, false);
                     sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     break;
 

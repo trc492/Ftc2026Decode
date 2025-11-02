@@ -65,6 +65,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     public static class TaskParams
     {
         public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
+        public boolean inAuto = false;
         public boolean useAprilTagVision = true;
         public boolean useClassifierVision = false;
         public int numArtifactsToShoot = 3;
@@ -75,6 +76,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             this.alliance = alliance;
             return this;
         }   //setAlliance
+
+        public TaskParams setInAuto(boolean inAuto)
+        {
+            this.inAuto = inAuto;
+            return this;
+        }   //setInAuto
 
         public TaskParams setVision(boolean useAprilTagVision, boolean useClassifierVision)
         {
@@ -94,6 +101,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public String toString()
         {
             return "(alliance=" + alliance +
+                    ",inAuto=" + inAuto +
                    ",useAprilTagVision=" + useAprilTagVision +
                    ",useClassifierVision=" + useClassifierVision +
                    ",numArtifactsToShoot=" + numArtifactsToShoot +
@@ -133,17 +141,19 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param owner specifies the owner to acquire subsystem ownerships, can be null if not requiring ownership.
      * @param completionEvent specifies the event to signal when done, can be null if none provided.
      * @param alliance specifies the alliance color, can be null if useClassifierVision is false.
+     * @param inAuto specifies true if running in Autonomous mode, false otherwise.
      * @param useAprilTagVision specifies true to use AprilTag Vision, false otherwise.
      * @param useClassifierVision specifies true to use Classifier Vision, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
      * @param moveToNextExitSlot specifies true to move to next Exit slot after shooting is done.
      */
     public void autoShoot(
-        String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean useAprilTagVision,
+        String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean inAuto, boolean useAprilTagVision,
         boolean useClassifierVision, int numArtifactsToShoot, boolean moveToNextExitSlot)
     {
         autoShootParams
             .setAlliance(alliance)
+            .setInAuto(inAuto)
             .setVision(useAprilTagVision, useClassifierVision)
             .setNumArtifactsToShoot(numArtifactsToShoot, moveToNextExitSlot);
         tracer.traceInfo(
@@ -316,6 +326,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         }
                         // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
                         targetPose.angle += robot.shooter.getPanAngle();
+                        if (taskParams.inAuto && FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            targetPose.angle += taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? -1.0: 1.0;
+                        }
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
                         shootParams = Shooter.Params.shootParamTable.get(aprilTagInfo.detectedObj.targetDepth, false);
