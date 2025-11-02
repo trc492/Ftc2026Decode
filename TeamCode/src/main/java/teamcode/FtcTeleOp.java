@@ -393,7 +393,7 @@ public class FtcTeleOp extends FtcOpMode
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.pidDrive.getTurnPidCtrl());
+                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
                         }
                     }
                     else if (robot.robotDrive.driveBase.supportsHolonomicDrive())
