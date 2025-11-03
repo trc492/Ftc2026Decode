@@ -1,0 +1,289 @@
+FtcTeleOp.startMode_INFO [0.009809042] ***** Starting TeleOp: 20251102@124701 *****
+Robot.startMode_INFO [0.132913096] Restore saved RobotPose=(x=9.639065,y=22.366898,angle=151.325587)
+FtcTeleOp.startMode_INFO [0.133733263] Enabling Limelight AprilTagVision.
+Vision.setLimelightVisionEnabled_INFO [0.134590763] Pipeline APRIL_TAG is enabled: running=true
+FtcTeleOp.driverButtonEvent_INFO [1.686262836] >>>>> Enabling FIELD mode.
+FtcTeleOp.setDriveOrientation_INFO [1.687903461] driveOrientation=FIELD
+FtcTeleOp.operatorButtonEvent_INFO [8.51404748] >>>>> refreshSlotStates
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [8.58479882] <Event name="StateInfo" time="8.58452232" tag="vvvvv" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [8.586265321] setEntryTriggerEnabled(enabled=false)
+Spindexer.moveToEntrySlot_INFO [8.587883779] MoveToEntrySlot: Slot=0, event=(Spindexer.event=CLEARED)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [8.601948239] <Event name="StateInfo" time="8.60162128" tag="^^^^^" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.Motor.pidCtrlTask_INFO [10.254367238] controlMode: Position,onTarget=true(359.4722222222222/360.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [10.271694573] intakeCompletionCallback(canceled=false)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [10.332629288] <Event name="StateInfo" time="10.332246329" tag="vvvvv" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [10.333979705] setEntryTriggerEnabled(enabled=true)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [10.336696288] <Event name="StateInfo" time="10.336328205" tag="^^^^^" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+FtcTeleOp.driverButtonEvent_INFO [10.85582334] >>>>> Enabling ROBOT mode.
+FtcTeleOp.setDriveOrientation_INFO [10.857238507] driveOrientation=ROBOT
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [11.394790144] <Event name="StateInfo" time="11.394371894" tag="vvvvv" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [11.39547527] setEntryTriggerEnabled(enabled=false)
+Spindexer.moveToEntrySlot_INFO [11.396875561] MoveToEntrySlot: Slot=1, event=(Spindexer.event=SIGNALED)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [11.426580356] <Event name="StateInfo" time="11.426166773" tag="^^^^^" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.Motor.pidCtrlTask_INFO [13.984347363] controlMode: Position,onTarget=true(482.9444444444444/480.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [14.040402202] intakeCompletionCallback(canceled=false)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [14.08997329] <Event name="StateInfo" time="14.089645457" tag="vvvvv" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [14.090573249] setEntryTriggerEnabled(enabled=true)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [14.091892165] <Event name="StateInfo" time="14.091539249" tag="^^^^^" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [15.103184309] <Event name="StateInfo" time="15.102865225" tag="vvvvv" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [15.108541934] setEntryTriggerEnabled(enabled=false)
+Spindexer.moveToEntrySlot_INFO [15.110576018] MoveToEntrySlot: Slot=2, event=(Spindexer.event=SIGNALED)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [15.128313728] <Event name="StateInfo" time="15.127991145" tag="^^^^^" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.Motor.pidCtrlTask_INFO [16.236568131] controlMode: Position,onTarget=true(598.6388888888888/600.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [16.269463468] intakeCompletionCallback(canceled=false)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [16.321875973] <Event name="StateInfo" time="16.321522181" tag="vvvvv" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+Spindexer.setEntryTriggerEnabled_INFO [16.323090765] setEntryTriggerEnabled(enabled=true)
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [16.324958306] <Event name="StateInfo" time="16.324603931" tag="^^^^^" Spindexer.refreshSlotStates.state="EXAMINE_SLOT" />
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [17.333146824] <Event name="StateInfo" time="17.332815199" tag="vvvvv" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [17.334456408] <Event name="StateInfo" time="17.333832533" tag="^^^^^" Spindexer.refreshSlotStates.state="MOVE_TO_NEXT_SLOT" />
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [17.351707618] <Event name="StateInfo" time="17.351363451" tag="vvvvv" Spindexer.refreshSlotStates.state="DONE" />
+Spindexer.refreshSlotStates.refreshSlotStatesTask_INFO [17.358235119] <Event name="StateInfo" time="17.357871702" tag="^^^^^" Spindexer.refreshSlotStates.state="DONE" />
+FtcTeleOp.driverButtonEvent_INFO [17.510511967] >>>>> Enabling FIELD mode.
+FtcTeleOp.setDriveOrientation_INFO [17.511768759] driveOrientation=FIELD
+FtcTeleOp.driverButtonEvent_INFO [20.050178722] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [20.061103974] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [20.06247539] setEntryTriggerEnabled(enabled=true)
+FtcTeleOp.driverButtonEvent_INFO [23.719098716] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [23.727139675] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [23.727800009] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [23.72892905] cancel(owner=null)
+FtcTeleOp.driverButtonEvent_INFO [24.785879865] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [24.787746823] Cancel all operations.
+Spindexer.cancel_INFO [24.79016124] cancel(owner=null)
+Shooter.cancel_INFO [24.791597699] owner=null
+TaskAutoShoot.cancel_INFO [24.7979607] Canceling auto task operation.
+Robot.zeroCalibrate_INFO [24.798491241] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [24.799757075] ZeroCalibrate(Subsystem=Spindexer, owner=FtcTeleOp, event=null)
+Spindexer.zeroCalibrate_INFO [24.800513075] zeroCalibrate(owner=FtcTeleOp, calPower=0.5, event=(Spindexer.zeroCal=CLEARED))
+Spindexer.Motor.acquireOwnership_INFO [24.801218325] Acquired ownership on behalf of FtcTeleOp
+TrcSubsystem.zeroCalibrateAll_INFO [24.803943075] ZeroCalibrate(Subsystem=Shooter, owner=FtcTeleOp, event=null)
+Shooter.PanMotor.acquireOwnership_INFO [24.805275408] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.zeroCalibratingMotor_INFO [24.82043916] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [24.82109366] Zero calibration done, event=(Spindexer.Motor.releaseOwnership=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [24.82170791] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [24.82246566] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [24.822976952] Signal completion event (Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [24.826997286] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [24.828303953] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [24.84893033] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [25.349735755] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [25.349742463] controlMode: Position,onTarget=true(0.7222222222221717/0.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [25.351603588] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [25.353396172] intakeCompletionCallback(canceled=false)
+Shooter.PanMotor.isMotorStalled_INFO [27.195034815] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [27.214023776] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [27.217121276] Zero calibration done, event=(Shooter.PanMotor.releaseOwnership=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [27.217768484] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [27.219155068] Released ownership on behalf of FtcTeleOp
+Shooter.PanMotor.releaseOwnership_INFO [27.219797901] Signal completion event (Shooter.PanMotor.callbackEvent=SIGNALED)
+Shooter.PanMotor.acquireOwnership_INFO [27.222664985] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.driverButtonEvent_INFO [27.435961714] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [27.437349465] Cancel all operations.
+Spindexer.cancel_INFO [27.439373048] cancel(owner=null)
+Shooter.cancel_INFO [27.444385049] owner=null
+TaskAutoShoot.cancel_INFO [27.448910549] Canceling auto task operation.
+Robot.zeroCalibrate_INFO [27.449492133] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [27.450135549] ZeroCalibrate(Subsystem=Spindexer, owner=FtcTeleOp, event=null)
+Spindexer.zeroCalibrate_INFO [27.450886591] zeroCalibrate(owner=FtcTeleOp, calPower=0.5, event=(Spindexer.zeroCal=CLEARED))
+Spindexer.Motor.acquireOwnership_INFO [27.451551299] Acquired ownership on behalf of FtcTeleOp
+TrcSubsystem.zeroCalibrateAll_INFO [27.453201841] ZeroCalibrate(Subsystem=Shooter, owner=FtcTeleOp, event=null)
+Shooter.PanMotor.acquireOwnership_INFO [27.455208217] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.zeroCalibratingMotor_INFO [27.467681926] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [27.468332926] Zero calibration done, event=(Spindexer.Motor.releaseOwnership=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [27.468996468] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [27.47005551] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [27.471345551] Signal completion event (Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [27.472712302] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [27.473899677] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [27.486484511] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [28.032449275] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [28.0324659] controlMode: Position,onTarget=true(-0.25/0.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [28.033070816] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [28.034241566] intakeCompletionCallback(canceled=false)
+Shooter.PanMotor.isMotorStalled_INFO [28.05647561] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [28.079569779] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [28.082659113] Zero calibration done, event=(Shooter.PanMotor.releaseOwnership=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [28.08326578] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [28.083907446] Released ownership on behalf of FtcTeleOp
+Shooter.PanMotor.releaseOwnership_INFO [28.084468321] Signal completion event (Shooter.PanMotor.callbackEvent=SIGNALED)
+Shooter.PanMotor.acquireOwnership_INFO [28.08598003] Acquired ownership on behalf of FtcTeleOp
+Shooter.PanMotor.pidCtrlTask_INFO [28.761911181] controlMode: Position,onTarget=true(45.199999999999996/45.0), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [28.761917014] Released ownership on behalf of FtcTeleOp
+FtcTeleOp.driverButtonEvent_INFO [28.938569907] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [28.940116032] Cancel all operations.
+Spindexer.cancel_INFO [28.973684244] cancel(owner=null)
+Shooter.cancel_INFO [28.977772244] owner=null
+TaskAutoShoot.cancel_INFO [28.987733245] Canceling auto task operation.
+Robot.zeroCalibrate_INFO [28.988315412] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [28.989073746] ZeroCalibrate(Subsystem=Spindexer, owner=FtcTeleOp, event=null)
+Spindexer.zeroCalibrate_INFO [28.989761496] zeroCalibrate(owner=FtcTeleOp, calPower=0.5, event=(Spindexer.zeroCal=CLEARED))
+Spindexer.Motor.acquireOwnership_INFO [28.990445162] Acquired ownership on behalf of FtcTeleOp
+TrcSubsystem.zeroCalibrateAll_INFO [28.991365954] ZeroCalibrate(Subsystem=Shooter, owner=FtcTeleOp, event=null)
+Shooter.PanMotor.acquireOwnership_INFO [28.992104162] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.zeroCalibratingMotor_INFO [29.006882914] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [29.007450206] Zero calibration done, event=(Spindexer.Motor.releaseOwnership=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [29.008160123] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [29.040019167] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [29.040691167] Signal completion event (Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [29.045520585] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [29.046390335] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [29.060513419] Acquired ownership on behalf of FtcTeleOp
+Shooter.PanMotor.isMotorStalled_INFO [29.559607053] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [29.591616014] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [29.595441807] Zero calibration done, event=(Shooter.PanMotor.releaseOwnership=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [29.596064515] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [29.596093973] Released ownership on behalf of FtcTeleOp
+Shooter.PanMotor.releaseOwnership_INFO [29.59657639] Signal completion event (Shooter.PanMotor.callbackEvent=SIGNALED)
+Shooter.PanMotor.acquireOwnership_INFO [29.597808682] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [29.623517643] controlMode: Position,onTarget=true(1.694444444444457/0.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [29.623631684] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [29.625484351] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [29.627109518] intakeCompletionCallback(canceled=false)
+FtcTeleOp.driverButtonEvent_INFO [29.785949742] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [29.795339952] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [29.796628827] setEntryTriggerEnabled(enabled=true)
+FtcTeleOp.operatorButtonEvent_INFO [30.478120895] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [30.478694604] EntrySlotUp: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [30.479291062] MoveToEntrySlot: Slot=1, event=null
+Spindexer.Motor.acquireOwnership_INFO [30.49393098] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.driverButtonEvent_INFO [30.714879877] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [30.719584753] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [30.720228753] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [30.721376753] cancel(owner=null)
+Shooter.PanMotor.pidCtrlTask_INFO [30.731786629] controlMode: Position,onTarget=true(44.33333333333333/45.0), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [30.739778005] Released ownership on behalf of FtcTeleOp
+FtcTeleOp.operatorButtonEvent_INFO [31.045207285] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [31.047621994] EntrySlotUp: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [31.049507619] MoveToEntrySlot: Slot=2, event=null
+Spindexer.Motor.acquireOwnership_INFO [31.065556288] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [31.72281727] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [31.722811437] controlMode: Position,onTarget=true(241.83333333333337/240.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [31.723385729] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [31.724424062] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [31.867822577] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [31.868463368] EntrySlotUp: FromSlot=2, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [31.869009368] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [31.883021911] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [32.660402906] controlMode: Position,onTarget=true(360.44444444444446/360.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [32.662250031] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [32.663027906] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [32.664557115] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [32.686120617] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [33.401181189] >>>>> Backup Spindexer exit position.
+Spindexer.exitSlotDown_INFO [33.401861064] ExitSlotDown: FromSlot=0, ToSlot=1
+Spindexer.moveToExitSlot_INFO [33.402884231] MoveToExitSlot: Slot=1, event=null
+Spindexer.Motor.acquireOwnership_INFO [33.417469024] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.driverButtonEvent_INFO [33.537288328] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [33.54188937] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [33.542537453] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [33.543079953] cancel(owner=null)
+FtcTeleOp.operatorButtonEvent_INFO [33.835949483] >>>>> OperatorAltFunc=false
+FtcTeleOp.driverButtonEvent_INFO [34.085965008] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [34.103391509] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [34.104275843] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [34.104886885] moveToNextVacantSlot: FromSlot=null, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [34.105632968] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [34.895312089] controlMode: Position,onTarget=true(243.77777777777771/240.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [34.926325884] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [34.942235427] spinCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [34.944389094] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [34.945698969] setEntryTriggerEnabled(enabled=true)
+FtcTeleOp.driverButtonEvent_INFO [35.144392239] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [35.155971115] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [35.156624449] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [35.157843615] cancel(owner=null)
+FtcTeleOp.driverButtonEvent_INFO [35.38687168] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [35.389192764] Cancel all operations.
+Spindexer.cancel_INFO [35.393921264] cancel(owner=null)
+Shooter.cancel_INFO [35.394517723] owner=null
+TaskAutoShoot.cancel_INFO [35.397277764] Canceling auto task operation.
+Robot.zeroCalibrate_INFO [35.398364806] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [35.399951765] ZeroCalibrate(Subsystem=Spindexer, owner=FtcTeleOp, event=null)
+Spindexer.zeroCalibrate_INFO [35.401398723] zeroCalibrate(owner=FtcTeleOp, calPower=0.5, event=(Spindexer.zeroCal=CLEARED))
+Spindexer.Motor.acquireOwnership_INFO [35.402688765] Acquired ownership on behalf of FtcTeleOp
+TrcSubsystem.zeroCalibrateAll_INFO [35.404238098] ZeroCalibrate(Subsystem=Shooter, owner=FtcTeleOp, event=null)
+Shooter.PanMotor.acquireOwnership_INFO [35.405612724] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.zeroCalibratingMotor_INFO [35.793709096] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [35.797431346] Zero calibration done, event=(Spindexer.Motor.releaseOwnership=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [35.798024888] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [35.798084096] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [35.799362471] Signal completion event (Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [35.80052068] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [35.800981222] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [35.820474182] Acquired ownership on behalf of FtcTeleOp
+Shooter.PanMotor.isMotorStalled_INFO [35.954619862] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [35.977548073] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [35.980736281] Zero calibration done, event=(Shooter.PanMotor.releaseOwnership=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [35.981377073] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [35.981536031] Released ownership on behalf of FtcTeleOp
+Shooter.PanMotor.releaseOwnership_INFO [35.98209574] Signal completion event (Shooter.PanMotor.callbackEvent=SIGNALED)
+Shooter.PanMotor.acquireOwnership_INFO [35.986585949] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [36.323803983] controlMode: Position,onTarget=true(-0.25/0.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [36.326359275] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [36.326873191] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [36.328231191] intakeCompletionCallback(canceled=false)
+FtcTeleOp.driverButtonEvent_INFO [36.995255133] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [37.01263176] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [37.014161552] setEntryTriggerEnabled(enabled=true)
+Shooter.PanMotor.pidCtrlTask_INFO [37.405039841] controlMode: Position,onTarget=true(44.766666666666666/45.0), stalled=false, expired=false, event=(Shooter.PanMotor.releaseOwnership=SIGNALED)
+Shooter.PanMotor.releaseOwnership_INFO [37.461122972] Released ownership on behalf of FtcTeleOp
+FtcTeleOp.driverButtonEvent_INFO [38.632652423] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [38.640452174] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [38.641065549] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [38.642273632] cancel(owner=null)
+Robot.cancelAll_INFO [40.190510163] Cancel all operations.
+Spindexer.cancel_INFO [40.258427961] cancel(owner=null)
+Shooter.cancel_INFO [40.267008212] owner=null
+TaskAutoShoot.cancel_INFO [40.286593047] Canceling auto task operation.
+TrcDigitalInput.getInput.printElapsedTime_INFO [40.302332841] TrcDigitalInput.getInput: avgElapsed=0.002162460803652968, minElapsed=5.3083E-5, maxElapsed=0.021343585
+TrcMotor.getPos.printElapsedTime_INFO [40.322214884] TrcMotor.getPos: avgElapsed=1.3327192168392918E-4, minElapsed=2.334E-6, maxElapsed=0.018559043
+TrcMotor.setPower.printElapsedTime_INFO [40.330650177] TrcMotor.setPower: avgElapsed=0.0031527990142180095, minElapsed=8.75E-6, maxElapsed=0.020910752
+TrcMotor.setVel.printElapsedTime_INFO [40.332028594] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [40.356021971] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [40.361111263] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [40.370688139] TrcServo.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+Robot.stopMode_INFO [40.388294599] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [40.396582308] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [40.397708434] Disabling ArtifactVision.
+Robot.stopMode_INFO [40.405199018] Disabling ClassifierVision.
+FtcTeleOp.stopMode_INFO [40.429759103] ***** Stopping TeleOp: 20251102@124741 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.445248355] FtcDashboard.task: STANDALONE_TASK=0.008173966746932515/0.015580100028374233
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.456116148] flDriveMotor.pidCtrlTask: OUTPUT_TASK=3.175079070866142E-4/0.0321940773488189
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.457551148] frDriveMotor.pidCtrlTask: OUTPUT_TASK=1.4721036929133858E-4/0.032194081711811026
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.466004815] blDriveMotor.pidCtrlTask: OUTPUT_TASK=7.708450866141732E-5/0.032194085846456694
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.467639607] brDriveMotor.pidCtrlTask: OUTPUT_TASK=8.077420708661417E-5/0.032194092276377956
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.469013941] flSteerEncoder.converterTask: INPUT_TASK=0.004633785494488189/0.03219442757795276
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.479680483] frSteerEncoder.converterTask: INPUT_TASK=0.0027113168582677165/0.032194106515748035
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.482657817] blSteerEncoder.converterTask: INPUT_TASK=4.375943070866142E-5/0.032194045196850395
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.483298026] brSteerEncoder.converterTask: INPUT_TASK=2.682780472440945E-5/0.032194047952755905
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.483835567] flSteerServo.pidCtrlTask: OUTPUT_TASK=0.0032656689047244093/0.03219409985511811
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.484345401] frSteerServo.pidCtrlTask: OUTPUT_TASK=0.0029675308606299214/0.03219424890393701
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.484884401] blSteerServo.pidCtrlTask: OUTPUT_TASK=0.003395502623622047/0.0321957262992126
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.485405026] brSteerServo.pidCtrlTask: OUTPUT_TASK=0.002626179092913386/0.03219588430472441
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.486056609] TrcSwerveDriveBase.odometryTask: INPUT_TASK=0.007011402795230263/0.03312480852960526
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.486880859] TrcSwerveDriveBase.absOdoHeadingWrap.converterTask: INPUT_TASK=7.178223622047244E-6/0.03219405415354331
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.487424818] StatusLED: OUTPUT_TASK=6.045375818897638E-4/0.032196741620472445
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.487975776] Spindexer1LED: OUTPUT_TASK=4.719006244094488E-4/0.0321937211480315
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.488576901] Spindexer2LED: OUTPUT_TASK=4.808584582677165E-4/0.032193675446456696
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.522721738] Spindexer3LED: OUTPUT_TASK=4.335007535433071E-4/0.032193640078740156
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.524122905] Intake.Motor.pidCtrlTask: OUTPUT_TASK=1.4925270653029111E-5/0.03221198061683714
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.525246405] Spindexer.EntrySensor.trigger.triggerTask: PRE_PERIODIC_TASK=0.008629465742021275/0.07521422564361702
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.526545196] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.0016769997301337531/0.03221198750118017
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.530356114] Spindexer.refreshSlotStatesTask: POST_PERIODIC_TASK=3.649425301204819E-5/0.002347212685676037
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.531515489] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=5.043697875688434E-6/0.03221199025491739
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.536718531] Shooter.TiltEncoder.converterTask: INPUT_TASK=5.2474764752163654E-5/0.032212845978756885
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.537907364] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=3.1647545239968532E-6/0.03221199002517702
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.539236198] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=8.552000511408339E-4/0.032211989565696306
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.540619573] DriverGamepad.buttonEventTask: PRE_PERIODIC_TASK=1.2196994356410162E-5/7.353152677671974E-4
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [40.5595152] OperatorGamepad.buttonEventTask: PRE_PERIODIC_TASK=4.366064524431045E-6/7.353122705614177E-4
+FtcOpMode.printPerformanceMetrics_INFO [40.565913492] [FtcTeleOp] Main robot thread average elapsed times:
+       robotInit=2.469150s
+    initPeriodic=0.005240s
+       startMode=0.000078s
+    loopInterval=0.000735s (1359.958Hz)
+             sdk=0.000023s
+ prePeriodicTask=0.000125s
+        periodic=0.000418s
+postPeriodicTask=0.000046s
+         loopSum=0.000713s
+        stopMode=0.000000s

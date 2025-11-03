@@ -1,0 +1,86 @@
+FtcTeleOp.startMode_INFO [0.005862208] ***** Starting TeleOp: 20251102@140551 *****
+FtcTeleOp.startMode_INFO [0.024985627] Enabling Limelight AprilTagVision.
+Vision.setLimelightVisionEnabled_INFO [0.027657294] Pipeline APRIL_TAG is enabled: running=true
+Spindexer.Motor.zeroCalibratingMotor_INFO [1.381845055] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [1.392014014] Zero calibration done, event=(Spindexer.zeroCal=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [1.392913514] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [1.438126227] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [1.439153769] MoveToEntrySlot: Slot=0, event=null
+Shooter.PanMotor.isMotorStalled_INFO [2.301723606] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [2.338454943] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [2.347176652] Zero calibration done, event=(Shooter.PanMotor.callbackEvent=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [2.347880735] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.callbackEvent=SIGNALED)
+FtcTeleOp.driverButtonEvent_INFO [3.130874272] >>>>> Enabling FIELD mode.
+FtcTeleOp.setDriveOrientation_INFO [3.131554147] driveOrientation=FIELD
+FtcTeleOp.driverButtonEvent_INFO [4.484654867] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [4.496286826] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [4.497030576] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [4.498399076] cancel(owner=null)
+Spindexer.moveCompletionCallback_INFO [4.508401202] intakeCompletionCallback(canceled=true)
+FtcTeleOp.driverButtonEvent_INFO [5.09695397] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [5.10955018] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [5.110366555] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [6.927649862] onEntryTrigger(active=true, numObj=1, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [6.991268494] EntryArtifact: hue=120.000, type=Green
+Intake.setPickupArtifactType_INFO [6.992217577] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [6.993132827] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [6.996048327] Entry[0]: value=120.000000, artifact=Green, numPurple=0, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.findSlot_INFO [6.998673036] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [7.000497703] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [7.003636036] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Robot.cancelAll_INFO [8.122000191] Cancel all operations.
+Spindexer.cancel_INFO [8.130669983] cancel(owner=null)
+Shooter.cancel_INFO [8.144435776] owner=null
+TaskAutoShoot.cancel_INFO [8.150181027] Canceling auto task operation.
+TrcDigitalInput.getInput.printElapsedTime_INFO [8.155900611] TrcDigitalInput.getInput: avgElapsed=3.7588056666666665E-4, minElapsed=7.1167E-5, maxElapsed=0.005179417
+TrcMotor.getPos.printElapsedTime_INFO [8.156452152] TrcMotor.getPos: avgElapsed=1.3530005295590218E-4, minElapsed=3.209E-6, maxElapsed=0.010960251
+TrcMotor.setPower.printElapsedTime_INFO [8.157117152] TrcMotor.setPower: avgElapsed=0.0029298111744868035, minElapsed=3.4708E-5, maxElapsed=0.015380168
+TrcMotor.setVel.printElapsedTime_INFO [8.157698152] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [8.158279153] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [8.173934071] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [8.176257488] TrcServo.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+Robot.stopMode_INFO [8.177791071] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [8.181113155] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [8.184307197] Disabling ArtifactVision.
+Robot.stopMode_INFO [8.188743447] Disabling ClassifierVision.
+FtcTeleOp.stopMode_INFO [8.193294031] ***** Stopping TeleOp: 20251102@140600 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.196082365] FtcDashboard.task: STANDALONE_TASK=5.2191804123711345E-5/0.01049183288273196
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.197409448] TrcWatchdogMgr: STANDALONE_TASK=9.3953125E-5/0.875376702625
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.204613615] flDriveMotor.pidCtrlTask: OUTPUT_TASK=5.521547966101694E-4/0.04168547546892656
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.207629741] frDriveMotor.pidCtrlTask: OUTPUT_TASK=1.5347603389830508E-4/0.041685063508474576
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.210285949] blDriveMotor.pidCtrlTask: OUTPUT_TASK=1.9686186440677966E-4/0.0416849069661017
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.212034783] brDriveMotor.pidCtrlTask: OUTPUT_TASK=3.629687005649717E-5/0.041694568220338984
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.214505491] flSteerEncoder.converterTask: INPUT_TASK=0.005022675163841808/0.04163885329378531
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.215878658] frSteerEncoder.converterTask: INPUT_TASK=0.0037121606666666667/0.0416513817740113
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.217056117] blSteerEncoder.converterTask: INPUT_TASK=7.88769209039548E-5/0.041646696983050846
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.218235325] brSteerEncoder.converterTask: INPUT_TASK=5.94159604519774E-5/0.04164608563841808
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.219434075] flSteerServo.pidCtrlTask: OUTPUT_TASK=0.0043056368068181815/0.041931273625
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.220598409] frSteerServo.pidCtrlTask: OUTPUT_TASK=0.004205636534090909/0.04168126555681818
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.221743784] blSteerServo.pidCtrlTask: OUTPUT_TASK=0.004479947414772727/0.04170236167613637
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.222988909] brSteerServo.pidCtrlTask: OUTPUT_TASK=0.003633177676136364/0.04173159297159091
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.224152367] TrcSwerveDriveBase.odometryTask: INPUT_TASK=0.008043526130681818/0.04174238297727273
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.227468034] TrcSwerveDriveBase.absOdoHeadingWrap.converterTask: INPUT_TASK=7.325787005649718E-5/0.041686899197740115
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.228721909] StatusLED: OUTPUT_TASK=8.847294772727273E-4/0.0417502298125
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.230530243] Spindexer1LED: OUTPUT_TASK=7.365080965909091E-4/0.04174563109090909
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.23168291] Spindexer2LED: OUTPUT_TASK=7.100708920454546E-4/0.04174491849431818
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.232907035] Spindexer3LED: OUTPUT_TASK=6.810119375E-4/0.041744403102272724
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.235415369] Intake.Motor.pidCtrlTask: OUTPUT_TASK=1.3890630681818182E-5/0.041743453528409094
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.23680341] Spindexer.EntrySensor.trigger.triggerTask: PRE_PERIODIC_TASK=0.011118217724999999/0.0453223431
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.238014702] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.0019887292784090908/0.041743206607954546
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.239337702] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=1.1737988636363636E-5/0.04174386948863637
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.240535869] Shooter.TiltEncoder.converterTask: INPUT_TASK=9.001131073446327E-5/0.041686141192090395
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.243458078] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=7.362909090909091E-6/0.041743637482954545
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.244623286] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=0.001637367159090909/0.04174347839204545
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.246467786] DriverGamepad.buttonEventTask: PRE_PERIODIC_TASK=2.4665494711147277E-5/0.002182972147816653
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [8.247944495] OperatorGamepad.buttonEventTask: PRE_PERIODIC_TASK=4.276039598589639E-6/0.0021829485741795495
+FtcOpMode.printPerformanceMetrics_INFO [8.249652787] [FtcTeleOp] Main robot thread average elapsed times:
+       robotInit=2.631219s
+    initPeriodic=NaNs
+       startMode=0.000324s
+    loopInterval=0.002183s (458.013Hz)
+             sdk=0.000048s
+ prePeriodicTask=0.000197s
+        periodic=0.001759s
+postPeriodicTask=0.000043s
+         loopSum=0.002147s
+        stopMode=0.000000s

@@ -1,0 +1,1529 @@
+FtcTeleOp.startMode_INFO [0.010083209] ***** Starting TeleOp: 20251102@125814 *****
+FtcTeleOp.startMode_INFO [0.05215088] Enabling Limelight AprilTagVision.
+Vision.setLimelightVisionEnabled_INFO [0.055862047] Pipeline APRIL_TAG is enabled: running=true
+Spindexer.Motor.zeroCalibratingMotor_INFO [0.500692259] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [0.509271926] Zero calibration done, event=(Spindexer.zeroCal=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [0.510149551] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.zeroCal=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [0.537406971] ZeroCalibrateCompletion: canceled=false
+Spindexer.moveToEntrySlot_INFO [0.538008679] MoveToEntrySlot: Slot=0, event=null
+Shooter.PanMotor.isMotorStalled_INFO [2.768385361] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [2.798945906] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [2.802473906] Zero calibration done, event=(Shooter.PanMotor.callbackEvent=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [2.803154657] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.callbackEvent=SIGNALED)
+FtcTeleOp.driverButtonEvent_INFO [3.958480856] >>>>> Enabling FIELD mode.
+FtcTeleOp.setDriveOrientation_INFO [3.959058064] driveOrientation=FIELD
+FtcTeleOp.driverButtonEvent_INFO [4.661821968] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [4.671419553] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [4.672680719] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [4.673995845] cancel(owner=null)
+Spindexer.moveCompletionCallback_INFO [4.67893172] intakeCompletionCallback(canceled=true)
+FtcTeleOp.driverButtonEvent_INFO [5.71142949] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [5.721537783] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [5.726669659] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [6.213143749] onEntryTrigger(active=true, numObj=1, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [6.283667006] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [6.28471584] Expect to pick up artifact Any
+Spindexer.setEntryTriggerEnabled_INFO [6.286048173] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [6.288135923] Entry[0]: value=240.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.findSlot_INFO [6.292211965] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [6.293088132] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [6.294077174] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [7.956903716] controlMode: Position,onTarget=true(121.27777777777777/120.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [7.999371262] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [8.056050559] spinCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [8.059068726] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [9.110798707] onEntryTrigger(active=true, numObj=2, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [9.172507213] EntryArtifact: hue=120.000, type=Green
+Intake.setPickupArtifactType_INFO [9.173814755] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [9.175410755] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [9.17757813] Entry[1]: value=120.000000, artifact=Green, numPurple=1, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.findSlot_INFO [9.179120756] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [9.180145381] moveToNextVacantSlot: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [9.181651839] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [10.236416903] controlMode: Position,onTarget=true(238.91666666666663/240.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [10.321492579] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [10.391212877] spinCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [10.391854836] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [11.214954585] onEntryTrigger(active=true, numObj=3, advOnTrigger=false)
+Spindexer.onEntryTrigger_INFO [11.29327001] onEntryTrigger(active=false, numObj=3, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [11.29426926] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [11.294860468] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [11.29545401] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [11.297386885] Entry[2]: value=240.000000, artifact=Purple, numPurple=2, numGreen=1, numUnknown=0, expectedNext=None
+Spindexer.moveToNextVacantEntrySlot_INFO [11.298138219] moveToNextVacantSlot: FromSlot=2, ToSlot=null
+Spindexer.getEntryArtifactType_INFO [11.390043853] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [11.390652269] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [11.391238519] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [11.392231645] Entry[2]: value=240.000000, artifact=Purple, numPurple=3, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.moveToNextVacantEntrySlot_INFO [11.392926395] moveToNextVacantSlot: FromSlot=2, ToSlot=null
+FtcTeleOp.driverButtonEvent_INFO [11.683920507] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [11.693992925] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [11.694614758] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [11.695254967] cancel(owner=null)
+FtcTeleOp.operatorButtonEvent_INFO [12.330777156] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [12.331864197] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=BLUE_ALLIANCE,inAuto=false,useAprilTagVision=true,useClassifierVision=false,numArtifactsToShoot=3,moveToNextExitSlot=true))
+TaskAutoShoot.startAutoTask_INFO [12.332891156] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [12.338744615] <Event name="StateInfo" time="12.338305365" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [12.33994774] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [12.342193282] <Event name="StateInfo" time="12.341793115" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [12.343471365] <Event name="StateInfo" time="12.34310474" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.344205782] <Event name="StateInfo" time="12.343861032" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.34569299] <Event name="StateInfo" time="12.345362532" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.346559532] <Event name="StateInfo" time="12.346109199" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.348080282] <Event name="StateInfo" time="12.347742241" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.348890824] <Event name="StateInfo" time="12.348546074" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.351589324] <Event name="StateInfo" time="12.351250991" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.353112408] <Event name="StateInfo" time="12.352064741" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.354183991] <Event name="StateInfo" time="12.353832533" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.355037991] <Event name="StateInfo" time="12.354585908" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.356080408] <Event name="StateInfo" time="12.355735658" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.356816866] <Event name="StateInfo" time="12.356486408" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.366907951] <Event name="StateInfo" time="12.366629701" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.367615534] <Event name="StateInfo" time="12.367277201" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.370060285] <Event name="StateInfo" time="12.368956034" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.37237991] <Event name="StateInfo" time="12.372065785" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.373867702] <Event name="StateInfo" time="12.373345035" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.374883868] <Event name="StateInfo" time="12.374472618" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.380799161] <Event name="StateInfo" time="12.380408911" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.381536786] <Event name="StateInfo" time="12.381238119" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.382459911] <Event name="StateInfo" time="12.382157744" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.383209494] <Event name="StateInfo" time="12.382921036" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.384064369] <Event name="StateInfo" time="12.383775911" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.384745119] <Event name="StateInfo" time="12.384442078" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.385721036] <Event name="StateInfo" time="12.385416828" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.386387203] <Event name="StateInfo" time="12.386063453" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.387342411] <Event name="StateInfo" time="12.387037328" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.388013828] <Event name="StateInfo" time="12.387706995" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.389116036] <Event name="StateInfo" time="12.388816786" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.391832328] <Event name="StateInfo" time="12.391464828" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.393428912] <Event name="StateInfo" time="12.393131412" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.39459587] <Event name="StateInfo" time="12.39424937" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.396542454] <Event name="StateInfo" time="12.396003745" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.398968537] <Event name="StateInfo" time="12.398658496" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.400783288] <Event name="StateInfo" time="12.400491913" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.402196413] <Event name="StateInfo" time="12.401909996" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.403188663] <Event name="StateInfo" time="12.402931704" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.403777538] <Event name="StateInfo" time="12.403520288" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.405510913] <Event name="StateInfo" time="12.404289413" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.407535372] <Event name="StateInfo" time="12.407233497" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.420977415] <Event name="StateInfo" time="12.420690123" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.42170979] <Event name="StateInfo" time="12.421432706" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.423418956] <Event name="StateInfo" time="12.423122331" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.424055373] <Event name="StateInfo" time="12.42376079" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.42618279] <Event name="StateInfo" time="12.425927582" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.427541374] <Event name="StateInfo" time="12.427257874" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.42981229] <Event name="StateInfo" time="12.429541624" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.431703166] <Event name="StateInfo" time="12.431325166" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.433231499] <Event name="StateInfo" time="12.432970457" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.434637041] <Event name="StateInfo" time="12.434269249" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.436147583] <Event name="StateInfo" time="12.435873416" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.437437041] <Event name="StateInfo" time="12.436842041" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.438913458] <Event name="StateInfo" time="12.438650375" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.439643208] <Event name="StateInfo" time="12.439383916" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.440430417] <Event name="StateInfo" time="12.440164708" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.441048167] <Event name="StateInfo" time="12.440771375" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.442399167] <Event name="StateInfo" time="12.441638792" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.445108167] <Event name="StateInfo" time="12.444570917" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.446567959] <Event name="StateInfo" time="12.446288834" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.447193876] <Event name="StateInfo" time="12.446922042" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.448042042] <Event name="StateInfo" time="12.447712751" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.448745542] <Event name="StateInfo" time="12.448343917" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.449657584] <Event name="StateInfo" time="12.449376709" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.450256668] <Event name="StateInfo" time="12.449999418" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.451564793] <Event name="StateInfo" time="12.451276043" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.452239709] <Event name="StateInfo" time="12.451966418" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.453177126] <Event name="StateInfo" time="12.452915501" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.453934876] <Event name="StateInfo" time="12.45364146" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.455028043] <Event name="StateInfo" time="12.454754168" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.455697418] <Event name="StateInfo" time="12.45541071" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.456670418] <Event name="StateInfo" time="12.456396251" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.457226043] <Event name="StateInfo" time="12.456970835" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.463849211] <Event name="StateInfo" time="12.463567169" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.464445086] <Event name="StateInfo" time="12.464172377" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.465437919] <Event name="StateInfo" time="12.465173086" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.466132961] <Event name="StateInfo" time="12.465848877" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.467255003] <Event name="StateInfo" time="12.466961586" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.468154503] <Event name="StateInfo" time="12.467862544" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.469031544] <Event name="StateInfo" time="12.468765253" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.469759836] <Event name="StateInfo" time="12.469359961" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.470657295] <Event name="StateInfo" time="12.470371461" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.471347961] <Event name="StateInfo" time="12.471073503" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.472304336] <Event name="StateInfo" time="12.472002753" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.472935795] <Event name="StateInfo" time="12.472652295" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.475462503] <Event name="StateInfo" time="12.47518542" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.476052545] <Event name="StateInfo" time="12.475776045" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.476846462] <Event name="StateInfo" time="12.476576087" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.477436212] <Event name="StateInfo" time="12.477176629" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.47883242] <Event name="StateInfo" time="12.47857867" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.479445212] <Event name="StateInfo" time="12.479159962" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.480257504] <Event name="StateInfo" time="12.479977504" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.481044712] <Event name="StateInfo" time="12.480746921" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.484682088] <Event name="StateInfo" time="12.484437379" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.485374504] <Event name="StateInfo" time="12.485042879" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.486253879] <Event name="StateInfo" time="12.485971838" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.48696438] <Event name="StateInfo" time="12.486600379" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.487859505] <Event name="StateInfo" time="12.487573963" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.488814421] <Event name="StateInfo" time="12.48852888" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.489826213] <Event name="StateInfo" time="12.48954913" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.490445713] <Event name="StateInfo" time="12.490189922" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.491370588] <Event name="StateInfo" time="12.491105172" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.49209888] <Event name="StateInfo" time="12.491802838" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.492916422] <Event name="StateInfo" time="12.492663255" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.493503255] <Event name="StateInfo" time="12.493232005" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.494403922] <Event name="StateInfo" time="12.494134714" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.495196672] <Event name="StateInfo" time="12.494872047" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.496054755] <Event name="StateInfo" time="12.495773589" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.496755922] <Event name="StateInfo" time="12.496397464" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.497611964] <Event name="StateInfo" time="12.497343922" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.498240214] <Event name="StateInfo" time="12.497971881" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.499176172] <Event name="StateInfo" time="12.498868464" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.500206923] <Event name="StateInfo" time="12.499906506" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.501161256] <Event name="StateInfo" time="12.500789673" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.502529464] <Event name="StateInfo" time="12.501641048" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.50330034] <Event name="StateInfo" time="12.50300984" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.503837298] <Event name="StateInfo" time="12.503596381" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.504546631] <Event name="StateInfo" time="12.504302215" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.505145423] <Event name="StateInfo" time="12.504847631" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.506272131] <Event name="StateInfo" time="12.506006131" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.506907673] <Event name="StateInfo" time="12.506622132" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.512357466] <Event name="StateInfo" time="12.512079215" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.513024507] <Event name="StateInfo" time="12.512739549" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.514040966] <Event name="StateInfo" time="12.513774382" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.514895841] <Event name="StateInfo" time="12.514407007" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.516074757] <Event name="StateInfo" time="12.515802924" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.516718758] <Event name="StateInfo" time="12.516457424" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.517580341] <Event name="StateInfo" time="12.517305299" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.518213841] <Event name="StateInfo" time="12.517937049" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.519148341] <Event name="StateInfo" time="12.518835674" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.519932633] <Event name="StateInfo" time="12.519648258" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.520813466] <Event name="StateInfo" time="12.520539591" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.521520466] <Event name="StateInfo" time="12.521247466" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.522489383] <Event name="StateInfo" time="12.522221341" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.523111508] <Event name="StateInfo" time="12.522828008" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.524158008] <Event name="StateInfo" time="12.52390105" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.524771092] <Event name="StateInfo" time="12.524515592" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.525644633] <Event name="StateInfo" time="12.525374258" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.526415217] <Event name="StateInfo" time="12.526145425" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.527272134] <Event name="StateInfo" time="12.526990675" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.527888134] <Event name="StateInfo" time="12.527615717" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.5287328] <Event name="StateInfo" time="12.528458925" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.529471592] <Event name="StateInfo" time="12.5291143" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.530433509] <Event name="StateInfo" time="12.530072426" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.531066426] <Event name="StateInfo" time="12.530785842" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.531929176] <Event name="StateInfo" time="12.531631967" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.532654842] <Event name="StateInfo" time="12.532391467" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.533967343] <Event name="StateInfo" time="12.533637176" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.534885218] <Event name="StateInfo" time="12.534586551" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.535820884] <Event name="StateInfo" time="12.535540301" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.536452926] <Event name="StateInfo" time="12.536174093" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.537400843] <Event name="StateInfo" time="12.537032468" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.538063218] <Event name="StateInfo" time="12.537778551" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.538916635] <Event name="StateInfo" time="12.538666385" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.539558593] <Event name="StateInfo" time="12.539201593" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.540360677] <Event name="StateInfo" time="12.540110135" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.540981635] <Event name="StateInfo" time="12.540733427" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.541840302] <Event name="StateInfo" time="12.541537552" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.542405843] <Event name="StateInfo" time="12.542145385" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.543314677] <Event name="StateInfo" time="12.54303351" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.543891594] <Event name="StateInfo" time="12.543627344" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.544699802] <Event name="StateInfo" time="12.544436719" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.54530676] <Event name="StateInfo" time="12.544981552" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.546129261] <Event name="StateInfo" time="12.545857427" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.546725719] <Event name="StateInfo" time="12.546474886" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.548011386] <Event name="StateInfo" time="12.547738677" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.548719844] <Event name="StateInfo" time="12.548436052" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.549665719] <Event name="StateInfo" time="12.549390969" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.550316136] <Event name="StateInfo" time="12.550041094" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.551243928] <Event name="StateInfo" time="12.550986386" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.552024719] <Event name="StateInfo" time="12.551598886" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.552929178] <Event name="StateInfo" time="12.552657344" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.553580761] <Event name="StateInfo" time="12.553290261" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.554545011] <Event name="StateInfo" time="12.55417022" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.555231011] <Event name="StateInfo" time="12.554901136" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.556058178] <Event name="StateInfo" time="12.555768845" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.55659922] <Event name="StateInfo" time="12.556343428" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.558767178] <Event name="StateInfo" time="12.558518678" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.559531637] <Event name="StateInfo" time="12.559240553" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.560495595] <Event name="StateInfo" time="12.560145304" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.56113172] <Event name="StateInfo" time="12.560852595" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.562152554] <Event name="StateInfo" time="12.561880137" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.562893096] <Event name="StateInfo" time="12.562638179" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.563724054] <Event name="StateInfo" time="12.563468554" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.564395471] <Event name="StateInfo" time="12.564111096" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.565575263] <Event name="StateInfo" time="12.565300804" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.566188929] <Event name="StateInfo" time="12.565941304" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.566992763] <Event name="StateInfo" time="12.566737554" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.567609346] <Event name="StateInfo" time="12.567338388" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.568511471] <Event name="StateInfo" time="12.568194429" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.569523555] <Event name="StateInfo" time="12.569123679" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.570564221] <Event name="StateInfo" time="12.570162013" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.571198888] <Event name="StateInfo" time="12.570893805" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.572104805] <Event name="StateInfo" time="12.571849013" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.572842722] <Event name="StateInfo" time="12.57247668" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.573735805] <Event name="StateInfo" time="12.573414972" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.574340138] <Event name="StateInfo" time="12.574072972" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.575391305] <Event name="StateInfo" time="12.575109555" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.576089264] <Event name="StateInfo" time="12.575715638" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.57751668] <Event name="StateInfo" time="12.577134597" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.578173222] <Event name="StateInfo" time="12.57789818" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.579055514] <Event name="StateInfo" time="12.578777264" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.579666556] <Event name="StateInfo" time="12.579395597" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.580706347] <Event name="StateInfo" time="12.580431597" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.581354139] <Event name="StateInfo" time="12.581078806" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.582259181] <Event name="StateInfo" time="12.581982681" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.582874014] <Event name="StateInfo" time="12.582615014" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.584109514] <Event name="StateInfo" time="12.583845556" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.584744764] <Event name="StateInfo" time="12.584464181" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.585751015] <Event name="StateInfo" time="12.585358723" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.586487181] <Event name="StateInfo" time="12.586193181" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.587423723] <Event name="StateInfo" time="12.587123015" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.588098348] <Event name="StateInfo" time="12.587805515" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.588961098] <Event name="StateInfo" time="12.58870414" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.589727015] <Event name="StateInfo" time="12.589333265" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.59081814] <Event name="StateInfo" time="12.590530557" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.59159514] <Event name="StateInfo" time="12.591296765" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.592590307] <Event name="StateInfo" time="12.59228289" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.593274849] <Event name="StateInfo" time="12.592975307" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.594338265] <Event name="StateInfo" time="12.594060015" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.595300474] <Event name="StateInfo" time="12.594963599" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.596348724] <Event name="StateInfo" time="12.596068724" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.597117266] <Event name="StateInfo" time="12.596814807" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.598098724] <Event name="StateInfo" time="12.597793641" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.598810974] <Event name="StateInfo" time="12.598527766" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.599708724] <Event name="StateInfo" time="12.599432516" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.600397641] <Event name="StateInfo" time="12.600102766" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.601948724] <Event name="StateInfo" time="12.601596099" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.602604391] <Event name="StateInfo" time="12.602328766" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.603518475] <Event name="StateInfo" time="12.603264141" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.604108516] <Event name="StateInfo" time="12.603831725" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.604946475] <Event name="StateInfo" time="12.604689808" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.605565683] <Event name="StateInfo" time="12.60529035" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.606418808] <Event name="StateInfo" time="12.606143766" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.607173933] <Event name="StateInfo" time="12.606904433" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.610239642] <Event name="StateInfo" time="12.609955559" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.615047476] <Event name="StateInfo" time="12.614676767" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.616314768] <Event name="StateInfo" time="12.615972351" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.617346976] <Event name="StateInfo" time="12.616977143" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.618997226] <Event name="StateInfo" time="12.618641684" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.620119851] <Event name="StateInfo" time="12.619596893" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.621217393] <Event name="StateInfo" time="12.620908226" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.622036685] <Event name="StateInfo" time="12.621685518" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.62291256] <Event name="StateInfo" time="12.622637518" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.623629185] <Event name="StateInfo" time="12.62330981" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.624563393] <Event name="StateInfo" time="12.624249852" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.625303352] <Event name="StateInfo" time="12.624955685" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.626253019] <Event name="StateInfo" time="12.62598031" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.626913352] <Event name="StateInfo" time="12.626616727" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.628008852] <Event name="StateInfo" time="12.627748685" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.628688144] <Event name="StateInfo" time="12.628368477" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.629604269] <Event name="StateInfo" time="12.629208186" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.630196352] <Event name="StateInfo" time="12.629930061" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.631001644] <Event name="StateInfo" time="12.630736811" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.631768727] <Event name="StateInfo" time="12.631445269" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.632692436] <Event name="StateInfo" time="12.632421769" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.633443186] <Event name="StateInfo" time="12.633129061" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.635110644] <Event name="StateInfo" time="12.634779603" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.635735103] <Event name="StateInfo" time="12.635434978" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.636472728] <Event name="StateInfo" time="12.63623327" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.637138603] <Event name="StateInfo" time="12.636854811" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.637957311] <Event name="StateInfo" time="12.63767002" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.638564853] <Event name="StateInfo" time="12.638241103" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.639326395] <Event name="StateInfo" time="12.639079645" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.639954062] <Event name="StateInfo" time="12.639650728" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.640812145] <Event name="StateInfo" time="12.640563062" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.641387312] <Event name="StateInfo" time="12.641085437" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.642341062] <Event name="StateInfo" time="12.642030728" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.643071395] <Event name="StateInfo" time="12.642668312" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.64391752] <Event name="StateInfo" time="12.64365502" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.644479562] <Event name="StateInfo" time="12.644208312" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.645344354] <Event name="StateInfo" time="12.645015354" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.646123396] <Event name="StateInfo" time="12.645791771" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.647077729] <Event name="StateInfo" time="12.646810271" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.647818562] <Event name="StateInfo" time="12.647435896" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.648762104] <Event name="StateInfo" time="12.648481521" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.649548729] <Event name="StateInfo" time="12.649119979" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.650391354] <Event name="StateInfo" time="12.650103188" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.650997438] <Event name="StateInfo" time="12.650727938" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.651829563] <Event name="StateInfo" time="12.651520688" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.652444688] <Event name="StateInfo" time="12.652144271" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.65413548] <Event name="StateInfo" time="12.65385373" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.655219313] <Event name="StateInfo" time="12.654737188" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.656111813] <Event name="StateInfo" time="12.65584348" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.65683398] <Event name="StateInfo" time="12.656532397" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.658939522] <Event name="StateInfo" time="12.658661564" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.659593439] <Event name="StateInfo" time="12.659315189" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.660589772] <Event name="StateInfo" time="12.66030598" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.661229105] <Event name="StateInfo" time="12.660910605" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.662291355] <Event name="StateInfo" time="12.661994439" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.662895981] <Event name="StateInfo" time="12.662626189" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.663724897] <Event name="StateInfo" time="12.663453064" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.664426647] <Event name="StateInfo" time="12.664041939" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.665282981] <Event name="StateInfo" time="12.664953981" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.665908898] <Event name="StateInfo" time="12.665611981" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.666727314] <Event name="StateInfo" time="12.666424856" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.667408648] <Event name="StateInfo" time="12.667128648" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.668223564] <Event name="StateInfo" time="12.667932773" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.668962648] <Event name="StateInfo" time="12.668589023" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.669946148] <Event name="StateInfo" time="12.669650398" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.670530065] <Event name="StateInfo" time="12.670266981" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.671253106] <Event name="StateInfo" time="12.670982731" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.671884273] <Event name="StateInfo" time="12.671541565" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.67267994] <Event name="StateInfo" time="12.672413648" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.673238773] <Event name="StateInfo" time="12.672958773" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.674277107] <Event name="StateInfo" time="12.673992148" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.675108357] <Event name="StateInfo" time="12.674778482" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.676012815] <Event name="StateInfo" time="12.675636565" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.676657399] <Event name="StateInfo" time="12.67635669" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.677490982] <Event name="StateInfo" time="12.677232274" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.678008399] <Event name="StateInfo" time="12.677749107" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.678840232] <Event name="StateInfo" time="12.678573065" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.679371357] <Event name="StateInfo" time="12.67909894" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.680171107] <Event name="StateInfo" time="12.679904524" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.680883357] <Event name="StateInfo" time="12.680599274" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.681877357] <Event name="StateInfo" time="12.681527066" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.682470899] <Event name="StateInfo" time="12.682207524" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.683472483] <Event name="StateInfo" time="12.683061233" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.684044441] <Event name="StateInfo" time="12.683762399" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.684852358] <Event name="StateInfo" time="12.684568858" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.685467483] <Event name="StateInfo" time="12.685180775" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.686296983] <Event name="StateInfo" time="12.686025441" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.686863691] <Event name="StateInfo" time="12.686590108" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.6877629] <Event name="StateInfo" time="12.687399191" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.688350608] <Event name="StateInfo" time="12.688063025" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.689640942] <Event name="StateInfo" time="12.689333817" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.69040715] <Event name="StateInfo" time="12.690123942" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.691295858] <Event name="StateInfo" time="12.69099515" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.691998483] <Event name="StateInfo" time="12.691680567" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.6927854] <Event name="StateInfo" time="12.692514734" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.693393234] <Event name="StateInfo" time="12.693043525" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.694205525] <Event name="StateInfo" time="12.6939334" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.694918651] <Event name="StateInfo" time="12.694621442" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.695830109] <Event name="StateInfo" time="12.695550109" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.696397109] <Event name="StateInfo" time="12.696117109" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.697187526] <Event name="StateInfo" time="12.696907817" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.697775526] <Event name="StateInfo" time="12.697485609" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.698641776] <Event name="StateInfo" time="12.698324734" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.699192151] <Event name="StateInfo" time="12.698925859" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.700040609] <Event name="StateInfo" time="12.699681859" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.700620734] <Event name="StateInfo" time="12.700330818" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.701551734] <Event name="StateInfo" time="12.701171984" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.702184943] <Event name="StateInfo" time="12.70187986" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.703033985] <Event name="StateInfo" time="12.702770318" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.70359136] <Event name="StateInfo" time="12.703311651" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.704351151] <Event name="StateInfo" time="12.704087776" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.704879068] <Event name="StateInfo" time="12.70461861" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.706286068] <Event name="StateInfo" time="12.705980402" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.706871152] <Event name="StateInfo" time="12.706568402" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.709015194] <Event name="StateInfo" time="12.70872936" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.709707027] <Event name="StateInfo" time="12.709328444" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.71075061] <Event name="StateInfo" time="12.710507652" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.711349986] <Event name="StateInfo" time="12.71104986" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.712246569] <Event name="StateInfo" time="12.711970652" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.713028819] <Event name="StateInfo" time="12.712714402" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.713876986] <Event name="StateInfo" time="12.713595819" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.714635319] <Event name="StateInfo" time="12.714165444" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.715561361] <Event name="StateInfo" time="12.715278444" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.716140903] <Event name="StateInfo" time="12.715842236" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.716986153] <Event name="StateInfo" time="12.716636444" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.717554319] <Event name="StateInfo" time="12.717264694" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.718848736] <Event name="StateInfo" time="12.718553861" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.719557486] <Event name="StateInfo" time="12.719140111" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.720355195] <Event name="StateInfo" time="12.720091236" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.720922486] <Event name="StateInfo" time="12.720650945" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.721877987] <Event name="StateInfo" time="12.721471403" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.722521403] <Event name="StateInfo" time="12.72222332" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.723409237] <Event name="StateInfo" time="12.72311582" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.724028153] <Event name="StateInfo" time="12.723718695" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.724806612] <Event name="StateInfo" time="12.724548487" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.72551157] <Event name="StateInfo" time="12.725187237" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.726513154] <Event name="StateInfo" time="12.72625007" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.727092404] <Event name="StateInfo" time="12.726807154" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.727947862] <Event name="StateInfo" time="12.727661445" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.728664779] <Event name="StateInfo" time="12.728237195" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.729486696] <Event name="StateInfo" time="12.729215737" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.730173862] <Event name="StateInfo" time="12.729868487" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.731027279] <Event name="StateInfo" time="12.730695362" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.731601863] <Event name="StateInfo" time="12.731306696" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.732620071] <Event name="StateInfo" time="12.732344446" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.733334363] <Event name="StateInfo" time="12.733060488" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.734136154] <Event name="StateInfo" time="12.733862279" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.734784821] <Event name="StateInfo" time="12.734489654" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.735726321] <Event name="StateInfo" time="12.735445446" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.736312571] <Event name="StateInfo" time="12.73603053" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.737120488] <Event name="StateInfo" time="12.736779238" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.737747571] <Event name="StateInfo" time="12.737430238" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.738862613] <Event name="StateInfo" time="12.738579405" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.739471322] <Event name="StateInfo" time="12.739198905" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.740250363] <Event name="StateInfo" time="12.739974155" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.74083428] <Event name="StateInfo" time="12.740560988" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.741579489] <Event name="StateInfo" time="12.741335655" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.742197239] <Event name="StateInfo" time="12.741894197" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.743066114] <Event name="StateInfo" time="12.742801864" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.74375328] <Event name="StateInfo" time="12.743473864" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.744540489] <Event name="StateInfo" time="12.744254947" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.745224155] <Event name="StateInfo" time="12.744871822" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.746085156] <Event name="StateInfo" time="12.745831697" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.746690947] <Event name="StateInfo" time="12.746379739" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.747603572] <Event name="StateInfo" time="12.747234906" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.748243198] <Event name="StateInfo" time="12.747952114" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.749112073] <Event name="StateInfo" time="12.748857739" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.749849114] <Event name="StateInfo" time="12.749569989" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.750635448] <Event name="StateInfo" time="12.750359531" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.751243864] <Event name="StateInfo" time="12.750941406" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.752101073] <Event name="StateInfo" time="12.751816989" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.752694615] <Event name="StateInfo" time="12.75241024" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.75363874] <Event name="StateInfo" time="12.753360198" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.754235781] <Event name="StateInfo" time="12.753951406" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.755698198] <Event name="StateInfo" time="12.75540624" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.75636699] <Event name="StateInfo" time="12.756064823" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.757224198] <Event name="StateInfo" time="12.75692174" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.757815115] <Event name="StateInfo" time="12.757532782" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.78463416] <Event name="StateInfo" time="12.784357951" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.785778951] <Event name="StateInfo" time="12.785503618" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.787293285] <Event name="StateInfo" time="12.78700716" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.788243243] <Event name="StateInfo" time="12.787965868" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.790120118] <Event name="StateInfo" time="12.789830493" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.791294952] <Event name="StateInfo" time="12.79076966" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.79266841] <Event name="StateInfo" time="12.792167035" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.793919369] <Event name="StateInfo" time="12.793612244" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.795433119] <Event name="StateInfo" time="12.795134452" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.796683786] <Event name="StateInfo" time="12.796384244" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.797995702] <Event name="StateInfo" time="12.797689452" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.799199703] <Event name="StateInfo" time="12.798939244" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.800696828] <Event name="StateInfo" time="12.800270119" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.802136203] <Event name="StateInfo" time="12.801490161" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.803619328] <Event name="StateInfo" time="12.803353911" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.804532245] <Event name="StateInfo" time="12.804276162" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.805292037] <Event name="StateInfo" time="12.804978787" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.805893453] <Event name="StateInfo" time="12.805569703" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.80989162] <Event name="StateInfo" time="12.809631745" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.811115745] <Event name="StateInfo" time="12.810853245" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.812459746] <Event name="StateInfo" time="12.812202204" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.813601912] <Event name="StateInfo" time="12.813288662" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.815226788] <Event name="StateInfo" time="12.814925788" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.816381496] <Event name="StateInfo" time="12.815845413" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.817828746] <Event name="StateInfo" time="12.817532121" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.819086996] <Event name="StateInfo" time="12.818782788" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.820633121] <Event name="StateInfo" time="12.820391913" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.821865413] <Event name="StateInfo" time="12.82152708" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.823272413] <Event name="StateInfo" time="12.823016622" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.824585788] <Event name="StateInfo" time="12.82427633" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.826038289] <Event name="StateInfo" time="12.825761789" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.82742983] <Event name="StateInfo" time="12.827104622" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.828931914] <Event name="StateInfo" time="12.828658331" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.830298081] <Event name="StateInfo" time="12.830025664" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.831873373] <Event name="StateInfo" time="12.831548748" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.833244789] <Event name="StateInfo" time="12.832966831" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.834616498] <Event name="StateInfo" time="12.834338539" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.835970123] <Event name="StateInfo" time="12.83564579" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.837397248] <Event name="StateInfo" time="12.837102373" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.838377248] <Event name="StateInfo" time="12.838079456" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.83927704] <Event name="StateInfo" time="12.839013665" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.83990354] <Event name="StateInfo" time="12.839540415" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.84089404] <Event name="StateInfo" time="12.840366998" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.841600749] <Event name="StateInfo" time="12.841297415" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.846497541] <Event name="StateInfo" time="12.846117499" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.849744374] <Event name="StateInfo" time="12.847749666" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.852350708] <Event name="StateInfo" time="12.852078" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.853871458] <Event name="StateInfo" time="12.853495208" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.855504792] <Event name="StateInfo" time="12.8552385" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.856729792] <Event name="StateInfo" time="12.856200417" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.877784044] <Event name="StateInfo" time="12.877424419" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.879740252] <Event name="StateInfo" time="12.878588461" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.880609127] <Event name="StateInfo" time="12.880347502" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.881257794] <Event name="StateInfo" time="12.880990919" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.882304878] <Event name="StateInfo" time="12.881930669" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.883155669] <Event name="StateInfo" time="12.882735961" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.884233378] <Event name="StateInfo" time="12.883860336" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.885419295] <Event name="StateInfo" time="12.884523878" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.886389086] <Event name="StateInfo" time="12.886029461" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.886976503] <Event name="StateInfo" time="12.886693003" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.887919462] <Event name="StateInfo" time="12.887622545" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.88879417] <Event name="StateInfo" time="12.888395462" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.89133867] <Event name="StateInfo" time="12.891046712" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.892113045] <Event name="StateInfo" time="12.891659504" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.89317792] <Event name="StateInfo" time="12.892789712" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.893821629] <Event name="StateInfo" time="12.89349642" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.894752046] <Event name="StateInfo" time="12.894464754" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.895475379] <Event name="StateInfo" time="12.895041671" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.896477254] <Event name="StateInfo" time="12.896116171" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.897153337] <Event name="StateInfo" time="12.896883837" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.898087837] <Event name="StateInfo" time="12.897783337" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.898839754] <Event name="StateInfo" time="12.898371046" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.899739254] <Event name="StateInfo" time="12.899371463" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.900291963] <Event name="StateInfo" time="12.900029171" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.901260005] <Event name="StateInfo" time="12.900970963" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.901969046] <Event name="StateInfo" time="12.901574421" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.902753338] <Event name="StateInfo" time="12.902506005" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.903271046] <Event name="StateInfo" time="12.903012338" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.904038713] <Event name="StateInfo" time="12.903767463" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.904876672] <Event name="StateInfo" time="12.904294213" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.90580388] <Event name="StateInfo" time="12.905472255" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.90660363] <Event name="StateInfo" time="12.906164672" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.907425838] <Event name="StateInfo" time="12.907127463" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.907970089] <Event name="StateInfo" time="12.907696505" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.92394584] <Event name="StateInfo" time="12.92367634" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.92462309] <Event name="StateInfo" time="12.924342215" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.926698007] <Event name="StateInfo" time="12.926441632" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.927346382] <Event name="StateInfo" time="12.927059674" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.928285549] <Event name="StateInfo" time="12.928002341" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.929123507] <Event name="StateInfo" time="12.928774674" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.932918383] <Event name="StateInfo" time="12.932379091" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.933524174] <Event name="StateInfo" time="12.933212091" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.934639216] <Event name="StateInfo" time="12.934142216" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.935321133] <Event name="StateInfo" time="12.934965591" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.9363513] <Event name="StateInfo" time="12.936038925" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.937094466] <Event name="StateInfo" time="12.936723466" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.938036258] <Event name="StateInfo" time="12.937716591" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.9386718] <Event name="StateInfo" time="12.938305467" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.939488467] <Event name="StateInfo" time="12.93919155" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.940032425] <Event name="StateInfo" time="12.939744258" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.940786967] <Event name="StateInfo" time="12.940524467" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.941340842] <Event name="StateInfo" time="12.941057925" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.94230655] <Event name="StateInfo" time="12.942027425" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.942872675] <Event name="StateInfo" time="12.942571092" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.9437048] <Event name="StateInfo" time="12.943419842" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.9442893] <Event name="StateInfo" time="12.943991217" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.945426217] <Event name="StateInfo" time="12.945059301" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.946032009] <Event name="StateInfo" time="12.945715259" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.946944051] <Event name="StateInfo" time="12.946615342" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.947720176] <Event name="StateInfo" time="12.947343634" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.950002468] <Event name="StateInfo" time="12.949704968" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.950563635] <Event name="StateInfo" time="12.950271968" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.952017301] <Event name="StateInfo" time="12.95165301" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.952781176] <Event name="StateInfo" time="12.952434968" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.953754468] <Event name="StateInfo" time="12.953424593" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.954396718] <Event name="StateInfo" time="12.954098052" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.955382843] <Event name="StateInfo" time="12.955037802" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.95608926] <Event name="StateInfo" time="12.955773093" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.956921093] <Event name="StateInfo" time="12.956631468" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.95759601] <Event name="StateInfo" time="12.957236385" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.968467011] <Event name="StateInfo" time="12.968128386" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.969334136] <Event name="StateInfo" time="12.968877095" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.970261053] <Event name="StateInfo" time="12.969978428" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.97081697] <Event name="StateInfo" time="12.970534636" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.974049512] <Event name="StateInfo" time="12.973771553" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.974818637] <Event name="StateInfo" time="12.974412929" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.97567672] <Event name="StateInfo" time="12.975401679" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.976295345] <Event name="StateInfo" time="12.975984137" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.983215429] <Event name="StateInfo" time="12.982838304" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.984609013] <Event name="StateInfo" time="12.984268638" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.98619218] <Event name="StateInfo" time="12.985875138" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.986842305] <Event name="StateInfo" time="12.986541013" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.98909018] <Event name="StateInfo" time="12.988737263" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.990066388] <Event name="StateInfo" time="12.989734472" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.992155889] <Event name="StateInfo" time="12.991837389" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.993512722] <Event name="StateInfo" time="12.99318868" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.995338847] <Event name="StateInfo" time="12.994981556" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.996652222] <Event name="StateInfo" time="12.996305139" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.998392598] <Event name="StateInfo" time="12.998057181" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.999873973] <Event name="StateInfo" time="12.999223264" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.001551931] <Event name="StateInfo" time="13.001246848" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.003191098] <Event name="StateInfo" time="13.00285014" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.00487839] <Event name="StateInfo" time="13.004555807" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.007343265] <Event name="StateInfo" time="13.007012515" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.011290391] <Event name="StateInfo" time="13.010966057" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.013769266] <Event name="StateInfo" time="13.012708474" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.017028349] <Event name="StateInfo" time="13.016730266" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.019092475] <Event name="StateInfo" time="13.018680641" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.02088185] <Event name="StateInfo" time="13.020575308" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.022613183] <Event name="StateInfo" time="13.021799725" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.025682392] <Event name="StateInfo" time="13.025336475" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.026543392] <Event name="StateInfo" time="13.026205059" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.029947142] <Event name="StateInfo" time="13.029579351" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.032129101] <Event name="StateInfo" time="13.031794851" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.035713101] <Event name="StateInfo" time="13.034483726" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.036983893] <Event name="StateInfo" time="13.036723435" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.037670477] <Event name="StateInfo" time="13.037426935" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.038179727] <Event name="StateInfo" time="13.037925393" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.040606977] <Event name="StateInfo" time="13.040298393" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.041276352] <Event name="StateInfo" time="13.040959019" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.043591019] <Event name="StateInfo" time="13.043217977" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.044414102] <Event name="StateInfo" time="13.044045144" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.046172852] <Event name="StateInfo" time="13.045284144" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.046923894] <Event name="StateInfo" time="13.046569227" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.048933478] <Event name="StateInfo" time="13.048579103" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.050368478] <Event name="StateInfo" time="13.050012353" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.051327186] <Event name="StateInfo" time="13.050962895" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.052247978] <Event name="StateInfo" time="13.051838186" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.055798728] <Event name="StateInfo" time="13.055418687" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.056872062] <Event name="StateInfo" time="13.056176728" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.068781105] <Event name="StateInfo" time="13.068473396" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.069608563] <Event name="StateInfo" time="13.069209855" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.071101897] <Event name="StateInfo" time="13.070449147" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.071868105] <Event name="StateInfo" time="13.071537355" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.073581355] <Event name="StateInfo" time="13.073288814" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.074231772] <Event name="StateInfo" time="13.073937772" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.075153439] <Event name="StateInfo" time="13.074807522" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.075916439] <Event name="StateInfo" time="13.075588022" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.076791439] <Event name="StateInfo" time="13.07650123" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.077519147] <Event name="StateInfo" time="13.077162439" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.079750397] <Event name="StateInfo" time="13.079456689" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.080426773] <Event name="StateInfo" time="13.080134523" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.081327148] <Event name="StateInfo" time="13.081037814" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.082032398] <Event name="StateInfo" time="13.081656439" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.083692565] <Event name="StateInfo" time="13.083387189" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.084909106] <Event name="StateInfo" time="13.084060065" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.086816315] <Event name="StateInfo" time="13.08651444" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.088294773] <Event name="StateInfo" time="13.087125482" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.089225482] <Event name="StateInfo" time="13.088941398" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.089887565] <Event name="StateInfo" time="13.089554482" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.090792315] <Event name="StateInfo" time="13.090516982" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.091397524] <Event name="StateInfo" time="13.091087482" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.092242482] <Event name="StateInfo" time="13.09197444" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.092906024] <Event name="StateInfo" time="13.092618149" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.093771691] <Event name="StateInfo" time="13.093465149" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.094380399] <Event name="StateInfo" time="13.094087274" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.095460732] <Event name="StateInfo" time="13.095167316" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.096032691] <Event name="StateInfo" time="13.095749774" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.096866566] <Event name="StateInfo" time="13.096597358" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.097501524] <Event name="StateInfo" time="13.097197608" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.098324316] <Event name="StateInfo" time="13.098062691" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.098923691] <Event name="StateInfo" time="13.098652149" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.099744441] <Event name="StateInfo" time="13.099442566" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.100349358] <Event name="StateInfo" time="13.100049233" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.101155816] <Event name="StateInfo" time="13.100876983" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.10170065] <Event name="StateInfo" time="13.101401691" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.102591983] <Event name="StateInfo" time="13.102331816" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.1031269] <Event name="StateInfo" time="13.102847191" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.103909733] <Event name="StateInfo" time="13.103629442" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.104425108] <Event name="StateInfo" time="13.104142192" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.105264233] <Event name="StateInfo" time="13.104936692" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.105863317] <Event name="StateInfo" time="13.105555317" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.106643234] <Event name="StateInfo" time="13.106384233" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.107177275] <Event name="StateInfo" time="13.106895817" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.114348193] <Event name="StateInfo" time="13.114058276" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.115052568] <Event name="StateInfo" time="13.114743693" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.116218068] <Event name="StateInfo" time="13.115819651" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.116904068] <Event name="StateInfo" time="13.116485818" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.118198776] <Event name="StateInfo" time="13.11776886" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.121388735] <Event name="StateInfo" time="13.118550235" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.122812943] <Event name="StateInfo" time="13.122520402" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.12373636] <Event name="StateInfo" time="13.123338819" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.124734735] <Event name="StateInfo" time="13.124424985" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.125446985] <Event name="StateInfo" time="13.125049152" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.127529486] <Event name="StateInfo" time="13.127211277" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.128196819] <Event name="StateInfo" time="13.127815611" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.129203069] <Event name="StateInfo" time="13.128878444" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.130130861] <Event name="StateInfo" time="13.129559194" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.131380361] <Event name="StateInfo" time="13.130963861" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.134252111] <Event name="StateInfo" time="13.131827194" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.135452903] <Event name="StateInfo" time="13.134986236" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.136268403] <Event name="StateInfo" time="13.135873778" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.142064112] <Event name="StateInfo" time="13.137379945" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.143360279] <Event name="StateInfo" time="13.142418487" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.144901737] <Event name="StateInfo" time="13.144620862" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.149050988] <Event name="StateInfo" time="13.146525738" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.150716405] <Event name="StateInfo" time="13.15042328" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.151344363] <Event name="StateInfo" time="13.151038988" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.152938613] <Event name="StateInfo" time="13.15266853" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.15402478] <Event name="StateInfo" time="13.15324603" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.155879488] <Event name="StateInfo" time="13.154717197" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.156601364] <Event name="StateInfo" time="13.156298322" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+FtcTeleOp.operatorButtonEvent_INFO [13.15800953] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [13.158567489] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [13.159171822] Stopping subsystems.
+Shooter.cancel_INFO [13.159706155] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [13.176139824] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [13.176871324] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [14.158246047] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [14.159097714] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=BLUE_ALLIANCE,inAuto=false,useAprilTagVision=true,useClassifierVision=false,numArtifactsToShoot=3,moveToNextExitSlot=true))
+TaskAutoShoot.startAutoTask_INFO [14.159945006] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [14.161229506] <Event name="StateInfo" time="14.160974881" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [14.16208409] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [14.163379381] <Event name="StateInfo" time="14.163094423" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [14.164784631] <Event name="StateInfo" time="14.164532631" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.165735173] <Event name="StateInfo" time="14.165227673" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.16669184] <Event name="StateInfo" time="14.166439257" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.167365298] <Event name="StateInfo" time="14.166976215" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.168267715] <Event name="StateInfo" time="14.168001132" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.168865632] <Event name="StateInfo" time="14.16860284" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.169874799] <Event name="StateInfo" time="14.169590424" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.170457257] <Event name="StateInfo" time="14.170161799" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.171457382] <Event name="StateInfo" time="14.171155507" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.172097882] <Event name="StateInfo" time="14.171802716" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.173352632] <Event name="StateInfo" time="14.173087507" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.173989341] <Event name="StateInfo" time="14.173675507" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.177769924] <Event name="StateInfo" time="14.177249883" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.179657591] <Event name="StateInfo" time="14.179376425" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.180716925] <Event name="StateInfo" time="14.180422633" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.181365592] <Event name="StateInfo" time="14.181094925" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.182472467] <Event name="StateInfo" time="14.182202383" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.182998925] <Event name="StateInfo" time="14.182730008" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.1842108] <Event name="StateInfo" time="14.18394655" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.184918675] <Event name="StateInfo" time="14.184640425" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.185886134] <Event name="StateInfo" time="14.185490342" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.187174134] <Event name="StateInfo" time="14.186325384" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.188232884] <Event name="StateInfo" time="14.187871217" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.188857342] <Event name="StateInfo" time="14.188568009" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.190299342] <Event name="StateInfo" time="14.190012342" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.191620884] <Event name="StateInfo" time="14.190710301" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.194175301] <Event name="StateInfo" time="14.193756176" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.194811426] <Event name="StateInfo" time="14.194502843" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.197033635] <Event name="StateInfo" time="14.196282301" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.19780451] <Event name="StateInfo" time="14.197484551" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.199390593] <Event name="StateInfo" time="14.19902251" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.201233927] <Event name="StateInfo" time="14.199773552" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.202378719] <Event name="StateInfo" time="14.20210776" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.203666427] <Event name="StateInfo" time="14.203265094" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.204551927] <Event name="StateInfo" time="14.20429001" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.205809302] <Event name="StateInfo" time="14.204852927" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.207293302] <Event name="StateInfo" time="14.207045094" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.208608136] <Event name="StateInfo" time="14.208203303" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.211495636] <Event name="StateInfo" time="14.211107719" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.21347197] <Event name="StateInfo" time="14.211892886" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.215234512] <Event name="StateInfo" time="14.214817137" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.217237387] <Event name="StateInfo" time="14.216817678" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.218805679] <Event name="StateInfo" time="14.218528012" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.219949012] <Event name="StateInfo" time="14.219672512" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.221394512] <Event name="StateInfo" time="14.221127929" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.223466221] <Event name="StateInfo" time="14.223168137" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.225010596] <Event name="StateInfo" time="14.224728262" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.226399513] <Event name="StateInfo" time="14.225924388" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.227889638] <Event name="StateInfo" time="14.227321179" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.229088096] <Event name="StateInfo" time="14.228593138" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.230545846] <Event name="StateInfo" time="14.230285096" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.231885763] <Event name="StateInfo" time="14.231569596" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.233550013] <Event name="StateInfo" time="14.23327468" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.234736514] <Event name="StateInfo" time="14.234459722" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.23612368] <Event name="StateInfo" time="14.23584193" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.237351014] <Event name="StateInfo" time="14.237067805" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.238667597] <Event name="StateInfo" time="14.238363097" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.240372681] <Event name="StateInfo" time="14.240066139" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.241887598] <Event name="StateInfo" time="14.241558014" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.243096264] <Event name="StateInfo" time="14.242823556" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.244648806] <Event name="StateInfo" time="14.244388056" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.246079723] <Event name="StateInfo" time="14.245782806" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.24752989] <Event name="StateInfo" time="14.247247848" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.248737682] <Event name="StateInfo" time="14.248439598" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.250041432] <Event name="StateInfo" time="14.249765223" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.25059064] <Event name="StateInfo" time="14.250329598" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.252301265] <Event name="StateInfo" time="14.252038765" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.252918432] <Event name="StateInfo" time="14.25262239" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.253791974] <Event name="StateInfo" time="14.253488057" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.254428682] <Event name="StateInfo" time="14.254132932" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.255280641] <Event name="StateInfo" time="14.254964182" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.255903932] <Event name="StateInfo" time="14.255585432" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.256738974] <Event name="StateInfo" time="14.256468599" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.257346516] <Event name="StateInfo" time="14.257060099" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.259304766] <Event name="StateInfo" time="14.259038183" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.259944099] <Event name="StateInfo" time="14.259632891" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.260749683] <Event name="StateInfo" time="14.260487474" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.261361308] <Event name="StateInfo" time="14.261078974" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.262346266] <Event name="StateInfo" time="14.262070058" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.263017683] <Event name="StateInfo" time="14.262738266" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.263833183] <Event name="StateInfo" time="14.263553183" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.26442935] <Event name="StateInfo" time="14.264144392" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.265278392] <Event name="StateInfo" time="14.264977975" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.26584685] <Event name="StateInfo" time="14.265563642" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.266679267] <Event name="StateInfo" time="14.266405683" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.267277767] <Event name="StateInfo" time="14.266976183" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.26806935] <Event name="StateInfo" time="14.267793433" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.268686809] <Event name="StateInfo" time="14.268358975" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.269491517] <Event name="StateInfo" time="14.269212392" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.270077184] <Event name="StateInfo" time="14.269788434" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.270895892] <Event name="StateInfo" time="14.270544434" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.271443642] <Event name="StateInfo" time="14.271179684" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.272274309] <Event name="StateInfo" time="14.271994601" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.272825559] <Event name="StateInfo" time="14.272560142" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.273625601] <Event name="StateInfo" time="14.273338601" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.274185892] <Event name="StateInfo" time="14.273900351" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.274972226] <Event name="StateInfo" time="14.274703309" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.275541268] <Event name="StateInfo" time="14.275278184" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.276386226] <Event name="StateInfo" time="14.276099518" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.276916476] <Event name="StateInfo" time="14.276649018" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.279800476] <Event name="StateInfo" time="14.277960351" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.28042231] <Event name="StateInfo" time="14.280090685" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.282440643] <Event name="StateInfo" time="14.282148393" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.282988102] <Event name="StateInfo" time="14.282709852" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.28381731] <Event name="StateInfo" time="14.28351806" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.284451685] <Event name="StateInfo" time="14.284151268" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.285852852] <Event name="StateInfo" time="14.285555352" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.286414602] <Event name="StateInfo" time="14.286136352" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.287334519] <Event name="StateInfo" time="14.28702506" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.287968894] <Event name="StateInfo" time="14.287666435" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.288946852] <Event name="StateInfo" time="14.288671811" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.289561686] <Event name="StateInfo" time="14.289248727" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.290873603] <Event name="StateInfo" time="14.290138894" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.291490769] <Event name="StateInfo" time="14.291208144" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.292416228] <Event name="StateInfo" time="14.292134769" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.293145686] <Event name="StateInfo" time="14.292828353" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.294055394] <Event name="StateInfo" time="14.293780936" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.29463027] <Event name="StateInfo" time="14.294326061" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.29550177] <Event name="StateInfo" time="14.295245978" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.296617978] <Event name="StateInfo" time="14.296307061" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.297555395] <Event name="StateInfo" time="14.29727627" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.298261228] <Event name="StateInfo" time="14.297947103" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.299213812] <Event name="StateInfo" time="14.29892652" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.299823395] <Event name="StateInfo" time="14.299529978" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.300620812] <Event name="StateInfo" time="14.300343437" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.301905604] <Event name="StateInfo" time="14.30096877" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.302752604] <Event name="StateInfo" time="14.302482812" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.303355479] <Event name="StateInfo" time="14.303064687" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.304209187] <Event name="StateInfo" time="14.303917812" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.304794562] <Event name="StateInfo" time="14.304506687" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.306324354] <Event name="StateInfo" time="14.305632229" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.306971854] <Event name="StateInfo" time="14.306636729" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.315217855] <Event name="StateInfo" time="14.314925022" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.315851063] <Event name="StateInfo" time="14.315539272" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.316690772] <Event name="StateInfo" time="14.316429438" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.317251939] <Event name="StateInfo" time="14.316966688" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.318852897] <Event name="StateInfo" time="14.318020189" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.319701064] <Event name="StateInfo" time="14.31936098" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.320618939] <Event name="StateInfo" time="14.32023248" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.321244564] <Event name="StateInfo" time="14.320937147" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.322083106] <Event name="StateInfo" time="14.321817106" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.322636106] <Event name="StateInfo" time="14.322352314" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.323451022] <Event name="StateInfo" time="14.323181522" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.324637231] <Event name="StateInfo" time="14.324342064" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.325565606] <Event name="StateInfo" time="14.325268106" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.326244023] <Event name="StateInfo" time="14.325859898" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.327348564] <Event name="StateInfo" time="14.327073231" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.327966898] <Event name="StateInfo" time="14.327664731" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.328874856] <Event name="StateInfo" time="14.32858669" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.330025481] <Event name="StateInfo" time="14.329144065" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.330799565] <Event name="StateInfo" time="14.330546398" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.331338856] <Event name="StateInfo" time="14.331069065" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.332207732] <Event name="StateInfo" time="14.331960982" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.332744107] <Event name="StateInfo" time="14.332471982" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.333493982] <Event name="StateInfo" time="14.333206107" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.334032982] <Event name="StateInfo" time="14.333750648" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.334832149] <Event name="StateInfo" time="14.334564982" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.336122482] <Event name="StateInfo" time="14.335824107" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.336910274] <Event name="StateInfo" time="14.336641357" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.337483691] <Event name="StateInfo" time="14.337181816" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.338379982] <Event name="StateInfo" time="14.338093857" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.339119649] <Event name="StateInfo" time="14.338692649" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.340029066] <Event name="StateInfo" time="14.339750816" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.341102691] <Event name="StateInfo" time="14.340328607" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.342010941] <Event name="StateInfo" time="14.341660941" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.342609441] <Event name="StateInfo" time="14.342321858" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.343436899] <Event name="StateInfo" time="14.343150774" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.343961608] <Event name="StateInfo" time="14.343700274" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.344892025] <Event name="StateInfo" time="14.344612608" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.345505691] <Event name="StateInfo" time="14.345216358" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.346881483] <Event name="StateInfo" time="14.346598566" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.347523733] <Event name="StateInfo" time="14.347150983" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.348314442] <Event name="StateInfo" time="14.34802015" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.348885817] <Event name="StateInfo" time="14.348617775" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.349687608] <Event name="StateInfo" time="14.3494149" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.350272692] <Event name="StateInfo" time="14.349984817" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.351127275] <Event name="StateInfo" time="14.350857775" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.352449109] <Event name="StateInfo" time="14.352103484" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.353273942] <Event name="StateInfo" time="14.353021067" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.353984442] <Event name="StateInfo" time="14.353692192" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.354878109] <Event name="StateInfo" time="14.354519942" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.355484484] <Event name="StateInfo" time="14.355204776" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.356274901] <Event name="StateInfo" time="14.356007734" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.356826151] <Event name="StateInfo" time="14.356558692" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.433857075] <Event name="StateInfo" time="14.433378742" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.434702617] <Event name="StateInfo" time="14.434251117" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.501276415] <Event name="StateInfo" time="14.501024999" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.502736499] <Event name="StateInfo" time="14.501976415" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.527826543] <Event name="StateInfo" time="14.527571043" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.529285168] <Event name="StateInfo" time="14.529029376" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.531869043] <Event name="StateInfo" time="14.531554335" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.533084127] <Event name="StateInfo" time="14.532831252" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.535177419] <Event name="StateInfo" time="14.534877294" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.53577971] <Event name="StateInfo" time="14.535497377" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.537208877] <Event name="StateInfo" time="14.536891836" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.537835086] <Event name="StateInfo" time="14.537530877" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.538990669] <Event name="StateInfo" time="14.538750627" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.539582169] <Event name="StateInfo" time="14.539302461" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.540688753] <Event name="StateInfo" time="14.540428586" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.541452628] <Event name="StateInfo" time="14.541028836" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.54417767] <Event name="StateInfo" time="14.54390642" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.545981628] <Event name="StateInfo" time="14.545682961" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.546807628] <Event name="StateInfo" time="14.546547461" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.547876878] <Event name="StateInfo" time="14.547603003" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.548826837] <Event name="StateInfo" time="14.548569878" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.550051837] <Event name="StateInfo" time="14.549490378" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.551467295] <Event name="StateInfo" time="14.551175337" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.553360212] <Event name="StateInfo" time="14.552454587" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.554863462] <Event name="StateInfo" time="14.554583754" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.556884129] <Event name="StateInfo" time="14.556553671" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.559339963] <Event name="StateInfo" time="14.559092046" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.560757171] <Event name="StateInfo" time="14.560241505" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.562186338] <Event name="StateInfo" time="14.561908671" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.563486588] <Event name="StateInfo" time="14.563158755" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.564833213] <Event name="StateInfo" time="14.564562255" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.566118005] <Event name="StateInfo" time="14.565798922" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.568433839] <Event name="StateInfo" time="14.568043589" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.569650672] <Event name="StateInfo" time="14.56933713" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.571130881] <Event name="StateInfo" time="14.570870422" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.572348006] <Event name="StateInfo" time="14.572065964" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.573776881] <Event name="StateInfo" time="14.573494839" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.575140714] <Event name="StateInfo" time="14.574812881" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.576975881] <Event name="StateInfo" time="14.576691798" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.577779423] <Event name="StateInfo" time="14.577464131" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.578623798] <Event name="StateInfo" time="14.578311131" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.583862132] <Event name="StateInfo" time="14.578923631" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.585397757] <Event name="StateInfo" time="14.585054174" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.586954674] <Event name="StateInfo" time="14.586648132" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.588745799] <Event name="StateInfo" time="14.588312674" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.590687133] <Event name="StateInfo" time="14.590092424" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.593818758] <Event name="StateInfo" time="14.5934463" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.594535383] <Event name="StateInfo" time="14.594210175" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.5971563] <Event name="StateInfo" time="14.595671133" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.600168342] <Event name="StateInfo" time="14.599851592" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.603620509] <Event name="StateInfo" time="14.601933217" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.605700092] <Event name="StateInfo" time="14.605321217" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.608363301] <Event name="StateInfo" time="14.607109134" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.610697218] <Event name="StateInfo" time="14.609802968" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.616336885] <Event name="StateInfo" time="14.615996218" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.617022594] <Event name="StateInfo" time="14.616678427" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.619196094] <Event name="StateInfo" time="14.618883135" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.619863719] <Event name="StateInfo" time="14.61954901" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.621000344] <Event name="StateInfo" time="14.620706344" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.621670886] <Event name="StateInfo" time="14.621329344" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.623329594] <Event name="StateInfo" time="14.622998261" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.624120011] <Event name="StateInfo" time="14.623784303" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.625269178] <Event name="StateInfo" time="14.624843928" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.626093136] <Event name="StateInfo" time="14.625768219" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.627472136] <Event name="StateInfo" time="14.627150428" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.628175636] <Event name="StateInfo" time="14.627785386" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.62928572] <Event name="StateInfo" time="14.628850845" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.630112303] <Event name="StateInfo" time="14.629654678" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.630999553] <Event name="StateInfo" time="14.630730637" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.632434554] <Event name="StateInfo" time="14.63214347" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.633245095] <Event name="StateInfo" time="14.63296072" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.633785554] <Event name="StateInfo" time="14.63349447" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.634890387] <Event name="StateInfo" time="14.634489929" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.635866595] <Event name="StateInfo" time="14.635534679" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.638564804] <Event name="StateInfo" time="14.638162304" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.639210262] <Event name="StateInfo" time="14.638888846" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.640942179] <Event name="StateInfo" time="14.640620179" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.642919096] <Event name="StateInfo" time="14.642545471" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.644735596] <Event name="StateInfo" time="14.644431388" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.646436305] <Event name="StateInfo" time="14.645057013" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.648109888] <Event name="StateInfo" time="14.647852347" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.650451972] <Event name="StateInfo" time="14.648471847" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.655012472] <Event name="StateInfo" time="14.654699514" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.657187723] <Event name="StateInfo" time="14.656807389" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.719263146] <Event name="StateInfo" time="14.71900677" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.720023521] <Event name="StateInfo" time="14.719709104" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.758241483] <Event name="StateInfo" time="14.757983649" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.7600784] <Event name="StateInfo" time="14.758686858" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.802776362] <Event name="StateInfo" time="14.802518529" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.803387404] <Event name="StateInfo" time="14.803136862" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.805297821] <Event name="StateInfo" time="14.804988946" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.806629863] <Event name="StateInfo" time="14.806054113" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.871660744] <Event name="StateInfo" time="14.871320369" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.872396328] <Event name="StateInfo" time="14.872103494" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.963126545] <Event name="StateInfo" time="14.962843045" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.963695295] <Event name="StateInfo" time="14.963429003" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.98366863] <Event name="StateInfo" time="14.983309589" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.985007672] <Event name="StateInfo" time="14.984733214" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.991151339] <Event name="StateInfo" time="14.990800756" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.992408423] <Event name="StateInfo" time="14.992126673" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.994105923] <Event name="StateInfo" time="14.993831756" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.995375257] <Event name="StateInfo" time="14.995025257" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.996800048] <Event name="StateInfo" time="14.996529382" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.998114882] <Event name="StateInfo" time="14.997841882" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.999563882] <Event name="StateInfo" time="14.99931509" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.000833215] <Event name="StateInfo" time="15.000427507" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.002272882] <Event name="StateInfo" time="15.002024674" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.003468132] <Event name="StateInfo" time="15.002934091" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.005137633] <Event name="StateInfo" time="15.004827883" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.006357383] <Event name="StateInfo" time="15.005798549" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.018478467] <Event name="StateInfo" time="15.018180676" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.019411509] <Event name="StateInfo" time="15.019119842" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.021222759] <Event name="StateInfo" time="15.020974551" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.022439593] <Event name="StateInfo" time="15.022151134" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.023801093] <Event name="StateInfo" time="15.023540926" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.025110385] <Event name="StateInfo" time="15.02479626" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.026745468] <Event name="StateInfo" time="15.026486468" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.03014076] <Event name="StateInfo" time="15.02983801" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.03178751] <Event name="StateInfo" time="15.031444802" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.032404385] <Event name="StateInfo" time="15.032125844" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.033212302] <Event name="StateInfo" time="15.032950385" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.033781344] <Event name="StateInfo" time="15.033472177" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.034652261] <Event name="StateInfo" time="15.034341927" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.035336511] <Event name="StateInfo" time="15.034984761" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.036191969] <Event name="StateInfo" time="15.035927719" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.036816719] <Event name="StateInfo" time="15.036519511" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.037599261] <Event name="StateInfo" time="15.037341719" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.038191053] <Event name="StateInfo" time="15.037904636" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.039019386] <Event name="StateInfo" time="15.038765928" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.039606511] <Event name="StateInfo" time="15.039303469" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.040810511] <Event name="StateInfo" time="15.040383219" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.04137022] <Event name="StateInfo" time="15.041090803" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.042400678] <Event name="StateInfo" time="15.042123011" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.042919261] <Event name="StateInfo" time="15.04264597" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.043785512] <Event name="StateInfo" time="15.043521553" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.044302928] <Event name="StateInfo" time="15.044023512" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.04523597] <Event name="StateInfo" time="15.044900845" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.045807637] <Event name="StateInfo" time="15.045501678" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.046892345] <Event name="StateInfo" time="15.046643262" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.047443595] <Event name="StateInfo" time="15.047167387" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.04821097] <Event name="StateInfo" time="15.047944095" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.048783512] <Event name="StateInfo" time="15.048491845" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.049740762] <Event name="StateInfo" time="15.049260679" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.05033372] <Event name="StateInfo" time="15.050040887" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.051141054] <Event name="StateInfo" time="15.050885554" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.051758512] <Event name="StateInfo" time="15.051440596" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.052800929] <Event name="StateInfo" time="15.052500804" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.053403221] <Event name="StateInfo" time="15.053103971" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.054222804] <Event name="StateInfo" time="15.053971679" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.054779888] <Event name="StateInfo" time="15.054501638" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.055648763] <Event name="StateInfo" time="15.055373138" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.056224221] <Event name="StateInfo" time="15.055924388" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.057104179] <Event name="StateInfo" time="15.056816013" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.057677596] <Event name="StateInfo" time="15.057394096" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+FtcTeleOp.operatorButtonEvent_INFO [15.059240055] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [15.05973093] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [15.060282471] Stopping subsystems.
+Shooter.cancel_INFO [15.060749722] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [15.061552388] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [15.062268138] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [17.799249747] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [17.799914747] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=BLUE_ALLIANCE,inAuto=false,useAprilTagVision=true,useClassifierVision=false,numArtifactsToShoot=3,moveToNextExitSlot=true))
+TaskAutoShoot.startAutoTask_INFO [17.800450247] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [17.84677246] <Event name="StateInfo" time="17.846491876" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [17.847371835] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [17.854734086] <Event name="StateInfo" time="17.854205586" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [17.903322257] <Event name="StateInfo" time="17.903011049" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [17.904039174] <Event name="StateInfo" time="17.90370609" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [17.970349014] <Event name="StateInfo" time="17.970048889" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [17.971432847] <Event name="StateInfo" time="17.971084014" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.013822227] <Event name="StateInfo" time="18.013382393" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.014698685] <Event name="StateInfo" time="18.014243102" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.039404021] <Event name="StateInfo" time="18.039085812" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.041567604] <Event name="StateInfo" time="18.041224313" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.044527438] <Event name="StateInfo" time="18.044232855" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.046131313] <Event name="StateInfo" time="18.045812521" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.047522272] <Event name="StateInfo" time="18.04720873" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.048808813] <Event name="StateInfo" time="18.048474563" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.050373605] <Event name="StateInfo" time="18.050079605" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.05163098] <Event name="StateInfo" time="18.051314814" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.053217647] <Event name="StateInfo" time="18.052906147" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.054807814] <Event name="StateInfo" time="18.054472397" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.056216856] <Event name="StateInfo" time="18.055908856" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.057448856] <Event name="StateInfo" time="18.057116356" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.060024565] <Event name="StateInfo" time="18.059682439" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.061123565] <Event name="StateInfo" time="18.060796315" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.06198894] <Event name="StateInfo" time="18.06162669" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.062630606] <Event name="StateInfo" time="18.062301898" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.063640357] <Event name="StateInfo" time="18.06332944" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.064357273] <Event name="StateInfo" time="18.064020107" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.065177732] <Event name="StateInfo" time="18.064799732" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.065833398] <Event name="StateInfo" time="18.065492732" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.066676024] <Event name="StateInfo" time="18.066325148" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.06733869] <Event name="StateInfo" time="18.066984024" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.068938774] <Event name="StateInfo" time="18.068630774" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.069820482] <Event name="StateInfo" time="18.069457357" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.070738649] <Event name="StateInfo" time="18.070432691" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.072088482] <Event name="StateInfo" time="18.071699982" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.073164441] <Event name="StateInfo" time="18.072862858" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.074682566] <Event name="StateInfo" time="18.074205983" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.076193983] <Event name="StateInfo" time="18.0758749" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.077503275] <Event name="StateInfo" time="18.076915858" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.078951983] <Event name="StateInfo" time="18.078670816" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.080167942] <Event name="StateInfo" time="18.079819983" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.081515733] <Event name="StateInfo" time="18.081197525" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.082854775] <Event name="StateInfo" time="18.082255692" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.084233775] <Event name="StateInfo" time="18.083926067" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.085525859] <Event name="StateInfo" time="18.085196567" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.086866067] <Event name="StateInfo" time="18.086550192" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.088194609] <Event name="StateInfo" time="18.087829734" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.089739567] <Event name="StateInfo" time="18.089423401" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.090998693] <Event name="StateInfo" time="18.090639068" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.092511276] <Event name="StateInfo" time="18.092199776" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.093817651] <Event name="StateInfo" time="18.093188526" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.095258776] <Event name="StateInfo" time="18.094888943" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.096002235] <Event name="StateInfo" time="18.09565661" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.096849527] <Event name="StateInfo" time="18.096520235" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.09746086] <Event name="StateInfo" time="18.097140902" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.098466527] <Event name="StateInfo" time="18.098111568" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.099146402] <Event name="StateInfo" time="18.098785318" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.099894527] <Event name="StateInfo" time="18.099576902" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.100496527] <Event name="StateInfo" time="18.100165777" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.101257485] <Event name="StateInfo" time="18.10094161" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.101956027] <Event name="StateInfo" time="18.101548569" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.102729527] <Event name="StateInfo" time="18.102433486" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.103315194] <Event name="StateInfo" time="18.102994652" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.103993902] <Event name="StateInfo" time="18.103704277" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.104568777] <Event name="StateInfo" time="18.104250569" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.105665152] <Event name="StateInfo" time="18.105351611" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.106296319] <Event name="StateInfo" time="18.105981611" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.107031611] <Event name="StateInfo" time="18.106728861" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.107653736] <Event name="StateInfo" time="18.107326486" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.114846528] <Event name="StateInfo" time="18.11453357" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.115563737] <Event name="StateInfo" time="18.11522657" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.117344362] <Event name="StateInfo" time="18.117034029" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.11797232] <Event name="StateInfo" time="18.117656154" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.119849779] <Event name="StateInfo" time="18.119529237" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.120507196] <Event name="StateInfo" time="18.120177321" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.122356946] <Event name="StateInfo" time="18.122033196" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.122947863] <Event name="StateInfo" time="18.122651821" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.124132613] <Event name="StateInfo" time="18.123812363" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.124743654] <Event name="StateInfo" time="18.124418154" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.125578696] <Event name="StateInfo" time="18.125268946" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.126185363] <Event name="StateInfo" time="18.125851988" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.127612488] <Event name="StateInfo" time="18.127293113" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.128220613] <Event name="StateInfo" time="18.127872655" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.128997613] <Event name="StateInfo" time="18.128686696" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.129801447] <Event name="StateInfo" time="18.129462238" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.130521863] <Event name="StateInfo" time="18.130221447" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.13122303] <Event name="StateInfo" time="18.130889363" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.131993322] <Event name="StateInfo" time="18.131638947" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.13258978] <Event name="StateInfo" time="18.132251447" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.133332364] <Event name="StateInfo" time="18.133035447" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.133927364] <Event name="StateInfo" time="18.133612072" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.134694447] <Event name="StateInfo" time="18.134404239" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.135339614] <Event name="StateInfo" time="18.134964822" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.136027364] <Event name="StateInfo" time="18.135749114" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.136573656] <Event name="StateInfo" time="18.136279656" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.137323822] <Event name="StateInfo" time="18.136995989" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.137939239] <Event name="StateInfo" time="18.137614322" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.138788281] <Event name="StateInfo" time="18.138469781" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.139399031] <Event name="StateInfo" time="18.139070322" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.140168739] <Event name="StateInfo" time="18.139839156" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.140756739] <Event name="StateInfo" time="18.140437073" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.141470156] <Event name="StateInfo" time="18.141174698" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.142143614] <Event name="StateInfo" time="18.141819281" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.143390781] <Event name="StateInfo" time="18.143064406" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.144020781] <Event name="StateInfo" time="18.143676906" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.144808281] <Event name="StateInfo" time="18.144481031" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.145452865] <Event name="StateInfo" time="18.145119198" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.146254073] <Event name="StateInfo" time="18.145912823" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.146893407] <Event name="StateInfo" time="18.146550407" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.14939824] <Event name="StateInfo" time="18.148889282" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.150037282] <Event name="StateInfo" time="18.149710032" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.151563865] <Event name="StateInfo" time="18.151259365" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.15217724] <Event name="StateInfo" time="18.15185874" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.152889782] <Event name="StateInfo" time="18.152582657" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.153454449] <Event name="StateInfo" time="18.153146449" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.155900657] <Event name="StateInfo" time="18.155607824" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.156461824] <Event name="StateInfo" time="18.156144199" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.184779744] <Event name="StateInfo" time="18.184444327" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.185561119] <Event name="StateInfo" time="18.185235619" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.187415827] <Event name="StateInfo" time="18.187105202" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.189014452] <Event name="StateInfo" time="18.187753577" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.189862619] <Event name="StateInfo" time="18.189526911" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.190517703] <Event name="StateInfo" time="18.190183161" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.191289161] <Event name="StateInfo" time="18.190986119" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.191956494] <Event name="StateInfo" time="18.191589869" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.192701703] <Event name="StateInfo" time="18.192391953" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.193324411] <Event name="StateInfo" time="18.192998911" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.194116578] <Event name="StateInfo" time="18.193772995" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.194739286] <Event name="StateInfo" time="18.194398036" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.195563245] <Event name="StateInfo" time="18.195280912" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.196112745] <Event name="StateInfo" time="18.195813203" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.196823537] <Event name="StateInfo" time="18.19653012" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.197367203] <Event name="StateInfo" time="18.197074953" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.198133703] <Event name="StateInfo" time="18.197820162" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.19876662] <Event name="StateInfo" time="18.198434412" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.199465745] <Event name="StateInfo" time="18.19918487" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.200065704] <Event name="StateInfo" time="18.19974487" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.201078662] <Event name="StateInfo" time="18.200788745" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.201674829] <Event name="StateInfo" time="18.201351079" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.20248712] <Event name="StateInfo" time="18.202158704" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.203092912] <Event name="StateInfo" time="18.202756621" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.203823246] <Event name="StateInfo" time="18.203518162" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.204390537] <Event name="StateInfo" time="18.204079037" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.205124662] <Event name="StateInfo" time="18.204792746" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.205731621] <Event name="StateInfo" time="18.205405246" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.206453204] <Event name="StateInfo" time="18.206151038" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.207024871] <Event name="StateInfo" time="18.206719496" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.250356917] <Event name="StateInfo" time="18.250029084" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.251122542] <Event name="StateInfo" time="18.250780125" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.252416084] <Event name="StateInfo" time="18.252087375" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.254775376] <Event name="StateInfo" time="18.252747709" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.255749543] <Event name="StateInfo" time="18.255445626" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.257790918] <Event name="StateInfo" time="18.257470959" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.327932091] <Event name="StateInfo" time="18.327641883" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.329830258] <Event name="StateInfo" time="18.329501258" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.381997472] <Event name="StateInfo" time="18.381629097" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.382685805] <Event name="StateInfo" time="18.382370222" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.418510642] <Event name="StateInfo" time="18.417989142" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.419851142] <Event name="StateInfo" time="18.419542559" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.459756396] <Event name="StateInfo" time="18.45945773" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.46137223] <Event name="StateInfo" time="18.460491396" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.496737692] <Event name="StateInfo" time="18.496260233" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.4992504] <Event name="StateInfo" time="18.498656275" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.501059317] <Event name="StateInfo" time="18.500733234" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.501899317] <Event name="StateInfo" time="18.501375484" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.502862984] <Event name="StateInfo" time="18.502556734" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.504186276] <Event name="StateInfo" time="18.503877692" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.505602609] <Event name="StateInfo" time="18.505300443" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.506996484] <Event name="StateInfo" time="18.506609151" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.536244237] <Event name="StateInfo" time="18.535859237" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.538051988] <Event name="StateInfo" time="18.537690904" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.539607738] <Event name="StateInfo" time="18.539304404" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.540823696] <Event name="StateInfo" time="18.540499071" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.542298363] <Event name="StateInfo" time="18.541989196" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.543483696] <Event name="StateInfo" time="18.54316403" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.544793572] <Event name="StateInfo" time="18.544427822" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.546530155] <Event name="StateInfo" time="18.546160613" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.548172822] <Event name="StateInfo" time="18.54779103" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.549430197] <Event name="StateInfo" time="18.548885072" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.550182989] <Event name="StateInfo" time="18.549884322" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.550765739] <Event name="StateInfo" time="18.550463572" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.551502197] <Event name="StateInfo" time="18.551180489" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.553895322] <Event name="StateInfo" time="18.552293781" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.562871365] <Event name="StateInfo" time="18.562547323" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.563562615] <Event name="StateInfo" time="18.563214657" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.564597157] <Event name="StateInfo" time="18.564116782" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.566500865] <Event name="StateInfo" time="18.566109157" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.568243282] <Event name="StateInfo" time="18.567855949" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.569915116] <Event name="StateInfo" time="18.569120907" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.571506741] <Event name="StateInfo" time="18.571135449" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.572955158] <Event name="StateInfo" time="18.572626449" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.574458116] <Event name="StateInfo" time="18.574143991" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.575821658] <Event name="StateInfo" time="18.575433741" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.5773322] <Event name="StateInfo" time="18.576994741" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.578739492] <Event name="StateInfo" time="18.578345158" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.580264908] <Event name="StateInfo" time="18.579885158" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.580952367] <Event name="StateInfo" time="18.580591575" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.581875492] <Event name="StateInfo" time="18.581435659" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.582555659] <Event name="StateInfo" time="18.582197784" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.583524284] <Event name="StateInfo" time="18.583201117" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.584199201] <Event name="StateInfo" time="18.583868742" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.585024909] <Event name="StateInfo" time="18.584625909" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.589033868] <Event name="StateInfo" time="18.586832951" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.590784451] <Event name="StateInfo" time="18.590469159" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.592025785] <Event name="StateInfo" time="18.591584493" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.592757576] <Event name="StateInfo" time="18.59244141" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.593369201] <Event name="StateInfo" time="18.59302766" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.594264035] <Event name="StateInfo" time="18.593887785" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.59716991] <Event name="StateInfo" time="18.59650841" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.598612202] <Event name="StateInfo" time="18.598237702" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.599357994] <Event name="StateInfo" time="18.598970077" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.601272494] <Event name="StateInfo" time="18.600919869" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.601992911] <Event name="StateInfo" time="18.601593619" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.602768744] <Event name="StateInfo" time="18.602457536" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.603403994] <Event name="StateInfo" time="18.603062452" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.604159119] <Event name="StateInfo" time="18.603843244" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.604845994] <Event name="StateInfo" time="18.604416661" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.60908362] <Event name="StateInfo" time="18.608250328" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.610237745] <Event name="StateInfo" time="18.609426911" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.619139412] <Event name="StateInfo" time="18.618807204" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.619891621] <Event name="StateInfo" time="18.619550079" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.622109746] <Event name="StateInfo" time="18.621645121" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.622921163] <Event name="StateInfo" time="18.622595079" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.624326413] <Event name="StateInfo" time="18.623514704" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.625003663] <Event name="StateInfo" time="18.624655413" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.628009288] <Event name="StateInfo" time="18.627659288" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.628752455] <Event name="StateInfo" time="18.628360455" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.631688955] <Event name="StateInfo" time="18.63133633" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.633139122] <Event name="StateInfo" time="18.63210108" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.634891747] <Event name="StateInfo" time="18.634532414" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.635653289] <Event name="StateInfo" time="18.635301247" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.639784164] <Event name="StateInfo" time="18.639456039" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.641412248] <Event name="StateInfo" time="18.640960165" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.64317304] <Event name="StateInfo" time="18.642824206" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.644643332] <Event name="StateInfo" time="18.644311998" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.645816998] <Event name="StateInfo" time="18.645515998" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.646375248] <Event name="StateInfo" time="18.646066665" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.648213624] <Event name="StateInfo" time="18.64680954" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.649730582] <Event name="StateInfo" time="18.649409165" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.651118332] <Event name="StateInfo" time="18.650824041" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.651783916] <Event name="StateInfo" time="18.651419041" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.653203457] <Event name="StateInfo" time="18.652906541" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.653841333] <Event name="StateInfo" time="18.653497166" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.654901249] <Event name="StateInfo" time="18.654545708" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.655569749] <Event name="StateInfo" time="18.655223249" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.656371833] <Event name="StateInfo" time="18.656044874" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.657065416] <Event name="StateInfo" time="18.656654458" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.703783129] <Event name="StateInfo" time="18.703499629" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.704512296] <Event name="StateInfo" time="18.704162004" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.705394004] <Event name="StateInfo" time="18.705043129" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.706023713] <Event name="StateInfo" time="18.705698213" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.706759005] <Event name="StateInfo" time="18.706452171" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.707336796] <Event name="StateInfo" time="18.707009546" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.769805969] <Event name="StateInfo" time="18.769388302" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.770674844] <Event name="StateInfo" time="18.770217803" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.822690974] <Event name="StateInfo" time="18.822407474" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.823439975] <Event name="StateInfo" time="18.823088808" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.868108437] <Event name="StateInfo" time="18.867799271" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.869682563] <Event name="StateInfo" time="18.869379813" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.895282148] <Event name="StateInfo" time="18.894931273" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.898800815] <Event name="StateInfo" time="18.898487565" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.899946191] <Event name="StateInfo" time="18.899651899" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.900521649] <Event name="StateInfo" time="18.900213066" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.901309441] <Event name="StateInfo" time="18.901010191" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.902009441] <Event name="StateInfo" time="18.901633191" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.903035524] <Event name="StateInfo" time="18.902687566" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.903677191] <Event name="StateInfo" time="18.903337108" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.904520983] <Event name="StateInfo" time="18.904218816" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [18.905151566] ***** Vision timed out.
+TaskAutoShoot.autoTask_INFO [18.9064384] <Event name="StateInfo" time="18.906122525" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [18.907384275] <Event name="StateInfo" time="18.907059358" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [18.907957983] Stopping subsystems.
+Shooter.cancel_INFO [18.9084439] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [18.909534733] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [18.910237942] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [18.910803775] <Event name="StateInfo" time="18.910474192" tag="^^^^^" TaskAutoShoot.state="DONE" />
+FtcTeleOp.operatorButtonEvent_INFO [19.761508027] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [20.060666182] >>>>> Advance Spindexer exit position.
+Spindexer.exitSlotUp_INFO [20.061311641] ExitSlotUp: FromSlot=null, ToSlot=1
+Spindexer.moveToExitSlot_INFO [20.063490099] MoveToExitSlot: Slot=1, event=null
+Spindexer.Motor.acquireOwnership_INFO [20.085054185] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.operatorButtonEvent_INFO [20.421889844] >>>>> OperatorAltFunc=false
+FtcTeleOp.operatorButtonEvent_INFO [20.707954206] >>>>> OperatorAltFunc=true
+Spindexer.Motor.pidCtrlTask_INFO [20.719384332] controlMode: Position,onTarget=true(299.19444444444446/300.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [20.719482623] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [20.719969998] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [20.720695957] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [20.958013772] >>>>> Manual Shoot
+Spindexer.findSlot_INFO [20.959266773] find slot for Any (1=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [20.959952189] MoveToExitSlot: FromSlot=1, ToSlot=1, artifactType=Any
+Spindexer.moveToExitSlot_INFO [20.960411273] MoveToExitSlot: Slot=1, event=null
+Shooter.TiltMotor.acquireOwnership_INFO [20.973493107] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [21.216206465] controlMode: Position,onTarget=true(301.1388888888889/300.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [21.243020259] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [21.757948478] >>>>> OperatorAltFunc=false
+Shooter.ShootMotor1.pidCtrlTask_INFO [23.497005902] controlMode: Velocity,onTarget=true(78.0/79.16666666666667), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.shoot_INFO [23.499784903] shoot(owner=FtcTeleOp, event=(Shooter.shootCompletionEvent=CLEARED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [23.506138278] Enabling exit trigger: lowThreshold=4390.000000, highThreshold=5090.000000
+Shooter.Launcher.acquireOwnership_INFO [23.50885107] Acquired ownership on behalf of FtcTeleOp
+Intake.setPickupArtifactType_INFO [23.77229493] Expect to pick up artifact None
+Spindexer.setExitTriggerEnabled_INFO [23.772932805] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [23.773705139] Exit[1]: vel=0.000000, artifact=Green, numPurple=3, numGreen=0, numUnknown=0, expectedNext=None
+Spindexer.disableExitTrigger_INFO [23.780130264] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [23.78844189] Released ownership on behalf of FtcTeleOp
+Shooter.shootCompleted_INFO [24.038217373] Shoot completed, delay stopping shooter motor for 0.5s.
+Shooter.timedOut_INFO [24.539515424] Timed out: completion=true
+FtcTeleOp.operatorButtonEvent_INFO [26.958783917] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [27.307948619] >>>>> OperatorAltFunc=false
+FtcTeleOp.operatorButtonEvent_INFO [27.959924601] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [27.961121893] EntrySlotUp: FromSlot=null, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [27.962129309] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [27.981855311] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [28.610912416] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [28.610868666] controlMode: Position,onTarget=true(358.5/360.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [28.612761] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [28.614753667] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [28.707886634] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [28.70972326] EntrySlotUp: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [28.710910343] MoveToEntrySlot: Slot=1, event=null
+Spindexer.Motor.acquireOwnership_INFO [28.724264303] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [29.351138574] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [29.351063907] controlMode: Position,onTarget=true(480.0277777777777/480.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [29.351615449] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [29.352776574] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [29.807971162] >>>>> Backup Spindexer entry position.
+Spindexer.entrySlotDown_INFO [29.808777912] EntrySlotDown: FromSlot=1, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [29.80931662] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.acquireOwnership_INFO [29.82935908] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.operatorButtonEvent_INFO [30.30785317] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [30.407842055] >>>>> OperatorAltFunc=false
+FtcTeleOp.operatorButtonEvent_INFO [30.557972237] >>>>> OperatorAltFunc=true
+Spindexer.Motor.pidCtrlTask_INFO [30.558194195] controlMode: Position,onTarget=true(361.41666666666663/360.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [30.558883987] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [30.559480154] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [30.560922154] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [30.807923012] >>>>> Manual Shoot
+Spindexer.findSlot_INFO [30.809357137] find slot for Any (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [30.812330096] MoveToExitSlot: FromSlot=null, ToSlot=2, artifactType=Any
+Spindexer.moveToExitSlot_INFO [30.812885429] MoveToExitSlot: Slot=2, event=null
+Shooter.TiltMotor.acquireOwnership_INFO [30.827060139] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.operatorButtonEvent_INFO [31.208266761] >>>>> OperatorAltFunc=false
+Spindexer.Motor.pidCtrlTask_INFO [31.423265074] controlMode: Position,onTarget=true(418.7777777777777/420.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [31.423314074] intakeCompletionCallback(canceled=false)
+Shooter.ShootMotor1.pidCtrlTask_INFO [33.437377901] controlMode: Velocity,onTarget=true(78.0/79.16666666666667), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.shoot_INFO [33.43899986] shoot(owner=FtcTeleOp, event=(Shooter.shootCompletionEvent=CLEARED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [33.439855318] Enabling exit trigger: lowThreshold=4330.000000, highThreshold=5030.000000
+Shooter.Launcher.acquireOwnership_INFO [33.441383652] Acquired ownership on behalf of FtcTeleOp
+Intake.setPickupArtifactType_INFO [33.710223345] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [33.712605387] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [33.713749887] Exit[2]: vel=0.000000, artifact=Purple, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Spindexer.disableExitTrigger_INFO [33.719317805] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [33.730934306] Released ownership on behalf of FtcTeleOp
+Shooter.shootCompleted_INFO [33.978612122] Shoot completed, delay stopping shooter motor for 0.5s.
+Shooter.timedOut_INFO [34.480289923] Timed out: completion=true
+FtcTeleOp.operatorButtonEvent_INFO [37.959180314] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [38.558784624] >>>>> OperatorAltFunc=false
+FtcTeleOp.operatorButtonEvent_INFO [38.958066414] >>>>> Advance Spindexer entry position.
+Spindexer.entrySlotUp_INFO [38.958684456] EntrySlotUp: FromSlot=null, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [38.959728039] MoveToEntrySlot: Slot=1, event=null
+Spindexer.Motor.acquireOwnership_INFO [38.984280834] Acquired ownership on behalf of FtcTeleOp
+Spindexer.Motor.pidCtrlTask_INFO [39.61419223] controlMode: Position,onTarget=true(478.08333333333326/480.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [39.64580715] Released ownership on behalf of FtcTeleOp
+Spindexer.Motor.releaseOwnership_INFO [39.646700817] Signal completion event (Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [39.64823265] intakeCompletionCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [39.953704514] >>>>> OperatorAltFunc=true
+FtcTeleOp.operatorButtonEvent_INFO [40.16065866] >>>>> Manual Shoot
+Spindexer.findSlot_INFO [40.162538452] find slot for Any (0=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [40.164602286] MoveToExitSlot: FromSlot=null, ToSlot=0, artifactType=Any
+Spindexer.moveToExitSlot_INFO [40.166213744] MoveToExitSlot: Slot=0, event=null
+Shooter.TiltMotor.acquireOwnership_INFO [40.186689038] Acquired ownership on behalf of FtcTeleOp
+FtcTeleOp.operatorButtonEvent_INFO [40.707908798] >>>>> OperatorAltFunc=false
+Shooter.ShootMotor1.pidCtrlTask_INFO [42.502745145] controlMode: Velocity,onTarget=true(79.0/79.16666666666667), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.shoot_INFO [42.504663729] shoot(owner=FtcTeleOp, event=(Shooter.shootCompletionEvent=CLEARED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [42.506212479] Enabling exit trigger: lowThreshold=4390.000000, highThreshold=5090.000000
+Shooter.Launcher.acquireOwnership_INFO [42.510054021] Acquired ownership on behalf of FtcTeleOp
+Intake.setPickupArtifactType_INFO [42.795474383] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [42.796862717] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [42.79828605] Exit[0]: vel=0.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [42.802727551] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [42.912001937] Released ownership on behalf of FtcTeleOp
+Shooter.shootCompleted_INFO [43.061540618] Shoot completed, delay stopping shooter motor for 0.5s.
+Shooter.timedOut_INFO [43.621152758] Timed out: completion=true
+Spindexer.Motor.pidCtrlTask_INFO [44.338541997] controlMode: Position,onTarget=true(540.3055555555555/540.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [44.379515917] intakeCompletionCallback(canceled=false)
+Robot.cancelAll_INFO [59.74964817] Cancel all operations.
+Spindexer.cancel_INFO [59.757442088] cancel(owner=null)
+Shooter.cancel_INFO [59.758833046] owner=null
+TaskAutoShoot.cancel_INFO [59.760012254] Canceling auto task operation.
+TrcDigitalInput.getInput.printElapsedTime_INFO [59.760614838] TrcDigitalInput.getInput: avgElapsed=0.0025096495317725753, minElapsed=8.2834E-5, maxElapsed=0.020954502
+TrcMotor.getPos.printElapsedTime_INFO [59.761235213] TrcMotor.getPos: avgElapsed=9.335286001308288E-5, minElapsed=3.208E-6, maxElapsed=0.016193043
+TrcMotor.setPower.printElapsedTime_INFO [59.761914213] TrcMotor.setPower: avgElapsed=9.745540312195122E-4, minElapsed=4.083E-6, maxElapsed=0.021445668
+TrcMotor.setVel.printElapsedTime_INFO [59.762415588] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [59.762862713] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [59.763969296] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [59.764753588] TrcServo.setPos: avgElapsed=0.005112188, minElapsed=0.003268708, maxElapsed=0.006799918
+Robot.stopMode_INFO [59.765240963] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [59.766314005] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [59.767058338] Disabling ArtifactVision.
+Robot.stopMode_INFO [59.767580422] Disabling ClassifierVision.
+FtcTeleOp.stopMode_INFO [59.771382881] ***** Stopping TeleOp: 20251102@125914 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.773175756] FtcDashboard.task: STANDALONE_TASK=0.00831320055237581/0.016118198501079914
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.773847756] TrcWatchdogMgr: STANDALONE_TASK=1.1082365E-4/0.9837870794
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.774708173] flDriveMotor.pidCtrlTask: OUTPUT_TASK=1.7041811624286454E-4/0.031003168246497147
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.775939298] frDriveMotor.pidCtrlTask: OUTPUT_TASK=7.064917384535548E-5/0.031003139185781004
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.776843756] blDriveMotor.pidCtrlTask: OUTPUT_TASK=8.278733264141152E-5/0.031003115876491957
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.777900464] brDriveMotor.pidCtrlTask: OUTPUT_TASK=4.743965594187857E-5/0.031003097108458742
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.77903709] flSteerEncoder.converterTask: INPUT_TASK=0.004504224678256357/0.030990909466528282
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.78000834] frSteerEncoder.converterTask: INPUT_TASK=0.0027559301629475866/0.03099400594654904
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.780960632] blSteerEncoder.converterTask: INPUT_TASK=4.9252007265179034E-5/0.030998076415153085
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.781979715] brSteerEncoder.converterTask: INPUT_TASK=3.081919200830306E-5/0.03099793913336793
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.782821465] flSteerServo.pidCtrlTask: OUTPUT_TASK=0.0028582630804359107/0.031003062598339386
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.783435132] frSteerServo.pidCtrlTask: OUTPUT_TASK=0.0024761505116761805/0.03100554638245978
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.784379257] blSteerServo.pidCtrlTask: OUTPUT_TASK=0.002978996005708355/0.031007935869226778
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.785509174] brSteerServo.pidCtrlTask: OUTPUT_TASK=0.002307382640373638/0.03101030840477426
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.786507257] TrcSwerveDriveBase.odometryTask: INPUT_TASK=0.008155690472481826/0.03099230336967809
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.788973007] TrcSwerveDriveBase.absOdoHeadingWrap.converterTask: INPUT_TASK=2.2324991177996885E-5/0.031003428582252204
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.789876007] StatusLED: OUTPUT_TASK=5.894257109496627E-4/0.0310123505256876
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.790543341] Spindexer1LED: OUTPUT_TASK=2.3027094499221586E-4/0.031010677263622208
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.791151174] Spindexer2LED: OUTPUT_TASK=3.668354078879087E-4/0.031011135272963154
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.791787883] Spindexer3LED: OUTPUT_TASK=3.244785893042575E-4/0.03102815838317757
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.792566924] Intake.Motor.pidCtrlTask: OUTPUT_TASK=1.1774468847352026E-5/0.03099486870353063
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.793114091] Spindexer.EntrySensor.trigger.triggerTask: PRE_PERIODIC_TASK=0.014547324609756097/0.13356115163414634
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.793917049] Spindexer.ShootVelTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=3.041823342210386E-4/0.025670564996005327
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.794517883] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.001341335628956928/0.031012817919045147
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.795263966] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=1.5047338090295795E-4/0.031008781051894137
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.795842633] Shooter.TiltEncoder.converterTask: INPUT_TASK=6.026087908666321E-5/0.03100328948417229
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.796416925] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=3.4594832797093925E-4/0.031008752142708877
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.796990925] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=4.692506860404774E-4/0.031008737763881678
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.797774925] TaskAutoShoot: POST_PERIODIC_TASK=0.0016592337772511848/0.010377283560821484
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.798698633] DriverGamepad.buttonEventTask: PRE_PERIODIC_TASK=6.35750815803786E-6/5.235716130721591E-4
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [59.799413508] OperatorGamepad.buttonEventTask: PRE_PERIODIC_TASK=5.57883419007351E-6/5.23570341479675E-4
+FtcOpMode.printPerformanceMetrics_INFO [59.801157675] [FtcTeleOp] Main robot thread average elapsed times:
+       robotInit=2.597081s
+    initPeriodic=NaNs
+       startMode=0.000428s
+    loopInterval=0.000524s (1909.813Hz)
+             sdk=0.000028s
+ prePeriodicTask=0.000094s
+        periodic=0.000243s
+postPeriodicTask=0.000075s
+         loopSum=0.000496s
+        stopMode=0.000000s
