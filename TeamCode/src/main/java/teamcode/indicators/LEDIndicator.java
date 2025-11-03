@@ -197,6 +197,25 @@ public class LEDIndicator
             }
         }
     }   //setDriveOrientation
+    /**
+     * This method sets the motif pattern on the status LED.
+     *
+     * @param motifPattern specifies the motif pattern to set.
+     */
+    public void setMotifPattern(Vision.ArtifactType[] motifPattern)
+    {
+        for (int i = 0; i < 3; i++) {
+            switch (motifPattern[i]) {
+                case Purple:
+                    spindexerIndicators[i].setPatternState(PURPLE_BLOB, true);
+                    break;
+
+                case Green:
+                    spindexerIndicators[i].setPatternState(GREEN_BLOB, true);
+                    break;
+            }
+        }
+    }
 
     /**
      * This method sets the statusLED pattern ON or OFF.

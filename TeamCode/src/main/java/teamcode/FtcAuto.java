@@ -246,6 +246,7 @@ public class FtcAuto extends FtcOpMode
                     }
                 }
                 robot.obeliskMotif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
+                robot.ledIndicator.setMotifPattern(robot.obeliskMotif);
             }
         }
     }   //initPeriodic
