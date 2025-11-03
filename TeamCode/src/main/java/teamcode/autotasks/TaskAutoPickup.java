@@ -25,7 +25,7 @@ package teamcode.autotasks;
 import androidx.annotation.NonNull;
 
 import teamcode.Robot;
-import teamcode.subsystems.LEDIndicator;
+import teamcode.indicators.LEDIndicator;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
@@ -207,15 +207,15 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     tracer.traceInfo(moduleName, "***** Not using Vision, manual pickup.");
                     sm.setState(State.PICKUP_OBJ);
                 }
-                else if (robot.vision != null && robot.vision.purpleBlobVision != null)
+                else if (robot.vision != null && robot.vision.artifactVision != null)
                 {
-                    tracer.traceInfo(moduleName, "***** Using ColorBlob Vision.");
+                    tracer.traceInfo(moduleName, "***** Using Artifact Vision.");
                     visionExpiredTime = null;
                     sm.setState(State.FIND_OBJ);
                 }
                 else
                 {
-                    tracer.traceInfo(moduleName, "***** Using ColorBlob Vision but Vision is not enabled.");
+                    tracer.traceInfo(moduleName, "***** Using Artifact Vision but Vision is not enabled.");
                     sm.setState(State.DONE);
                 }
                 break;
@@ -223,13 +223,18 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
             case FIND_OBJ:
                 // Use vision to determine the appropriate AprilTag location.
                 TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> object =
-                    robot.vision.purpleBlobVision.getBestDetectedTargetInfo(
-                        null, null, 0.0, robot.robotInfo.webCam1.camZOffset);
+                    robot.vision.artifactVision.getBestDetectedTargetInfo(
+                        null, null, robot.vision::compareDistanceY, 0.0, robot.robotInfo.webCam1.camPose.z);
                 if (object != null)
                 {
                     objPose = object.detectedObj.getObjectPose();
                     tracer.traceInfo(
                         moduleName, "***** Vision found object: objPose=" + objPose);
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setStatusVisionPatternsOff();
+                        robot.ledIndicator.setStatusPattern(object.detectedObj.label, true);
+                    }
                     sm.setState(State.PICKUP_OBJ);
                 }
                 else if (visionExpiredTime == null)
@@ -241,10 +246,11 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                 {
                     // Timed out, moving on.
                     tracer.traceInfo(moduleName, "***** No object found.");
-                    if (robot.ledIndicator1 != null)
+                    if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator1.setDetectedPattern(LEDIndicator.NOT_FOUND);
+                        robot.ledIndicator.setStatusVisionPatternsOff();
+                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
                     }
                     sm.setState(State.DONE);
                 }

@@ -22,17 +22,25 @@
 
 package teamcode.subsystems;
 
+import teamcode.Robot;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
+import teamcode.RobotParams;
+import teamcode.vision.Vision;
 import trclib.robotcore.TrcEvent;
+import trclib.sensor.TrcTrigger;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
+import trclib.vision.TrcOpenCvColorBlobPipeline;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
- * This class implements an Intake Subsystem. This implementation consists of one or two motors and optionally a
- * front and/or back digital sensor(s) that can detect object entering/exiting the intake.
+ * This class implements an Intake Subsystem. This implementation consists of one motor but no sensor of its own.
+ * It does have two triggers, one front and one back. The front trigger is triggered by vision detecting if there is
+ * a correct color artifact in front of it. The back trigger is triggered by the entry sensor of the spindexer so
+ * it can stop the Intake.
  */
 public class Intake extends TrcSubsystem
 {
@@ -41,67 +49,58 @@ public class Intake extends TrcSubsystem
         public static final String SUBSYSTEM_NAME               = "Intake";
         public static final boolean NEED_ZERO_CAL               = false;
 
-        public static final boolean HAS_TWO_MOTORS              = false;
-        public static final boolean HAS_FRONT_SENSOR            = true;
-        public static final boolean HAS_BACK_SENSOR             = true;
+        public static final boolean HAS_FRONT_TRIGGER           = true;
+        public static final boolean HAS_BACK_TRIGGER            = true;
 
-        public static final String PRIMARY_MOTOR_NAME           = SUBSYSTEM_NAME + ".primary";
-        public static final MotorType PRIMARY_MOTOR_TYPE        = MotorType.DcMotor;
-        public static final boolean PRIMARY_MOTOR_INVERTED      = true;
+        public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
+        public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
+        public static final boolean MOTOR_INVERTED              = true;
 
-        public static final String FOLLOWER_MOTOR_NAME          = SUBSYSTEM_NAME + ".follower";
-        public static final MotorType FOLLOWER_MOTOR_TYPE       = MotorType.DcMotor;
-        public static final boolean FOLLOWER_MOTOR_INVERTED     = !PRIMARY_MOTOR_INVERTED;
-
-        public static final String FRONT_SENSOR_NAME            = SUBSYSTEM_NAME + ".frontSensor";
-        public static final boolean FRONT_SENSOR_INVERTED       = false;
-
-        public static final String BACK_SENSOR_NAME             = SUBSYSTEM_NAME + ".backSensor";
-        public static final boolean BACK_SENSOR_INVERTED        = false;
+        public static final String FRONT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".FrontTrigger";
+        public static final String BACK_TRIGGER_NAME             = SUBSYSTEM_NAME + ".BackTrigger";
 
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
-        public static final double EJECT_POWER                  = 1.0;  // Eject forward
+        public static final double EJECT_POWER                  = -1.0;
         public static final double RETAIN_POWER                 = 0.0;
-        public static final double INTAKE_FINISH_DELAY          = 0.0;
+        public static final double INTAKE_FINISH_DELAY          = 1.0;
         public static final double EJECT_FINISH_DELAY           = 0.5;
     }   //class Params
 
     private final FtcDashboard dashboard;
+    private final Robot robot;
     private final TrcRollerIntake intake;
+    private Vision.ArtifactType pickupArtifactType = Vision.ArtifactType.Any;
+    private String detectedArtifactName = null;
+    private boolean bulldozeEnabled = false;
 
     /**
      * Constructor: Creates an instance of the object.
+     *
+     * @param robot specifies the robot object to access the other subsystems.
      */
-    public Intake()
+    public Intake(Robot robot)
     {
         super(Params.SUBSYSTEM_NAME, Params.NEED_ZERO_CAL);
 
-        dashboard = FtcDashboard.getInstance();
+        this.dashboard = FtcDashboard.getInstance();
+        this.robot = robot;
         FtcRollerIntake.Params intakeParams = new FtcRollerIntake.Params()
-            .setPrimaryMotor(Params.PRIMARY_MOTOR_NAME, Params.PRIMARY_MOTOR_TYPE, Params.PRIMARY_MOTOR_INVERTED)
+            .setPrimaryMotor(Params.MOTOR_NAME, Params.MOTOR_TYPE, Params.MOTOR_INVERTED)
             .setPowerLevels(Params.INTAKE_POWER, Params.EJECT_POWER, Params.RETAIN_POWER)
             .setFinishDelays(Params.INTAKE_FINISH_DELAY, Params.EJECT_FINISH_DELAY);
 
-        if (Params.HAS_TWO_MOTORS)
+        if (Params.HAS_FRONT_TRIGGER)
         {
-            intakeParams.setFollowerMotor(
-                Params.FOLLOWER_MOTOR_NAME, Params.FOLLOWER_MOTOR_TYPE, Params.FOLLOWER_MOTOR_INVERTED);
+            intakeParams.setFrontDigitalSourceTrigger(
+                Params.FRONT_TRIGGER_NAME, this::visionDetectedArtifact, TriggerAction.StartOnTrigger,
+                TrcTrigger.TriggerMode.OnActive, this::frontTriggerCallback, null);
         }
 
-        if (Params.HAS_FRONT_SENSOR)
+        if (Params.HAS_BACK_TRIGGER)
         {
-            // TODO: Create a DigitalState trigger providing a method to call vision to detect the correct artifact.
-//            intakeParams.setFrontDigitalInputTrigger(
-//                Params.FRONT_SENSOR_NAME, Params.FRONT_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null,
-//                null);
-        }
-
-        if (Params.HAS_BACK_SENSOR)
-        {
-            // TODO: Create a DigitalState trigger providing a method to call spindexer to detect if the "slot" has
-            // captured an artifact.
-//            intakeParams.setBackDigitalInputTrigger(
-//                Params.BACK_SENSOR_NAME, Params.BACK_SENSOR_INVERTED, TriggerAction.FinishOnTrigger, null, null, null);
+            intakeParams.setBackDigitalSourceTrigger(
+                Params.BACK_TRIGGER_NAME, this::spindexerEntryHasArtifact, TriggerAction.FinishOnTrigger,
+                null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
     }   //Intake
@@ -115,6 +114,111 @@ public class Intake extends TrcSubsystem
     {
         return intake;
     }   //getIntake
+
+    /**
+     * This method is called by the Intake front trigger periodically using vision to detect the correct artifact type
+     * to be picked up. Spindexer is responsible for calling setPickupArtifactType to specify whether vision should
+     * look for purple artifact, green artifact, any artifact or None.
+     *
+     * @return true if vision found the specified artifact type, false otherwise.
+     */
+    private boolean visionDetectedArtifact()
+    {
+        boolean artifactDetected = false;
+
+        if (robot.vision != null && robot.vision.artifactVision != null &&
+            pickupArtifactType != Vision.ArtifactType.None)
+        {
+            TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo =
+                robot.vision.artifactVision.getBestDetectedTargetInfo(
+                    robot.vision::artifactFilter, pickupArtifactType, robot.vision::compareDistanceY, 0.0,
+                    robot.robotInfo.webCam1.camPose.z);
+            artifactDetected = artifactInfo != null;
+            detectedArtifactName = artifactDetected? artifactInfo.detectedObj.label: null;
+        }
+
+        return artifactDetected;
+    }   //visionDetectedArtifact
+
+    /**
+     * This method is called when the front sensor is triggered.
+     * While vision kept finding correct objects, it will keep calling this method and keep enabling the spindexer
+     * entry trigger. That's okay because it does no harm enabling a trigger that's already enabled. It will just
+     * be ignored.
+     *
+     * @param context (not used).
+     * @param canceled specifies if the trigger is disabled.
+     */
+    private void frontTriggerCallback(Object context, boolean canceled)
+    {
+        // Vision found the artifact we want. Enable Spindexer entry trigger preparing to receive it.
+        intake.tracer.traceInfo(instanceName, "Vision found artifact " + detectedArtifactName);
+        if (!canceled && robot.spindexer != null)
+        {
+            robot.spindexer.setEntryTriggerEnabled(true);
+        }
+    }   //frontTriggerCallback
+
+    /**
+     * This method is called by the Intake back trigger periodically using the spindexer entry sensor to detect if the
+     * artifact has entered the spindexer, so it can stop the Intake.
+     *
+     * @return true if spindexer entry sensor has detected the artifact, false otherwise.
+     */
+    private boolean spindexerEntryHasArtifact()
+    {
+        return robot.spindexer != null && robot.spindexer.isEntrySensorActive();
+    }   //spindexerEntryHasArtifact
+
+    /**
+     * This method is called by the Spindexer to set the artifact type to pick up. This is according to what artifacts
+     * are already in the Spindexer. It will ask for Any artifact if Spindexer is empty or has one Purple artifact.
+     * It will ask for Purple if it has one or two vacant slots and already has a Green. It will ask for None if
+     * Spindexer is full.
+     *
+     * @param artifactType specifies the artifact to pick up.
+     */
+    public void setPickupArtifactType(Vision.ArtifactType artifactType)
+    {
+        pickupArtifactType = artifactType;
+        intake.tracer.traceInfo(instanceName, "Expect to pick up artifact " + pickupArtifactType);
+    }   //setPickupArtifactType
+
+    /**
+     * This method enables/disable Bulldoze intake of artifacts. When enabled, it turns on manual intake and also
+     * turns on Spindexer auto receive.
+     *
+     * @param enabled specifies true to enable and false to disable.
+     */
+    public void setBulldozeIntakeEnabled(boolean enabled)
+    {
+        boolean intakeOn = intake.isActive();
+
+        if (!intakeOn && enabled)
+        {
+            // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
+            intake.intake();
+            robot.spindexerSubsystem.setAutoReceiveEnabled(true);
+            bulldozeEnabled = true;
+        }
+        else if (intakeOn && !enabled)
+        {
+            // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
+            intake.cancel();
+            robot.spindexerSubsystem.setAutoReceiveEnabled(false);
+            bulldozeEnabled = false;
+        }
+    }   //setBulldozeIntakeEnabled
+
+    /**
+     * This method checks if Bulldoze mode is enabled.
+     *
+     * @return true if bulldoze mode is enabled, false if disabled.
+     */
+    public boolean isBulldozeEnabled()
+    {
+        return bulldozeEnabled;
+    }   //isBulldozeEnabled
 
     //
     // Implements TrcSubsystem abstract methods.
@@ -160,27 +264,39 @@ public class Intake extends TrcSubsystem
     @Override
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showIntakeStatus)
         {
-            dashboard.displayPrintf(
-                lineNum++, "%s: power=%.3f, current=%.3f, hasObject=%s, sensorState=%s/%s, autoActive=%s",
-                Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.hasObject(),
-                intake.getFrontTriggerState(), intake.getBackTriggerState(), intake.isAutoActive());
+            if (slowLoop)
+            {
+                dashboard.displayPrintf(
+                    lineNum++, "%s: power=%.1f, current=%.1f, front/back=%s/%s, auto=%s",
+                    Params.SUBSYSTEM_NAME, intake.getPower(), intake.getCurrent(), intake.getFrontTriggerState(),
+                    intake.getBackTriggerState(), intake.isAutoActive());
+//                dashboard.displayPrintf(
+//                    lineNum++, "%s: artifact(detected/expected)=%s/%s",
+//                    Params.SUBSYSTEM_NAME, detectedArtifactName, pickupArtifactType);
+            }
         }
 
         return lineNum;
     }   //updateStatus
 
     /**
-     * This method is called to prep the subsystem for tuning.
-     *
-     * @param subComponent specifies the sub-component of the Subsystem to be tuned, can be null if no sub-component.
-     * @param tuneParams specifies tuning parameters.
+     * This method is called to update subsystem parameter to the Dashboard.
      */
     @Override
-    public void prepSubsystemForTuning(String subComponent, double... tuneParams)
+    public void updateParamsToDashboard()
     {
         // Intake subsystem doesn't need tuning.
-    }   //prepSubsystemForTuning
+    }   //updateParamsToDashboard
+
+    /**
+     * This method is called to update subsystem parameters from the Dashboard.
+     */
+    @Override
+    public void updateParamsFromDashboard()
+    {
+        // Intake subsystem doesn't need tuning.
+    }   //updateParamsFromDashboard
 
 }   //class Intake

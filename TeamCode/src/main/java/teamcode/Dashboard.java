@@ -24,9 +24,17 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import trclib.controller.TrcPidController;
-import trclib.subsystem.TrcSubsystem;
-import trclib.timer.TrcTimer;
+import teamcode.autotasks.TaskAutoShoot;
+import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.Shooter;
+import teamcode.subsystems.Spindexer;
+import teamcode.vision.Vision;
+import trclib.drivebase.TrcDriveBase;
+import trclib.drivebase.TrcSwerveDriveBase;
+import trclib.driverio.TrcGameController;
+import trclib.motor.TrcMotor;
+import trclib.motor.TrcServo;
+import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 
 /**
@@ -34,79 +42,56 @@ import trclib.vision.TrcOpenCvColorBlobPipeline;
  */
 public class Dashboard
 {
-    private static Double nextDashboardUpdateTime =  null;
-
-    /**
-     * This method is called periodically to update various hardware/subsystem status of the robot to the dashboard
-     * and trace log. In order to lower the potential impact these updates, this method will only update the dashboard
-     * at DASHBOARD_UPDATE_INTERVAL.
-     *
-     * @param robot specifies the robot object.
-     * @param lineNum specifies the first Dashboard line for printing status.
-     * @return next available dashboard line.
-     */
-    public static int updateDashboard(Robot robot, int lineNum)
+    @Config
+    public static class DashboardParams
     {
-        double currTime = TrcTimer.getCurrentTime();
-        boolean slowLoop = nextDashboardUpdateTime == null || currTime >= nextDashboardUpdateTime;
-
-        if (slowLoop)
-        {
-            nextDashboardUpdateTime = currTime + RobotParams.Robot.DASHBOARD_UPDATE_INTERVAL;
-        }
-
-        if (RobotParams.Preferences.showDriveBase)
-        {
-            lineNum = robot.robotBase.updateStatus(lineNum, slowLoop);
-        }
-
-        if (RobotParams.Preferences.showVision && robot.vision != null)
-        {
-            lineNum = robot.vision.updateStatus(lineNum, slowLoop);
-        }
-
-        if (RobotParams.Preferences.showSubsystems)
-        {
-            lineNum = TrcSubsystem.updateStatusAll(lineNum, slowLoop);
-        }
-
-        return lineNum;
-    }   //updateDashboard
+        public static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
+        public static String tuneSubsystemName = "";
+        public static FtcAuto.AutoChoices autoChoices = FtcAuto.autoChoices;
+    }   //class DashboardParams
 
     @Config
-    public static class Vision
+    public static class Subsystem_Drivebase
     {
-        public static double[] colorThresholds = new double[6];
-        public static TrcOpenCvColorBlobPipeline.FilterContourParams filterContourParams =
-            new TrcOpenCvColorBlobPipeline.FilterContourParams();
-    }   //class Vision
+        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
+        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
+        public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
+        public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
+        public static double driveSlowScale = 0.3;
+        public static double driveNormalScale = 0.6;
+        public static double turnSlowScale = 0.2;
+        public static double turnNormalScale = 0.3;
+        public static double steerPowerCompConstant = 0.0;
+    }   //class Subsystem_Drivebase
 
     @Config
-    public static class Drive
+    public static class Subsystem_Vision
     {
-        public static double xTarget = 0.0;
-        public static double yTarget = 0.0;
-        public static double turnTarget = 0.0;
-        public static double drivePower = 1.0;
-        public static double turnPower = 1.0;
-        public static double driveTime = 0.0;
-        public static TrcPidController.PidCoefficients xPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static TrcPidController.PidCoefficients yPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static TrcPidController.PidCoefficients turnPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
-        public static double maxVelocity = 0.0;
-        public static double maxAcceleration = 0.0;
-        public static double maxDeceleration = 0.0;
-    }   //class Drive
+        public static int[] trackedAprilTagIds = new int[] {20, 24};
+        public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
+        public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
+    }   //class Subsystem_Vision
 
     @Config
-    public static class Subsystem
+    public static class Subsystem_Shooter
     {
-        public static String subsystemName = "";
-        // 7 doubles: Kp, Ki, Kd, Kf, iZone, PIDTolerance, GravityCompPower
-        public static double[] tuneParams = new double[7];
-    }   //class Subsystem
+        public static boolean tuneShootingTable = false;
+        public static double shootMotor1Velocity = 2000.0;  // in RPM
+        public static double tiltAngle = 26.0;              // in degrees
+        public static TaskAutoShoot.TaskParams autoShootParams = TaskAutoShoot.autoShootParams;
+        public static TrcMotor.PidParams shootMotor1Pid = Shooter.shootMotor1PidParams;
+        public static TrcMotor.PidParams shootMotor2Pid = Shooter.shootMotor1PidParams;
+        public static TrcMotor.PidParams panMotorPid = Shooter.panMotorPidParams;
+        public static TrcMotor.PidParams tiltMotorPid = Shooter.tiltMotorPidParams;
+        public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
+    }   //class Subsystem_Shooter
+
+    @Config
+    public static class Subsystem_Spindexer
+    {
+        public static TrcMotor.PidParams motorPid = Spindexer.motorPidParams;
+        public static TrcTriggerThresholdRange.TriggerParams entryTrigger = Spindexer.entryTriggerParams;
+        public static TrcTriggerThresholdRange.TriggerParams exitTrigger = Spindexer.exitTriggerParams;
+    }   //class Subsystem_Spindexer
 
 }   //class Dashboard

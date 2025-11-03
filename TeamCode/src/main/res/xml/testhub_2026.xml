@@ -22,43 +22,35 @@ SOFTWARE.
 -->
 <Robot type="FirstInspires-FTC" name="TestHub2026">
     <!--
-    <Webcam name="Webcam 1" serialNumber="13F45DDF"/>
-    -->
     <EthernetDevice name="Limelight3a" serialNumber="EthernetOverUsb:eth0:172.29.0.21" port="0" ipAddress="172.29.0.1" />
     <Webcam name="Webcam 1" serialNumber="VendorProduct:vendor=0x045e|product=0x0779|connection="/>
+    -->
+    <Webcam name="Webcam 1" serialNumber="945CD8AF" />
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <LynxModule name="Control Hub" port="173">
-            <goBILDA5202SeriesMotor name="Shooter.shooterMotor1" port="0"/>
-            <goBILDA5202SeriesMotor name="Intake.primary" port="1"/>
-            <DigitalDevice name="Intake.backSensor" port="0" />
-            <Servo name="Shooter.launcher" port="5" />
+            <!-- Shooter -->
             <!--
-            <RevBlinkinLedDriver name="blinkin" port="0" />
-            <Servo name="gobildaLED" port="1" />
-            <DigitalDevice name="Elbow.lowerLimit" port="1" />
-            <DigitalDevice name="Extender.lowerLimit" port="3" />
-            <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
-            <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
-            <RevColorSensorV3 name="Grabber.sensor" port="0" bus="2" />
-            <REV_VL53L0X_RANGE_SENSOR name="ServoGrabber.sensor" port="0" bus="1"/>
-            <SparkFunOTOS name="sparkfunOtos" port="0" bus="1"/>
-            <OctoQuadFTC name="octoquad" port="0" bus="1"/>
+            <goBILDA5202SeriesMotor name="Shooter.ShooterMotor1" port="0"/>
+            <Servo name="Shooter.Launcher" port="5" />
+            -->
+            <!-- Intake -->
+            <!--
+            <goBILDA5202SeriesMotor name="Intake.Motor" port="1"/>
+            -->
+            <!-- Spindexer -->
+            <!--
+            <RevRobotics40HDHexMotor name="Spindexer.Motor" port="2" />
+            <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="1" />
+            <RevColorSensorV3 name="Spindexer.ExitSensor" port="0" bus="2" />
+            <DigitalDevice name="Spindexer.LowerLimit" port="0" />
+            -->
+            <!-- LED Indicators -->
+            <!--
+            <RevBlinkinLedDriver name="StatusLED" port="0" />
+            <Servo name="Spindexer1LED" port="1" />
+            <Servo name="Spindexer2LED" port="2" />
+            <Servo name="Spindexer3LED" port="3" />
             -->
         </LynxModule>
-        <!--
-        <LynxModule name="Expansion Hub 2" port="2">
-            <goBILDA5202SeriesMotor name="lfDriveMotor" port="1"/>
-            <goBILDA5202SeriesMotor name="lbDriveMotor" port="2"/>
-            <Servo name="Wrist.primary" port="0" />
-            <Servo name="Wrist.servo2" port="0" />
-            <Servo name="Wrist.servo1" port="3" />
-            <ContinuousRotationServo name="Grabber.primary" port="4" />
-            <ContinuousRotationServo name="Grabber.follower" port="5" />
-            <RevColorSensorV3 name="Grabber.sensor" port="0" bus="2" />
-            <Servo name="Grabber.primary" port="2" />
-            <Servo name="Grabber.follower" port="3" />
-            <LynxEmbeddedIMU name="imu" port="0" bus="0"/>
-        </LynxModule>
-        -->
     </LynxUsbDevice>
 </Robot>

@@ -22,39 +22,29 @@
 
 package teamcode.vision;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfDouble;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 
 import ftclib.drivebase.FtcRobotDrive;
+import ftclib.driverio.FtcDashboard;
 import ftclib.robotcore.FtcOpMode;
-import ftclib.vision.FtcCameraStreamProcessor;
 import ftclib.vision.FtcEocvColorBlobProcessor;
 import ftclib.vision.FtcLimelightVision;
-import ftclib.vision.FtcRawEocvColorBlobPipeline;
-import ftclib.vision.FtcRawEocvVision;
 import ftclib.vision.FtcVision;
 import ftclib.vision.FtcVisionAprilTag;
 import ftclib.vision.FtcVisionEocvColorBlob;
-import teamcode.Dashboard;
+import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
-import teamcode.subsystems.LEDIndicator;
-import trclib.dataprocessor.TrcUtil;
+import teamcode.indicators.LEDIndicator;
 import trclib.pathdrive.TrcPose2D;
-import trclib.pathdrive.TrcPose3D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
@@ -70,140 +60,148 @@ public class Vision
 {
     private final String moduleName = getClass().getSimpleName();
 
-    /**
-     * This class contains the parameters of the front camera.
-     */
-    public static class FrontCamParams extends FtcRobotDrive.VisionInfo
-    {
-        public FrontCamParams()
-        {
-            camName = "Webcam 1";
-            camImageWidth = 640;
-            camImageHeight = 480;
-            camXOffset = 0.0;                   // Inches to the right from robot center
-            camYOffset = 0.0;                   // Inches forward from robot center
-            camZOffset = 11.25;                 // Inches up from the floor
-            camYaw = 0.0;                      // degrees clockwise from robot forward
-            camPitch = -32.346629699;           // degrees up from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-            camOrientation = OpenCvCameraRotation.UPRIGHT;
-            // Homography: cameraRect in pixels, worldRect in inches
-            cameraRect = new TrcHomographyMapper.Rectangle(
+    // Lens properties for various cameras.
+    private static final TrcOpenCvDetector.LensInfo logitechC920At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(622.001, 622.001, 319.803, 241.251)
+            .setDistortionCoefficents(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
+    private static final TrcOpenCvDetector.LensInfo logitechC270At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(822.317, 822.317, 319.495, 242.502)
+            .setDistortionCoefficents(-0.0449369, 1.17277, 0, 0, -3.63244, 0, 0, 0);
+    private static final TrcOpenCvDetector.LensInfo lifeCamHD3000At640x480 =
+        new TrcOpenCvDetector.LensInfo()
+            .setLensProperties(678.154, 678.170, 318.135, 228.374)
+            .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
+
+    // Front camera properties
+    public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Webcam 1", 320, 240)
+        .setCameraPose(0.0, 8.75, 11.0, 0.0, 0.0, 0.0)
+        .setLensProperties(lifeCamHD3000At640x480)
+        .setHomographyParams(
+            new TrcHomographyMapper.Rectangle(
                 14.0, 28.0,                     // Camera Top Left
                 612.0, 33.0,                    // Camera Top Right
                 56.0, 448.0,                    // Camera Bottom Left
-                581.0, 430.5);                  // Camera Bottom Right
-            worldRect = new TrcHomographyMapper.Rectangle(
+                581.0, 430.5),                  // Camera Bottom Right
+            new TrcHomographyMapper.Rectangle(
                 -19.0, 37.5,                    // World Top Left
                 24.0, 37.5,                     // World Top Right
                 -4.75, 9.0,                     // World Bottom Left
-                6.25, 9.0);                     // World Bottom Right
-        }   //FrontCamParams
-    }   //class FrontCamParams
+                6.25, 9.0));                    // World Bottom Right
+    // Limelight camera properties
+    public static final int NUM_LIMELIGHT_PIPELINES = 2;
+    public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Limelight3a", 640, 480)
+        .setCameraFOV(54.5, 42.0)
+        .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
 
-    /**
-     * This class contains the parameters of the back camera.
-     */
-    public static class BackCamParams extends FtcRobotDrive.VisionInfo
+    public enum ArtifactType
     {
-        public BackCamParams()
+        None,
+        Purple,
+        Green,
+        Unknown,
+        Any
+    }   //enum ArtifactType
+
+    public enum LimelightPipelineType
+    {
+        APRIL_TAG(0),
+        ARTIFACT(1);
+
+        public final int value;
+        LimelightPipelineType(int value)
         {
-            camName = "Webcam 2";
-            camImageWidth = 640;
-            camImageHeight = 480;
-            camXOffset = 0.0;                   // Inches to the right from robot center
-            camYOffset = 2.0;                   // Inches forward from robot center
-            camZOffset = 9.75;                  // Inches up from the floor
-            camYaw = 0.0;                       // degrees clockwise from robot front
-            camPitch = 15.0;                    // degrees down from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-            camOrientation = OpenCvCameraRotation.UPRIGHT;
-            // Homography: cameraRect in pixels, worldRect in inches
-            cameraRect = new TrcHomographyMapper.Rectangle(
-                0.0, 120.0,                                             // Camera Top Left
-                camImageWidth -1, 120.0,                                // Camera Top Right
-                0.0, camImageHeight - 1,                                // Camera Bottom Left
-                camImageWidth - 1, camImageHeight - 1);                 // Camera Bottom Right
-            worldRect = new TrcHomographyMapper.Rectangle(
-                -12.5626, 48.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,   // World Top Left
-                11.4375, 44.75 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,   // World Top Right
-                -2.5625, 21.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset,    // World Bottom Left
-                2.5626, 21.0 - RobotParams.Robot.ROBOT_LENGTH/2.0 - camYOffset);    // World Bottom Right
-        }   //BackCamParams
-    }   //class BackCamParams
-
-    /**
-     * This class contains the parameters of the Limelight vision processor.
-     */
-    public static class LimelightParams extends FtcRobotDrive.VisionInfo
-    {
-        public static final int NUM_PIPELINES = 4;
-
-        public LimelightParams()
-        {
-            camName = "Limelight3a";
-            camImageWidth = 640;
-            camImageHeight = 480;
-            camHFov = 54.5;                             // in degrees
-            camVFov = 42.0;                             // in degrees
-            camXOffset = 135.47*TrcUtil.INCHES_PER_MM;  // Inches to the right from robot center
-            camYOffset = 2.073;                         // Inches forward from robot center
-            camZOffset = 10.758;                        // Inches up from the floor
-            camYaw = -3.438;                            // degrees clockwise from robot front
-            camPitch = 0.0;                             // degrees down from horizontal
-            camRoll = 0.0;
-            camPose = new TrcPose3D(camXOffset, camYOffset, camZOffset, camYaw, camPitch, camRoll);
-        }   //LimelightParams
-    }   //class LimelightParams
-
-    public enum ColorBlobType
-    {
-        PurpleArtifact,
-        GreenArtifact,
-        AnyArtifact
-    }   //enum ColorBlobType
+            this.value = value;
+        }
+    }   //enum LimelightPipelineType
 
     // Warning: EOCV converts camera stream to RGBA whereas Desktop OpenCV converts it to BGRA. Therefore, the correct
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
     //
-    // YCrCb Color Space.
-    private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purpleBlobColorThresholds = {0.0, 180.0, 80.0, 150.0, 150.0, 200.0};
-    private static final double[] greenBlobColorThresholds = {100.0, 250.0, 120.0, 200.0, 60.0, 90.0};
-    public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterContourParams =
+//    // YCrCb Color Space.
+//    private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
+//        TrcOpenCvColorBlobPipeline.ColorConversion.RGBToYCrCb;
+//    private static final double[] purpleThresholdsLow = {80.0, 139.0, 120.0};
+//    private static final double[] purpleThresholdsHigh = {180.0, 160.0, 150.0};
+//    private static final double[] greenThresholdsLow = {70.0, 40.0, 100.0};
+//    private static final double[] greenThresholdsHigh = {220.0, 118.0, 145.0};
+    // HSV Color Space.
+    private static final TrcOpenCvColorBlobPipeline.ColorConversion colorConversion =
+        TrcOpenCvColorBlobPipeline.ColorConversion.RGBToHSV;
+    private static final double[] purpleThresholdsLow = {120.0, 60.0, 100.0};
+    private static final double[] purpleThresholdsHigh = {170.0, 255.0, 255.0};
+    private static final double[] greenThresholdsLow = {50.0, 70.0, 100.0};
+    private static final double[] greenThresholdsHigh = {100.0, 255.0, 255.0};
+    public static final TrcOpenCvColorBlobPipeline.FilterContourParams artifactFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(400.0)
-            .setMinPerimeter(80.0)
-            .setWidthRange(20.0, 500.0)
-            .setHeightRange(20.0, 500.0)
+            .setMinArea(50.0)
+            .setMinPerimeter(20.0)
+            .setWidthRange(10.0, 500.0)
+            .setHeightRange(10.0, 500.0)
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
-            .setAspectRatioRange(0.8, 1.25);
-    private static final double objectWidth = 5.0;
-    private static final double objectHeight = 5.0;
-    // Logitech C920
-    private static final double fx = 622.001;
-    private static final double fy = 622.001;
-    private static final double cx = 319.803;
-    private static final double cy = 241.251;
-    private static final MatOfDouble distCoeffs = new MatOfDouble(0.1208, -0.261599, 0, 0, 0.10308, 0, 0, 0);
+            .setAspectRatioRange(0.5, 2.0);
+    public static final TrcOpenCvColorBlobPipeline.FilterContourParams classifierBlobFilterParams =
+        new TrcOpenCvColorBlobPipeline.FilterContourParams()
+            .setMinArea(200.0)
+            .setMinPerimeter(50.0)
+            .setWidthRange(20.0, 250.0)
+            .setHeightRange(10.0, 60.0)
+            .setSolidityRange(0.0, 100.0)
+            .setVerticesRange(0.0, 1000.0)
+            .setAspectRatioRange(0.05, 20.0);
+    private static final double artifactWidth = 5.0;  // inches
+    private static final double artifactHeight = 5.0; // inches
+
+    private static final int CLASSIFIER_ROI_LEFT = 0;
+    private static final int CLASSIFIER_ROI_TOP = 0;
+    private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
+    private static final int CLASSIFIER_ROI_BOTTOM = 90;
+    private static final double RECT_ANGLE_THRESHOLD = 3.0;
+    private static final double ONE_BALL_THRESHOLD = 3.0;
+    private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
+    private static final double THREE_BALL_THRESHOLD = 3 * ONE_BALL_THRESHOLD;
+    private static final double FOUR_BALL_THRESHOLD = 4 * ONE_BALL_THRESHOLD;
+    private static final double FIVE_BALL_THRESHOLD = 5 * ONE_BALL_THRESHOLD;
+    private static final double SIX_BALL_THRESHOLD = 6 * ONE_BALL_THRESHOLD;
+    private static final double SEVEN_BALL_THRESHOLD = 7 * ONE_BALL_THRESHOLD;
+    private static final double EIGHT_BALL_THRESHOLD = 8 * ONE_BALL_THRESHOLD;
+    // Create the pipeline parameters for both purple and green artifacts here so that Dashboard can access them.
+    public static final TrcOpenCvColorBlobPipeline.PipelineParams artifactPipelineParams =
+        new TrcOpenCvColorBlobPipeline.PipelineParams()
+            .setAnnotation(false, false)
+            .setColorConversion(colorConversion)
+            .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
+            .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
+            .buildColorThresholdSets()
+            .setCircleDetection(10.0)
+            .setCircleBlur(true, 9)
+            .setFilterContourParams(true, artifactFilterParams);
+    public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
+        new TrcOpenCvColorBlobPipeline.PipelineParams()
+            .setAnnotation(true, false)
+            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
+            .setColorConversion(colorConversion)
+            .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
+            .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
+            .buildColorThresholdSets()
+            .setFilterContourParams(true, classifierBlobFilterParams);
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
-    private FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
-    public FtcRawEocvVision rawColorBlobVision;
     public FtcLimelightVision limelightVision;
-    private FtcCameraStreamProcessor cameraStreamProcessor;
     public FtcVisionAprilTag aprilTagVision;
     private AprilTagProcessor aprilTagProcessor;
-    public FtcVisionEocvColorBlob purpleBlobVision;
-    private FtcEocvColorBlobProcessor purpleBlobProcessor;
-    public FtcVisionEocvColorBlob greenBlobVision;
-    private FtcEocvColorBlobProcessor greenBlobProcessor;
-    public FtcVision vision;
+    public FtcVisionEocvColorBlob artifactVision;
+    private FtcEocvColorBlobProcessor artifactProcessor;
+    public FtcVisionEocvColorBlob classifierVision;
+    private FtcEocvColorBlobProcessor classifierProcessor;
+    public FtcVision ftcVision;
+    private FtcAuto.Alliance alliance = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -214,77 +212,32 @@ public class Vision
     {
         FtcOpMode opMode = FtcOpMode.getInstance();
 
-        if (robot.robotInfo.webCam1 == null &&
-            (RobotParams.Preferences.useWebCam || RobotParams.Preferences.tuneColorBlobVision))
+        if (robot.robotInfo.webCam1 == null && RobotParams.Preferences.useWebCam)
         {
             throw new IllegalArgumentException("Must provide valid WebCam 1 info.");
         }
 
         this.tracer = new TrcDbgTrace();
         this.robot = robot;
-        webcam1 = robot.robotInfo.webCam1 != null?
+
+        webcam1 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam1 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
-        webcam2 = robot.robotInfo.webCam2 != null?
+        webcam2 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam2 != null?
             opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
-        Mat cameraMatrix = new Mat(3, 3, CvType.CV_64FC1);
-        cameraMatrix.put(0, 0,
-                         fx, 0, cx,
-                         0, fy, cy,
-                         0, 0, 1);
-        // TuneColorBlobVision: must use webcam1.
-        if (RobotParams.Preferences.tuneColorBlobVision && webcam1 != null)
+        // LimelightVision (not a Vision Processor).
+        if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
-            OpenCvCamera openCvCamera;
-
-            if (RobotParams.Preferences.showVisionView)
-            {
-                int cameraViewId = opMode.hardwareMap.appContext.getResources().getIdentifier(
-                    "cameraMonitorViewId", "id", opMode.hardwareMap.appContext.getPackageName());
-                openCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcam1, cameraViewId);
-            }
-            else
-            {
-                openCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcam1);
-            }
-
-            if (RobotParams.Preferences.useCameraStreamProcessor)
-            {
-                com.acmerobotics.dashboard.FtcDashboard.getInstance().startCameraStream(openCvCamera, 0);
-            }
-
-            tracer.traceInfo(moduleName, "Starting RawEocvColorBlobVision...");
-            rawColorBlobPipeline = new FtcRawEocvColorBlobPipeline(
-                "rawColorBlobPipeline", colorConversion, Dashboard.Vision.colorThresholds,
-                Dashboard.Vision.filterContourParams, true, objectWidth, objectHeight,
-                RobotParams.Preferences.useSolvePnp? cameraMatrix: null, distCoeffs, robot.robotInfo.webCam1.camPose);
-            // By default, display original Mat.
-            rawColorBlobPipeline.setVideoOutput(0);
-            rawColorBlobPipeline.enableAnnotation(false);
-            rawColorBlobVision = new FtcRawEocvVision(
-                "rawColorBlobVision", robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                null, null,
-                openCvCamera, robot.robotInfo.webCam1.camOrientation);
-            rawColorBlobVision.setFpsMeterEnabled(RobotParams.Preferences.showVisionStat);
-            setRawColorBlobVisionEnabled(false);
+            tracer.traceInfo(moduleName, "Starting LimelightVision...");
+            limelightVision = new FtcLimelightVision(
+                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
+                this::getLimelightTargetGroundOffset);
+            setLimelightPipeline(LimelightPipelineType.APRIL_TAG);
         }
-        else
+
+        if (webcam1 != null || webcam2 != null)
         {
-            // LimelightVision (not a Vision Processor).
-            if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
-            {
-                limelightVision = new FtcLimelightVision(
-                    robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose, this::getTargetGroundOffset);
-                limelightVision.setPipeline(0);
-            }
             // Creating Vision Processors for VisionPortal.
             ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
-
-            if (RobotParams.Preferences.useCameraStreamProcessor)
-            {
-                cameraStreamProcessor = new FtcCameraStreamProcessor();
-                visionProcessorsList.add(cameraStreamProcessor);
-                com.acmerobotics.dashboard.FtcDashboard.getInstance().startCameraStream(cameraStreamProcessor, 0);
-            }
 
             if (RobotParams.Preferences.useWebcamAprilTagVision)
             {
@@ -300,38 +253,42 @@ public class Vision
                 visionProcessorsList.add(aprilTagProcessor);
             }
 
-            if (RobotParams.Preferences.useColorBlobVision && robot.robotInfo.webCam1 != null)
+            if (robot.robotInfo.webCam1 != null)
             {
-                Mat camMatrix;
-                TrcHomographyMapper.Rectangle camRect, worldRect;
-
-                if (RobotParams.Preferences.useSolvePnp)
+                if (RobotParams.Preferences.useArtifactVision)
                 {
-                    camMatrix = cameraMatrix;
-                    camRect = null;
-                    worldRect = null;
+                    tracer.traceInfo(moduleName, "Starting Webcam ArtifactVision...");
+                    TrcOpenCvColorBlobPipeline.SolvePnpParams solvePnpParams = null;
+                    if (RobotParams.Preferences.useSolvePnp)
+                    {
+                        solvePnpParams =
+                            new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(
+                                artifactWidth, artifactHeight);
+                        if (robot.robotInfo.webCam1.lensInfo != null)
+                        {
+                            solvePnpParams.setSolvePnpParams(
+                                robot.robotInfo.webCam1.lensInfo, robot.robotInfo.webCam1.camPose);
+                        }
+                    }
+
+                    artifactVision = new FtcVisionEocvColorBlob(
+                        "ArtifactVision", artifactPipelineParams, solvePnpParams,
+                        robot.robotInfo.webCam1.cameraRect, robot.robotInfo.webCam1.worldRect);
+                    artifactProcessor = artifactVision.getVisionProcessor();
+                    visionProcessorsList.add(artifactProcessor);
+                    //                artifactProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
                 }
-                else
+
+                if (RobotParams.Preferences.useClassifierVision)
                 {
-                    camMatrix = null;
-                    camRect = robot.robotInfo.webCam1.cameraRect;
-                    worldRect = robot.robotInfo.webCam1.worldRect;
+                    tracer.traceInfo(moduleName, "Starting Webcam ClassifierVision...");
+                    classifierVision = new FtcVisionEocvColorBlob(
+                        "ClassifierVision", classifierPipelineParams, null, robot.robotInfo.webCam1.cameraRect,
+                        robot.robotInfo.webCam1.worldRect);
+                    classifierProcessor = classifierVision.getVisionProcessor();
+                    visionProcessorsList.add(classifierProcessor);
+                    //                classifierProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
                 }
-
-                tracer.traceInfo(moduleName, "Starting Webcam ColorBlobVision...");
-                purpleBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.PURPLE_BLOB, colorConversion, purpleBlobColorThresholds, artifactFilterContourParams,
-                    true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false);
-                purpleBlobProcessor = purpleBlobVision.getVisionProcessor();
-                visionProcessorsList.add(purpleBlobProcessor);
-
-                greenBlobVision = new FtcVisionEocvColorBlob(
-                    LEDIndicator.GREEN_BLOB, colorConversion, greenBlobColorThresholds, artifactFilterContourParams,
-                    true, objectWidth, objectHeight, camMatrix, distCoeffs, robot.robotInfo.webCam1.camPose, camRect,
-                    worldRect, true, false);
-                greenBlobProcessor = greenBlobVision.getVisionProcessor();
-                visionProcessorsList.add(greenBlobProcessor);
             }
 
             if (!visionProcessorsList.isEmpty())
@@ -341,29 +298,20 @@ public class Vision
                 if (RobotParams.Preferences.useWebCam)
                 {
                     // Use USB webcams.
-                    vision = new FtcVision(
+                    ftcVision = new FtcVision(
                         webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
-                        RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
-                        visionProcessors);
-                }
-                else
-                {
-                    // Use phone camera.
-                    vision = new FtcVision(
-                        RobotParams.Preferences.useBuiltinCamBack?
-                            BuiltinCameraDirection.BACK: BuiltinCameraDirection.FRONT,
-                        robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
                         RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
                         visionProcessors);
                 }
 
                 // Disable all vision until they are needed.
-                for (VisionProcessor processor: visionProcessors)
+                for (VisionProcessor processor : visionProcessors)
                 {
-                    vision.setProcessorEnabled(processor, false);
+                    ftcVision.setProcessorEnabled(processor, false);
                 }
             }
         }
+        FtcDashboard.getInstance().addStatusUpdate(moduleName, this::updateStatus);
     }   //Vision
 
     /**
@@ -371,9 +319,9 @@ public class Vision
      */
     public void close()
     {
-        if (vision != null)
+        if (ftcVision != null)
         {
-            vision.close();
+            ftcVision.close();
         }
     }   //close
 
@@ -384,13 +332,9 @@ public class Vision
      */
     public void setFpsMeterEnabled(boolean enabled)
     {
-        if (rawColorBlobVision != null)
+        if (ftcVision != null)
         {
-            rawColorBlobVision.setFpsMeterEnabled(enabled);
-        }
-        else if (vision != null)
-        {
-            vision.setFpsMeterEnabled(enabled);
+            ftcVision.setFpsMeterEnabled(enabled);
         }
     }   //setFpsMeterEnabled
 
@@ -421,7 +365,7 @@ public class Vision
      */
     public WebcamName getActiveWebcam()
     {
-        return vision.getActiveWebcam();
+        return ftcVision.getActiveWebcam();
     }   //getActiveWebcam
 
     /**
@@ -431,7 +375,7 @@ public class Vision
      */
     public void setActiveWebcam(WebcamName webcam)
     {
-        vision.setActiveWebcam(webcam);
+        ftcVision.setActiveWebcam(webcam);
     }   //setActiveWebcam
 
     /**
@@ -441,10 +385,10 @@ public class Vision
      */
     public void displayExposureSettings(int lineNum)
     {
-        long[] exposureSetting = vision.getExposureSetting();
-        long currExposure = vision.getCurrentExposure();
-        int[] gainSetting = vision.getGainSetting();
-        int currGain = vision.getCurrentGain();
+        long[] exposureSetting = ftcVision.getExposureSetting();
+        long currExposure = ftcVision.getCurrentExposure();
+        int[] gainSetting = ftcVision.getGainSetting();
+        int currGain = ftcVision.getCurrentGain();
 
         if (exposureSetting != null && gainSetting != null)
         {
@@ -455,101 +399,22 @@ public class Vision
     }   //displayExposureSettings
 
     /**
-     * This method returns the color threshold values of rawColorBlobVision.
-     *
-     * @return array of color threshold values.
-     */
-    public double[] getRawColorBlobThresholds()
-    {
-        return rawColorBlobPipeline != null? rawColorBlobPipeline.getColorThresholds(): null;
-    }   //getRawColorBlobThresholds
-
-    /**
-     * This method sets the color threshold values of rawColorBlobVision.
-     *
-     * @param colorThresholds specifies an array of color threshold values.
-     */
-    public void setRawColorBlobThresholds(double... colorThresholds)
-    {
-        if (rawColorBlobPipeline != null)
-        {
-            rawColorBlobPipeline.setColorThresholds(colorThresholds);
-        }
-    }   //setRawColorBlobThresholds
-
-    /**
-     * This method enables/disables raw ColorBlob vision.
-     *
-     * @param enabled specifies true to enable, false to disable.
-     */
-    public void setRawColorBlobVisionEnabled(boolean enabled)
-    {
-        if (rawColorBlobVision != null)
-        {
-            rawColorBlobVision.setPipeline(enabled? rawColorBlobPipeline: null);
-        }
-    }   //setRawColorBlobVisionEnabled
-
-    /**
-     * This method checks if raw ColorBlob vision is enabled.
-     *
-     * @return true if enabled, false if disabled.
-     */
-    public boolean isRawColorBlobVisionEnabled()
-    {
-        return rawColorBlobVision != null && rawColorBlobVision.getPipeline() != null;
-    }   //isRawColorBlobVisionEnabled
-
-    /**
-     * This method calls RawColorBlob vision to detect the color blob for color threshold tuning.
-     *
-     * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
-     * @return detected raw color blob object info.
-     */
-    public TrcVisionTargetInfo<TrcOpenCvDetector.DetectedObject<?>> getDetectedRawColorBlob(int lineNum)
-    {
-        TrcVisionTargetInfo<TrcOpenCvDetector.DetectedObject<?>> colorBlobInfo =
-            rawColorBlobVision != null? rawColorBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0): null;
-
-        if (cameraStreamProcessor != null && colorBlobInfo != null)
-        {
-            cameraStreamProcessor.addRectInfo(
-                colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
-        }
-
-        if (colorBlobInfo != null && robot.ledIndicator1 != null)
-        {
-            robot.ledIndicator1.setDetectedPattern(colorBlobInfo.detectedObj.label);
-        }
-
-        if (lineNum != -1)
-        {
-            robot.dashboard.displayPrintf(
-                lineNum, "RawColorBlob: %s, heading=%.3f",
-                colorBlobInfo != null? colorBlobInfo: "Not found.",
-                robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): 0.0);
-        }
-
-        return colorBlobInfo;
-    }   //getDetectedRawColorBlob
-
-    /**
      * This method enables/disables Limelight vision for the specified pipeline.
      *
-     * @param pipelineIndex specifies the limelight pipeline index to be selected, ignore if disabled.
+     * @param pipelineType specifies the limelight pipeline type to be selected, ignore if disabled.
      * @param enabled specifies true to enable, false to disable.
      */
-    public void setLimelightVisionEnabled(int pipelineIndex, boolean enabled)
+    public void setLimelightVisionEnabled(LimelightPipelineType pipelineType, boolean enabled)
     {
         if (limelightVision != null)
         {
             if (enabled)
             {
-                limelightVision.setPipeline(pipelineIndex);
+                setLimelightPipeline(pipelineType);
             }
             limelightVision.setVisionEnabled(enabled);
-            tracer.traceInfo(moduleName, "Pipeline %d is %s: running=%s",
-                             pipelineIndex, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
+            tracer.traceInfo(moduleName, "Pipeline %s is %s: running=%s",
+                             pipelineType, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
         }
     }   //setLimelightVisionEnabled
 
@@ -564,15 +429,31 @@ public class Vision
     }   //isLimelightVisionEnabled
 
     /**
+     * This method sets the Limelight pipeline.
+     *
+     * @param pipelineType specifies the pipeline type.
+     */
+    public void setLimelightPipeline(LimelightPipelineType pipelineType)
+    {
+        if (limelightVision != null && limelightVision.isVisionEnabled())
+        {
+            limelightVision.setPipeline(pipelineType.value);
+            limelightVision.setStatusResultType(
+                pipelineType == LimelightPipelineType.APRIL_TAG? FtcLimelightVision.ResultType.Fiducial:
+                pipelineType == LimelightPipelineType.ARTIFACT? FtcLimelightVision.ResultType.Python: null);
+        }
+    }   //setLimelightPipeline
+
+    /**
      * This method calls Limelight vision to detect the object.
      *
      * @param resultType specifies the result type to look for.
-     * @param label specifies the detected object label, can be null to match any label.
+     * @param matchIds specifies the object ID(s) to match for, null if no matching required.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, String label, int lineNum)
+        FtcLimelightVision.ResultType resultType, Object matchIds, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
 
@@ -582,14 +463,15 @@ public class Vision
             int pipelineIndex = -1;
             Double robotHeading = robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): null;
 
-            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, label, robotHeading, null);
+            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, null);
             if (limelightInfo != null)
             {
                 pipelineIndex = limelightVision.getPipeline();
                 switch (pipelineIndex)
                 {
                     case 0:
-                        objectName = LEDIndicator.APRIL_TAG;
+                        objectName = (int)limelightInfo.detectedObj.objId == 20?
+                            LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
                         break;
 
                     case 1:
@@ -605,15 +487,16 @@ public class Vision
                 }
             }
 
-            if (objectName != null && robot.ledIndicator1 != null)
+            if (objectName != null && robot.ledIndicator != null)
             {
-                robot.ledIndicator1.setDetectedPattern(objectName);
+                robot.ledIndicator.setStatusVisionPatternsOff();
+                robot.ledIndicator.setStatusPattern(objectName, true);
             }
 
             if (lineNum != -1)
             {
                 robot.dashboard.displayPrintf(
-                    lineNum, "%s(%d): %s",
+                    lineNum, "%s(pipeline=%d): %s",
                     objectName, pipelineIndex, limelightInfo != null? limelightInfo: "Not found.");
             }
         }
@@ -631,7 +514,7 @@ public class Vision
     {
         if (processor != null)
         {
-            vision.setProcessorEnabled(processor, enabled);
+            ftcVision.setProcessorEnabled(processor, enabled);
         }
     }   //setVisionProcessorEnabled
 
@@ -643,31 +526,8 @@ public class Vision
      */
     public boolean isVisionProcessorEnabled(VisionProcessor processor)
     {
-        return processor != null && vision.isVisionProcessorEnabled(processor);
+        return processor != null && ftcVision.isVisionProcessorEnabled(processor);
     }   //isVisionProcessorEnabled
-
-    /**
-     * This method enables/disables the CameraStream processor.
-     *
-     * @param enabled specifies true to enable, false to disable.
-     */
-    public void setCameraStreamEnabled(boolean enabled)
-    {
-        if (vision != null && cameraStreamProcessor != null)
-        {
-            cameraStreamProcessor.setCameraStreamEnabled(vision, enabled);
-        }
-    }   //setCameraStreamEnabled
-
-    /**
-     * This method checks if the CameraStream processor is enabled.
-     *
-     * @return true if enabled, false if disabled.
-     */
-    public boolean isCameraStreamEnabled()
-    {
-        return cameraStreamProcessor != null && cameraStreamProcessor.isCameraStreamEnabled();
-    }   //isAprilTagVisionEnabled
 
     /**
      * This method enables/disables AprilTag vision.
@@ -701,22 +561,18 @@ public class Vision
         TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo =
             aprilTagVision.getBestDetectedTargetInfo(id, null);
 
-        if (cameraStreamProcessor != null && aprilTagInfo != null)
+        if (aprilTagInfo != null && robot.ledIndicator != null)
         {
-            cameraStreamProcessor.addRectInfo(
-                Integer.toString(aprilTagInfo.detectedObj.aprilTagDetection.id),
-                                 aprilTagInfo.detectedObj.getRotatedRectVertices());
-        }
-
-        if (aprilTagInfo != null && robot.ledIndicator1 != null)
-        {
-            robot.ledIndicator1.setDetectedPattern(LEDIndicator.APRIL_TAG);
+            robot.ledIndicator.setStatusVisionPatternsOff();
+            robot.ledIndicator.setStatusPattern(
+                aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
+                    LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG, true);
         }
 
         if (lineNum != -1)
         {
             robot.dashboard.displayPrintf(
-                lineNum, "%s: %s", LEDIndicator.APRIL_TAG, aprilTagInfo != null? aprilTagInfo : "Not found.");
+                lineNum, "AprilTag[%s]: %s", id, aprilTagInfo != null ? aprilTagInfo : "Not found.");
         }
 
         return aprilTagInfo;
@@ -738,8 +594,8 @@ public class Vision
                 RobotParams.Game.APRILTAG_POSES[aprilTagInfo.detectedObj.aprilTagDetection.id - 1];
             TrcPose2D cameraPose = aprilTagPose.subtractRelativePose(aprilTagInfo.objPose);
             robotPose = cameraPose.subtractRelativePose(
-                new TrcPose2D(robot.robotInfo.webCam1.camXOffset, robot.robotInfo.webCam1.camYOffset,
-                              robot.robotInfo.webCam1.camYaw));
+                new TrcPose2D(robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
+                              robot.robotInfo.webCam1.camPose.yaw));
             tracer.traceInfo(
                 moduleName,
                 "AprilTagId=" + aprilTagInfo.detectedObj.aprilTagDetection.id +
@@ -787,174 +643,465 @@ public class Vision
     }   //getRobotFieldPose
 
     /**
-     * This method enables/disables vision for the specified color blob type.
+     * This method enables/disables the Dashboard Streaming of the specified ColorBlob processor.
      *
-     * @param colorBlobType specifies the color blob type to be detected.
-     * @param enabled specifies true to enable, false to disable.
+     * @param processor specifies the ColorBlob processor to have the Dashboard stream enabled/disabled.
+     * @param enabled specifies true to enable stream, false to disable.
      */
-    public void setColorBlobVisionEnabled(ColorBlobType colorBlobType, boolean enabled)
+    public void setDashboardStreamEnabled(FtcEocvColorBlobProcessor processor, boolean enabled)
     {
-        switch (colorBlobType)
+        if (RobotParams.Preferences.streamWebcamToDashboard)
         {
-            case PurpleArtifact:
-                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
-                break;
-
-            case GreenArtifact:
-                setVisionProcessorEnabled(greenBlobProcessor, enabled);
-                break;
-
-            case AnyArtifact:
-                setVisionProcessorEnabled(purpleBlobProcessor, enabled);
-                setVisionProcessorEnabled(greenBlobProcessor, enabled);
-                break;
+            if (enabled)
+            {
+                processor.enableDashboardStream();
+            }
+            else
+            {
+                processor.disableDashboardStream();
+            }
         }
-    }   //setColorBlobVisionEnabled
+    }   //setDashboardStreamEnabled
 
     /**
-     * This method checks if vision is enabled for the specified color blob type.
+     * This method enables/disables vision for the specified artifact type.
      *
-     * @param colorBlobType specifies the color blob type to be detected.
+     * @param artifactType specifies the artifact type to be detected.
+     * @param enabled specifies true to enable, false to disable.
+     */
+    public void setArtifactVisionEnabled(ArtifactType artifactType, boolean enabled)
+    {
+        TrcOpenCvColorBlobPipeline artifactPipeline =
+            artifactProcessor != null? artifactProcessor.getPipeline(): null;
+
+        if (artifactPipeline != null)
+        {
+            switch (artifactType)
+            {
+                case Purple:
+                    artifactPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, enabled);
+                    if (enabled)
+                    {
+                        artifactPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, false);
+                    }
+                    break;
+
+                case Green:
+                    artifactPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, enabled);
+                    if (enabled)
+                    {
+                        artifactPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, false);
+                    }
+                    break;
+
+                case Any:
+                    artifactPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, enabled);
+                    artifactPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, enabled);
+                    break;
+            }
+
+            if (enabled)
+            {
+                // Start Dashboard Stream before turning on Artifact Processor.
+                setDashboardStreamEnabled(artifactProcessor, true);
+                setVisionProcessorEnabled(artifactProcessor, true);
+            }
+            else
+            {
+                // We are disabling a color threshold set in the Artifact pipeline. If all color threshold sets
+                // are disabled, disable the Artifact vision processor as well.
+                if (!artifactPipeline.isColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB) &&
+                    !artifactPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB))
+                {
+                    setVisionProcessorEnabled(artifactProcessor, false);
+                    setDashboardStreamEnabled(artifactProcessor, false);
+                }
+            }
+        }
+    }   //setArtifactVisionEnabled
+
+    /**
+     * This method checks if vision is enabled for the specified color artifact type.
+     *
+     * @param artifactType specifies the artifact type to be detected.
      * @return true if enabled, false if disabled.
      */
-    public boolean isColorBlobVisionEnabled(ColorBlobType colorBlobType)
+    public boolean isArtifactVisionEnabled(ArtifactType artifactType)
     {
         boolean enabled = false;
+        TrcOpenCvColorBlobPipeline artifactPipeline =
+            artifactProcessor != null && isVisionProcessorEnabled(artifactProcessor)?
+                artifactProcessor.getPipeline(): null;
 
-        switch (colorBlobType)
+        if (artifactPipeline != null)
         {
-            case PurpleArtifact:
-                enabled = isVisionProcessorEnabled(purpleBlobProcessor);
-                break;
+            switch (artifactType)
+            {
+                case Purple:
+                    enabled = artifactPipeline.isColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB);
+                    break;
 
-            case GreenArtifact:
-                enabled = isVisionProcessorEnabled(greenBlobProcessor);
-                break;
+                case Green:
+                    enabled = artifactPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB);
+                    break;
 
-            case AnyArtifact:
-                enabled = isVisionProcessorEnabled(purpleBlobProcessor) || isVisionProcessorEnabled(greenBlobProcessor);
-                break;
+                case Any:
+                    enabled = artifactPipeline.isColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB) ||
+                              artifactPipeline.isColorThresholdsEnabled(LEDIndicator.GREEN_BLOB);
+                    break;
+            }
         }
 
         return enabled;
-    }   //isColorBlobVisionEnabled
+    }   //isArtifactVisionEnabled
 
     /**
-     * This method calls ColorBlob vision to detect the specified color blob object.
+     * This method calls Artifact vision to detect the specified artifact.
      *
-     * @param colorBlobType specifies the color blob type to be detected.
+     * @param artifactType specifies the artifact type to be detected.
      * @param groundOffset specifies the ground offset of the detected sample.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected color blob object info.
      */
-    public TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> getDetectedColorBlob(
-        ColorBlobType colorBlobType, double groundOffset, int lineNum)
+    public TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> getDetectedArtifact(
+        ArtifactType artifactType, double groundOffset, int lineNum)
     {
-        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> colorBlobInfo = null;
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo = null;
 
-        switch (colorBlobType)
+        if (isArtifactVisionEnabled(artifactType))
         {
-            case PurpleArtifact:
-                colorBlobInfo = purpleBlobVision != null? purpleBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
-                break;
-
-            case GreenArtifact:
-                colorBlobInfo = greenBlobVision != null? greenBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset): null;
-                break;
-
-            case AnyArtifact:
-                ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> colorBlobList =
-                    new ArrayList<>();
-
-                colorBlobInfo = purpleBlobVision != null ? purpleBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
-                if (colorBlobInfo != null)
-                {
-                    colorBlobList.add(colorBlobInfo);
-                }
-
-                colorBlobInfo = greenBlobVision != null ? greenBlobVision.getBestDetectedTargetInfo(
-                    null, this::compareDistance, groundOffset, robot.robotInfo.webCam1.camZOffset) : null;
-                if (colorBlobInfo != null)
-                {
-                    colorBlobList.add(colorBlobInfo);
-                }
-
-                if (!colorBlobList.isEmpty())
-                {
-                    if (colorBlobList.size() > 1)
-                    {
-                        colorBlobList.sort(this::compareDistance);
-                    }
-                    colorBlobInfo = colorBlobList.get(0);
-                }
-                break;
+            artifactInfo = artifactVision == null? null:
+                artifactVision.getBestDetectedTargetInfo(
+                    this::artifactFilter, artifactType, this::compareDistanceY, groundOffset,
+                    robot.robotInfo.webCam1.camPose.z);
         }
 
-        if (cameraStreamProcessor != null && colorBlobInfo != null)
+        if (artifactInfo != null && robot.ledIndicator != null)
         {
-            cameraStreamProcessor.addRectInfo(
-                colorBlobInfo.detectedObj.label, colorBlobInfo.detectedObj.getRotatedRectVertices());
-        }
-
-        if (colorBlobInfo != null && robot.ledIndicator1 != null)
-        {
-            robot.ledIndicator1.setDetectedPattern(colorBlobInfo.detectedObj.label);
+            robot.ledIndicator.setStatusVisionPatternsOff();
+            robot.ledIndicator.setStatusPattern(artifactInfo.detectedObj.label, true);
         }
 
         if (lineNum != -1)
         {
-            if (colorBlobInfo != null)
+            if (artifactInfo != null)
             {
-                robot.dashboard.displayPrintf(lineNum, "%s: %s", colorBlobInfo.detectedObj.label, colorBlobInfo);
+                robot.dashboard.displayPrintf(lineNum, "%s: %s", artifactInfo.detectedObj.label, artifactInfo);
             }
             else
             {
-                robot.dashboard.displayPrintf(lineNum, "No ColorBlob found.");
+                robot.dashboard.displayPrintf(lineNum, "No Artifact found.");
             }
         }
 
-        return colorBlobInfo;
-    }   //getDetectedColorBlob
+        return artifactInfo;
+    }   //getDetectedArtifact
 
     /**
-     * This method returns the target Z offset from ground.
+     * This method enables/disables Classifier vision.
+     *
+     * @param enabled specifies true to enable, false to disable.
+     */
+    public void setClassifierVisionEnabled(boolean enabled)
+    {
+        TrcOpenCvColorBlobPipeline classifierPipeline =
+            classifierProcessor != null? classifierProcessor.getPipeline(): null;
+
+        if (classifierPipeline != null)
+        {
+            if (enabled)
+            {
+                // Enable both color threshold sets for Classifier Vision in case they are not already enabled.
+                classifierPipeline.setColorThresholdsEnabled(LEDIndicator.PURPLE_BLOB, true);
+                classifierPipeline.setColorThresholdsEnabled(LEDIndicator.GREEN_BLOB, true);
+                // Start Dashboard Stream before turning on Classifier Processor.
+                setDashboardStreamEnabled(classifierProcessor, true);
+                setVisionProcessorEnabled(classifierProcessor, true);
+            }
+            else
+            {
+                // We are disabling Classifier Vision, just disable the Classifier processor but no need to disable
+                // the color threshold set.
+                setVisionProcessorEnabled(classifierProcessor, false);
+                setDashboardStreamEnabled(classifierProcessor, false);
+            }
+        }
+    }   //setClassifierVisionEnabled
+
+    /**
+     * This method checks if Classifier Vision is enabled.
+     *
+     * @return true if enabled, false if disabled.
+     */
+    public boolean isClassifierVisionEnabled()
+    {
+        return classifierProcessor != null && isVisionProcessorEnabled(classifierProcessor);
+    }   //isClassifierVisionEnabled
+
+    /**
+     * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
+     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts.
+     *
+     * @param alliance specifies the alliance color for sorting the array.
+     */
+    public ArtifactType[] getClassifierArtifacts(FtcAuto.Alliance alliance)
+    {
+        ArtifactType[] artifacts = null;
+
+        if (isClassifierVisionEnabled())
+        {
+            // compareDistanceX is using alliance to determine the sort order of color blobs in the classifier.
+            this.alliance = alliance;
+            ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> blobs =
+                classifierVision.getDetectedTargetsInfo(null, null, this::compareDistanceX, 0.0, 0.0);
+
+            if (blobs != null)
+            {
+                int index = 0;
+                artifacts = new ArtifactType[9];
+
+                for (int i = 0; i < blobs.size(); i++)
+                {
+                    TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blob = blobs.get(i);
+                    ArtifactType artifactType =
+                        blob.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB)?
+                            ArtifactType.Purple : ArtifactType.Green;
+                    int count = getArtifactCount(blob);
+                    tracer.traceDebug(moduleName, "[%d] %d %s", i, count, artifactType);
+                    robot.dashboard.putString(
+                        "Blob" + i,
+                        String.format(
+                            Locale.US, "%d %s(%.1f/%.1f=%.1f, angle=%.1f)",
+                            count, artifactType, blob.objPixelWidth, blob.objPixelHeight, getAspectRatio(blob),
+                            blob.objRotatedRectAngle));
+
+                    for (int j = 0; j < count; j++)
+                    {
+                        if (index < artifacts.length)
+                        {
+                            artifacts[index++] = artifactType;
+                        }
+                        else
+                        {
+                            tracer.traceWarn(
+                                moduleName, "Number artifact exceeds capacity (artifact=%s, count=%d, blob=%s)",
+                                artifactType, count, blob);
+                            break;
+                        }
+                    }
+                }
+
+                for (int k = blobs.size(); k < artifacts.length; k++)
+                {
+                    robot.dashboard.putString("Blob" + k, "");
+                }
+
+                for (int k = index; k < artifacts.length; k++)
+                {
+                    artifacts[k] = ArtifactType.None;
+                }
+
+                robot.dashboard.putString("Classifier", Arrays.toString(artifacts));
+            }
+        }
+
+        return artifacts;
+    }   //getClassifierArtifacts
+
+    /**
+     * This method calls Classifier Vision to determine motif sequence to shoot next. It assumes Classifier Vision
+     * is enabled.
+     *
+     * @param alliance specifies the alliance color.
+     * @param obeliskMotif specifies the obelisk motif pattern.
+     * @param useVision specifies true to use Classifier Vision, false otherwise.
+     * @return the motif sequence for shooting, null if data not ready or not detecting classifier artifacts.
+     */
+    public ArtifactType[] getMotifSequence(FtcAuto.Alliance alliance, ArtifactType[] obeliskMotif, boolean useVision)
+    {
+        ArtifactType[] motifSequence = null;
+
+        if (useVision)
+        {
+            ArtifactType[] classifierArtifacts = getClassifierArtifacts(alliance);
+
+            if (classifierArtifacts != null)
+            {
+                int noneIndex = -1;
+                for (int i = 0; i < classifierArtifacts.length; i++)
+                {
+                    if (classifierArtifacts[i] == Vision.ArtifactType.None)
+                    {
+                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
+                        noneIndex = i%obeliskMotif.length;
+                        break;
+                    }
+                }
+
+                if (noneIndex != -1)
+                {
+                    motifSequence = new Vision.ArtifactType[3];
+                    for (int i = 0; i < motifSequence.length; i++)
+                    {
+                        motifSequence[i] = obeliskMotif[noneIndex];
+                        noneIndex = (noneIndex + 1)%obeliskMotif.length;
+                    }
+                    tracer.traceInfo(
+                        moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
+                }
+            }
+        }
+        else
+        {
+            motifSequence = obeliskMotif.clone();
+        }
+
+        return motifSequence;
+    }   //getMotifSequence
+
+    /**
+     * This method calculates the aspect ratio of the detected blob.
+     *
+     * @param blob specifies the detected blob.
+     * @return calculated the aspect ratio, or NaN if cannot be determined.
+     */
+    private double getAspectRatio(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blob)
+    {
+        double aspectRatio =
+            blob.objPixelWidth != null && blob.objPixelHeight != null && blob.objPixelHeight != 0.0?
+            (double) blob.objPixelWidth / (double) blob.objPixelHeight: Double.NaN;
+        tracer.traceDebug(
+            moduleName, "%.1f/%.1f=%.1f, obj=%s", blob.objPixelWidth, blob.objPixelHeight, aspectRatio, blob);
+        return aspectRatio;
+    }   //getAspectRatio
+
+    /**
+     * This method checks the detected blob aspect ratio to determine how many artifacts are in the detected blob.
+     *
+     * @param blob specifies the detected blob.
+     * @return count of artifact in the detected object.
+     */
+    private int getArtifactCount(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blob)
+    {
+        double blobRectAngle = Math.abs(blob.objRotatedRectAngle) % 180.0;
+        if (blobRectAngle > 90.0) blobRectAngle = Math.abs(180.0 - blobRectAngle);
+        boolean firstSingleBall = blobRectAngle < RECT_ANGLE_THRESHOLD;
+        double aspectRatio = getAspectRatio(blob);
+        return firstSingleBall || aspectRatio <= ONE_BALL_THRESHOLD? 1:
+               aspectRatio <= TWO_BALL_THRESHOLD ? 2 :
+               aspectRatio <= THREE_BALL_THRESHOLD ? 3 :
+               aspectRatio <= FOUR_BALL_THRESHOLD ? 4 :
+               aspectRatio <= FIVE_BALL_THRESHOLD ? 5 :
+               aspectRatio <= SIX_BALL_THRESHOLD ? 6 :
+               aspectRatio <= SEVEN_BALL_THRESHOLD ? 8 :
+               aspectRatio <= EIGHT_BALL_THRESHOLD ? 8 : 9;
+    }   //getArtifactCount
+
+    /**
+     * This method returns the Limelight target Z offset from ground.
      *
      * @param resultType specifies the detected object result type.
      * @return target ground offset.
      */
-    private double getTargetGroundOffset(FtcLimelightVision.ResultType resultType)
+    private double getLimelightTargetGroundOffset(FtcLimelightVision.ResultType resultType)
     {
-        double offset = 0.0;
+        double offset;
 
-        if (resultType == FtcLimelightVision.ResultType.Fiducial)
+        switch (resultType)
         {
-            offset = 5.75;
-        }
-        else if (resultType == FtcLimelightVision.ResultType.Python)
-        {
-            offset = 10.0;
+            case Fiducial:
+                offset = 29.5;
+                break;
+
+            case Python:
+            default:
+                offset = 0.0;
+                break;
         }
 
         return offset;
-    }   //getTargetGroundOffset
+    }   //getLimelightTargetGroundOffset
 
     /**
-     * This method is called by the Arrays.sort to sort the target object by increasing distance.
+     * This method is called by Vision to validate if the detected artifact matches expectation for filtering.
+     *
+     * @param artifactInfo specifies the detected artifact info.
+     * @param context specifies the expected color artifact type.
+     * @return true if it matches expectation, false otherwise.
+     */
+    public boolean artifactFilter(
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> artifactInfo, Object context)
+    {
+        ArtifactType artifactType = (ArtifactType) context;
+        boolean match = false;
+
+        switch (artifactType)
+        {
+            case Purple:
+                match = artifactInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB);
+                break;
+
+            case Green:
+                match = artifactInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB);
+                break;
+
+            case Any:
+                match = artifactInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
+                        artifactInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB);
+                break;
+        }
+
+        return match;
+    }   //artifactFilter
+
+//    /**
+//     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
+//     * vertical position is in the ROI of the classifier.
+//     *
+//     * @param blobInfo specifies the detected blob info.
+//     * @param context not used.
+//     * @return true if it matches expectation, false otherwise.
+//     */
+//    public boolean classifierBlobFilter(
+//        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blobInfo, Object context)
+//    {
+//        return (blobInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
+//                blobInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
+//               blobInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
+//               blobInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
+//    }   //classifierBlobFilter
+
+    /**
+     * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction
+     * will be determined by the alliance color.
      *
      * @param a specifies the first target
      * @param b specifies the second target.
      * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
      *         if a has higher distance than b.
      */
-    private int compareDistance(
+    public int compareDistanceX(
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
     {
-        return (int)((a.objPose.y - b.objPose.y)*100);
-    }   //compareDistance
+        int diff = (int)((b.objPose.x - a.objPose.x)*100);
+        return alliance == FtcAuto.Alliance.RED_ALLIANCE? diff: -diff;
+    }   //compareDistanceX
+
+    /**
+     * This method is called by the Arrays.sort to sort the target object by increasing distance Y.
+     *
+     * @param a specifies the first target
+     * @param b specifies the second target.
+     * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
+     *         if a has higher distance than b.
+     */
+    public int compareDistanceY(
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> a,
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> b)
+    {
+        return (int)((b.objPose.y - a.objPose.y)*100);
+    }   //compareDistanceY
 
     /**
      * This method update the dashboard with vision status.
@@ -965,31 +1112,29 @@ public class Vision
      */
     public int updateStatus(int lineNum, boolean slowLoop)
     {
-        if (slowLoop)
+        if (RobotParams.Preferences.showVisionStatus)
         {
-            if (rawColorBlobVision != null)
+            if (slowLoop)
             {
-                lineNum = rawColorBlobVision.updateStatus(lineNum);
-            }
+                if (limelightVision != null)
+                {
+                    lineNum = limelightVision.updateStatus(lineNum);
+                }
 
-            if (limelightVision != null)
-            {
-                lineNum = limelightVision.updateStatus(lineNum);
-            }
+                if (aprilTagVision != null)
+                {
+                    lineNum = aprilTagVision.updateStatus(lineNum);
+                }
 
-            if (aprilTagVision != null)
-            {
-                lineNum = aprilTagVision.updateStatus(lineNum);
-            }
+                if (artifactVision != null)
+                {
+                    lineNum = artifactVision.updateStatus(lineNum);
+                }
 
-            if (purpleBlobVision != null)
-            {
-                lineNum = purpleBlobVision.updateStatus(lineNum);
-            }
-
-            if (greenBlobVision != null)
-            {
-                lineNum = greenBlobVision.updateStatus(lineNum);
+                if (classifierVision != null)
+                {
+                    lineNum = classifierVision.updateStatus(lineNum);
+                }
             }
         }
 

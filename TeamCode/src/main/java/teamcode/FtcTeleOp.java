@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Titan Robotics Club (http://www.titanrobotics.com)
+ * Copyright (c) 2025 Titan Robotics Club (http://www.titanrobotics.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,20 @@ package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import ftclib.drivebase.FtcSwerveDrive;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
-import teamcode.subsystems.Intake;
-import teamcode.subsystems.RumbleIndicator;
+import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
+import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcRobot;
+import trclib.subsystem.TrcShootParamTable;
 import trclib.timer.TrcTimer;
 
 /**
@@ -53,10 +55,14 @@ public class FtcTeleOp extends FtcOpMode
     private double turnPowerScale;
     protected boolean driverAltFunc = false;
     protected boolean operatorAltFunc = false;
-    private boolean statusUpdateOn = false;
+    protected boolean allowAnalogControl = true;
     private boolean relocalizing = false;
     private TrcPose2D robotFieldPose = null;
     private Integer savedLimelightPipeline = null;
+
+    private double panPrevPower = 0.0;
+    private double tiltPrevPower = 0.0;
+    private boolean preSpinOn = false;
 
     //
     // Implements FtcOpMode abstract method.
@@ -96,9 +102,9 @@ public class FtcTeleOp extends FtcOpMode
             robot.operatorRumble = new RumbleIndicator("OperatorRumble", operatorGamepad);
         }
 
-        drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
-        turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
-        setDriveOrientation(RobotParams.Robot.DRIVE_ORIENTATION);
+        drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
+        turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
+        setDriveOrientation(Dashboard.Subsystem_Drivebase.driveOrientation);
     }   //robotInit
 
     //
@@ -140,7 +146,7 @@ public class FtcTeleOp extends FtcOpMode
             else if (robot.vision.limelightVision != null)
             {
                 robot.globalTracer.traceInfo(moduleName, "Enabling Limelight AprilTagVision.");
-                robot.vision.setLimelightVisionEnabled(0, true);
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
             }
         }
     }   //startMode
@@ -181,69 +187,99 @@ public class FtcTeleOp extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
-        if (slowPeriodicLoop)
+        if (allowAnalogControl)
         {
-            int lineNum = 1;
-            //
-            // DriveBase subsystem.
-            //
-            if (robot.robotDrive != null)
+            if (slowPeriodicLoop)
             {
-                // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
-                if (relocalizing)
+                //
+                // DriveBase subsystem.
+                //
+                if (robot.robotDrive != null)
                 {
-                    if (robotFieldPose == null)
+                    // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
+                    if (relocalizing)
                     {
-                        robotFieldPose = robot.vision.getRobotFieldPose();
-                    }
-                }
-                else
-                {
-                    double[] inputs = driverGamepad.getDriveInputs(
-                        RobotParams.Robot.DRIVE_MODE, true, drivePowerScale, turnPowerScale);
-
-                    if (robot.robotDrive.driveBase.supportsHolonomicDrive())
-                    {
-                        robot.robotDrive.driveBase.holonomicDrive(
-                            null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                        if (robotFieldPose == null)
+                        {
+                            robotFieldPose = robot.vision.getRobotFieldPose();
+                        }
                     }
                     else
                     {
-                        robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
-                    }
+                        double[] inputs = driverGamepad.getDriveInputs(
+                            Dashboard.Subsystem_Drivebase.driveMode, true, drivePowerScale, turnPowerScale);
 
-                    if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
+                        if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+                        {
+                            robot.robotDrive.driveBase.holonomicDrive(
+                                null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                        }
+                        else
+                        {
+                            robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
+                        }
+
+                        if (robot.dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
+                        {
+                            robot.dashboard.displayPrintf(
+                                14, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
+                                inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
+                        }
+                    }
+                    // Check for EndGame warning.
+                    if (elapsedTime > RobotParams.Game.ENDGAME_DEADLINE)
                     {
-                        robot.dashboard.displayPrintf(
-                            lineNum++, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
-                            inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
+                        if (robot.driverRumble != null)
+                        {
+                            robot.driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                        }
+
+                        if (robot.operatorRumble != null)
+                        {
+                            robot.operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                        }
                     }
                 }
-                // Check for EndGame warning.
-                if (elapsedTime > RobotParams.Game.ENDGAME_DEADLINE)
+                //
+                // Other subsystems.
+                //
+                if (RobotParams.Preferences.useSubsystems)
                 {
-                    if (robot.driverRumble != null)
+                    // Analog control of subsystems.
+                    if (robot.shooterSubsystem != null)
                     {
-                        robot.driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
-                    }
+                        double panPower = operatorGamepad.getLeftStickX(true);
+                        double tiltPower = operatorGamepad.getRightStickY(true);
 
-                    if (robot.operatorRumble != null)
-                    {
-                        robot.operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                        if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        {
+                            if (operatorAltFunc)
+                            {
+                                robot.shooter.panMotor.setPower(panPower);
+                            }
+                            else
+                            {
+                                robot.shooter.panMotor.setPidPower(
+                                    panPower, Shooter.Params.PAN_MIN_POS, Shooter.Params.PAN_MAX_POS, true);
+                            }
+                            panPrevPower = panPower;
+                        }
+
+                        if (tiltPower != tiltPrevPower)
+                        {
+                            if (operatorAltFunc)
+                            {
+                                robot.shooter.tiltMotor.setPower(tiltPower);
+                            }
+                            else
+                            {
+                                robot.shooter.tiltMotor.setPidPower(
+                                    tiltPower, Shooter.Params.TILT_MIN_POS, Shooter.Params.TILT_MAX_POS, true);
+                            }
+                            tiltPrevPower = tiltPower;
+                        }
                     }
                 }
-            }
-            //
-            // Other subsystems.
-            //
-            if (RobotParams.Preferences.useSubsystems)
-            {
-                // Analog control of subsystems.
-            }
-            // Display subsystem status.
-            if (RobotParams.Preferences.updateDashboard || statusUpdateOn)
-            {
-                Dashboard.updateDashboard(robot, lineNum);
             }
         }
     }   //periodic
@@ -260,9 +296,9 @@ public class FtcTeleOp extends FtcOpMode
             robot.globalTracer.traceInfo(moduleName, "driveOrientation=" + orientation);
             robot.robotDrive.driveBase.setDriveOrientation(
                 orientation, orientation == TrcDriveBase.DriveOrientation.FIELD);
-            if (robot.ledIndicator1 != null)
+            if (robot.ledIndicator != null)
             {
-                robot.ledIndicator1.setDriveOrientation(orientation);
+                robot.ledIndicator.setDriveOrientation(orientation);
             }
         }
     }   //setDriveOrientation
@@ -279,11 +315,74 @@ public class FtcTeleOp extends FtcOpMode
      */
     public void driverButtonEvent(FtcGamepad.ButtonType button, boolean pressed)
     {
-        robot.dashboard.displayPrintf(8, "Driver: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Driver: %s=%s", button, pressed? "Pressed": "Released");
 
         switch (button)
         {
             case A:
+                if (robot.intakeSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.intake.isActive())
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        }
+                    }
+                }
+                break;
+
+            case B:
+                if (robot.shooterSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (!operatorAltFunc && robot.autoShootTask != null)
+                        {
+                            // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
+                            if (robot.autoShootTask.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                                robot.autoShootTask.cancel();
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                                robot.autoShootTask.autoShoot(
+                                        moduleName + ".autoShoot", null,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                        false,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
+                            }
+                        }
+                        else
+                        {
+                            preSpinOn = !preSpinOn;
+                            if (preSpinOn)
+                            {
+                                robot.shooter.shooterMotor1.setVelocity(
+                                    Dashboard.Subsystem_Shooter.shootMotor1Velocity);
+                            }
+                            else
+                            {
+                                robot.shooter.shooterMotor1.cancel();
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case X:
                 if (robot.robotDrive != null && pressed)
                 {
                     if (driverAltFunc)
@@ -296,7 +395,7 @@ public class FtcTeleOp extends FtcOpMode
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.pidDrive.getTurnPidCtrl());
+                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
                         }
                     }
                     else if (robot.robotDrive.driveBase.supportsHolonomicDrive())
@@ -316,18 +415,26 @@ public class FtcTeleOp extends FtcOpMode
                 }
                 break;
 
-            case B:
-                break;
-
-            case X:
-                if (pressed)
-                {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> Turtle mode.");
-                    robot.turtle();
-                }
-                break;
-
             case Y:
+                if (robot.vision != null && robot.vision.isLimelightVisionEnabled() && robot.shooterSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
+                            robot.shooterSubsystem.disableAprilTagTracking(null);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedIds=%s).",
+                                Arrays.toString(Dashboard.Subsystem_Vision.trackedAprilTagIds));
+                            robot.shooterSubsystem.enableAprilTagTracking(
+                                null, Dashboard.Subsystem_Vision.trackedAprilTagIds);
+                        }
+                    }
+                }
                 break;
 
             case LeftBumper:
@@ -342,22 +449,30 @@ public class FtcTeleOp extends FtcOpMode
                     if (pressed)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower slow.");
-                        drivePowerScale = RobotParams.Robot.DRIVE_SLOW_SCALE;
-                        turnPowerScale = RobotParams.Robot.TURN_SLOW_SCALE;
+                        drivePowerScale = Dashboard.Subsystem_Drivebase.driveSlowScale;
+                        turnPowerScale = Dashboard.Subsystem_Drivebase.turnSlowScale;
                     }
                     else
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> DrivePower normal.");
-                        drivePowerScale = RobotParams.Robot.DRIVE_NORMAL_SCALE;
-                        turnPowerScale = RobotParams.Robot.TURN_NORMAL_SCALE;
+                        drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
+                        turnPowerScale = Dashboard.Subsystem_Drivebase.turnNormalScale;
                     }
                 }
-                else if (pressed)
+                else
                 {
-                    if (!RobotParams.Preferences.updateDashboard)
+                    if (pressed)
                     {
-                        // Toggle status update ON/OFF.
-                        statusUpdateOn = !statusUpdateOn;
+                        boolean enabled = !robot.dashboard.isDashboardUpdateEnabled();
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
+                        if (enabled)
+                        {
+                            robot.dashboard.enableDashboardUpdate(1, true);
+                        }
+                        else
+                        {
+                            robot.dashboard.disableDashboardUpdate();
+                        }
                     }
                 }
                 break;
@@ -406,7 +521,7 @@ public class FtcTeleOp extends FtcOpMode
                             // Webcam AprilTag vision is not enable, enable Limelight AprilTag pipeline instead.
                             // Note: we assume pipeline 0 is the AprilTag pipeline.
                             savedLimelightPipeline = robot.vision.limelightVision.getPipeline();
-                            robot.vision.setLimelightVisionEnabled(0, true);
+                            robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                         }
                     }
 
@@ -450,96 +565,91 @@ public class FtcTeleOp extends FtcOpMode
      */
     public void operatorButtonEvent(FtcGamepad.ButtonType button, boolean pressed)
     {
-        robot.dashboard.displayPrintf(8, "Operator: %s=%s", button, pressed? "Pressed": "Released");
+        robot.dashboard.displayPrintf(15, "Operator: %s=%s", button, pressed? "Pressed": "Released");
 
         switch (button)
         {
             case A:
+                if (robot.intakeSubsystem != null && robot.spindexerSubsystem != null)
+                {
+                    if (!operatorAltFunc)
+                    {
+                        if (pressed)
+                        {
+                            if (robot.intake.isActive())
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                            }
+                            else
+                            {
+                                robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (pressed)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Start Intake Eject");
+                            robot.intake.eject();
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Intake Eject");
+                            robot.intake.cancel();
+                        }
+                    }
+                }
                 break;
 
             case B:
-                if (robot.shooter != null)
+                if (robot.shooterSubsystem != null && robot.spindexerSubsystem != null)
                 {
                     if (pressed)
                     {
-                        if (robot.autoShootTask != null)
+                        if (!operatorAltFunc && robot.autoShootTask != null)
                         {
                             // Auto Shoot Task is enabled, auto shoot at any AprilTag detected.
                             if (robot.autoShootTask.isActive())
                             {
-                                robot.autoShootTask.cancel();
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Shoot");
+                                robot.autoShootTask.cancel();
                             }
                             else
                             {
-                                robot.autoShootTask.autoShoot(moduleName, null, !driverAltFunc, (int[]) null);
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
+                                robot.autoShootTask.autoShoot(
+                                    moduleName + ".autoShoot", null,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    false,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }
                         else
                         {
-                            // Auto Shoot Task is disabled, shoot manually.
                             if (robot.shooter.isActive())
                             {
-                                robot.shooter.cancel(moduleName);
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
+                                robot.shooter.cancel(moduleName);
                             }
                             else
                             {
-                                robot.shooter.aimShooter(
-                                    moduleName, robot.shooterSubsystem.shooter1Velocity.getValue() / 60.0, 0.0,
-                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
-                                    Shooter.Params.SHOOTER_OFF_DELAY);
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
-                            }
-                        }
-                    }
-                }
-                else if (robot.intake != null)
-                {
-                    if (pressed)
-                    {
-                        if (robot.autoPickupTask != null)
-                        {
-                            if (robot.autoPickupTask.isActive())
-                            {
-                                robot.autoPickupTask.cancel();
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Pickup");
-                            }
-                            else
-                            {
-                                robot.autoPickupTask.autoPickup(moduleName, null, !driverAltFunc);
-                                robot.globalTracer.traceInfo(
-                                    moduleName, ">>>>> Auto Pickup (useVision=" + !driverAltFunc + ")");
-                            }
-                        }
-                        else
-                        {
-                            if (driverAltFunc)
-                            {
-                                if (robot.intake.getPower() == 0.0)
-                                {
-                                    robot.intake.setPower(Intake.Params.INTAKE_POWER);
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Intake");
-                                }
-                                else
-                                {
-                                    robot.intake.cancel();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Intake");
-                                }
-                            }
-                            else
-                            {
-                                if (robot.intake.isAutoActive())
-                                {
-                                    robot.intake.cancel();
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Sensor Intake");
-                                }
-                                else
-                                {
-                                    robot.intake.autoIntake(moduleName);
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Sensor Intake");
-                                }
+                                TrcShootParamTable.Params manualShootParams = Shooter.Params.shootParamTable.get("Target_9.44ft_2");
+                                robot.spindexerSubsystem.moveToExitSlotWithArtifact(null, Vision.ArtifactType.Any, null);
+                                robot.shooter.tiltMotor.setPosition(
+                                        moduleName, 0.0, manualShootParams.tiltAngle, true,
+                                        Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
+                                robot.shooter.aimShooter(
+                                        moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
+                                        null, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                        Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
                     }
@@ -547,7 +657,23 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case X:
+                if (robot.shooterSubsystem != null)
+                {
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
+                    if (pressed) robot.cancelAll();
+                    robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                }
+                break;
+
             case Y:
+                if (robot.spindexerSubsystem != null && robot.intakeSubsystem != null)
+                {
+                    if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> refreshSlotStates");
+                        robot.spindexerSubsystem.refreshSlotStates();
+                    }
+                }
                 break;
 
             case LeftBumper:
@@ -556,48 +682,72 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case RightBumper:
+                if (operatorAltFunc)
+                {
+                    if (pressed)
+                    {
+                        boolean enabled = !robot.dashboard.isDashboardUpdateEnabled();
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setUpdateDashboardEnable=" + enabled);
+                        if (enabled)
+                        {
+                            robot.dashboard.enableDashboardUpdate(1, true);
+                        }
+                        else
+                        {
+                            robot.dashboard.disableDashboardUpdate();
+                        }
+                    }
+                }
                 break;
 
             case DpadUp:
-                if (robot.shooter != null)
+                if (pressed)
                 {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.upValue();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity up");
-                    }
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 3");
+                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 3;
                 }
                 break;
-
             case DpadDown:
-                if (robot.shooter != null)
+                if (pressed)
                 {
-                    if (pressed)
-                    {
-                        robot.shooterSubsystem.shooter1Velocity.downValue();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity down");
-                    }
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 1");
+                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 1;
                 }
                 break;
-
             case DpadLeft:
-                if (robot.shooter != null)
+                if (robot.spindexer != null)
                 {
                     if (pressed)
                     {
-                        robot.shooterSubsystem.shooter1Velocity.downIncrement();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity increment down");
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotDown(moduleName);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotDown(moduleName);
+                        }
                     }
                 }
                 break;
 
             case DpadRight:
-                if (robot.shooter != null)
+                if (robot.spindexer != null)
                 {
                     if (pressed)
                     {
-                        robot.shooterSubsystem.shooter1Velocity.upIncrement();
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shooter velocity increment up");
+                        if (operatorAltFunc)
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
+                            robot.spindexerSubsystem.exitSlotUp(moduleName);
+                        }
+                        else
+                        {
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
+                            robot.spindexerSubsystem.entrySlotUp(moduleName);
+                        }
                     }
                 }
                 break;

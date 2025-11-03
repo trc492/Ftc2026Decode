@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Titan Robotics Club (http://www.titanrobotics.com)
+ * Copyright (c) 2025 Titan Robotics Club (http://www.titanrobotics.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +32,11 @@ import ftclib.sensor.FtcRobotBattery;
 import teamcode.autotasks.TaskAutoPickup;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.Intake;
-import teamcode.subsystems.LEDIndicator;
-import teamcode.subsystems.RobotBase;
-import teamcode.subsystems.RumbleIndicator;
+import teamcode.indicators.LEDIndicator;
+import teamcode.subsystems.BaseDrive;
+import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
+import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
@@ -44,6 +45,7 @@ import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.sensor.TrcDigitalInput;
+import trclib.subsystem.TrcPidStorage;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
@@ -61,24 +63,28 @@ public class Robot
     public static FtcMatchInfo matchInfo = null;
     private static TrcPose2D endOfAutoRobotPose = null;
     // Robot Drive.
-    public RobotBase robotBase;
+    public BaseDrive baseDrive;
     public FtcRobotDrive.RobotInfo robotInfo;
     public FtcRobotDrive robotDrive;
     // Vision subsystems.
     public Vision vision;
     // Sensors and indicators.
-    public LEDIndicator ledIndicator1;
-    public LEDIndicator ledIndicator2;
+    public LEDIndicator ledIndicator;
     public RumbleIndicator driverRumble;
     public RumbleIndicator operatorRumble;
     public FtcRobotBattery battery;
     // Subsystems.
+    public Intake intakeSubsystem;
     public TrcRollerIntake intake;
+    public Spindexer spindexerSubsystem;
+    public TrcPidStorage spindexer;
     public Shooter shooterSubsystem;
     public TrcShooter shooter;
     // Autotasks.
-    public TaskAutoShoot autoShootTask;
     public TaskAutoPickup autoPickupTask;
+    public TaskAutoShoot autoShootTask;
+    public int obeliskAprilTagId = 0;
+    public Vision.ArtifactType[] obeliskMotif = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -94,27 +100,24 @@ public class Robot
         dashboard = FtcDashboard.getInstance();
         speak("Init starting");
         // Create and initialize Robot Base.
-        robotBase = new RobotBase();
-        robotInfo = robotBase.getRobotInfo();
-        robotDrive = robotBase.getRobotDrive();
+        baseDrive = new BaseDrive();
+        robotInfo = baseDrive.getRobotInfo();
+        robotDrive = baseDrive.getRobotDrive();
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
-            (RobotParams.Preferences.tuneColorBlobVision ||
-             RobotParams.Preferences.useWebcamAprilTagVision ||
-             RobotParams.Preferences.useColorBlobVision ||
+            (RobotParams.Preferences.useWebcamAprilTagVision ||
+             RobotParams.Preferences.useArtifactVision ||
+             RobotParams.Preferences.useClassifierVision ||
              RobotParams.Preferences.useLimelightVision))
         {
             vision = new Vision(this);
         }
         // If robotType is VisionOnly, the robot controller is disconnected from the robot for testing vision.
         // In this case, we should not instantiate any robot hardware.
-        if (RobotParams.Preferences.robotType != RobotBase.RobotType.VisionOnly)
+        if (RobotParams.Preferences.robotType != BaseDrive.RobotType.VisionOnly)
         {
             // Create and initialize sensors and indicators.
-            ledIndicator1 = robotInfo.indicator1Name != null?
-                new LEDIndicator(robotInfo.indicator1Name, robotInfo.indicator1Type): null;
-            ledIndicator2 = robotInfo.indicator2Name != null?
-                new LEDIndicator(robotInfo.indicator2Name, robotInfo.indicator2Type): null;
+            ledIndicator = robotInfo.indicatorNames != null? new LEDIndicator(robotInfo.indicatorNames): null;
             battery = RobotParams.Preferences.useBatteryMonitor? new FtcRobotBattery(): null;
             //
             // Create and initialize other subsystems.
@@ -124,31 +127,31 @@ public class Robot
                 // Create subsystems.
                 if (RobotParams.Preferences.useIntake)
                 {
-                    intake = new Intake().getIntake();
+                    intakeSubsystem = new Intake(this);
+                    intake = intakeSubsystem.getIntake();
+                }
+
+                if (RobotParams.Preferences.useSpindexer)
+                {
+                    spindexerSubsystem = new Spindexer(this);
+                    spindexer = spindexerSubsystem.getPidStorage();
                 }
 
                 if (RobotParams.Preferences.useShooter)
                 {
-                    // Note: Since shooter depends on Intake, Intake subsystem must instantiate before shooter.
-                    shooterSubsystem = new Shooter();
+                    shooterSubsystem = new Shooter(this);
                     shooter = shooterSubsystem.getShooter();
                 }
 
                 // Create autotasks.
-                if (RobotParams.Preferences.useAutoShoot)
+                if (RobotParams.Preferences.useAutoPickup && intake != null && spindexer != null)
                 {
-                    if (shooter != null)
-                    {
-                        autoShootTask = new TaskAutoShoot(this);
-                    }
+                    autoPickupTask = new TaskAutoPickup(this);
                 }
 
-                if (RobotParams.Preferences.useAutoPickup)
+                if (RobotParams.Preferences.useAutoShoot && shooter != null && spindexer != null)
                 {
-                    if (intake != null)
-                    {
-                        autoPickupTask = new TaskAutoPickup(this);
-                    }
+                    autoShootTask = new TaskAutoShoot(this);
                 }
 
                 // Zero calibrate all subsystems only in Auto or if TeleOp is run standalone without prior Auto.
@@ -159,8 +162,12 @@ public class Robot
                 }
             }
         }
-
         speak("Init complete");
+        Dashboard.DashboardParams.updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
+        if (Dashboard.DashboardParams.updateDashboardEnabled)
+        {
+            dashboard.enableDashboardUpdate(1, true);
+        }
     }   //Robot
 
     /**
@@ -211,6 +218,15 @@ public class Robot
             // Consume it so it's no longer valid for next run.
             endOfAutoRobotPose = null;
         }
+
+//        if (vision != null)
+//        {
+//            globalTracer.traceInfo(moduleName, "Enabling LimelightVision.");
+//            vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
+//            globalTracer.traceInfo(moduleName, "Enabling WebCam ArtifactVision.");
+//            vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
+//        }
+
         TrcDigitalInput.setElapsedTimerEnabled(true);
         TrcMotor.setElapsedTimerEnabled(true);
         TrcServo.setElapsedTimerEnabled(true);
@@ -245,17 +261,10 @@ public class Robot
         //
         if (vision != null)
         {
-            vision.setCameraStreamEnabled(false);
-            if (vision.isRawColorBlobVisionEnabled())
-            {
-                globalTracer.traceInfo(moduleName, "Disabling RawColorBlobVision.");
-                vision.setRawColorBlobVisionEnabled(false);
-            }
-
             if (vision.isLimelightVisionEnabled())
             {
                 globalTracer.traceInfo(moduleName, "Disabling LimelightVision.");
-                vision.setLimelightVisionEnabled(0, false);
+                vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, false);
             }
 
             if (vision.isAprilTagVisionEnabled())
@@ -264,22 +273,16 @@ public class Robot
                 vision.setAprilTagVisionEnabled(false);
             }
 
-            if (vision.purpleBlobVision != null)
+            if (vision.artifactVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling PurpleBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.PurpleArtifact, false);
+                globalTracer.traceInfo(moduleName, "Disabling ArtifactVision.");
+                vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
             }
 
-            if (vision.greenBlobVision != null)
+            if (vision.classifierVision != null)
             {
-                globalTracer.traceInfo(moduleName, "Disabling GreenBlobVision.");
-                vision.setColorBlobVisionEnabled(Vision.ColorBlobType.GreenArtifact, false);
-            }
-
-            if (vision.limelightVision != null)
-            {
-                globalTracer.traceInfo(moduleName, "Disabling LimelightVision.");
-                vision.setLimelightVisionEnabled(0, false);
+                globalTracer.traceInfo(moduleName, "Disabling ClassifierVision.");
+                vision.setClassifierVisionEnabled(false);
             }
 
             vision.close();
@@ -317,6 +320,15 @@ public class Robot
         if (robotDrive != null) robotDrive.cancel();
         TrcSubsystem.cancelAll();
         // Cancel auto tasks.
+        if (autoPickupTask != null)
+        {
+            autoPickupTask.cancel();
+        }
+
+        if (autoShootTask != null)
+        {
+            autoShootTask.cancel();
+        }
     }   //cancelAll
 
     /**
@@ -347,6 +359,12 @@ public class Robot
      */
     public void setRobotStartPosition(FtcAuto.AutoChoices autoChoices)
     {
+        TrcPose2D startPose = adjustPoseByAlliance(
+            autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? RobotParams.Game.STARTPOSE_RED_GOAL_ZONE:
+            autoChoices.startPos == FtcAuto.StartPos.LOAD_CENTER? RobotParams.Game.STARTPOSE_RED_LOAD_CENTER:
+                RobotParams.Game.STARTPOSE_RED_LOAD_CORNER,
+            autoChoices.alliance, false);
+        robotDrive.driveBase.setFieldPosition(startPose);
     }   //setRobotStartPosition
 
     /**
@@ -369,14 +387,16 @@ public class Robot
             // Translate blue alliance pose to red alliance pose.
             if (RobotParams.Game.fieldIsMirrored)
             {
-                // Mirrored field.
+                // Field is mirrored on X axis.
+                // Same X, Flip Y. Heading left becomes right and right becomes left.
                 double angleDelta = (newPose.angle - 90.0)*2.0;
                 newPose.angle -= angleDelta;
                 newPose.y = -newPose.y;
             }
             else
             {
-                // Symmetrical field.
+                // Field is symmetrical.
+                // Flip X, Flip Y. Heading flips 180-degree.
                 newPose.x = -newPose.x;
                 newPose.y = -newPose.y;
                 newPose.angle = (newPose.angle + 180.0) % 360.0;
