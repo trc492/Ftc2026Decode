@@ -44,7 +44,7 @@ public class RobotParams
     {
         // Global config
         public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.DecodeRobot;
-        public static final boolean inCompetition               = false;
+        public static final boolean inCompetition               = true;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
@@ -53,7 +53,7 @@ public class RobotParams
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
-        public static final boolean showVisionStatus            = false;
+        public static final boolean showVisionStatus            = true;
         public static final boolean useLimelightVision          = true;
         public static final boolean useWebCam                   = true;
         public static final boolean useWebcamAprilTagVision     = false;
@@ -79,7 +79,7 @@ public class RobotParams
         public static final boolean showSpindexerStatus         = true;
         public static final boolean useShooter                  = true;
         public static final boolean showShooterStatus           = true;
-        public static final boolean showShooterGraph            = false;
+        public static final boolean showShooterGraph            = true;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = true;

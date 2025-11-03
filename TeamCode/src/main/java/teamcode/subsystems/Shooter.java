@@ -81,7 +81,8 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR_MAX_VEL          = 6000.0;
 
         public static final double SHOOT_MOTOR1_PID_KP          = 1.0;
-        public static final double SHOOT_MOTOR1_PID_KI          = 0.0;
+        public static final double SHOOT_MOTOR1_PID_KI          = 0.01;
+        public static final double SHOOT_MOTOR1_PID_IZONE       = 160/60.0; // in RPS
         public static final double SHOOT_MOTOR1_PID_KD          = 0.0;
         public static final double SHOOT_MOTOR1_PID_KF          = 0.0125;
 
@@ -90,7 +91,7 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR2_PID_KD          = 0.0;
         public static final double SHOOT_MOTOR2_PID_KF          = 0.0125;
 
-        public static final double SHOOT_PID_TOLERANCE_RPM      = 60.0;
+        public static final double SHOOT_PID_TOLERANCE_RPM      = 75.0;
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
         public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 350.0;    // in RPM
@@ -183,7 +184,7 @@ public class Shooter extends TrcSubsystem
     public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.SHOOT_MOTOR1_PID_KP, Params.SHOOT_MOTOR1_PID_KI, Params.SHOOT_MOTOR1_PID_KD,
-            Params.SHOOT_MOTOR1_PID_KF)
+            Params.SHOOT_MOTOR1_PID_KF, Params.SHOOT_MOTOR1_PID_IZONE)
         .setPidControlParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.PidParams shootMotor2PidParams = new TrcMotor.PidParams()
         .setPidCoefficients(

@@ -148,7 +148,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_PRELOAD_SHOOT_POS:
-                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
+//                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                     robot.shooter.panMotor.setPosition(
                         null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
