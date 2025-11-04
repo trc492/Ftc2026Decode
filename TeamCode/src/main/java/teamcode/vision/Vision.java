@@ -30,6 +30,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Locale;
 
 import ftclib.drivebase.FtcRobotDrive;
@@ -78,7 +79,7 @@ public class Vision
     public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
         .setCameraInfo("Webcam 1", 320, 240)
         .setCameraPose(0.0, 8.75, 11.0, 0.0, 0.0, 0.0)
-        .setLensProperties(lifeCamHD3000At640x480)
+        .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
         .setHomographyParams(
             new TrcHomographyMapper.Rectangle(
                 14.0, 28.0,                     // Camera Top Left
@@ -194,8 +195,8 @@ public class Vision
     private final Robot robot;
     private final WebcamName webcam1, webcam2;
     public FtcLimelightVision limelightVision;
-    public FtcVisionAprilTag aprilTagVision;
-    private AprilTagProcessor aprilTagProcessor;
+    public FtcVisionAprilTag webcamAprilTagVision;
+    private AprilTagProcessor webcamAprilTagProcessor;
     public FtcVisionEocvColorBlob artifactVision;
     private FtcEocvColorBlobProcessor artifactProcessor;
     public FtcVisionEocvColorBlob classifierVision;
@@ -248,9 +249,9 @@ public class Vision
                     .setDrawAxesEnabled(false)
                     .setDrawCubeProjectionEnabled(false)
                     .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES);
-                aprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
-                aprilTagProcessor = aprilTagVision.getVisionProcessor();
-                visionProcessorsList.add(aprilTagProcessor);
+                webcamAprilTagVision = new FtcVisionAprilTag(aprilTagParams, AprilTagProcessor.TagFamily.TAG_36h11);
+                webcamAprilTagProcessor = webcamAprilTagVision.getVisionProcessor();
+                visionProcessorsList.add(webcamAprilTagProcessor);
             }
 
             if (robot.robotInfo.webCam1 != null)
@@ -406,15 +407,16 @@ public class Vision
      */
     public void setLimelightVisionEnabled(LimelightPipelineType pipelineType, boolean enabled)
     {
-        if (limelightVision != null)
+        if (limelightVision != null && enabled ^ limelightVision.isVisionEnabled())
         {
             if (enabled)
             {
                 setLimelightPipeline(pipelineType);
             }
             limelightVision.setVisionEnabled(enabled);
-            tracer.traceInfo(moduleName, "Pipeline %s is %s: running=%s",
-                             pipelineType, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
+            tracer.traceInfo(
+                moduleName, "Pipeline %s is %s: running=%s",
+                pipelineType, enabled? "enabled": "disabled", limelightVision.limelight.isRunning());
         }
     }   //setLimelightVisionEnabled
 
@@ -449,11 +451,13 @@ public class Vision
      *
      * @param resultType specifies the result type to look for.
      * @param matchIds specifies the object ID(s) to match for, null if no matching required.
+     * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, Object matchIds, int lineNum)
+        FtcLimelightVision.ResultType resultType, Object matchIds,
+        Comparator<? super TrcVisionTargetInfo<FtcLimelightVision.DetectedObject>> comparator, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
 
@@ -463,7 +467,7 @@ public class Vision
             int pipelineIndex = -1;
             Double robotHeading = robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): null;
 
-            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, null);
+            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, comparator);
             if (limelightInfo != null)
             {
                 pipelineIndex = limelightVision.getPipeline();
@@ -530,36 +534,36 @@ public class Vision
     }   //isVisionProcessorEnabled
 
     /**
-     * This method enables/disables AprilTag vision.
+     * This method enables/disables Webcam AprilTag vision.
      *
      * @param enabled specifies true to enable, false to disable.
      */
-    public void setAprilTagVisionEnabled(boolean enabled)
+    public void setWebcamAprilTagVisionEnabled(boolean enabled)
     {
-        setVisionProcessorEnabled(aprilTagProcessor, enabled);
-    }   //setAprilTagVisionEnabled
+        setVisionProcessorEnabled(webcamAprilTagProcessor, enabled);
+    }   //setWebcamAprilTagVisionEnabled
 
     /**
-     * This method checks if AprilTag vision is enabled.
+     * This method checks if Webcam AprilTag vision is enabled.
      *
      * @return true if enabled, false if disabled.
      */
-    public boolean isAprilTagVisionEnabled()
+    public boolean isWebcamAprilTagVisionEnabled()
     {
-        return isVisionProcessorEnabled(aprilTagProcessor);
-    }   //isAprilTagVisionEnabled
+        return isVisionProcessorEnabled(webcamAprilTagProcessor);
+    }   //isWebcamAprilTagVisionEnabled
 
     /**
-     * This method calls AprilTag vision to detect the AprilTag object.
+     * This method calls Webcam AprilTag vision to detect the AprilTag object.
      *
      * @param id specifies the AprilTag ID to look for, null if match to any ID.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected AprilTag object info.
      */
-    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getDetectedAprilTag(Integer id, int lineNum)
+    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getWebcamDetectedAprilTag(Integer id, int lineNum)
     {
         TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo =
-            aprilTagVision.getBestDetectedTargetInfo(id, null);
+            webcamAprilTagVision.getBestDetectedTargetInfo(id, null);
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
@@ -576,7 +580,7 @@ public class Vision
         }
 
         return aprilTagInfo;
-    }   //getDetectedAprilTag
+    }   //getWebcamDetectedAprilTag
 
     /**
      * This method calculates the robot's absolute field location with the detected AprilTagInfo.
@@ -621,17 +625,18 @@ public class Vision
         if (isLimelightVisionEnabled())
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
-                getLimelightDetectedObject(FtcLimelightVision.ResultType.Fiducial, null, -1);
+                getLimelightDetectedObject(
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, null, -1);
 
             if (aprilTagInfo != null)
             {
                 robotPose = aprilTagInfo.detectedObj.robotPose;
             }
         }
-        else if (isAprilTagVisionEnabled())
+        else if (isWebcamAprilTagVisionEnabled())
         {
             // Find any AprilTag in view.
-            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getDetectedAprilTag(null, -1);
+            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getWebcamDetectedAprilTag(null, -1);
 
             if (aprilTagInfo != null)
             {
@@ -1121,9 +1126,9 @@ public class Vision
                     lineNum = limelightVision.updateStatus(lineNum);
                 }
 
-                if (aprilTagVision != null)
+                if (webcamAprilTagVision != null)
                 {
-                    lineNum = aprilTagVision.updateStatus(lineNum);
+                    lineNum = webcamAprilTagVision.updateStatus(lineNum);
                 }
 
                 if (artifactVision != null)

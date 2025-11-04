@@ -53,8 +53,8 @@ public class Dashboard
     @Config
     public static class Subsystem_Drivebase
     {
-        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.DecodeInfo.baseParams;
-        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.DecodeInfo.swerveParams;
+        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.SwerveRobotInfo.baseParams;
+        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.SwerveRobotInfo.swerveParams;
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
         public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
         public static double driveSlowScale = 0.3;

@@ -311,8 +311,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                         robot.vision.limelightVision.getBestDetectedTargetInfo(
                             FtcLimelightVision.ResultType.Fiducial,
-                            taskParams.alliance == null? new int[] {20, 24}:
-                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? new int[] {20}: new int[] {24},
+                            taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
+                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
                             null,
                             null);
                     if (aprilTagInfo != null)
