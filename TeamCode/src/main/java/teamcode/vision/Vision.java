@@ -766,7 +766,7 @@ public class Vision
      * @param artifactType specifies the artifact type to be detected.
      * @param groundOffset specifies the ground offset of the detected sample.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
-     * @return detected color blob object info.
+     * @return detected artifact object info.
      */
     public TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> getDetectedArtifact(
         ArtifactType artifactType, double groundOffset, int lineNum)

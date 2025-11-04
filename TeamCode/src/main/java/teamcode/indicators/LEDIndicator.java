@@ -196,6 +196,7 @@ public class LEDIndicator
             }
         }
     }   //setDriveOrientation
+
     /**
      * This method sets the motif pattern on the status LED.
      *
