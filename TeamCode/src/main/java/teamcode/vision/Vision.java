@@ -474,16 +474,12 @@ public class Vision
                 switch (pipelineIndex)
                 {
                     case 0:
-                        objectName = (int)limelightInfo.detectedObj.objId == 20?
+                        objectName = (int) limelightInfo.detectedObj.objId == 20?
                             LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
                         break;
 
                     case 1:
-                        objectName = LEDIndicator.PURPLE_BLOB;
-                        break;
-
-                    case 2:
-                        objectName = LEDIndicator.GREEN_BLOB;
+                        objectName = (String)limelightInfo.detectedObj.objId;
                         break;
 
                     default:
