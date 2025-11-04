@@ -298,6 +298,12 @@ public class Robot
                 robotDrive.gyro.setEnabled(false);
             }
         }
+
+        if (ledIndicator != null)
+        {
+            globalTracer.traceInfo(moduleName, "Turning all LED indicators OFF.");
+            ledIndicator.reset();
+        }
     }   //stopMode
 
     /**

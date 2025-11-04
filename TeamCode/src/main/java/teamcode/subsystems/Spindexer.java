@@ -27,6 +27,8 @@ import android.graphics.Color;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import java.util.Arrays;
+
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
@@ -36,6 +38,7 @@ import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcDataBuffer;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
@@ -94,13 +97,13 @@ public class Spindexer extends TrcSubsystem
         public static final int MAX_CAPACITY                    = 3;
 
         public static final double GREEN_LOW_THRESHOLD          = 100.0;
-        public static final double GREEN_HIGH_THRESHOLD         = 180.0;
-        public static final double PURPLE_LOW_THRESHOLD         = 200.0;
-        public static final double PURPLE_HIGH_THRESHOLD        = 240.0;
+        public static final double PURPLE_LOW_THRESHOLD         = 180.0;
+        public static final double PURPLE_HIGH_THRESHOLD        = 300.0;
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = GREEN_LOW_THRESHOLD;
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = PURPLE_HIGH_THRESHOLD;
-        public static final double ENTRY_TRIGGER_SETTLING       = 0.15;     // in seconds
+        public static final double ENTRY_TRIGGER_SETTLING       = 0.0;      // in seconds
+        public static final double ENTRY_REFRESH_TIMEOUT        = 5.0;
 
         public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
         public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
@@ -237,10 +240,14 @@ public class Spindexer extends TrcSubsystem
             // In other words, if this gets called, it is guaranteed that the Intake is active and an artifact has
             // just entered the entry slot of the Spindexer.
             TrcEvent triggerEvent = (TrcEvent) context;
-            double hue = entryTrigger.getLastTriggeredValue();
+            TrcDataBuffer.DataSummary triggeredData = entryTrigger.getLastTriggeredData();
+            double hue = triggeredData.averageValue;
             Vision.ArtifactType artifactType = getEntryArtifactType(hue);
             String artifactName = null;
 
+            spindexer.tracer.traceInfo(
+                instanceName, "hue=%f (%f/%f), count=%d",
+                hue, triggeredData.minimumValue, triggeredData.maximumValue, triggeredData.dataCount);
             if (artifactType == Vision.ArtifactType.Purple)
             {
                 numPurpleArtifacts++;
@@ -273,7 +280,22 @@ public class Spindexer extends TrcSubsystem
                 robot.ledIndicator.setSpindexerPatternOn(entrySlot, artifactName);
             }
 
-            moveToNextVacantEntrySlot(null, triggerEvent);
+            if (numPurpleArtifacts + numGreenArtifacts + numUnknownArtifacts < 3)
+            {
+                moveToNextVacantEntrySlot(null, triggerEvent);
+                // moveToNextVacantEntrySlot will signal the triggerEvent when done.
+                // Consume it here so we don't signal it twice.
+                triggerEvent = null;
+            }
+            else if (robot.intakeSubsystem.isBulldozeEnabled())
+            {
+                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+            }
+
+            if (triggerEvent != null)
+            {
+                triggerEvent.signal();
+            }
         }
         else
         {
@@ -332,7 +354,7 @@ public class Spindexer extends TrcSubsystem
                 // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
                 // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
                 //
-                double vel = ((TrcTriggerThresholdRange) shootVelTrigger).getLastTriggeredValue();
+                double vel = ((TrcTriggerThresholdRange) shootVelTrigger).getTriggeredAverageValue();
                 Vision.ArtifactType artifactType = slotStates[exitSlot];
                 slotStates[exitSlot] = Vision.ArtifactType.None;
                 if (artifactType == Vision.ArtifactType.Purple)
@@ -389,7 +411,7 @@ public class Spindexer extends TrcSubsystem
      */
     private void updateExpectedArtifactType()
     {
-        if (numPurpleArtifacts + numGreenArtifacts == 3)
+        if (numPurpleArtifacts + numGreenArtifacts + numUnknownArtifacts == 3)
         {
             expectedArtifactType = Vision.ArtifactType.None;
         }
@@ -459,6 +481,17 @@ public class Spindexer extends TrcSubsystem
                 (int) (normalizedColors.blue*255),
                 hsvValues);
             hue = hsvValues[0];
+            if (hue == 120.0 || hue == 180.0 || hue == 240.0)
+            {
+                spindexer.tracer.traceInfo(
+                    instanceName, "HSV=%s", Arrays.toString(hsvValues));
+            }
+
+            if (hue == 180.0)
+            {
+                // When hue is 180.0, we can't really tell purple from green. Just throw away this data.
+                hue = 0.0;
+            }
         }
 
         return hue;
@@ -590,6 +623,7 @@ public class Spindexer extends TrcSubsystem
             {
                 robot.intake.cancel();
             }
+
             if (event != null)
             {
                 event.signal();
@@ -920,7 +954,7 @@ public class Spindexer extends TrcSubsystem
                 case EXAMINE_SLOT:
                     examinedSlotIndex++;
                     spindexer.setEntryTriggerEnabled(true);
-                    sm.waitForSingleEvent(entryTriggerEvent, State.MOVE_TO_NEXT_SLOT, 1.0);
+                    sm.waitForSingleEvent(entryTriggerEvent, State.MOVE_TO_NEXT_SLOT, Params.ENTRY_REFRESH_TIMEOUT);
                     break;
 
                 case DONE:

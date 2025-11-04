@@ -166,6 +166,25 @@ public class LEDIndicator
     }   //LEDIndicator
 
     /**
+     * This method turns all LED indicator patterns off.
+     */
+    public void reset()
+    {
+        if (statusIndicator != null)
+        {
+            statusIndicator.reset();
+        }
+
+        for (TrcPriorityIndicator spindexerIndicator : spindexerIndicators)
+        {
+            if (spindexerIndicator != null)
+            {
+                spindexerIndicator.reset();
+            }
+        }
+    }   //reset
+
+    /**
      * This method sets the statusLED to indicate the drive orientation mode of the robot.
      *
      * @param orientation specifies the drive orientation mode.
@@ -215,7 +234,7 @@ public class LEDIndicator
                     break;
             }
         }
-    }
+    }   //setMotifPattern
 
     /**
      * This method sets the statusLED pattern ON or OFF.
