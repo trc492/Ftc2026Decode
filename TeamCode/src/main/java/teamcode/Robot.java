@@ -34,7 +34,6 @@ import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.Intake;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.BaseDrive;
-import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
@@ -70,8 +69,6 @@ public class Robot
     public Vision vision;
     // Sensors and indicators.
     public LEDIndicator ledIndicator;
-    public RumbleIndicator driverRumble;
-    public RumbleIndicator operatorRumble;
     public FtcRobotBattery battery;
     // Subsystems.
     public Intake intakeSubsystem;
@@ -83,6 +80,7 @@ public class Robot
     // Autotasks.
     public TaskAutoPickup autoPickupTask;
     public TaskAutoShoot autoShootTask;
+
     public int obeliskAprilTagId = 0;
     public Vision.ArtifactType[] obeliskMotif = null;
 
@@ -105,10 +103,10 @@ public class Robot
         robotDrive = baseDrive.getRobotDrive();
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
-            (RobotParams.Preferences.useWebcamAprilTagVision ||
+            (RobotParams.Preferences.useLimelightVision ||
+             RobotParams.Preferences.useWebcamAprilTagVision ||
              RobotParams.Preferences.useArtifactVision ||
-             RobotParams.Preferences.useClassifierVision ||
-             RobotParams.Preferences.useLimelightVision))
+             RobotParams.Preferences.useClassifierVision))
         {
             vision = new Vision(this);
         }
@@ -179,7 +177,7 @@ public class Robot
     @Override
     public String toString()
     {
-        return robotInfo != null? robotInfo.robotName: RobotParams.Robot.ROBOT_CODEBASE;
+        return robotInfo != null? robotInfo.robotName: RobotParams.Preferences.robotType.toString();
     }   //toString
 
     /**
@@ -218,14 +216,6 @@ public class Robot
             // Consume it so it's no longer valid for next run.
             endOfAutoRobotPose = null;
         }
-
-//        if (vision != null)
-//        {
-//            globalTracer.traceInfo(moduleName, "Enabling LimelightVision.");
-//            vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
-//            globalTracer.traceInfo(moduleName, "Enabling WebCam ArtifactVision.");
-//            vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
-//        }
 
         TrcDigitalInput.setElapsedTimerEnabled(true);
         TrcMotor.setElapsedTimerEnabled(true);
@@ -267,10 +257,10 @@ public class Robot
                 vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, false);
             }
 
-            if (vision.isAprilTagVisionEnabled())
+            if (vision.isWebcamAprilTagVisionEnabled())
             {
                 globalTracer.traceInfo(moduleName, "Disabling Webcam AprilTagVision.");
-                vision.setAprilTagVisionEnabled(false);
+                vision.setWebcamAprilTagVisionEnabled(false);
             }
 
             if (vision.artifactVision != null)
@@ -316,9 +306,6 @@ public class Robot
     public void cancelAll()
     {
         globalTracer.traceInfo(moduleName, "Cancel all operations.");
-        // Cancel subsystems.
-        if (robotDrive != null) robotDrive.cancel();
-        TrcSubsystem.cancelAll();
         // Cancel auto tasks.
         if (autoPickupTask != null)
         {
@@ -329,6 +316,8 @@ public class Robot
         {
             autoShootTask.cancel();
         }
+        // Cancel subsystems.
+        TrcSubsystem.cancelAll();
     }   //cancelAll
 
     /**

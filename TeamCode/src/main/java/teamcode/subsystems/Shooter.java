@@ -53,6 +53,8 @@ import trclib.vision.TrcVisionTargetInfo;
  */
 public class Shooter extends TrcSubsystem
 {
+    public static final String FAR_ZONE_SHOOT_POINT             = "Target_9.44ft_2";
+
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Shooter";
@@ -487,7 +489,7 @@ public class Shooter extends TrcSubsystem
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, -1);
+                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, null, -1);
             if (aprilTagInfo == null)
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.

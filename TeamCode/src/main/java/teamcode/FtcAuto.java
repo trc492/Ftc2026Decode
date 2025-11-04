@@ -183,7 +183,7 @@ public class FtcAuto extends FtcOpMode
                 break;
 
             case PID_DRIVE:
-                if (robot.robotDrive != null)
+                if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
                 {
                     autoCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
                 }
@@ -232,19 +232,20 @@ public class FtcAuto extends FtcOpMode
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> detectedAprilTag =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, -1);
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags,
+                    this::compareObeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {
                 robot.obeliskAprilTagId = (int) detectedAprilTag.detectedObj.objId;
-                if (FtcAuto.autoChoices.alliance == Alliance.BLUE_ALLIANCE)
-                {
-                    // We are Blue Alliance
-                    robot.obeliskAprilTagId -= 1;
-                    if (robot.obeliskAprilTagId <= 20)
-                    {
-                        robot.obeliskAprilTagId = 23;
-                    }
-                }
+//                if (FtcAuto.autoChoices.alliance == Alliance.BLUE_ALLIANCE)
+//                {
+//                    // We are Blue Alliance
+//                    robot.obeliskAprilTagId -= 1;
+//                    if (robot.obeliskAprilTagId <= 20)
+//                    {
+//                        robot.obeliskAprilTagId = 23;
+//                    }
+//                }
                 robot.obeliskMotif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
                 robot.ledIndicator.setMotifPattern(robot.obeliskMotif);
             }
@@ -351,6 +352,23 @@ public class FtcAuto extends FtcOpMode
             autoCommand.cmdPeriodic(elapsedTime);
         }
     }   //periodic
+
+    /**
+     * This method is called to sort the detected AprilTags in the array to determine the best AprilTag we are looking
+     * for by the screen X distance.
+     *
+     * @param a specifies the first target
+     * @param b specifies the second target.
+     * @return negative value if a has closer distance than b, 0 if a and b have equal distances, positive value
+     *         if a has higher distance than b.
+     */
+    private int compareObeliskAprilTags(
+        TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> a,
+        TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> b)
+    {
+        int result = (int)((b.objRect.x - a.objRect.x)*100);
+        return autoChoices.alliance == Alliance.BLUE_ALLIANCE? result: -result;
+    }   //compareObeliskAprilTags
 
     /**
      * This method creates the autonomous menus, displays them and stores the choices.

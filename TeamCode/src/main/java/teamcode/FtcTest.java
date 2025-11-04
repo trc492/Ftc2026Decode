@@ -93,6 +93,7 @@ public class FtcTest extends FtcTeleOp
 
     private final TestChoices testChoices = new TestChoices();
     private TrcRobot.RobotCommand testCommand = null;
+    private boolean teleOpControlEnabled = true;
     // Drive Speed Test.
     private double maxDriveVelocity = 0.0;
     private double maxDriveAcceleration = 0.0;
@@ -106,9 +107,8 @@ public class FtcTest extends FtcTeleOp
     private boolean tuneDriveAtEndPoint = false;
     // Swerve Steering Calibration.
     private boolean steerCalibrating = false;
-    private boolean teleOpControlEnabled = true;
+    // Vision.
     private boolean fpsMeterEnabled = false;
-    // Vision Test.
     private Vision.ArtifactType testVisionArtifactType = Vision.ArtifactType.Any;
 
     //
@@ -219,10 +219,10 @@ public class FtcTest extends FtcTeleOp
             case VISION_TEST:
                 if (robot.vision != null)
                 {
-                    if (robot.vision.aprilTagVision != null)
+                    if (robot.vision.webcamAprilTagVision != null)
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling AprilTagVision for Webcam.");
-                        robot.vision.setAprilTagVisionEnabled(true);
+                        robot.vision.setWebcamAprilTagVisionEnabled(true);
                     }
 
                     if (robot.vision.limelightVision != null)
@@ -525,31 +525,7 @@ public class FtcTest extends FtcTeleOp
             case A:
             case B:
             case X:
-                break;
-
             case Y:
-                if (robot.vision != null && robot.vision.isLimelightVisionEnabled() && robot.shooterSubsystem != null)
-                {
-                    if (pressed)
-                    {
-                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
-                        {
-                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
-                            robot.shooterSubsystem.disableAprilTagTracking(null);
-                        }
-                        else
-                        {
-                            robot.globalTracer.traceInfo(
-                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedIds=%s).",
-                                Arrays.toString(Dashboard.Subsystem_Vision.trackedAprilTagIds));
-                            robot.shooterSubsystem.enableAprilTagTracking(
-                                null, Dashboard.Subsystem_Vision.trackedAprilTagIds);
-                        }
-                    }
-                    passToTeleOp = false;
-                }
-                break;
-
             case LeftBumper:
             case RightBumper:
                 break;
@@ -833,60 +809,10 @@ public class FtcTest extends FtcTeleOp
         switch (button)
         {
             case A:
-                if (robot.intake != null)
-                {
-                    if (pressed)
-                    {
-                        if (robot.autoPickupTask != null)
-                        {
-                            if (robot.autoPickupTask.isActive())
-                            {
-                                robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Auto Intake");
-                                robot.autoPickupTask.cancel();
-                            }
-                            else
-                            {
-                                robot.globalTracer.traceInfo(
-                                    moduleName, ">>>>> Auto Intake (useVision=" + !operatorAltFunc + ")");
-                                robot.autoPickupTask.autoPickup(moduleName, null, !operatorAltFunc);
-                            }
-                        }
-                        else
-                        {
-                            if (!operatorAltFunc)
-                            {
-                                if (robot.intake.isActive())
-                                {
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
-                                }
-                                else
-                                {
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                                    robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
-                                }
-                            }
-                            else
-                            {
-                                if (robot.intake.isAutoActive())
-                                {
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Sensor Intake");
-                                    robot.intake.cancel();
-                                }
-                                else
-                                {
-                                    robot.globalTracer.traceInfo(moduleName, ">>>>> Sensor Intake");
-                                    robot.intake.autoIntake(moduleName);
-                                }
-                            }
-                        }
-                    }
-                    passToTeleOp = false;
-                }
                 break;
 
             case B:
-                if (robot.shooter != null)
+                if (robot.shooterSubsystem != null)
                 {
                     if (pressed)
                     {
@@ -914,6 +840,12 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
+                            // Cancel AutoShoot in case it's active.
+                            if (robot.autoShootTask != null)
+                            {
+                                robot.autoShootTask.cancel();
+                            }
+
                             // Auto Shoot Task is disabled, shoot manually.
                             if (robot.shooter.isActive())
                             {
@@ -923,10 +855,6 @@ public class FtcTest extends FtcTeleOp
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
-//                                robot.shooter.aimShooter(
-//                                    moduleName, Dashboard.Subsystem_Shooter.shootMotor1Velocity / 60.0, 0.0,
-//                                    Dashboard.Subsystem_Shooter.tiltAngle, null, null, 0.0,
-//                                    robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                                 robot.shooter.tiltMotor.setPosition(
                                     moduleName, 0.0, Dashboard.Subsystem_Shooter.tiltAngle, true,
                                     Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
@@ -942,22 +870,6 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case X:
-                if (robot.shooterSubsystem != null)
-                {
-                    if (operatorAltFunc)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
-                        robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
-                    }
-                    else if (pressed)
-                    {
-                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shoot");
-                        robot.shooterSubsystem.shoot(moduleName, null);
-                    }
-                    passToTeleOp = false;
-                }
-                break;
-
             case Y:
             case LeftBumper:
             case RightBumper:
@@ -1114,12 +1026,12 @@ public class FtcTest extends FtcTeleOp
             {
                 robot.vision.getLimelightDetectedObject(
                     robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
-                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python, null, -1);
+                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python, null, null, -1);
             }
 
-            if (robot.vision.aprilTagVision != null)
+            if (robot.vision.webcamAprilTagVision != null)
             {
-                robot.vision.getDetectedAprilTag(null, -1);
+                robot.vision.getWebcamDetectedAprilTag(null, -1);
             }
 
             if (robot.vision.isArtifactVisionEnabled(Vision.ArtifactType.Any))

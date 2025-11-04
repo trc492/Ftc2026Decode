@@ -51,6 +51,8 @@ public class FtcTeleOp extends FtcOpMode
     protected Robot robot;
     protected FtcGamepad driverGamepad;
     protected FtcGamepad operatorGamepad;
+    protected RumbleIndicator driverRumble;
+    protected RumbleIndicator operatorRumble;
     private double drivePowerScale;
     private double turnPowerScale;
     protected boolean driverAltFunc = false;
@@ -82,7 +84,7 @@ public class FtcTeleOp extends FtcOpMode
         {
             String filePrefix = Robot.matchInfo != null?
                 String.format(Locale.US, "%s%02d_TeleOp", Robot.matchInfo.matchType, Robot.matchInfo.matchNumber):
-                "Unknown_TeleOp";
+                "Standalone_TeleOp";
             TrcDbgTrace.openTraceLog(RobotParams.Robot.LOG_FOLDER_PATH, filePrefix);
         }
         // Create and initialize Gamepads.
@@ -98,8 +100,8 @@ public class FtcTeleOp extends FtcOpMode
 
         if (RobotParams.Preferences.useRumble)
         {
-            robot.driverRumble = new RumbleIndicator("DriverRumble", driverGamepad);
-            robot.operatorRumble = new RumbleIndicator("OperatorRumble", operatorGamepad);
+            driverRumble = new RumbleIndicator("DriverRumble", driverGamepad);
+            operatorRumble = new RumbleIndicator("OperatorRumble", operatorGamepad);
         }
 
         drivePowerScale = Dashboard.Subsystem_Drivebase.driveNormalScale;
@@ -134,14 +136,14 @@ public class FtcTeleOp extends FtcOpMode
         //
         robot.startMode(nextMode);
         //
-        // Enable AprilTag vision for re-localization.
+        // Enable AprilTag vision for re-localization and AutoShoot.
         //
         if (robot.vision != null)
         {
-            if (robot.vision.aprilTagVision != null)
+            if (robot.vision.webcamAprilTagVision != null)
             {
                 robot.globalTracer.traceInfo(moduleName, "Enabling WebCam AprilTagVision.");
-                robot.vision.setAprilTagVisionEnabled(true);
+                robot.vision.setWebcamAprilTagVisionEnabled(true);
             }
             else if (robot.vision.limelightVision != null)
             {
@@ -229,14 +231,14 @@ public class FtcTeleOp extends FtcOpMode
                     // Check for EndGame warning.
                     if (elapsedTime > RobotParams.Game.ENDGAME_DEADLINE)
                     {
-                        if (robot.driverRumble != null)
+                        if (driverRumble != null)
                         {
-                            robot.driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                            driverRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
                         }
 
-                        if (robot.operatorRumble != null)
+                        if (operatorRumble != null)
                         {
-                            robot.operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
+                            operatorRumble.setRumblePattern(RumbleIndicator.ENDGAME_DEADLINE);
                         }
                     }
                 }
@@ -367,6 +369,12 @@ public class FtcTeleOp extends FtcOpMode
                         }
                         else
                         {
+                            // Cancel AutoShoot in case it's active.
+                            if (robot.autoShootTask != null)
+                            {
+                                robot.autoShootTask.cancel();
+                            }
+
                             preSpinOn = !preSpinOn;
                             if (preSpinOn)
                             {
@@ -510,7 +518,7 @@ public class FtcTeleOp extends FtcOpMode
                 // Do AprilTag Vision re-localization.
                 if (robot.vision != null && robot.robotDrive != null)
                 {
-                    boolean hasAprilTagVision = robot.vision.isAprilTagVisionEnabled();
+                    boolean hasAprilTagVision = robot.vision.isWebcamAprilTagVisionEnabled();
                     // If Webcam AprilTag vision is not enabled, check if we have Limelight since Limelight has
                     // AprilTag pipeline as well.
                     if (!hasAprilTagVision && robot.vision.limelightVision != null)
@@ -590,6 +598,8 @@ public class FtcTeleOp extends FtcOpMode
                     }
                     else
                     {
+                        // Cancel Bulldoze Intake in case it's enabled.
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                         if (pressed)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Start Intake Eject");
@@ -633,6 +643,12 @@ public class FtcTeleOp extends FtcOpMode
                         }
                         else
                         {
+                            // Cancel AutoShoot in case it's active.
+                            if (robot.autoShootTask != null)
+                            {
+                                robot.autoShootTask.cancel();
+                            }
+
                             if (robot.shooter.isActive())
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Manual Shoot");
@@ -641,15 +657,19 @@ public class FtcTeleOp extends FtcOpMode
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
-                                TrcShootParamTable.Params manualShootParams = Shooter.Params.shootParamTable.get("Target_9.44ft_2");
-                                robot.spindexerSubsystem.moveToExitSlotWithArtifact(null, Vision.ArtifactType.Any, null);
+                                TrcShootParamTable.Params manualShootParams =
+                                    Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                                // Fire and forget assuming Spindexer moves faster than aimShooter.
+                                robot.spindexerSubsystem.moveToExitSlotWithArtifact(
+                                    null, Vision.ArtifactType.Any, null);
+                                // Fire and forget assuming Tilter moves faster than aimShooter.
                                 robot.shooter.tiltMotor.setPosition(
-                                        moduleName, 0.0, manualShootParams.tiltAngle, true,
-                                        Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
+                                    moduleName, 0.0, manualShootParams.tiltAngle, true,
+                                    Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
                                 robot.shooter.aimShooter(
-                                        moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
-                                        null, null, null, 0.0, robot.shooterSubsystem::shoot,
-                                        Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
+                                    moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
+                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                    Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
                     }
@@ -659,9 +679,22 @@ public class FtcTeleOp extends FtcOpMode
             case X:
                 if (robot.shooterSubsystem != null)
                 {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
-                    if (pressed) robot.cancelAll();
-                    robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                    // Cancel AutoShoot in case it's active.
+                    if (robot.autoShootTask != null)
+                    {
+                        robot.autoShootTask.cancel();
+                    }
+
+                    if (operatorAltFunc)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
+                        robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                    }
+                    else if (pressed)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, ">>>>> Shoot");
+                        robot.shooterSubsystem.shoot(moduleName, null);
+                    }
                 }
                 break;
 
@@ -703,17 +736,19 @@ public class FtcTeleOp extends FtcOpMode
             case DpadUp:
                 if (pressed)
                 {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 3");
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot to 3");
                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 3;
                 }
                 break;
+
             case DpadDown:
                 if (pressed)
                 {
-                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot = 1");
+                    robot.globalTracer.traceInfo(moduleName, ">>>>> Setting numArtifactsToShoot to 1");
                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot = 1;
                 }
                 break;
+
             case DpadLeft:
                 if (robot.spindexer != null)
                 {

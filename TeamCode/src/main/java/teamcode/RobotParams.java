@@ -43,7 +43,7 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.DecodeRobot;
+        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.SwerveRobot;
         public static final boolean inCompetition               = true;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
@@ -96,8 +96,6 @@ public class RobotParams
         public static final String TEAM_FOLDER_PATH             = "/sdcard/FIRST/ftc3543";
         public static final String LOG_FOLDER_PATH              = TEAM_FOLDER_PATH + "/tracelogs";
         public static final String STEER_ZERO_CAL_FILE          = TEAM_FOLDER_PATH + "/SteerZeroCalibration.txt";
-        public static final double DASHBOARD_UPDATE_INTERVAL    = 0.2;      // in msec
-        public static final String ROBOT_CODEBASE               = "Ftc2026Decode";
         //TODO: Needs adjustment with Shooter and side plates mounted.
         public static final double ROBOT_LENGTH                 = 432.0*TrcUtil.INCHES_PER_MM;
         public static final double ROBOT_WIDTH                  = 384.0*TrcUtil.INCHES_PER_MM;
@@ -123,6 +121,9 @@ public class RobotParams
             new TrcPose2D(-Field.HALF_FIELD_INCHES, Field.HALF_FIELD_INCHES, 0.0);
         public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER.subtractRelativePose(APRILTAG_POSES[0]);
         public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER.subtractRelativePose(APRILTAG_POSES[4]);
+        public static final int[] blueGoalAprilTag              = new int[] {20};
+        public static final int[] redGoalAprilTag               = new int[] {24};
+        public static final int[] anyGoalAprilTags              = new int[] {20, 24};
         public static final int[] obeliskAprilTags              = new int[] {21, 22, 23};
         public static final Vision.ArtifactType[][] motifPatterns =
             new Vision.ArtifactType[][]
@@ -138,23 +139,23 @@ public class RobotParams
             new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, -90.0);
         public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER     =
             new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0,
-                          1.0*Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0,
+                          Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0,
                           -90.0);
 
         public static final TrcPose2D RED_PRELOAD_LAUNCH_SHOOT_POSE =
             new TrcPose2D(0.0, 0.0, 0.0); // TODO: Determine if we can shoot from starting position
         public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   =
-            new TrcPose2D(-1.0*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 135.0); //TODO: Can be changed to 1
+            new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 135.0); //TODO: Can be changed to 1
         // .0 if using motif vision for preload
         public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE      =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
 
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   =
-            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
+            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2   =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3   =
-            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, 1.0*Field.FULL_TILE_INCHES, 0.0);
+            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POS           =
             {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
         public static final TrcPose2D RED_PARK_POSE                 = new TrcPose2D(0.0, 0.0, 0.0); //TODO: Not sure about this
