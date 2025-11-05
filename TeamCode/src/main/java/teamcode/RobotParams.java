@@ -110,18 +110,18 @@ public class RobotParams
         // AprilTag locations.
         public static final TrcPose2D[] APRILTAG_POSES          = new TrcPose2D[] {
             new TrcPose2D(-58.3727, -55.6425, -133.62826142189439980808796560491),  // TagId 20: z = 29.5 in
-            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 21: z =
-            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 22: z =
-            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 23: z =
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 21: z = 18.75 in
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 22: z = 18.75 in
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 23: z = 18.75 in
             new TrcPose2D(-58.3727, 55.6425, -46.371738578105600191912034395085)    // TagId 24: z = 29.5 in
         };
-        public static final TrcPose2D BLUE_CORNER               =
+        public static final TrcPose2D BLUE_CORNER_POSE          =
             new TrcPose2D(-Field.HALF_FIELD_INCHES, -Field.HALF_FIELD_INCHES, -135.0);
-        public static final TrcPose2D RED_CORNER                =
+        public static final TrcPose2D RED_CORNER_POSE           =
             new TrcPose2D(-Field.HALF_FIELD_INCHES, Field.HALF_FIELD_INCHES, -45.0);
-        public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER.subtractRelativePose(APRILTAG_POSES[0]);
-        public static final TrcPose2D sanityCheck = APRILTAG_POSES[0].addRelativePose(BLUE_APRILTAG_TO_CORNER);
-        public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER.subtractRelativePose(APRILTAG_POSES[4]);
+        public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER_POSE.relativeTo(APRILTAG_POSES[0]);
+        public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER_POSE.relativeTo(APRILTAG_POSES[4]);
+
         public static final int[] blueGoalAprilTag              = new int[] {20};
         public static final int[] redGoalAprilTag               = new int[] {24};
         public static final int[] anyGoalAprilTags              = new int[] {20, 24};

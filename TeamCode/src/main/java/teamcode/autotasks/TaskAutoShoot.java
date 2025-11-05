@@ -265,7 +265,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     tracer.traceInfo(moduleName, "***** Not using AprilTag Vision, aim at AprilTag using odometry.");
                     int aprilTagIndex = taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? 0: 4;
                     TrcPose2D robotPose = robot.robotDrive.driveBase.getFieldPosition();
-                    targetPose = RobotParams.Game.APRILTAG_POSES[aprilTagIndex].subtractRelativePose(robotPose);
+                    targetPose = RobotParams.Game.APRILTAG_POSES[aprilTagIndex].relativeTo(robotPose);
                     tracer.traceInfo(
                         moduleName, "robotPose=%s, aprilTagPose=%s, targetPose=%s",
                         robotPose, RobotParams.Game.APRILTAG_POSES[aprilTagIndex], targetPose);
@@ -329,14 +329,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             robot.ledIndicator.setStatusPatternOn(
                                 aprilTagId == 20? LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG, true);
                         }
-                        TrcPose2D aprilTagToCornerPose =
+                        TrcPose2D adjustedTargetPose = targetPose.addRelativePose(
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER;
-                        TrcPose2D adjustedTargetPose = targetPose.addRelativePose(aprilTagToCornerPose);
-                        tracer.traceInfo(
-                            moduleName, "\n\taprilTagPose=%s\n\taprilTagToCorner=%s\n\tadjustedPose=%s\n\tsanity=%s",
-                            targetPose, aprilTagToCornerPose, adjustedTargetPose, RobotParams.Game.sanityCheck);
-                            // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
+                                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER);
+                        tracer.traceInfo(moduleName, "adjustedTargetPose=%s", adjustedTargetPose);
+                        targetPose.angle = adjustedTargetPose.angle;
+                        // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
                         targetPose.angle += robot.shooter.getPanAngle();
 //                        if (taskParams.inAuto && FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
 //                        {
