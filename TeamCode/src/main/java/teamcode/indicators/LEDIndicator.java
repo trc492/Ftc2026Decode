@@ -223,15 +223,22 @@ public class LEDIndicator
      */
     public void setMotifPattern(Vision.ArtifactType[] motifPattern)
     {
-        for (int i = 0; i < 3; i++) {
-            switch (motifPattern[i]) {
-                case Purple:
-                    spindexerIndicators[i].setPatternState(PURPLE_BLOB, true);
-                    break;
+        for (int i = 0; i < motifPattern.length; i++)
+        {
+            if (spindexerIndicators[i] != null)
+            {
+                switch (motifPattern[i])
+                {
+                    case Purple:
+                        spindexerIndicators[i].setPatternState(PURPLE_BLOB, true);
+                        spindexerIndicators[i].setPatternState(GREEN_BLOB, false);
+                        break;
 
-                case Green:
-                    spindexerIndicators[i].setPatternState(GREEN_BLOB, true);
-                    break;
+                    case Green:
+                        spindexerIndicators[i].setPatternState(GREEN_BLOB, true);
+                        spindexerIndicators[i].setPatternState(PURPLE_BLOB, false);
+                        break;
+                }
             }
         }
     }   //setMotifPattern

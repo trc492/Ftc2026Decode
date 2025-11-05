@@ -237,17 +237,11 @@ public class FtcAuto extends FtcOpMode
             if (detectedAprilTag != null)
             {
                 robot.obeliskAprilTagId = (int) detectedAprilTag.detectedObj.objId;
-//                if (FtcAuto.autoChoices.alliance == Alliance.BLUE_ALLIANCE)
-//                {
-//                    // We are Blue Alliance
-//                    robot.obeliskAprilTagId -= 1;
-//                    if (robot.obeliskAprilTagId <= 20)
-//                    {
-//                        robot.obeliskAprilTagId = 23;
-//                    }
-//                }
                 robot.obeliskMotif = RobotParams.Game.motifPatterns[robot.obeliskAprilTagId - 21];
-                robot.ledIndicator.setMotifPattern(robot.obeliskMotif);
+                if (robot.ledIndicator != null)
+                {
+                    robot.ledIndicator.setMotifPattern(robot.obeliskMotif);
+                }
             }
         }
     }   //initPeriodic
