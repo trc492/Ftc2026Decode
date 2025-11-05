@@ -481,10 +481,14 @@ public class Spindexer extends TrcSubsystem
                 (int) (normalizedColors.blue*255),
                 hsvValues);
             hue = hsvValues[0];
-            if (hue == 120.0 || hue == 180.0 || hue == 240.0)
+            if (hue >= Params.GREEN_LOW_THRESHOLD)
             {
                 spindexer.tracer.traceInfo(
-                    instanceName, "HSV=%s", Arrays.toString(hsvValues));
+                    instanceName, "HSV=%s, rgb=%d/%d/%d",
+                    Arrays.toString(hsvValues),
+                    (int) (normalizedColors.red*255),
+                    (int) (normalizedColors.green*255),
+                    (int) (normalizedColors.blue*255));
             }
 
             if (hue == 180.0)
