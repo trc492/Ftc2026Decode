@@ -45,6 +45,7 @@ import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
+import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
@@ -97,6 +98,27 @@ public class Vision
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
         .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
+
+    // IntoTheDeep Robot
+    public static final FtcRobotDrive.VisionInfo sampleCamParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Webcam 1", 640, 480)
+        .setCameraPose(-4.25, 5.5, 10.608, -2.0, -32.346629699, 0.0)
+        .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
+        .setHomographyParams(
+            new TrcHomographyMapper.Rectangle(
+                14.0, 28.0,                     // Camera Top Left
+                612.0, 33.0,                    // Camera Top Right
+                56.0, 448.0,                    // Camera Bottom Left
+                581.0, 430.5),                  // Camera Bottom Right
+            new TrcHomographyMapper.Rectangle(
+                -19.0, 37.5,                    // World Top Left
+                24.0, 37.5,                     // World Top Right
+                -4.75, 9.0,                     // World Bottom Left
+                6.25, 9.0));                    // World Bottom Right
+    public static final FtcRobotDrive.VisionInfo intoTheDeepLimelightParams = new FtcRobotDrive.VisionInfo()
+        .setCameraInfo("Limelight3a", 640, 480)
+        .setCameraFOV(54.5, 42.0)
+        .setCameraPose(135.47*TrcUtil.INCHES_PER_MM, 2.073, 10.758, -3.438, 0.0, 0.0);
 
     public enum ArtifactType
     {
