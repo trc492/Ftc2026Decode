@@ -232,8 +232,8 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                         moduleName, "***** Vision found object: objPose=" + objPose);
                     if (robot.ledIndicator != null)
                     {
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(object.detectedObj.label, true);
+                        // Artifact pattern will turn itself off.
+                        robot.ledIndicator.setStatusPatternOn(object.detectedObj.label, false);
                     }
                     sm.setState(State.PICKUP_OBJ);
                 }
@@ -249,8 +249,7 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
+                        robot.ledIndicator.setStatusPatternOn(LEDIndicator.NOT_FOUND, false);
                     }
                     sm.setState(State.DONE);
                 }

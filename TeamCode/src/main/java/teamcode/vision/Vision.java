@@ -498,21 +498,26 @@ public class Vision
                     case 0:
                         objectName = (int) limelightInfo.detectedObj.objId == 20?
                             LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
+                        if (robot.ledIndicator != null)
+                        {
+                            // Clear all previously set states first.
+                            robot.ledIndicator.setStatusPatternOn(objectName, true);
+                        }
                         break;
 
                     case 1:
                         objectName = (String)limelightInfo.detectedObj.objId;
+                        if (robot.ledIndicator != null)
+                        {
+                            // Artifact states will turn itself off and it is the highest priority,
+                            // so no need to clear previous states.
+                            robot.ledIndicator.setStatusPatternOn(objectName, false);
+                        }
                         break;
 
                     default:
                         break;
                 }
-            }
-
-            if (objectName != null && robot.ledIndicator != null)
-            {
-                robot.ledIndicator.setStatusVisionPatternsOff();
-                robot.ledIndicator.setStatusPattern(objectName, true);
             }
 
             if (lineNum != -1)
@@ -585,8 +590,8 @@ public class Vision
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusVisionPatternsOff();
-            robot.ledIndicator.setStatusPattern(
+            // This is assuming vision is looking for either 20 or 24 and not the obelisk.
+            robot.ledIndicator.setStatusPatternOn(
                 aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
                     LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG, true);
         }
@@ -801,8 +806,8 @@ public class Vision
 
         if (artifactInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusVisionPatternsOff();
-            robot.ledIndicator.setStatusPattern(artifactInfo.detectedObj.label, true);
+            // Artifact state will turn itself off and is the highest priority.
+            robot.ledIndicator.setStatusPatternOn(artifactInfo.detectedObj.label, false);
         }
 
         if (lineNum != -1)

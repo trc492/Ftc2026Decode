@@ -284,8 +284,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     visionExpiredTime = null;
                     if (robot.ledIndicator != null)
                     {
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(
+                        // Clear other LED states so this will show.
+                        robot.ledIndicator.setStatusPatternOn(
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
                             true);
@@ -325,16 +325,23 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + targetPose);
                         if (robot.ledIndicator != null)
                         {
-                            robot.ledIndicator.setStatusVisionPatternsOff();
-                            robot.ledIndicator.setStatusPattern(
+                            // This is assuming vision is set to look for 20 or 24 only.
+                            robot.ledIndicator.setStatusPatternOn(
                                 aprilTagId == 20? LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG, true);
                         }
-                        // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
+                        TrcPose2D aprilTagToCornerPose =
+                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER;
+                        TrcPose2D adjustedTargetPose = targetPose.addRelativePose(aprilTagToCornerPose);
+                        tracer.traceInfo(
+                            moduleName, "\n\taprilTagPose=%s\n\taprilTagToCorner=%s\n\tadjustedPose=%s\n\tsanity=%s",
+                            targetPose, aprilTagToCornerPose, adjustedTargetPose, RobotParams.Game.sanityCheck);
+                            // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
                         targetPose.angle += robot.shooter.getPanAngle();
-                        if (taskParams.inAuto && FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
-                        {
-                            targetPose.angle += taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? -1.0: 1.0;
-                        }
+//                        if (taskParams.inAuto && FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+//                        {
+//                            targetPose.angle += taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? -1.0: 1.0;
+//                        }
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
                         shootParams = Shooter.Params.shootParamTable.get(aprilTagInfo.detectedObj.targetDepth, false);
@@ -372,8 +379,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
+                        robot.ledIndicator.setStatusPatternOn(LEDIndicator.NOT_FOUND, true);
                     }
                     sm.setState(State.DONE);
                 }
@@ -469,6 +475,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case DONE:
             default:
+                if (robot.ledIndicator != null)
+                {
+                    // We are done, turn off all LED patterns in case the "SEARCHING" and found AprilTag pattern is
+                    // still ON.
+                    robot.ledIndicator.resetStatusPatterns();
+                }
                 // Stop task.
                 stopAutoTask(true);
                 break;

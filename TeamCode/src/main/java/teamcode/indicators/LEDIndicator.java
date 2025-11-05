@@ -62,14 +62,14 @@ public class LEDIndicator
     public final TrcPriorityIndicator.Pattern[] statusLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
     {
         // Highest priority.
-        new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcRevBlinkin.RevLedPattern.SolidViolet),
-        new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcRevBlinkin.RevLedPattern.SolidGreen),
-        new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcRevBlinkin.RevLedPattern.SolidYellow),
-        new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed),
-        new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue),
+        new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcRevBlinkin.RevLedPattern.SolidViolet, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcRevBlinkin.RevLedPattern.SolidGreen, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(NOT_FOUND, TrcRevBlinkin.RevLedPattern.SolidYellow, 0.5, 0.0),
-        new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.0),
-        new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.0),
+        new TrcPriorityIndicator.Pattern(RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.2, 0.2),
+        new TrcPriorityIndicator.Pattern(BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.2, 0.2),
+        new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.5, 0.5),
+        new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.5, 0.5),
         new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),
@@ -244,33 +244,43 @@ public class LEDIndicator
     }   //setMotifPattern
 
     /**
+     * This method clears all vision detected states.
+     */
+    public void resetStatusPatterns()
+    {
+        if (statusIndicator != null)
+        {
+            statusIndicator.resetAllPatternStates();
+        }
+    }   //resetStatusPatterns
+
+    /**
      * This method sets the statusLED pattern ON or OFF.
      *
      * @param patternName specifies the name of the LED pattern to turn on.
      */
-    public void setStatusPattern(String patternName, boolean on)
+    public void setStatusPatternState(String patternName, boolean on)
     {
         if (statusIndicator != null)
         {
             statusIndicator.setPatternState(patternName, on);
         }
-    }   //setStatusPattern
+    }   //setStatusPatternState
 
     /**
-     * This method clears all vision detected states.
+     * This method sets the specified status pattern ON and optionally clears all other active patterns.
      */
-    public void setStatusVisionPatternsOff()
+    public void setStatusPatternOn(String patternName, boolean clearOthers)
     {
         if (statusIndicator != null)
         {
-            statusIndicator.setPatternState(PURPLE_BLOB, false);
-            statusIndicator.setPatternState(GREEN_BLOB, false);
-            statusIndicator.setPatternState(UNKNOWN_BLOB, false);
-            statusIndicator.setPatternState(RED_APRILTAG, false);
-            statusIndicator.setPatternState(BLUE_APRILTAG, false);
-            statusIndicator.setPatternState(NOT_FOUND, false);
+            if (clearOthers)
+            {
+                resetStatusPatterns();
+            }
+            statusIndicator.setPatternState(patternName, true);
         }
-    }   //setStatusVisionPatternsOff
+    }   //setStatusPatternOn
 
     /**
      * This method sets the spindexerLED pattern ON for the specified slot.

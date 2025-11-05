@@ -102,8 +102,8 @@ public class Spindexer extends TrcSubsystem
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = GREEN_LOW_THRESHOLD;
         public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = PURPLE_HIGH_THRESHOLD;
-        public static final double ENTRY_TRIGGER_SETTLING       = 0.0;      // in seconds
-        public static final double ENTRY_REFRESH_TIMEOUT        = 5.0;
+        public static final double ENTRY_TRIGGER_SETTLING       = 0.02;     // in seconds
+        public static final double ENTRY_REFRESH_TIMEOUT        = 1.0;
 
         public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
         public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
@@ -489,12 +489,6 @@ public class Spindexer extends TrcSubsystem
                     (int) (normalizedColors.red*255),
                     (int) (normalizedColors.green*255),
                     (int) (normalizedColors.blue*255));
-            }
-
-            if (hue == 180.0)
-            {
-                // When hue is 180.0, we can't really tell purple from green. Just throw away this data.
-                hue = 0.0;
             }
         }
 
