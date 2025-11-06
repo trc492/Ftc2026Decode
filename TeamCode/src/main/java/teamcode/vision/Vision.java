@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
 
-import ftclib.drivebase.FtcRobotDrive;
 import ftclib.driverio.FtcDashboard;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcEocvColorBlobProcessor;
@@ -51,6 +50,7 @@ import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 import trclib.vision.TrcOpenCvDetector;
+import trclib.vision.TrcVision;
 import trclib.vision.TrcVisionTargetInfo;
 
 /**
@@ -77,7 +77,7 @@ public class Vision
             .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
 
     // Front camera properties
-    public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo frontCamParams = new TrcVision.CameraInfo()
         .setCameraInfo("Webcam 1", 320, 240)
         .setCameraPose(0.0, 8.75, 11.0, 0.0, 0.0, 0.0)
         .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
@@ -94,13 +94,13 @@ public class Vision
                 6.25, 9.0));                    // World Bottom Right
     // Limelight camera properties
     public static final int NUM_LIMELIGHT_PIPELINES = 2;
-    public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo limelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
         .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
 
     // IntoTheDeep Robot
-    public static final FtcRobotDrive.VisionInfo sampleCamParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo sampleCamParams = new TrcVision.CameraInfo()
         .setCameraInfo("Webcam 1", 640, 480)
         .setCameraPose(-4.25, 5.5, 10.608, -2.0, -32.346629699, 0.0)
         .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
@@ -115,7 +115,7 @@ public class Vision
                 24.0, 37.5,                     // World Top Right
                 -4.75, 9.0,                     // World Bottom Left
                 6.25, 9.0));                    // World Bottom Right
-    public static final FtcRobotDrive.VisionInfo intoTheDeepLimelightParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo intoTheDeepLimelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
         .setCameraPose(135.47*TrcUtil.INCHES_PER_MM, 2.073, 10.758, -3.438, 0.0, 0.0);
@@ -251,9 +251,7 @@ public class Vision
         if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
             tracer.traceInfo(moduleName, "Starting LimelightVision...");
-            limelightVision = new FtcLimelightVision(
-                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
-                this::getLimelightTargetGroundOffset);
+            limelightVision = new FtcLimelightVision(robot.robotInfo.limelight, this::getLimelightTargetGroundOffset);
             setLimelightPipeline(LimelightPipelineType.APRIL_TAG);
         }
 
