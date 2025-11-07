@@ -43,8 +43,8 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.SwerveRobot;
-        public static final boolean inCompetition               = true;
+        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.IntoTheDeepRobot;
+        public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
@@ -52,7 +52,7 @@ public class RobotParams
         public static final boolean updateDashboard             = !inCompetition;   // Start up default value.
         public static final boolean useRumble                   = false;
         // Vision
-        public static final boolean useVision                   = true;
+        public static final boolean useVision                   = false;
         public static final boolean showVisionStatus            = true;
         public static final boolean useLimelightVision          = true;
         public static final boolean useWebCam                   = true;
@@ -64,7 +64,7 @@ public class RobotParams
         public static final boolean showVisionView              = false;    // For both HDMI and Dashboard
         public static final boolean showVisionStat              = false;    // For HDMI
         // Master switches for Subsystems
-        public static final boolean useSubsystems               = true;
+        public static final boolean useSubsystems               = false;
         // Drive Base Subsystem
         public static final boolean useDriveBase                = true;
         public static final boolean showDriveBaseStatus         = false;
@@ -82,7 +82,7 @@ public class RobotParams
         public static final boolean showShooterGraph            = true;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
-        public static final boolean useAutoShoot                = true;
+        public static final boolean useAutoShoot                = false;
     }   //class Preferences
 
     /**

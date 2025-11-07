@@ -281,6 +281,11 @@ public class BaseDrive extends TrcSubsystem
                 robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
                 break;
 
+            case IntoTheDeepRobot:
+                robotInfo = new IntoTheDeepRobotInfo();
+                robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
+                break;
+
             case SwerveRobot:
                 robotInfo = new SwerveRobotInfo();
                 FtcSwerveDrive swerveDrive =
