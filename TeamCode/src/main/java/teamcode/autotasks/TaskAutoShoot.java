@@ -282,14 +282,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     tracer.traceInfo(moduleName, "***** Using AprilTag Vision.");
                     visionExpiredTime = null;
-                    if (robot.ledIndicator != null)
-                    {
-                        // Clear other LED states so this will show.
-                        robot.ledIndicator.setStatusPatternOn(
-                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                                LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
-                            true);
-                    }
+//                    if (robot.ledIndicator != null)
+//                    {
+//                        // Clear other LED states so this will show.
+//                        robot.ledIndicator.setStatusPatternOn(
+//                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+//                                LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
+//                            true);
+//                    }
                     sm.setState(State.DO_VISION);
                 }
                 else
@@ -314,8 +314,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                            null,
-                            null);
+                            null, null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;

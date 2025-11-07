@@ -489,7 +489,7 @@ public class Shooter extends TrcSubsystem
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, null, -1);
+                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, null, null, -1);
             if (aprilTagInfo == null)
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.

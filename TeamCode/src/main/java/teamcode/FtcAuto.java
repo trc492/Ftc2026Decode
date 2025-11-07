@@ -232,7 +232,7 @@ public class FtcAuto extends FtcOpMode
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> detectedAprilTag =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags,
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, null,
                     this::compareObeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {

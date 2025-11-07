@@ -1026,7 +1026,8 @@ public class FtcTest extends FtcTeleOp
             {
                 robot.vision.getLimelightDetectedObject(
                     robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
-                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python, null, null, -1);
+                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python,
+                    null, null, null, -1);
             }
 
             if (robot.vision.webcamAprilTagVision != null)

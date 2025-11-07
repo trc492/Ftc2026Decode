@@ -96,7 +96,7 @@ public class Vision
     public static final int NUM_LIMELIGHT_PIPELINES = 2;
     public static final TrcVision.CameraInfo limelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
-        .setCameraFOV(54.5, 42.0)
+        .setCameraFOV(54.505, 42.239)
         .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
 
     // IntoTheDeep Robot
@@ -471,12 +471,13 @@ public class Vision
      *
      * @param resultType specifies the result type to look for.
      * @param matchIds specifies the object ID(s) to match for, null if no matching required.
+     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, Object matchIds,
+        FtcLimelightVision.ResultType resultType, Object matchIds, Double robotHeading,
         Comparator<? super TrcVisionTargetInfo<FtcLimelightVision.DetectedObject>> comparator, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
@@ -485,7 +486,6 @@ public class Vision
         {
             String objectName = null;
             int pipelineIndex = -1;
-            Double robotHeading = robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): null;
 
             limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, comparator);
             if (limelightInfo != null)
@@ -615,18 +615,19 @@ public class Vision
 
         if (aprilTagInfo != null)
         {
-            TrcPose2D aprilTagPose =
+            TrcPose2D aprilTagFieldPose =
                 RobotParams.Game.APRILTAG_POSES[aprilTagInfo.detectedObj.aprilTagDetection.id - 1];
-            TrcPose2D cameraPose = aprilTagPose.subtractRelativePose(aprilTagInfo.objPose);
-            robotPose = cameraPose.subtractRelativePose(
-                new TrcPose2D(robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
-                              robot.robotInfo.webCam1.camPose.yaw));
+            TrcPose2D camPoseOnBot = new TrcPose2D(
+                robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
+                robot.robotInfo.webCam1.camPose.yaw);
+            robotPose = aprilTagFieldPose.addRelativePose(aprilTagInfo.objPose.invert())
+                                         .addRelativePose(camPoseOnBot.invert());
             tracer.traceInfo(
                 moduleName,
                 "AprilTagId=" + aprilTagInfo.detectedObj.aprilTagDetection.id +
-                ", aprilTagFieldPose=" + aprilTagPose +
+                ", aprilTagFieldPose=" + aprilTagFieldPose +
                 ", aprilTagPoseFromCamera=" + aprilTagInfo.objPose +
-                ", cameraPose=" + cameraPose +
+                ", cameraPose=" + camPoseOnBot +
                 ", robotPose=%s" + robotPose);
         }
 
@@ -637,9 +638,10 @@ public class Vision
      * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
      * position from the camera to calculate the robot's absolute field location.
      *
+     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @return robot field location.
      */
-    public TrcPose2D getRobotFieldPose()
+    public TrcPose2D getRobotFieldPose(Double robotHeading)
     {
         TrcPose2D robotPose = null;
 
@@ -647,11 +649,12 @@ public class Vision
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, null, -1);
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, robotHeading, null, -1);
 
             if (aprilTagInfo != null)
             {
                 robotPose = aprilTagInfo.detectedObj.robotPose;
+                tracer.traceInfo(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
             }
         }
         else if (isWebcamAprilTagVisionEnabled())
@@ -666,6 +669,17 @@ public class Vision
         }
 
         return robotPose;
+    }   //getRobotFieldPose
+
+    /**
+     * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
+     * position from the camera to calculate the robot's absolute field location.
+     *
+     * @return robot field location.
+     */
+    public TrcPose2D getRobotFieldPose()
+    {
+        return getRobotFieldPose((Double) null);
     }   //getRobotFieldPose
 
     /**
