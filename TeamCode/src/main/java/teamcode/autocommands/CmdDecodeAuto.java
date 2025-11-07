@@ -129,11 +129,17 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case START:
                     // Set robot location according to auto choices.
                     robot.setRobotStartPosition(autoChoices);
-                    robot.spindexerSubsystem.setPreloadedArtifacts(
-                        Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
+                    if (robot.spindexerSubsystem != null)
+                    {
+                        robot.spindexerSubsystem.setPreloadedArtifacts(
+                            Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
+                    }
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     // Do delay if necessary.
-                    ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
+                    if (robot.robotDrive instanceof FtcSwerveDrive)
+                    {
+                        ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
+                    }
                     if (autoChoices.startDelay > 0.0)
                     {
                         robot.globalTracer.traceInfo(
@@ -148,9 +154,12 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_PRELOAD_SHOOT_POS:
-//                    robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
-                    robot.shooter.panMotor.setPosition(
-                        null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                    if (robot.shooterSubsystem != null)
+                    {
+//                        robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
+                        robot.shooter.panMotor.setPosition(
+                            null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                    }
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
                     {
                         sm.setState(State.SHOOT_PRELOAD);
@@ -173,8 +182,15 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case SHOOT_PRELOAD:
-                    robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
-                    sm.waitForSingleEvent(event, State.LEAVE_LAUNCH_ZONE);
+                    if (robot.autoShootTask != null)
+                    {
+                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
+                        sm.waitForSingleEvent(event, State.LEAVE_LAUNCH_ZONE);
+                    }
+                    else
+                    {
+                        sm.setState(State.LEAVE_LAUNCH_ZONE);
+                    }
                     break;
 
                 case LEAVE_LAUNCH_ZONE:
