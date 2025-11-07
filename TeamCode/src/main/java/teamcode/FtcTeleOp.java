@@ -203,7 +203,8 @@ public class FtcTeleOp extends FtcOpMode
                     {
                         if (robotFieldPose == null)
                         {
-                            robotFieldPose = robot.vision.getRobotFieldPose();
+                            robotFieldPose =
+                                robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
                         }
                     }
                     else
@@ -516,7 +517,7 @@ public class FtcTeleOp extends FtcOpMode
 
             case Start:
                 // Do AprilTag Vision re-localization.
-                if (robot.vision != null && robot.robotDrive != null)
+                if (robot.vision != null && robot.robotDrive != null && robot.shooterSubsystem != null)
                 {
                     boolean hasAprilTagVision = robot.vision.isWebcamAprilTagVisionEnabled();
                     // If Webcam AprilTag vision is not enabled, check if we have Limelight since Limelight has

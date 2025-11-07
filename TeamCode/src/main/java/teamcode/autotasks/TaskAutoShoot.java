@@ -282,14 +282,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     tracer.traceInfo(moduleName, "***** Using AprilTag Vision.");
                     visionExpiredTime = null;
-//                    if (robot.ledIndicator != null)
-//                    {
-//                        // Clear other LED states so this will show.
-//                        robot.ledIndicator.setStatusPatternOn(
-//                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-//                                LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
-//                            true);
-//                    }
+                    if (robot.ledIndicator != null)
+                    {
+                        // Clear other LED states so this will show.
+                        robot.ledIndicator.setStatusPatternOn(
+                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                LEDIndicator.SEARCHING_BLUE_APRILTAG: LEDIndicator.SEARCHING_RED_APRILTAG,
+                            true);
+                    }
                     sm.setState(State.DO_VISION);
                 }
                 else

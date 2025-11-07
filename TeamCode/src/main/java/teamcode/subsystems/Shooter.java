@@ -35,6 +35,7 @@ import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
+import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcShootParamTable;
@@ -114,7 +115,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
-        public static final double PAN_POS_OFFSET               = 92.0;
+        public static final double PAN_POS_OFFSET               = 95.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -345.0;
@@ -179,8 +180,12 @@ public class Shooter extends TrcSubsystem
         public static final boolean LAUNCHER_SERVO_INVERTED     = true;
         public static double LAUNCHER_REST_POS                  = 0.48;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
-        public static double LAUNCHER_LAUNCH_DURATION           = 0.75; // in seconds
-        public static double LAUNCHER_RETRACT_TIME              = 0.25; // in seconds
+        public static double LAUNCHER_LAUNCH_DURATION           = 0.75;     // in seconds
+        public static double LAUNCHER_RETRACT_TIME              = 0.25;     // in seconds
+
+        public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
+        public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
+        public static TrcPose2D CAMERA_POSE_ON_TURRET           = new TrcPose2D(0.0, -2.9837, 0.0);
     }   //class Params
 
     public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
@@ -517,6 +522,35 @@ public class Shooter extends TrcSubsystem
 
         return panPosition;
     }   //getPanPosition
+
+    /**
+     * This method computes the camera pose on the robot given the turret heading.
+     *
+     * @param turretAngleDeg specifies the turret heading in degrees.
+     * @return camera pose relative to the robot center.
+     */
+    public TrcPose2D getCameraPoseOnRobot(double turretAngleDeg)
+    {
+        TrcPose2D turretPoseOnRobot = new TrcPose2D(Params.TURRET_X_OFFSET, Params.TURRET_Y_OFFSET, turretAngleDeg);
+        return turretPoseOnRobot.addRelativePose(Params.CAMERA_POSE_ON_TURRET);
+    }   //getCameraPoseOnRobot
+
+    /**
+     * This method returns the Robot Field position adjusted by the camera position on the robot's turret.
+     *
+     * @param camFieldPose specifies the camera's field position from Vision.
+     * @return robot's field position.
+     */
+    public TrcPose2D adjustRobotFieldPosition(TrcPose2D camFieldPose)
+    {
+        double turretAngleDeg = shooter.panMotor.getPosition();
+        TrcPose2D cameraPoseOnRobot = getCameraPoseOnRobot(turretAngleDeg);
+        TrcPose2D adjustedRobotFieldPose = camFieldPose.addRelativePose(cameraPoseOnRobot.invert());
+        shooter.tracer.traceInfo(
+            Params.SUBSYSTEM_NAME, "turretAngle=%f, camFieldPose=%s, cameraPoseOnRobot=%s, adjustedPose=%s",
+            turretAngleDeg, camFieldPose, cameraPoseOnRobot, adjustedRobotFieldPose);
+        return adjustedRobotFieldPose;
+    }   //adjustRobotFieldPosition
 
     //
     // Implements TrcSubsystem abstract methods.
