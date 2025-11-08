@@ -148,8 +148,10 @@ public class RobotParams
         public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   =
             new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 135.0); //TODO: Can be changed to 1
         // .0 if using motif vision for preload
-        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE      =
+        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_GOAL      =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 135.0);
+        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_FAR      =
+            new TrcPose2D(2.0*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, -55.0);
 
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);

@@ -378,7 +378,7 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
         FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
         FtcValueMenu spikeMarkCountMenu =
-            new FtcValueMenu("SpikeMark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 2.0, " %.0f");
+            new FtcValueMenu("SpikeMark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
         FtcValueMenu shootDelay1Menu =
             new FtcValueMenu("First Shoot delay:", spikeMarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay2Menu =
@@ -407,6 +407,7 @@ public class FtcAuto extends FtcOpMode
         yTargetMenu.setChildMenu(turnTargetMenu);
         turnTargetMenu.setChildMenu(drivePowerMenu);
         driveTimeMenu.setChildMenu(drivePowerMenu);
+        spikeMarkCountMenu.setChildMenu(parkOptionMenu);
         //
         // Populate choice menus.
         //

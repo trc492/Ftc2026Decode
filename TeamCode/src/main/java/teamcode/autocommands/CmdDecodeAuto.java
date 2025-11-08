@@ -188,6 +188,12 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
+                    else if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                    {
+                        // TODO: Temporary delay to simulate shooting, will be replaced with auto shoot task
+                        timer.set(2.0, event);
+                        sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+                    }
                     else
                     {
                         sm.setState(State.PICKUP_SPIKEMARK);
@@ -246,12 +252,14 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case SHOOT_SPIKEMARK:
+                    TrcPose2D shootPos = autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE ?
+                        RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_FAR : RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_GOAL;
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(
-                                RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE, autoChoices.alliance));
+                                shootPos, autoChoices.alliance));
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
