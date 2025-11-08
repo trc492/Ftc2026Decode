@@ -84,7 +84,8 @@ public class FtcAuto extends FtcOpMode
 
     public enum ParkOption
     {
-        PARK,
+        CLASSIFIER_PARK,
+        SQUARE_PARK,
         NO_PARK
     }   //enum ParkOption
 
@@ -102,7 +103,7 @@ public class FtcAuto extends FtcOpMode
         public double shootDelay1 = 0.0;
         public double shootDelay2 = 0.0;
         public double shootDelay3 = 0.0;
-        public ParkOption parkOption = ParkOption.PARK;
+        public ParkOption parkOption = ParkOption.CLASSIFIER_PARK;
         public double xTarget = 0.0;
         public double yTarget = 0.0;
         public double turnTarget = 0.0;
@@ -427,7 +428,8 @@ public class FtcAuto extends FtcOpMode
         pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
         pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikeMarkCountMenu);
 
-        parkOptionMenu.addChoice("Park", ParkOption.PARK, true);
+        parkOptionMenu.addChoice("Classifier Park", ParkOption.CLASSIFIER_PARK, true);
+        parkOptionMenu.addChoice("Square Park", ParkOption.SQUARE_PARK, false);
         parkOptionMenu.addChoice("No Park", ParkOption.NO_PARK, false);
         //
         // Traverse menus.

@@ -229,7 +229,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
-                        sm.setState(autoChoices.parkOption == FtcAuto.ParkOption.PARK ? State.PARK : State.DONE);
+                        sm.setState(autoChoices.parkOption == FtcAuto.ParkOption.NO_PARK ? State.DONE : State.PARK);
                     }
                     break;
 
@@ -276,7 +276,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(RobotParams.Game.RED_PARK_POSE, autoChoices.alliance));
+                            robot.adjustPoseByAlliance(autoChoices.parkOption == FtcAuto.ParkOption.CLASSIFIER_PARK ? RobotParams.Game.RED_ClASSIFIER_PARK_POSE:
+                                autoChoices.parkOption == FtcAuto.ParkOption.SQUARE_PARK ? RobotParams.Game.RED_SQUARE_PARK_POSE: RobotParams.Game.RED_SQUARE_PARK_POSE, autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.DONE);
                     break;
 

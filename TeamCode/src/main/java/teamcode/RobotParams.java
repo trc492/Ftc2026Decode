@@ -161,7 +161,10 @@ public class RobotParams
             new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POS           =
             {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
-        public static final TrcPose2D RED_PARK_POSE                 = new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
+        public static final TrcPose2D RED_ClASSIFIER_PARK_POSE      =
+            new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
+        public static final TrcPose2D RED_SQUARE_PARK_POSE          =
+            new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
         // Game elapsed times.
         public static final double AUTO_PERIOD                  = 30.0;     // 30 seconds auto period
         public static final double TELEOP_PERIOD                = 120.0;    // 2 minutes teleop period
