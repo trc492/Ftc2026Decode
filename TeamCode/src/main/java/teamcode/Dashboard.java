@@ -58,9 +58,9 @@ public class Dashboard
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
         public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
         public static double driveSlowScale = 0.3;
-        public static double driveNormalScale = 0.6;
-        public static double turnSlowScale = 0.2;
-        public static double turnNormalScale = 0.3;
+        public static double driveNormalScale = 1.0;
+        public static double turnSlowScale = 0.3;
+        public static double turnNormalScale = 0.6;
         public static double steerPowerCompConstant = 0.0;
     }   //class Subsystem_Drivebase
 
