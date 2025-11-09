@@ -663,13 +663,9 @@ public class FtcTeleOp extends FtcOpMode
                                 // Fire and forget assuming Spindexer moves faster than aimShooter.
                                 robot.spindexerSubsystem.moveToExitSlotWithArtifact(
                                     null, Vision.ArtifactType.Any, null);
-                                // Fire and forget assuming Tilter moves faster than aimShooter.
-                                robot.shooter.tiltMotor.setPosition(
-                                    moduleName, 0.0, manualShootParams.tiltAngle, true,
-                                    Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
                                 robot.shooter.aimShooter(
                                     moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
-                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                    manualShootParams.tiltAngle, null, null, 0.0, robot.shooterSubsystem::shoot,
                                     Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
