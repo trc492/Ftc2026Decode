@@ -140,17 +140,17 @@ public class Shooter extends TrcSubsystem
         public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
         public static final boolean TILT_ENCODER_INVERTED       = false;
 
-        public static final double TILT_MOTOR_PID_KP            = 0.045;
+        public static final double TILT_MOTOR_PID_KP            = 0.1;
         public static final double TILT_MOTOR_PID_KI            = 0.0;
         public static final double TILT_MOTOR_PID_KD            = 0.0;
-        public static final double TILT_PID_TOLERANCE           = 0.5;
+        public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
 //        public static final double TILT_GEAR_RATIO              = 543.0/56.0;   // Not accurate???
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
         public static final double TILT_POS_OFFSET              = 25.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.200303;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.2037875;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;

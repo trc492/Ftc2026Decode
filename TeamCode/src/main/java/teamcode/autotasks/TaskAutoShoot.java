@@ -335,10 +335,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         targetPose.angle = adjustedTargetPose.angle;
                         // Adjusted target angle to absolute pan angle since Limelight is mounted on the turret.
                         targetPose.angle += robot.shooter.getPanAngle();
-//                        if (taskParams.inAuto && FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
-//                        {
-//                            targetPose.angle += taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE ? -1.0: 1.0;
-//                        }
                         // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
                         // Use vision distance to look up shooter parameters.
                         shootParams = Shooter.Params.shootParamTable.get(aprilTagInfo.detectedObj.targetDepth, false);
@@ -426,11 +422,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     tracer.traceInfo(
                         moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
                         shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
-                    robot.shooter.tiltMotor.setPosition(
-                        owner, 0.0, shootParams.tiltAngle, true, Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
                     robot.shooter.aimShooter(
                         owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                        null, targetPose.angle, event, 0.0, null, 0.0);
+                        shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
                 }
                 else
                 {
