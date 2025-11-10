@@ -238,11 +238,12 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
                     }
+                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.3);
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, true,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            new TrcPose2D(0.0, 18.0, 0.0)); // TODO: tune
+                            new TrcPose2D(0.0, 20.0, 0.0)); // TODO: tune
                     if (robot.intakeSubsystem != null)
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
@@ -252,6 +253,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case SHOOT_SPIKEMARK:
+                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
                     TrcPose2D shootPos = autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE ?
                         RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_FAR : RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_GOAL;
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
