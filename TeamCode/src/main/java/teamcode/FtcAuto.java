@@ -416,8 +416,8 @@ public class FtcAuto extends FtcOpMode
         allianceMenu.addChoice("Blue", Alliance.BLUE_ALLIANCE, false, startPosMenu);
 
         startPosMenu.addChoice("Start Position Goal Zone", StartPos.GOAL_ZONE, true, strategyMenu);
-        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOAD_CENTER, false, strategyMenu);
-        startPosMenu.addChoice("Start Position Loading Zone", StartPos.LOAD_CORNER, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Center Loading Zone", StartPos.LOAD_CENTER, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Corner Loading Zone", StartPos.LOAD_CORNER, false, strategyMenu);
 
         strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
