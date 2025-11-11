@@ -59,9 +59,9 @@ public class BaseDrive extends TrcSubsystem
     {
         // This is useful for developing Vision code where all you need is a Robot Controller and camera.
         VisionOnly,
-        MecanumRobot,
+        DecodeRobot,        // Mecanum drive base
         SwerveRobot,
-        IntoTheDeepRobot
+        IntoTheDeepRobot    // Mecanum drive base
     }   //enum RobotType
 
     /**
@@ -78,68 +78,10 @@ public class BaseDrive extends TrcSubsystem
     }   //class VisionOnlyInfo
 
     /**
-     * This class contains the IntoTheDeep Drive Base Parameters.
-     */
-    public static class IntoTheDeepRobotInfo extends FtcRobotDrive.RobotInfo
-    {
-        // Optii Odometry Wheel
-        private static final double ODWHEEL_DIAMETER_MM = 35.0;
-        private static final double ODWHEEL_CPR = 4096.0;
-//        private static final double ODWHEEL_DIAMETER = ODWHEEL_DIAMETER_MM*TrcUtil.INCHES_PER_MM;
-//        private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
-//        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
-
-        private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
-        private static final TrcPidController.PidCoefficients xDrivePidCoeffs =
-            new TrcPidController.PidCoefficients(0.072, 0.001, 0.0065, 0.0, 2.0);
-        private static final TrcPidController.PidCoefficients yDrivePidCoeffs =
-            new TrcPidController.PidCoefficients(0.02, 0.00175, 0.002, 0.0, 2.0);
-        private static final TrcPidController.PidCoefficients turnPidCoeffs =
-            new TrcPidController.PidCoefficients(0.032, 0.1, 0.0025, 0.0, 5.0);
-        private static final TrcPidController.PidCoefficients velPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 1.0/80.0, 0.0);
-
-        public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-//            .setDriveMotorVelocityControl(
-//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
-            .setPidTolerances(3.5, 2.5)
-            .setXPidParams(xDrivePidCoeffs, 1.0)
-            .setYPidParams(yDrivePidCoeffs, 1.0)
-            .setTurnPidParams(turnPidCoeffs, 0.5)
-            .setVelocityPidParams(velPidCoeffs)
-            .setDriveCharacteristics(80.0, 350.0, 300.0,  80.0);
-
-        public IntoTheDeepRobotInfo()
-        {
-            this.setBaseParams(baseParams)
-                .setRobotInfo(
-                    RobotType.IntoTheDeepRobot.toString(), 18.0, 18.0,
-                    360.0 * TrcUtil.INCHES_PER_MM, (312.0 + 103.623) * TrcUtil.INCHES_PER_MM)
-                .setDriveMotorInfo(
-                    FtcMotorActuator.MotorType.DcMotor,
-                    new String[] {"flDriveMotor", "frDriveMotor", "blDriveMotor", "brDriveMotor"},
-                    new boolean[] {true, false, true, false})
-                .setPinpointOdometry(
-                    "pinpointOdo", -156.0, -131.4, ODWHEEL_CPR / (Math.PI * ODWHEEL_DIAMETER_MM),
-                    false, false, -180.0, 180.0)
-                .setPidStallDetectionEnabled(true)
-                .setPidDriveParams(true)
-                .setPurePursuitDriveParams(6.0, true, true)
-                .setVisionInfo(Vision.sampleCamParams, null, Vision.intoTheDeepLimelightParams)
-                .setIndicators("blinkin", "gobildaLED");
-        }   //IntoTheDeepRobotInfo
-    }   //class IntoTheDeepRobotInfo
-
-    /**
      * This class contains the Mecanum Drive Base Parameters.
      */
-    public static class MecanumRobotInfo extends FtcRobotDrive.RobotInfo
+    public static class DecodeRobotInfo extends FtcRobotDrive.RobotInfo
     {
-        // Gobilda 4-bar Odometry Pods
-//        private static final double ODWHEEL_DIAMETER_MM = 32.0;
-//        private static final double ODWHEEL_DIAMETER = ODWHEEL_DIAMETER_MM*TrcUtil.INCHES_PER_MM;
-//        private static final double ODWHEEL_CPR = 2000.0;
         private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
         private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
@@ -162,11 +104,11 @@ public class BaseDrive extends TrcSubsystem
             .setVelocityPidParams(velPidCoeffs)
             .setDriveCharacteristics(30.0, 150.0, 150.0,  15.0);
 
-        public MecanumRobotInfo()
+        public DecodeRobotInfo()
         {
             this.setBaseParams(baseParams)
                 .setRobotInfo(
-                    RobotType.MecanumRobot.toString(), RobotParams.Robot.ROBOT_LENGTH, RobotParams.Robot.ROBOT_WIDTH,
+                    RobotType.DecodeRobot.toString(), RobotParams.Robot.ROBOT_LENGTH, RobotParams.Robot.ROBOT_WIDTH,
                     336.0*TrcUtil.INCHES_PER_MM, 336.0*TrcUtil.INCHES_PER_MM)
                 .setDriveMotorInfo(
                     FtcMotorActuator.MotorType.DcMotor,
@@ -182,8 +124,8 @@ public class BaseDrive extends TrcSubsystem
                 .setIndicators(
                     LEDIndicator.STATUS_LED_NAME, LEDIndicator.SPINDEXER1_LED_NAME, LEDIndicator.SPINDEXER2_LED_NAME,
                     LEDIndicator.SPINDEXER3_LED_NAME);
-        }   //MecanumRobotInfo
-    }   //class MecanumRobotInfo
+        }   //DecodeRobotInfo
+    }   //class DecodeRobotInfo
 
     /**
      * This class contains the Swerve Drive Base Parameters.
@@ -257,6 +199,59 @@ public class BaseDrive extends TrcSubsystem
         }   //SwerveRobotInfo
     }   //class SwerveRobotInfo
 
+    /**
+     * This class contains the IntoTheDeep Drive Base Parameters.
+     */
+    public static class IntoTheDeepRobotInfo extends FtcRobotDrive.RobotInfo
+    {
+        // Optii Odometry Wheel
+        private static final double ODWHEEL_DIAMETER_MM = 35.0;
+        private static final double ODWHEEL_CPR = 4096.0;
+//        private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
+//        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
+
+        private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
+            new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
+        private static final TrcPidController.PidCoefficients xDrivePidCoeffs =
+            new TrcPidController.PidCoefficients(0.072, 0.001, 0.0065, 0.0, 2.0);
+        private static final TrcPidController.PidCoefficients yDrivePidCoeffs =
+            new TrcPidController.PidCoefficients(0.02, 0.00175, 0.002, 0.0, 2.0);
+        private static final TrcPidController.PidCoefficients turnPidCoeffs =
+            new TrcPidController.PidCoefficients(0.032, 0.1, 0.0025, 0.0, 5.0);
+        private static final TrcPidController.PidCoefficients velPidCoeffs =
+            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 1.0/80.0, 0.0);
+
+        public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
+//            .setDriveMotorVelocityControl(
+//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+            .setPidTolerances(3.5, 2.5)
+            .setXPidParams(xDrivePidCoeffs, 1.0)
+            .setYPidParams(yDrivePidCoeffs, 1.0)
+            .setTurnPidParams(turnPidCoeffs, 0.5)
+            .setVelocityPidParams(velPidCoeffs)
+            .setDriveCharacteristics(80.0, 350.0, 300.0,  80.0);
+
+        public IntoTheDeepRobotInfo()
+        {
+            this.setBaseParams(baseParams)
+                .setRobotInfo(
+                    RobotType.IntoTheDeepRobot.toString(), 18.0, 18.0,
+                    360.0 * TrcUtil.INCHES_PER_MM, (312.0 + 103.623) * TrcUtil.INCHES_PER_MM)
+                .setDriveMotorInfo(
+                    FtcMotorActuator.MotorType.DcMotor,
+                    new String[] {"flDriveMotor", "frDriveMotor", "blDriveMotor", "brDriveMotor"},
+                    new boolean[] {true, false, true, false})
+                .setPinpointOdometry(
+                    "pinpointOdo", -156.0, -131.4, ODWHEEL_CPR / (Math.PI * ODWHEEL_DIAMETER_MM),
+                    false, false, -180.0, 180.0)
+                .setPidStallDetectionEnabled(true)
+                .setPidDriveParams(true)
+                .setPurePursuitDriveParams(6.0, true, true)
+                .setVisionInfo(Vision.sampleCamParams, null, Vision.intoTheDeepLimelightParams)
+                .setIndicators("blinkin", "gobildaLED");
+        }   //IntoTheDeepRobotInfo
+    }   //class IntoTheDeepRobotInfo
+
     private final HashMap<TrcMotor, Integer> motorIndexMap = new HashMap<>();
     private final FtcDashboard dashboard;
     private final FtcRobotDrive.RobotInfo robotInfo;
@@ -276,13 +271,8 @@ public class BaseDrive extends TrcSubsystem
                 robotDrive = null;
                 break;
 
-            case MecanumRobot:
-                robotInfo = new MecanumRobotInfo();
-                robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
-                break;
-
-            case IntoTheDeepRobot:
-                robotInfo = new IntoTheDeepRobotInfo();
+            case DecodeRobot:
+                robotInfo = new DecodeRobotInfo();
                 robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
                 break;
 
@@ -299,6 +289,11 @@ public class BaseDrive extends TrcSubsystem
                         swerveDrive.steerMotors[i].setPositionPidPowerComp(this::getSteerPowerComp);
                     }
                 }
+                break;
+
+            case IntoTheDeepRobot:
+                robotInfo = new IntoTheDeepRobotInfo();
+                robotDrive = RobotParams.Preferences.useDriveBase? new FtcMecanumDrive(robotInfo): null;
                 break;
 
             default:

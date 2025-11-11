@@ -28,10 +28,13 @@ SOFTWARE.
         <!-- Control Hub -->
         <LynxModule name="Control Hub" port="173">
             <!-- Motors -->
-            <goBILDA5202SeriesMotor name="brDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="frDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="Spindexer.Motor" port="1" />
+            <!--
             <goBILDA5202SeriesMotor name="Shooter.ShootMotor1" port="1"/>
             <RevRobotics40HDHexMotor name="Shooter.PanMotor" port="2"/>
-            <goBILDA5202SeriesMotor name="frDriveMotor" port="3"/>
+            -->
+            <goBILDA5202SeriesMotor name="brDriveMotor" port="3"/>
             <!-- Servos -->
             <Servo name="Shooter.Launcher" port="0" />
             <ContinuousRotationServo name="Shooter.TiltMotor" port="5" />
@@ -51,10 +54,9 @@ SOFTWARE.
         <!-- Expansion Hub -->
         <LynxModule name="Expansion Hub 2" port="2">
             <!-- Motors -->
-            <goBILDA5202SeriesMotor name="blDriveMotor" port="0"/>
-            <RevRobotics40HDHexMotor name="Spindexer.Motor" port="1" />
-            <RevRobotics40HDHexMotor name="Intake.Motor" port="2"/>
-            <goBILDA5202SeriesMotor name="flDriveMotor" port="3"/>
+            <goBILDA5202SeriesMotor name="flDriveMotor" port="0"/>
+            <goBILDA5202SeriesMotor name="Intake.Motor" port="2"/>
+            <goBILDA5202SeriesMotor name="blDriveMotor" port="3"/>
             <!-- Servos -->
             <RevBlinkinLedDriver name="StatusLED" port="0" />
             <Servo name="Spindexer1LED" port="2" />
