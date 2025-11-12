@@ -50,6 +50,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         LEAVE_LAUNCH_ZONE,
         PICKUP_SPIKEMARK,
         BULLDOZE_INTAKE,
+        OPEN_GATE,
         SHOOT_SPIKEMARK,
         PARK,
         DONE
@@ -185,7 +186,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case SHOOT_PRELOAD:
                     if (robot.autoShootTask != null)
                     {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
+                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
@@ -249,6 +250,17 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                     }
                     currentSpikeMarkCount++;
+                    boolean openGate = (autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1);
+                    sm.waitForSingleEvent(event, openGate ? State.OPEN_GATE: State.SHOOT_SPIKEMARK);
+                    break;
+
+                case OPEN_GATE:
+                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.85);
+                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(RobotParams.Game.RED_OPEN_GATE_POSE, autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.SHOOT_SPIKEMARK);
                     break;
 
@@ -264,7 +276,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 shootPos, autoChoices.alliance));
                     if (robot.autoShootTask != null)
                     {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, 3, false);
+                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else

@@ -69,6 +69,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
         public boolean inAuto = false;
         public boolean useAprilTagVision = true;
+        public boolean relocalize = false;
         public boolean useClassifierVision = false;
         public int numArtifactsToShoot = 3;
         public boolean moveToNextExitSlot = true;
@@ -84,6 +85,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             this.inAuto = inAuto;
             return this;
         }   //setInAuto
+
+        public TaskParams setRelocalizeEnabled(boolean enabled)
+        {
+            this.relocalize = enabled;
+            return this;
+        }   //setRelocalizeEnabled
 
         public TaskParams setVision(boolean useAprilTagVision, boolean useClassifierVision)
         {
@@ -105,6 +112,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return "(alliance=" + alliance +
                     ",inAuto=" + inAuto +
                    ",useAprilTagVision=" + useAprilTagVision +
+                    ",relocalize=" + relocalize +
                    ",useClassifierVision=" + useClassifierVision +
                    ",numArtifactsToShoot=" + numArtifactsToShoot +
                    ",moveToNextExitSlot=" + moveToNextExitSlot + ")";
@@ -145,17 +153,19 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param alliance specifies the alliance color, can be null if useClassifierVision is false.
      * @param inAuto specifies true if running in Autonomous mode, false otherwise.
      * @param useAprilTagVision specifies true to use AprilTag Vision, false otherwise.
+     * @param relocalize specifies true to enable relocalization, false otherwise.
      * @param useClassifierVision specifies true to use Classifier Vision, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
      * @param moveToNextExitSlot specifies true to move to next Exit slot after shooting is done.
      */
     public void autoShoot(
-        String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean inAuto, boolean useAprilTagVision,
+        String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean inAuto, boolean useAprilTagVision, boolean relocalize,
         boolean useClassifierVision, int numArtifactsToShoot, boolean moveToNextExitSlot)
     {
         autoShootParams
             .setAlliance(alliance)
             .setInAuto(inAuto)
+            .setRelocalizeEnabled(relocalize)
             .setVision(useAprilTagVision, useClassifierVision)
             .setNumArtifactsToShoot(numArtifactsToShoot, moveToNextExitSlot);
         tracer.traceInfo(
@@ -314,7 +324,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                            null, null);
+                            -robot.robotDrive.driveBase.getHeading(), null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
@@ -322,6 +332,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         tracer.traceInfo(
                             moduleName,
                             "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + targetPose);
+                        TrcPose2D robotFieldPose =
+                                robot.shooterSubsystem.adjustRobotFieldPosition(
+                                        aprilTagInfo.detectedObj.robotPose);
+                        robot.robotDrive.driveBase.setFieldPosition(robotFieldPose, false);
                         if (robot.ledIndicator != null)
                         {
                             // This is assuming vision is set to look for 20 or 24 only.
