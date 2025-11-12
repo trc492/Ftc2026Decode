@@ -832,7 +832,7 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                    false,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,

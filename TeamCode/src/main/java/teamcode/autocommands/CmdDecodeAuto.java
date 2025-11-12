@@ -220,7 +220,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
                         int index = order[currentSpikeMarkCount];
                         TrcPose2D targetPose = robot.adjustPoseByAlliance(
-                            RobotParams.Game.RED_SPIKEMARK_POS[index], autoChoices.alliance);
+                            RobotParams.Game.RED_SPIKEMARK_POSES[index], autoChoices.alliance);
                         robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                                 robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                                 robot.robotInfo.baseParams.profiledMaxDriveAcceleration,

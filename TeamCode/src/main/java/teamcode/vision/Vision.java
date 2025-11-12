@@ -494,7 +494,7 @@ public class Vision
                 switch (pipelineIndex)
                 {
                     case 0:
-                        objectName = (int) limelightInfo.detectedObj.objId == 20?
+                        objectName = (int) limelightInfo.detectedObj.objId == RobotParams.Game.blueGoalAprilTag[0]?
                             LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
                         if (robot.ledIndicator != null)
                         {
@@ -591,7 +591,7 @@ public class Vision
         {
             // This is assuming vision is looking for either 20 or 24 and not the obelisk.
             robot.ledIndicator.setStatusPatternOn(
-                aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
+                aprilTagInfo.detectedObj.aprilTagDetection.id == RobotParams.Game.blueGoalAprilTag[0] ?
                     LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG, true);
         }
 

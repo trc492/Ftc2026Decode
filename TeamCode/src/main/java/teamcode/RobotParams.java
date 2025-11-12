@@ -90,8 +90,6 @@ public class RobotParams
      */
     public static class Robot
     {
-//        public static final String TEAM_FOLDER_PATH             =
-//            Environment.getExternalStorageDirectory().getPath() + "/FIRST/ftc3543";
         @SuppressLint("SdCardPath")
         public static final String TEAM_FOLDER_PATH             = "/sdcard/FIRST/ftc3543";
         public static final String LOG_FOLDER_PATH              = TEAM_FOLDER_PATH + "/tracelogs";
@@ -134,38 +132,38 @@ public class RobotParams
                 {Vision.ArtifactType.Purple, Vision.ArtifactType.Purple, Vision.ArtifactType.Green}     // AprilTag 23
             };
         // Robot start locations.
-        public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE       =
+        public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE   =
             new TrcPose2D(-Field.HALF_FIELD_INCHES+22.0+Robot.ROBOT_WIDTH/2, Field.HALF_FIELD_INCHES-7.0-Robot.ROBOT_LENGTH/2, 0.0);
-        public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER     =
+        public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER =
             new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER     =
+        public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER =
             new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0,
                           Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0,
                           -90.0);
 
         public static final TrcPose2D RED_PRELOAD_LAUNCH_SHOOT_POSE =
             new TrcPose2D(0.0, 0.0, 0.0); // TODO: Determine if we can shoot from starting position
-        public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   =
+        public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE =
             new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0); //TODO: Can be changed to 1
         // .0 if using motif vision for preload
-        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_GOAL      =
+        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_GOAL =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_FAR      =
+        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE_FAR =
             new TrcPose2D(2.0*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
 
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   =
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2   =
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
             new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3   =
+        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
             new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D[] RED_SPIKEMARK_POS           =
+        public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
             {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
-        public static final TrcPose2D RED_OPEN_GATE_POSE   =
-                new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_ClASSIFIER_PARK_POSE      =
+        public static final TrcPose2D RED_OPEN_GATE_POSE        =
+            new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_ClASSIFIER_PARK_POSE  =
             new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
-        public static final TrcPose2D RED_SQUARE_PARK_POSE          =
+        public static final TrcPose2D RED_SQUARE_PARK_POSE      =
             new TrcPose2D(2.25*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
         // Game elapsed times.
         public static final double AUTO_PERIOD                  = 30.0;     // 30 seconds auto period

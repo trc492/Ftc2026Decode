@@ -206,7 +206,7 @@ public class FtcTeleOp extends FtcOpMode
                             // Use MT2 for relocalization.
                             robotFieldPose =
                                 robot.shooterSubsystem.adjustRobotFieldPosition(
-                                    robot.vision.getRobotFieldPose(-robot.robotDrive.driveBase.getHeading()));
+                                    robot.vision.getRobotFieldPose(robot.robotDrive.driveBase.getHeading()));
                         }
                     }
                     else
@@ -364,10 +364,10 @@ public class FtcTeleOp extends FtcOpMode
                                         Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                         false,
                                         Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                        false,
                                         Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                        Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
-                                                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                            Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
                                         Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }
@@ -639,7 +639,7 @@ public class FtcTeleOp extends FtcOpMode
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                    false,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,

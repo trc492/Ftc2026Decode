@@ -86,7 +86,7 @@ public class FtcAuto extends FtcOpMode
     {
         YES,
         NO
-    }
+    }   //enum OpenGate
 
     public enum ParkOption
     {
@@ -388,7 +388,7 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
         FtcChoiceMenu<OpenGate> openGateMenu = new FtcChoiceMenu<>("Open Gate:", pickupOptionMenu);
         FtcValueMenu spikeMarkCountMenu =
-            new FtcValueMenu("SpikeMark Count:", pickupOptionMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
+            new FtcValueMenu("SpikeMark Count:", openGateMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
         FtcValueMenu shootDelay1Menu =
             new FtcValueMenu("First Shoot delay:", spikeMarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay2Menu =
@@ -410,6 +410,7 @@ public class FtcAuto extends FtcOpMode
 
         // Link Value Menus to their children.
         startDelayMenu.setChildMenu(allianceMenu);
+        spikeMarkCountMenu.setChildMenu(shootDelay1Menu);
         shootDelay1Menu.setChildMenu(shootDelay2Menu);
         shootDelay2Menu.setChildMenu(shootDelay3Menu);
         shootDelay3Menu.setChildMenu(parkOptionMenu);
@@ -417,7 +418,6 @@ public class FtcAuto extends FtcOpMode
         yTargetMenu.setChildMenu(turnTargetMenu);
         turnTargetMenu.setChildMenu(drivePowerMenu);
         driveTimeMenu.setChildMenu(drivePowerMenu);
-        spikeMarkCountMenu.setChildMenu(openGateMenu);
         //
         // Populate choice menus.
         //
@@ -467,8 +467,8 @@ public class FtcAuto extends FtcOpMode
         autoChoices.driveTime = driveTimeMenu.getCurrentValue();
         autoChoices.drivePower = drivePowerMenu.getCurrentValue();
         TaskAutoShoot.autoShootParams.alliance = autoChoices.alliance;
-        Dashboard.Subsystem_Vision.trackedAprilTagIds =
-            new int[] {autoChoices.alliance == Alliance.BLUE_ALLIANCE? 20: 24};
+        Dashboard.Subsystem_Vision.trackedAprilTagIds = autoChoices.alliance == Alliance.BLUE_ALLIANCE?
+            RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag;
         //
         // Show choices.
         //
