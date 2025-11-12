@@ -577,14 +577,15 @@ public class Vision
     /**
      * This method calls Webcam AprilTag vision to detect the AprilTag object.
      *
-     * @param id specifies the AprilTag ID to look for, null if match to any ID.
+     * @param aprilTagIds specifies an array of AprilTag ID to look for, null if match to any ID.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected AprilTag object info.
      */
-    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getWebcamDetectedAprilTag(Integer id, int lineNum)
+    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getWebcamDetectedAprilTag(
+        int[] aprilTagIds, int lineNum)
     {
         TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo =
-            webcamAprilTagVision.getBestDetectedTargetInfo(id, null);
+            webcamAprilTagVision.getBestDetectedTargetInfo(aprilTagIds, null);
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
@@ -597,7 +598,8 @@ public class Vision
         if (lineNum != -1)
         {
             robot.dashboard.displayPrintf(
-                lineNum, "AprilTag[%s]: %s", id, aprilTagInfo != null ? aprilTagInfo : "Not found.");
+                lineNum, "AprilTag[%s]: %s",
+                Arrays.toString(aprilTagIds), aprilTagInfo != null ? aprilTagInfo : "Not found.");
         }
 
         return aprilTagInfo;
@@ -660,7 +662,8 @@ public class Vision
         else if (isWebcamAprilTagVisionEnabled())
         {
             // Find any AprilTag in view.
-            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getWebcamDetectedAprilTag(null, -1);
+            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getWebcamDetectedAprilTag(
+                RobotParams.Game.anyGoalAprilTags, -1);
 
             if (aprilTagInfo != null)
             {

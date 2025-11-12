@@ -62,6 +62,8 @@ public class Spindexer extends TrcSubsystem
         public static final boolean NEED_ZERO_CAL               = true;
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
+        public static final boolean DUAL_ENTRY_SENSORS          =
+            RobotParams.Preferences.robotType == BaseDrive.RobotType.DecodeRobot;
         public static final boolean HAS_EXIT_SENSOR             = true;
 
         public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
@@ -90,7 +92,9 @@ public class Spindexer extends TrcSubsystem
 //        public static final double MOTION_PROFILED_MAX_ACCEL    = 500.0;
 //        public static final double MOTION_PROFILED_MAX_DECEL    = 500.0;
 
-        public static final String ENTRY_SENSOR_NAME            = SUBSYSTEM_NAME + ".EntrySensor";
+        public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
+        public static final String ENTRY_SENSOR2_NAME           = SUBSYSTEM_NAME + ".EntrySensor2";
+        public static final String ENTRY_TRIGGER_NAME           = SUBSYSTEM_NAME + ".EntryTrigger";
 
         public static final double OBJECT_DISTANCE              = 120.0;    // in degrees
         public static final double MOVE_POWER                   = 1.0;
@@ -135,7 +139,8 @@ public class Spindexer extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcEvent entryTriggerEvent;
-    private final RevColorSensorV3 entryAnalogSensor;
+    private final RevColorSensorV3 entryAnalogSensor1;
+    private final RevColorSensorV3 entryAnalogSensor2;
     private final TrcTrigger shootVelTrigger;
     public final TrcPidStorage spindexer;
     private final TrcWarpSpace warpSpace;
@@ -177,16 +182,26 @@ public class Spindexer extends TrcSubsystem
         if (Params.HAS_ENTRY_SENSOR)
         {
             entryTriggerEvent = new TrcEvent(Params.SUBSYSTEM_NAME + "entryTrigger");
-            entryAnalogSensor = FtcOpMode.getInstance().hardwareMap.get(
-                RevColorSensorV3.class, Params.ENTRY_SENSOR_NAME);
+            entryAnalogSensor1 = FtcOpMode.getInstance().hardwareMap.get(
+                RevColorSensorV3.class, Params.ENTRY_SENSOR1_NAME);
+            if (Params.DUAL_ENTRY_SENSORS)
+            {
+                entryAnalogSensor2 = FtcOpMode.getInstance().hardwareMap.get(
+                    RevColorSensorV3.class, Params.ENTRY_SENSOR2_NAME);
+            }
+            else
+            {
+                entryAnalogSensor2 = null;
+            }
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.ENTRY_SENSOR_NAME, this::getEntrySensorHue, entryTriggerParams, false,
+                Params.ENTRY_TRIGGER_NAME, this::getEntrySensorHue, entryTriggerParams, false,
                 this::entryTriggerCallback, entryTriggerEvent);
         }
         else
         {
             entryTriggerEvent = null;
-            entryAnalogSensor = null;
+            entryAnalogSensor1 = null;
+            entryAnalogSensor2 = null;
         }
 
         if (Params.HAS_EXIT_SENSOR)
@@ -463,6 +478,36 @@ public class Spindexer extends TrcSubsystem
     }   //isEntrySensorActive
 
     /**
+     * This method reads the specified color sensor and convert its RGB values to HSV.
+     *
+     * @param sensor specifies the color sensor to read.
+     * @return HSV values.
+     */
+    private float[] getColorSensorHSV(RevColorSensorV3 sensor)
+    {
+        float[] hsvValues = {0.0f, 0.0f, 0.0f};
+
+        NormalizedRGBA normalizedColors = sensor.getNormalizedColors();
+        Color.RGBToHSV(
+            (int) (normalizedColors.red*255),
+            (int) (normalizedColors.green*255),
+            (int) (normalizedColors.blue*255),
+            hsvValues);
+        if (hsvValues[0] >= Params.GREEN_LOW_THRESHOLD)
+        {
+            spindexer.tracer.traceDebug(
+                instanceName, "%s: hsv1=%s, rgb={%d/%d/%d}",
+                "EntrySensor" + (sensor == entryAnalogSensor1? 1: 2),
+                Arrays.toString(hsvValues),
+                (int) (normalizedColors.red*255),
+                (int) (normalizedColors.green*255),
+                (int) (normalizedColors.blue*255));
+        }
+
+        return hsvValues;
+    }   //getColorSensorHSV
+
+    /**
      * This method reads the entry REV Color Sensor and returns the Hue value.
      *
      * @return hue value.
@@ -471,25 +516,11 @@ public class Spindexer extends TrcSubsystem
     {
         double hue = 0.0;
 
-        if (entryAnalogSensor != null)
+        if (entryAnalogSensor1 != null)
         {
-            float[] hsvValues = {0.0f, 0.0f, 0.0f};
-            NormalizedRGBA normalizedColors = entryAnalogSensor.getNormalizedColors();
-            Color.RGBToHSV(
-                (int) (normalizedColors.red*255),
-                (int) (normalizedColors.green*255),
-                (int) (normalizedColors.blue*255),
-                hsvValues);
-            hue = hsvValues[0];
-//            if (hue >= Params.GREEN_LOW_THRESHOLD)
-//            {
-//                spindexer.tracer.traceInfo(
-//                    instanceName, "HSV=%s, rgb=%d/%d/%d",
-//                    Arrays.toString(hsvValues),
-//                    (int) (normalizedColors.red*255),
-//                    (int) (normalizedColors.green*255),
-//                    (int) (normalizedColors.blue*255));
-//            }
+            float[] sensor1Hsv = getColorSensorHSV(entryAnalogSensor1);
+            float[] sensor2Hsv = entryAnalogSensor2 != null? getColorSensorHSV(entryAnalogSensor2): null;
+            hue = sensor2Hsv == null || sensor1Hsv[1] > sensor2Hsv[2]? sensor1Hsv[0]: sensor2Hsv[0];
         }
 
         return hue;
@@ -505,7 +536,7 @@ public class Spindexer extends TrcSubsystem
     {
         Vision.ArtifactType artifactType = null;
 
-        if (entryAnalogSensor != null)
+        if (entryAnalogSensor1 != null)
         {
             if (hue >= Params.PURPLE_LOW_THRESHOLD)
             {
