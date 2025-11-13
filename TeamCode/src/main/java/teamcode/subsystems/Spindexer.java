@@ -59,12 +59,12 @@ public class Spindexer extends TrcSubsystem
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Spindexer";
-        public static final boolean NEED_ZERO_CAL               = true;
+        public static final boolean NEED_ZERO_CAL               = false;//true
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean DUAL_ENTRY_SENSORS          =
             RobotParams.Preferences.robotType == BaseDrive.RobotType.DecodeRobot;
-        public static final boolean HAS_EXIT_SENSOR             = true;
+        public static final boolean HAS_EXIT_TRIGGER            = true;
 
         public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
@@ -204,7 +204,7 @@ public class Spindexer extends TrcSubsystem
             entryAnalogSensor2 = null;
         }
 
-        if (Params.HAS_EXIT_SENSOR)
+        if (Params.HAS_EXIT_TRIGGER)
         {
             shootVelTrigger = new FtcSensorTrigger()
                 .setAnalogSourceTrigger(

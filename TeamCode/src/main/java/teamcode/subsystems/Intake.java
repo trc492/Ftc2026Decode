@@ -63,7 +63,7 @@ public class Intake extends TrcSubsystem
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
         public static final double EJECT_POWER                  = -1.0;
         public static final double RETAIN_POWER                 = 0.0;
-        public static final double INTAKE_FINISH_DELAY          = 1.0;
+        public static final double INTAKE_FINISH_DELAY          = 0.5;
         public static final double EJECT_FINISH_DELAY           = 0.5;
     }   //class Params
 
