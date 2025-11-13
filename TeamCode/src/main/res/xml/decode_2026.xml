@@ -22,8 +22,10 @@ SOFTWARE.
 -->
 <Robot type="FirstInspires-FTC" name="Decode_2026">
     <!-- Cameras -->
+    <!--
     <Webcam name="Webcam 1" serialNumber="6BC978AF" />
     <EthernetDevice name="Limelight3a" serialNumber="EthernetOverUsb:eth0:172.29.0.21" port="0" ipAddress="172.29.0.1" />
+    -->
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <!-- Control Hub -->
         <LynxModule name="Control Hub" port="173">
@@ -38,11 +40,10 @@ SOFTWARE.
             <!-- Analog -->
             <AnalogInput name="Shooter.TiltEncoder" port="0" />
             <!-- Digital -->
-            <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <!-- I2C -->
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
             <RevColorSensorV3 name="Spindexer.EntrySensor1" port="0" bus="2" />
-            <RevColorSensorV3 name="Spindexer.EntrySensor2" port="0" bus="2" />
+            <RevColorSensorV3 name="Spindexer.EntrySensor2" port="0" bus="3" />
             <!--
             <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
             -->
@@ -61,6 +62,7 @@ SOFTWARE.
             <Servo name="Spindexer3LED" port="3" />
             <!-- Analog -->
             <!-- Digital -->
+            <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <!-- I2C -->
             <!--
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0"/>
