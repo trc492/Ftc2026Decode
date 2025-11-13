@@ -209,7 +209,7 @@ public class Spindexer extends TrcSubsystem
             shootVelTrigger = new FtcSensorTrigger()
                 .setAnalogSourceTrigger(
                     Params.EXIT_TRIGGER_NAME,
-                    () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelVelocity(): 0.0,
+                    () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelRPM(): 0.0,
                     exitTriggerParams).getTrigger();
         }
         else

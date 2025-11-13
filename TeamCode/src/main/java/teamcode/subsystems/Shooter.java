@@ -324,10 +324,10 @@ public class Shooter extends TrcSubsystem
      *
      * @return current flywheel velocity in RPM.
      */
-    public double getFlywheelVelocity()
+    public double getFlywheelRPM()
     {
         return shooter.shooterMotor1.getVelocity()*60.0;
-    }   //getFlywheelVelocity
+    }   //getFlywheelRPM
 
     /**
      * This method sets the launcher servo position.
@@ -364,11 +364,11 @@ public class Shooter extends TrcSubsystem
             if (robot.spindexerSubsystem != null)
             {
                 // Enable Spindexer exit trigger.
-                double currFlywheelVel = getFlywheelVelocity();
+                double currFlywheelRPM = getFlywheelRPM();
                 robot.spindexerSubsystem.enableExitTrigger(
-                    currFlywheelVel - Params.SHOOT_VEL_TRIGGER_THRESHOLD,
-                    currFlywheelVel + Params.SHOOT_VEL_TRIGGER_THRESHOLD,
-                    this::launchCallback);
+                    currFlywheelRPM - Params.SHOOT_VEL_TRIGGER_THRESHOLD,
+                    currFlywheelRPM + Params.SHOOT_VEL_TRIGGER_THRESHOLD,
+                    this::velTriggerCallback);
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
@@ -382,12 +382,12 @@ public class Shooter extends TrcSubsystem
     }   //shoot
 
     /**
-     * This method is called when the launch duration has expired.
+     * This method is called when the flywheel velocity trigger occurred.
      *
      * @param context not used.
      * @param canceled specifies true if launch was canceled (not used).
      */
-    private void launchCallback(Object context, boolean canceled)
+    private void velTriggerCallback(Object context, boolean canceled)
     {
         if (robot.spindexerSubsystem != null)
         {
@@ -397,7 +397,7 @@ public class Shooter extends TrcSubsystem
         TrcEvent callbackEvent = new TrcEvent("Launcher.retractCallback");
         callbackEvent.setCallback(this::retractCallback, null);
         launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, callbackEvent, launcherParams.retractTime);
-    }   //launchCallback
+    }   //velTriggerCallback
 
     /**
      * This method is called when the launcher finished retracting.
@@ -565,6 +565,10 @@ public class Shooter extends TrcSubsystem
         shooter.cancel();
         if (launcher != null)
         {
+            if (launcher.getPosition() == launcherParams.activatePos)
+            {
+                velTriggerCallback(null, true);
+            }
             launcher.cancel();
         }
     }   //cancel
