@@ -101,7 +101,7 @@ public class Spindexer extends TrcSubsystem
         public static final int MAX_CAPACITY                    = 3;
 
         public static final double GREEN_LOW_THRESHOLD          = 100.0;
-        public static final double PURPLE_LOW_THRESHOLD         = 180.0;
+        public static final double PURPLE_LOW_THRESHOLD         = 200.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 300.0;
 
         public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = GREEN_LOW_THRESHOLD;
@@ -488,20 +488,19 @@ public class Spindexer extends TrcSubsystem
         float[] hsvValues = {0.0f, 0.0f, 0.0f};
 
         NormalizedRGBA normalizedColors = sensor.getNormalizedColors();
-        Color.RGBToHSV(
+        int[] rgbValues = new int[] {
             (int) (normalizedColors.red*255),
             (int) (normalizedColors.green*255),
-            (int) (normalizedColors.blue*255),
-            hsvValues);
-        if (hsvValues[0] >= Params.GREEN_LOW_THRESHOLD)
+            (int) (normalizedColors.blue*255)};
+        Color.RGBToHSV(rgbValues[0], rgbValues[1], rgbValues[2], hsvValues);
+        if (hsvValues[0] == 180.0)
         {
+            // If hue is 180.0, it is ambiguous (right in the middle of purple and green). Print out the raw color
+            // values so we can analyze them.
             spindexer.tracer.traceDebug(
-                instanceName, "%s: hsv1=%s, rgb={%d/%d/%d}",
-                "EntrySensor" + (sensor == entryAnalogSensor1? 1: 2),
-                Arrays.toString(hsvValues),
-                (int) (normalizedColors.red*255),
-                (int) (normalizedColors.green*255),
-                (int) (normalizedColors.blue*255));
+                instanceName, "%s: hsv=%s, rgb=%s",
+                "ColorSensor" + (sensor == entryAnalogSensor1? 1: 2),
+                Arrays.toString(hsvValues), Arrays.toString(rgbValues));
         }
 
         return hsvValues;
@@ -521,6 +520,12 @@ public class Spindexer extends TrcSubsystem
             float[] sensor1Hsv = getColorSensorHSV(entryAnalogSensor1);
             float[] sensor2Hsv = entryAnalogSensor2 != null? getColorSensorHSV(entryAnalogSensor2): null;
             hue = sensor2Hsv == null || sensor1Hsv[1] > sensor2Hsv[2]? sensor1Hsv[0]: sensor2Hsv[0];
+            if (hue >= Params.GREEN_LOW_THRESHOLD)
+            {
+                spindexer.tracer.traceDebug(
+                    instanceName, "sensor1Hsv=%s, sensor2Hsv=%s",
+                    Arrays.toString(sensor1Hsv), Arrays.toString(sensor2Hsv));
+            }
         }
 
         return hue;
