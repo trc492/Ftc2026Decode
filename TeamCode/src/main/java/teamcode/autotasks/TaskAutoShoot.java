@@ -246,6 +246,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         robot.shooter.cancel(owner);
         robot.spindexer.cancel(owner);
+        if (robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.SHOOT_IN_PROGRESS, false);
+        }
     }   //stopSubsystems
 
     /**
@@ -270,6 +274,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 targetPose = null;
+                if (robot.ledIndicator != null)
+                {
+                    robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
+                }
                 if (!taskParams.useAprilTagVision)
                 {
                     tracer.traceInfo(moduleName, "***** Not using AprilTag Vision, aim at AprilTag using odometry.");
