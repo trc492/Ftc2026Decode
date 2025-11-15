@@ -413,7 +413,7 @@ public class FtcAuto extends FtcOpMode
         spikeMarkCountMenu.setChildMenu(shootDelay1Menu);
         shootDelay1Menu.setChildMenu(shootDelay2Menu);
         shootDelay2Menu.setChildMenu(shootDelay3Menu);
-        shootDelay3Menu.setChildMenu(parkOptionMenu);
+        shootDelay3Menu.setChildMenu(openGateMenu);
         xTargetMenu.setChildMenu(yTargetMenu);
         yTargetMenu.setChildMenu(turnTargetMenu);
         turnTargetMenu.setChildMenu(drivePowerMenu);

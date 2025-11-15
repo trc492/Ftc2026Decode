@@ -213,8 +213,16 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case PICKUP_SPIKEMARK:
-                    int[] order = (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE) ?
-                            new int[]{0, 1, 2} : new int[]{2, 1, 0};
+                    int[] order;
+                    if (autoChoices.openGate == FtcAuto.OpenGate.YES && autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                    {
+                        order = new int[]{1, 0, 2}; // Note: Could be {1, 2, 0}, should be the same in terms of distance
+                    }
+                    else
+                    {
+                        order = (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE) ?
+                                new int[]{0, 1, 2} : new int[]{2, 1, 0};
+                    }
                     if (currentSpikeMarkCount < targetSpikeMarkCount)
                     {
                         int index = order[currentSpikeMarkCount];
