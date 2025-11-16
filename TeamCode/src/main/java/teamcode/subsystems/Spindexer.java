@@ -59,7 +59,7 @@ public class Spindexer extends TrcSubsystem
     public static final class Params
     {
         public static final String SUBSYSTEM_NAME               = "Spindexer";
-        public static final boolean NEED_ZERO_CAL               = false;//true
+        public static final boolean NEED_ZERO_CAL               = true;
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean DUAL_ENTRY_SENSORS          =
@@ -68,19 +68,17 @@ public class Spindexer extends TrcSubsystem
 
         public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
-        public static final boolean MOTOR_INVERTED              = true;
+        public static final boolean MOTOR_INVERTED              = false;
 
         public static final String LOWER_LIMIT_SWITCH_NAME      = SUBSYSTEM_NAME + ".LowerLimit";
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
-        public static final double GEAR_RATIO                   = 36.0/28.0;    // Load to Motor
-        public static final double DEG_PER_COUNT                =
-            360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*GEAR_RATIO);
-        public static final double POS_OFFSET                   = 26.0;
+        public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
+        public static final double POS_OFFSET                   = -160.0;
         public static final double ZERO_OFFSET                  = 0.0;
-        public static final double ZERO_CAL_POWER               = 0.5;
+        public static final double ZERO_CAL_POWER               = -0.2;
 
-        public static final double MOTOR_PID_KP                 = 0.04;
+        public static final double MOTOR_PID_KP                 = 0.01;
         public static final double MOTOR_PID_KI                 = 0.0;
         public static final double MOTOR_PID_KD                 = 0.0;
 //        public static final double MOTOR_FF_KS                  = 0.0;

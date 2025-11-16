@@ -192,6 +192,10 @@ public class RobotParams
             (((1.0+46.0/17.0)*(1.0+46.0/17.0)*(1.0+46.0/11.0))*28.0);
         public static final double GOBILDA_84_MAX_RPM           = 84.0;
         public static final double GOBILDA_84_MAX_VEL_PPS       = GOBILDA_84_ENC_PPR*GOBILDA_84_MAX_RPM/60.0;
+        //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-26-9-1-ratio-24mm-length-8mm-rex-shaft-223-rpm-3-3-5v-encoder/
+        public static final double GOBILDA_223_ENC_PPR          = (((1.0+46.0/11.0)*(1.0+46.0/11.0))*28.0);
+        public static final double GOBILDA_223_MAX_RPM          = 223.0;
+        public static final double GOBILA_223_MAX_VEL_PPS       = GOBILDA_223_ENC_PPR*GOBILDA_223_MAX_RPM/60.0;
         //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
         public static final double GOBILDA_312_ENC_PPR          = (((1.0+46.0/17.0)*(1.0+46.0/11.0))*28.0);
         public static final double GOBILDA_312_MAX_RPM          = 312.0;

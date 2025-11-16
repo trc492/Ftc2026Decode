@@ -114,7 +114,7 @@ public class Shooter extends TrcSubsystem
 
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
-            360.0/(RobotParams.MotorSpec.REV_COREHEX_ENC_PPR*PAN_GEAR_RATIO);
+            360.0/(RobotParams.MotorSpec.GOBILDA_223_ENC_PPR*PAN_GEAR_RATIO);
         public static final double PAN_POS_OFFSET               = 95.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
@@ -136,13 +136,15 @@ public class Shooter extends TrcSubsystem
         // Tilt Motor
         public static final String TILT_MOTOR_NAME              = SUBSYSTEM_NAME + ".TiltMotor";
         public static final MotorType TILT_MOTOR_TYPE           = MotorType.CRServo;
-        public static final boolean TILT_MOTOR_INVERTED         = true;
+        public static final boolean TILT_MOTOR_INVERTED         = false;
         public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
         public static final boolean TILT_ENCODER_INVERTED       = false;
 
-        public static final double TILT_MOTOR_PID_KP            = 0.1;
-        public static final double TILT_MOTOR_PID_KI            = 0.0;
-        public static final double TILT_MOTOR_PID_KD            = 0.0;
+        public static final double TILT_MOTOR_PID_KP            = 0.06;
+        public static final double TILT_MOTOR_PID_KI            = 0.005;
+        public static final double TILT_MOTOR_PID_KD            = 0.001;
+        public static final double TILT_MOTOR_PID_KF            = 0.0;
+        public static final double TILT_MOTOR_PID_IZONE         = 3.0;
         public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
@@ -150,7 +152,7 @@ public class Shooter extends TrcSubsystem
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
         public static final double TILT_POS_OFFSET              = 25.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.2037875;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.1262125;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;
@@ -204,7 +206,8 @@ public class Shooter extends TrcSubsystem
         .setPidControlParams(Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.PidParams tiltMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
-            Params.TILT_MOTOR_PID_KP, Params.TILT_MOTOR_PID_KI, Params.TILT_MOTOR_PID_KD)
+            Params.TILT_MOTOR_PID_KP, Params.TILT_MOTOR_PID_KI, Params.TILT_MOTOR_PID_KD, Params.TILT_MOTOR_PID_KF,
+            Params.TILT_MOTOR_PID_IZONE)
         .setPidControlParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
     public static final TrcServo.TuneParams launcherParams = new TrcServo.TuneParams(
         Params.LAUNCHER_SERVO_INVERTED, Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS,

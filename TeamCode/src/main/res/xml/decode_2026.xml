@@ -22,10 +22,8 @@ SOFTWARE.
 -->
 <Robot type="FirstInspires-FTC" name="Decode_2026">
     <!-- Cameras -->
-    <!--
-    <Webcam name="Webcam 1" serialNumber="6BC978AF" />
+    <Webcam name="Webcam 1" serialNumber="945CD8AF" />
     <EthernetDevice name="Limelight3a" serialNumber="EthernetOverUsb:eth0:172.29.0.21" port="0" ipAddress="172.29.0.1" />
-    -->
     <LynxUsbDevice name="Control Hub Portal" serialNumber="(embedded)" parentModuleAddress="173">
         <!-- Control Hub -->
         <LynxModule name="Control Hub" port="173">
@@ -35,8 +33,8 @@ SOFTWARE.
             <goBILDA5202SeriesMotor name="Spindexer.Motor" port="2" />
             <goBILDA5202SeriesMotor name="brDriveMotor" port="3"/>
             <!-- Servos -->
-            <ContinuousRotationServo name="Shooter.TiltMotor" port="0" />
-            <Servo name="Shooter.Launcher" port="2" />
+            <Servo name="Shooter.Launcher" port="0" />
+            <ContinuousRotationServo name="Shooter.TiltMotor" port="2" />
             <!-- Analog -->
             <AnalogInput name="Shooter.TiltEncoder" port="0" />
             <!-- Digital -->

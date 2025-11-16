@@ -45,7 +45,7 @@ SOFTWARE.
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
             <!-- I2C -->
             <goBILDAPinpoint name="pinpointOdo" port="0" bus="1"/>
-            <RevColorSensorV3 name="Spindexer.EntrySensor" port="0" bus="2" />
+            <RevColorSensorV3 name="Spindexer.EntrySensor1" port="0" bus="2" />
             <!--
             <ControlHubImuBHI260AP name="imu" port="0" bus="0"/>
             -->
