@@ -179,8 +179,8 @@ public class Shooter extends TrcSubsystem
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
-        public static final boolean LAUNCHER_SERVO_INVERTED     = true;
-        public static double LAUNCHER_REST_POS                  = 0.48;
+        public static final boolean LAUNCHER_SERVO_INVERTED     = false;
+        public static double LAUNCHER_REST_POS                  = 0.5;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.75;     // in seconds
         public static double LAUNCHER_RETRACT_TIME              = 0.25;     // in seconds
@@ -209,9 +209,9 @@ public class Shooter extends TrcSubsystem
             Params.TILT_MOTOR_PID_KP, Params.TILT_MOTOR_PID_KI, Params.TILT_MOTOR_PID_KD, Params.TILT_MOTOR_PID_KF,
             Params.TILT_MOTOR_PID_IZONE)
         .setPidControlParams(Params.TILT_PID_TOLERANCE, Params.TILT_SOFTWARE_PID_ENABLED);
-    public static final TrcServo.TuneParams launcherParams = new TrcServo.TuneParams(
-        Params.LAUNCHER_SERVO_INVERTED, Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS,
-        Params.LAUNCHER_LAUNCH_DURATION, Params.LAUNCHER_RETRACT_TIME);
+    public static final FtcServoActuator.TuneParams launcherTuneParams = new FtcServoActuator.TuneParams(
+        Params.LAUNCHER_REST_POS, Params.LAUNCHER_LAUNCH_POS, Params.LAUNCHER_LAUNCH_DURATION,
+        Params.LAUNCHER_RETRACT_TIME);
 
     private final FtcDashboard dashboard;
     private final Robot robot;
@@ -302,7 +302,8 @@ public class Shooter extends TrcSubsystem
         if (Params.HAS_LAUNCHER)
         {
             FtcServoActuator.Params launcherParams = new FtcServoActuator.Params()
-                .setPrimaryServo(Params.LAUNCHER_SERVO_NAME, Params.LAUNCHER_SERVO_INVERTED);
+                .setPrimaryServo(Params.LAUNCHER_SERVO_NAME, Params.LAUNCHER_SERVO_INVERTED)
+                .setTuneParams(launcherTuneParams);
             launcher = new FtcServoActuator(launcherParams).getServo();
             launcher.setPosition(Params.LAUNCHER_REST_POS);
         }
@@ -342,11 +343,11 @@ public class Shooter extends TrcSubsystem
     {
         if (launch)
         {
-            launcher.setPosition(owner, 0.0, launcherParams.activatePos, null, 0.0);
+            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, 0.0);
         }
         else
         {
-            launcher.setPosition(owner, 0.0, launcherParams.restPos, null, 0.0);
+            launcher.setPosition(owner, 0.0, launcherTuneParams.restPos, null, 0.0);
         }
     }   //setLaunchPosition
 
@@ -363,7 +364,7 @@ public class Shooter extends TrcSubsystem
         {
             TrcDbgTrace.globalTraceInfo(
                 instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f)",
-                owner, completionEvent, launcherParams.activatePos, launcherParams.activateDuration);
+                owner, completionEvent, launcherTuneParams.activatePos, launcherTuneParams.activateDuration);
             if (robot.spindexerSubsystem != null)
             {
                 // Enable Spindexer exit trigger.
@@ -375,7 +376,7 @@ public class Shooter extends TrcSubsystem
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-            launcher.setPosition(owner, 0.0, launcherParams.activatePos, null, 0.0);
+            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, 0.0);
         }
         else if (completionEvent != null)
         {
@@ -399,7 +400,8 @@ public class Shooter extends TrcSubsystem
         // Reset launcher, fire and forget.
         TrcEvent callbackEvent = new TrcEvent("Launcher.retractCallback");
         callbackEvent.setCallback(this::retractCallback, null);
-        launcher.setPosition(launchOwner, 0.0, launcherParams.restPos, callbackEvent, launcherParams.retractTime);
+        launcher.setPosition(
+            launchOwner, 0.0, launcherTuneParams.restPos, callbackEvent, launcherTuneParams.retractTime);
     }   //velTriggerCallback
 
     /**
@@ -568,7 +570,7 @@ public class Shooter extends TrcSubsystem
         shooter.cancel();
         if (launcher != null)
         {
-            if (launcher.getPosition() == launcherParams.activatePos)
+            if (launcher.getPosition() == launcherTuneParams.activatePos)
             {
                 velTriggerCallback(null, true);
             }

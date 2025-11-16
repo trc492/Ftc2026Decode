@@ -24,6 +24,7 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import ftclib.motor.FtcServoActuator;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.BaseDrive;
 import teamcode.subsystems.Shooter;
@@ -33,7 +34,6 @@ import trclib.drivebase.TrcDriveBase;
 import trclib.drivebase.TrcSwerveDriveBase;
 import trclib.driverio.TrcGameController;
 import trclib.motor.TrcMotor;
-import trclib.motor.TrcServo;
 import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 
@@ -84,7 +84,7 @@ public class Dashboard
         public static TrcMotor.PidParams shootMotor2Pid = Shooter.shootMotor1PidParams;
         public static TrcMotor.PidParams panMotorPid = Shooter.panMotorPidParams;
         public static TrcMotor.PidParams tiltMotorPid = Shooter.tiltMotorPidParams;
-        public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
+        public static FtcServoActuator.TuneParams launcherPos = Shooter.launcherTuneParams;
     }   //class Subsystem_Shooter
 
     @Config
