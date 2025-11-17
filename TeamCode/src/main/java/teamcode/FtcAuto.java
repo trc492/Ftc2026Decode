@@ -63,8 +63,8 @@ public class FtcAuto extends FtcOpMode
     public enum StartPos
     {
         GOAL_ZONE,
-        LOAD_CENTER,
-        LOAD_CORNER
+        FAR_CENTER,
+        FAR_CORNER
     }   //enum StartPos
 
     public enum AutoStrategy
@@ -425,8 +425,8 @@ public class FtcAuto extends FtcOpMode
         allianceMenu.addChoice("Blue", Alliance.BLUE_ALLIANCE, false, startPosMenu);
 
         startPosMenu.addChoice("Start Position Goal Zone", StartPos.GOAL_ZONE, true, strategyMenu);
-        startPosMenu.addChoice("Start Position Center Loading Zone", StartPos.LOAD_CENTER, false, strategyMenu);
-        startPosMenu.addChoice("Start Position Corner Loading Zone", StartPos.LOAD_CORNER, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Far Zone Center", StartPos.FAR_CENTER, false, strategyMenu);
+        startPosMenu.addChoice("Start Position Far Zone Corner", StartPos.FAR_CORNER, false, strategyMenu);
 
         strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);

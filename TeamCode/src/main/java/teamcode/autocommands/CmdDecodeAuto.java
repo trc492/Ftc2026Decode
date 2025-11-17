@@ -22,17 +22,16 @@
 
 package teamcode.autocommands;
 
-import ftclib.drivebase.FtcSwerveDrive;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
+import trclib.subsystem.TrcShootParamTable;
 import trclib.timer.TrcTimer;
 
 /**
@@ -45,14 +44,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private enum State
     {
         START,
-        GOTO_PRELOAD_SHOOT_POS,
-        SHOOT_PRELOAD,
-        LEAVE_LAUNCH_ZONE,
+        GOTO_SHOOT_POS,
+        SHOOT_ARTIFACTS,
         PICKUP_SPIKEMARK,
-        BULLDOZE_INTAKE,
+        FINISH_PICKUP,
         OPEN_GATE,
-        DRIVE_TO_SHOOT,
-        SHOOT_SPIKEMARK,
         PARK,
         DONE
     }   //enum State
@@ -106,6 +102,19 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     {
         timer.cancel();
         sm.stop();
+        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
+        if (robot.intakeSubsystem != null)
+        {
+            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+        }
+        if (robot.autoShootTask != null)
+        {
+            robot.autoShootTask.cancel();
+        }
+        if (robot.shooterSubsystem != null)
+        {
+            robot.shooterSubsystem.cancel();
+        }
     }   //cancel
 
     /**
@@ -138,58 +147,65 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     }
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
+                    currentSpikeMarkCount = 0;
                     // Do delay if necessary.
-                    if (robot.robotDrive instanceof FtcSwerveDrive)
-                    {
-                        ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
-                    }
                     if (autoChoices.startDelay > 0.0)
                     {
                         robot.globalTracer.traceInfo(
                             moduleName, "***** Do Start Delay " + autoChoices.startDelay + "s.");
                         timer.set(autoChoices.startDelay, event);
-                        sm.waitForSingleEvent(event, State.GOTO_PRELOAD_SHOOT_POS);
+                        sm.waitForSingleEvent(event, State.GOTO_SHOOT_POS);
                     }
                     else
                     {
-                        sm.setState(State.GOTO_PRELOAD_SHOOT_POS);
+                        sm.setState(State.GOTO_SHOOT_POS);
                     }
                     break;
 
-                case GOTO_PRELOAD_SHOOT_POS:
+                case GOTO_SHOOT_POS:
                     if (robot.shooterSubsystem != null)
                     {
-//                        robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
-                        robot.shooter.panMotor.setPosition(
-                            null, 0.0, autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? -45.0 : 45.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
-                        robot.shooter.shooterMotor1.setVelocity(67.0);
+                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        TrcShootParamTable.Params shootParams;
+                        double panAngle;
+                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shootParams = Shooter.Params.shootParamTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
+                        }
+                        else
+                        {
+                            shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -20.0 : 20.0;
+                        }
+                        robot.shooter.aimShooter(
+                            shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, panAngle);
                     }
+
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
                     {
-                        sm.setState(State.SHOOT_PRELOAD);
+                        sm.setState(State.SHOOT_ARTIFACTS);
                     }
                     else
                     {
-//                        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.5);
-//                        robot.robotDrive.purePursuitDrive.setRotOutputLimit(0.1);
-//                        robot.robotDrive.purePursuitDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, false, true, false);
+                        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
+                        TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
+                            RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
                         robot.robotDrive.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(
-                                RobotParams.Game.RED_PRELOAD_GOAL_SHOOT_POSE, autoChoices.alliance));
-//                        robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
-//                        robot.robotDrive.driveBase.holonomicDrive(0.0, 0.5, 0.0, 4, event);
-                        sm.waitForSingleEvent(event, State.SHOOT_PRELOAD);
+                            robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
+                        sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
                     }
                     break;
 
-                case SHOOT_PRELOAD:
+                case SHOOT_ARTIFACTS:
                     if (robot.autoShootTask != null)
                     {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, false, 3, false);
+                        robot.autoShootTask.autoShoot(
+                            null, event, autoChoices.alliance, true, true, false, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else
@@ -198,40 +214,36 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     break;
 
-                case LEAVE_LAUNCH_ZONE:
-                    TrcPose2D parkingPose = robot.robotDrive.driveBase.getFieldPosition();
-                    parkingPose.x += autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? 24.0: -24.0;
-                    robot.robotDrive.purePursuitDrive.start(
-                        event, 1.0, false,
-                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                        parkingPose);
-                    sm.waitForSingleEvent(event, State.DONE);
-                    break;
-
                 case PICKUP_SPIKEMARK:
-                    int[] order;
-                    if (autoChoices.openGate == FtcAuto.OpenGate.YES && autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
-                    {
-                        order = new int[]{1, 0, 2}; // Note: Could be {1, 2, 0}, should be the same in terms of distance
-                    }
-                    else
-                    {
-                        order = (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE) ?
-                                new int[]{0, 1, 2} : new int[]{2, 1, 0};
-                    }
                     if (currentSpikeMarkCount < targetSpikeMarkCount)
                     {
-                        int index = order[currentSpikeMarkCount];
-                        TrcPose2D targetPose = robot.adjustPoseByAlliance(
-                            RobotParams.Game.RED_SPIKEMARK_POSES[index], autoChoices.alliance);
-                        robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                                targetPose);
-                        sm.waitForSingleEvent(event, State.BULLDOZE_INTAKE);
+                        int[] order =
+                            autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? new int[] {0, 1, 2}:
+                            autoChoices.openGate == FtcAuto.OpenGate.YES? new int[] {1, 0, 2}: new int[] {2, 1, 0};
+                        int spikeMarkIndex = order[currentSpikeMarkCount];
+
+                        if (robot.intakeSubsystem != null)
+                        {
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        }
+
+                        TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
+                            RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex], autoChoices.alliance);
+                        TrcPose2D endPose = spikeMarkPose.clone();
+                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 24.0: -24.0;
+                        robot.robotDrive.purePursuitDrive.setWaypointEventHandler(
+                            (i, wp) ->
+                            {
+                                robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
+                                robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.15);
+                            });
+                        robot.robotDrive.purePursuitDrive.start(
+                            event, 0.0, false,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            spikeMarkPose, endPose);
+                        sm.waitForSingleEvent(event, State.FINISH_PICKUP);
                     }
                     else
                     {
@@ -239,75 +251,39 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     break;
 
-                case BULLDOZE_INTAKE:
+                case FINISH_PICKUP:
+                    robot.robotDrive.purePursuitDrive.setWaypointEventHandler(null);
                     if (robot.intakeSubsystem != null)
                     {
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                     }
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.15);
-                    robot.robotDrive.purePursuitDrive.start(event, 0.0, true,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            new TrcPose2D(0.0, 24.0, 0.0)); // TODO: tune
                     currentSpikeMarkCount++;
-                    boolean openGate = (autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1);
-                    sm.waitForSingleEvent(event, openGate ? State.OPEN_GATE: State.DRIVE_TO_SHOOT);
+                    sm.setState(autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1?
+                        State.OPEN_GATE: State.GOTO_SHOOT_POS);
                     break;
 
                 case OPEN_GATE:
-                    if (robot.intakeSubsystem != null)
-                    {
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
-                    }
                     robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.85);
-                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(RobotParams.Game.RED_OPEN_GATE_POSE, autoChoices.alliance));
-                    sm.waitForSingleEvent(event, State.DRIVE_TO_SHOOT);
-                    break;
-
-                case DRIVE_TO_SHOOT:
-                    if (robot.intakeSubsystem != null)
-                    {
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
-                    }
-                    if (robot.shooterSubsystem != null)
-                    {
-                        robot.shooter.shooterMotor1.setVelocity(67.0);
-                    }
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
-                    TrcPose2D shootPos = autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE ?
-                            RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_FAR : RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_GOAL;
-                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(
-                                    shootPos, autoChoices.alliance));
-                    sm.waitForSingleEvent(event, State.SHOOT_SPIKEMARK);
-                    break;
-                case SHOOT_SPIKEMARK:
-                    if (robot.autoShootTask != null)
-                    {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, false, 3, false);
-                        sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
-                    }
-                    else
-                    {
-                        sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
-                    }
+                    robot.robotDrive.purePursuitDrive.start(
+                        event, 0.0, false,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(RobotParams.Game.RED_OPEN_GATE_POSE, autoChoices.alliance));
+                    sm.waitForSingleEvent(event, State.GOTO_SHOOT_POS);
                     break;
 
                 case PARK:
-                    robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(autoChoices.parkOption == FtcAuto.ParkOption.CLASSIFIER_PARK ? RobotParams.Game.RED_ClASSIFIER_PARK_POSE:
-                                RobotParams.Game.RED_SQUARE_PARK_POSE, autoChoices.alliance));
+                    robot.robotDrive.purePursuitDrive.start(
+                        event, 0.0, false,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(
+                            autoChoices.parkOption == FtcAuto.ParkOption.CLASSIFIER_PARK ?
+                                RobotParams.Game.RED_ClASSIFIER_PARK_POSE:
+                                RobotParams.Game.RED_SQUARE_PARK_POSE,
+                            autoChoices.alliance));
                     sm.waitForSingleEvent(event, State.DONE);
                     break;
 

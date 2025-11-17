@@ -356,8 +356,8 @@ public class Robot
     {
         TrcPose2D startPose = adjustPoseByAlliance(
             autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? RobotParams.Game.STARTPOSE_RED_GOAL_ZONE:
-            autoChoices.startPos == FtcAuto.StartPos.LOAD_CENTER? RobotParams.Game.STARTPOSE_RED_LOAD_CENTER:
-                RobotParams.Game.STARTPOSE_RED_LOAD_CORNER,
+            autoChoices.startPos == FtcAuto.StartPos.FAR_CENTER? RobotParams.Game.STARTPOSE_RED_FAR_CENTER:
+                RobotParams.Game.STARTPOSE_RED_FAR_CORNER,
             autoChoices.alliance, false);
         robotDrive.driveBase.setFieldPosition(startPose);
     }   //setRobotStartPosition

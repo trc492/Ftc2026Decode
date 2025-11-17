@@ -55,6 +55,7 @@ import trclib.vision.TrcVisionTargetInfo;
 public class Shooter extends TrcSubsystem
 {
     public static final String FAR_ZONE_SHOOT_POINT             = "Target_9.44ft_2";
+    public static final String GOAL_ZONE_SHOOT_POINT            = "Target_2.93ft_2";
 
     public static final class Params
     {
