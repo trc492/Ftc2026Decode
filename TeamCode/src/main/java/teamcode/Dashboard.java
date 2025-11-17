@@ -31,7 +31,7 @@ import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
-import trclib.drivebase.TrcSwerveDriveBase;
+import trclib.drivebase.TrcSwerveDrive;
 import trclib.driverio.TrcGameController;
 import trclib.motor.TrcMotor;
 import trclib.sensor.TrcTriggerThresholdRange;
@@ -54,7 +54,7 @@ public class Dashboard
     public static class Subsystem_Drivebase
     {
         public static TrcDriveBase.BaseParams driveBaseParams = DriveBase.SwerveRobotInfo.baseParams;
-        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = DriveBase.SwerveRobotInfo.swerveParams;
+        public static TrcSwerveDrive.SwerveParams swerveDriveParams = DriveBase.SwerveRobotInfo.swerveParams;
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
         public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
         public static double driveSlowScale = 0.3;

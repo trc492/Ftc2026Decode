@@ -37,7 +37,7 @@ import teamcode.vision.Vision;
 import trclib.controller.TrcPidController;
 import trclib.dataprocessor.TrcUtil;
 import trclib.drivebase.TrcDriveBase;
-import trclib.drivebase.TrcSwerveDriveBase;
+import trclib.drivebase.TrcSwerveDrive;
 import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
@@ -159,7 +159,7 @@ public class DriveBase extends TrcSubsystem
             .setTurnPidParams(turnPidCoeffs, 0.25)
             .setVelocityPidParams(velPidCoeffs)
             .setDriveCharacteristics(30.0, 150.0, 150.0,  15.0);
-        public static TrcSwerveDriveBase.SwerveParams swerveParams = new TrcSwerveDriveBase.SwerveParams()
+        public static TrcSwerveDrive.SwerveParams swerveParams = new TrcSwerveDrive.SwerveParams()
             .setSteerMotorPidParams(
                 new TrcMotor.PidParams()
                     .setPidCoefficients(steerPidCoeffs)
