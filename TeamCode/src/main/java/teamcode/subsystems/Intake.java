@@ -33,6 +33,7 @@ import trclib.sensor.TrcTrigger;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
+import trclib.timer.TrcTimer;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 import trclib.vision.TrcVisionTargetInfo;
 
@@ -70,6 +71,7 @@ public class Intake extends TrcSubsystem
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcRollerIntake intake;
+    private final TrcTimer timer;
     private Vision.ArtifactType pickupArtifactType = Vision.ArtifactType.Any;
     private String detectedArtifactName = null;
     private boolean bulldozeEnabled = false;
@@ -104,6 +106,7 @@ public class Intake extends TrcSubsystem
                 null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
+        timer = new TrcTimer(Params.SUBSYSTEM_NAME + ".timer");
     }   //Intake
 
     /**
@@ -205,7 +208,7 @@ public class Intake extends TrcSubsystem
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
-            intake.cancel();
+            timer.set(Params.INTAKE_FINISH_DELAY, (ctxt, canceled) -> {intake.cancel();});
             robot.spindexerSubsystem.setAutoReceiveEnabled(false);
             bulldozeEnabled = false;
         }
