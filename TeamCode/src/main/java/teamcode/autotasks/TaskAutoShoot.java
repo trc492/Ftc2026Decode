@@ -283,7 +283,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     tracer.traceInfo(moduleName, "***** Not using AprilTag Vision, aim at AprilTag using odometry.");
                     int aprilTagIndex = taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? 0: 4;
-                    TrcPose2D robotPose = robot.robotDrive.driveBase.getFieldPosition();
+                    TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
                     targetPose = RobotParams.Game.APRILTAG_POSES[aprilTagIndex].relativeTo(robotPose);
                     tracer.traceInfo(
                         moduleName, "robotPose=%s, aprilTagPose=%s, targetPose=%s",
@@ -333,7 +333,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                            robot.robotDrive.driveBase.getHeading(), null);
+                            robot.robotBase.driveBase.getHeading(), null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
@@ -344,10 +344,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
                         if (taskParams.relocalize && aprilTagInfo.detectedObj.robotPose != null)
                         {
-                            TrcPose2D originalRobotPose = robot.robotDrive.driveBase.getFieldPosition();
+                            TrcPose2D originalRobotPose = robot.robotBase.driveBase.getFieldPosition();
                             TrcPose2D robotFieldPose =
                                 robot.shooterSubsystem.adjustRobotFieldPosition(aprilTagInfo.detectedObj.robotPose);
-                            robot.robotDrive.driveBase.setFieldPosition(robotFieldPose, false);
+                            robot.robotBase.driveBase.setFieldPosition(robotFieldPose, false);
                             tracer.traceInfo(
                                 moduleName, "***** Relocalize: " + originalRobotPose + " -> " + robotFieldPose);
                         }

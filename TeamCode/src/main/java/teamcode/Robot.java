@@ -24,7 +24,7 @@ package teamcode;
 
 import androidx.annotation.NonNull;
 
-import ftclib.drivebase.FtcRobotDrive;
+import ftclib.drivebase.FtcRobotBase;
 import ftclib.driverio.FtcDashboard;
 import ftclib.driverio.FtcMatchInfo;
 import ftclib.robotcore.FtcOpMode;
@@ -33,7 +33,7 @@ import teamcode.autotasks.TaskAutoPickup;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.Intake;
 import teamcode.indicators.LEDIndicator;
-import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.DriveBase;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
@@ -62,9 +62,9 @@ public class Robot
     public static FtcMatchInfo matchInfo = null;
     private static TrcPose2D endOfAutoRobotPose = null;
     // Robot Drive.
-    public BaseDrive baseDrive;
-    public FtcRobotDrive.RobotInfo robotInfo;
-    public FtcRobotDrive robotDrive;
+    public DriveBase robotDriveBase;
+    public FtcRobotBase.RobotInfo robotInfo;
+    public FtcRobotBase robotBase;
     // Vision subsystems.
     public Vision vision;
     // Sensors and indicators.
@@ -98,9 +98,9 @@ public class Robot
         dashboard = FtcDashboard.getInstance();
         speak("Init starting");
         // Create and initialize Robot Base.
-        baseDrive = new BaseDrive();
-        robotInfo = baseDrive.getRobotInfo();
-        robotDrive = baseDrive.getRobotDrive();
+        robotDriveBase = new DriveBase();
+        robotInfo = robotDriveBase.getRobotInfo();
+        robotBase = robotDriveBase.getRobotBase();
         // Create and initialize vision subsystems.
         if (RobotParams.Preferences.useVision &&
             (RobotParams.Preferences.useLimelightVision ||
@@ -112,7 +112,7 @@ public class Robot
         }
         // If robotType is VisionOnly, the robot controller is disconnected from the robot for testing vision.
         // In this case, we should not instantiate any robot hardware.
-        if (RobotParams.Preferences.robotType != BaseDrive.RobotType.VisionOnly)
+        if (RobotParams.Preferences.robotType != DriveBase.RobotType.VisionOnly)
         {
             // Create and initialize sensors and indicators.
             ledIndicator = robotInfo.indicatorNames != null? new LEDIndicator(robotInfo.indicatorNames): null;
@@ -188,28 +188,28 @@ public class Robot
      */
     public void startMode(TrcRobot.RunMode runMode)
     {
-        if (robotDrive != null)
+        if (robotBase != null)
         {
             //
             // Since the IMU gyro is giving us cardinal heading, we need to enable its cardinal to cartesian converter.
             //
-            if (robotDrive.gyro != null)
+            if (robotBase.gyro != null)
             {
-                robotDrive.gyro.setEnabled(true);
+                robotBase.gyro.setEnabled(true);
                 // The following are performance counters, could be disabled for competition if you want.
                 // But it might give you some insight if somehow autonomous wasn't performing as expected.
-                robotDrive.gyro.setElapsedTimerEnabled(true);
+                robotBase.gyro.setElapsedTimerEnabled(true);
             }
             //
             // Enable odometry for all opmodes. We may need odometry in TeleOp for auto-assist drive.
             //
-            robotDrive.driveBase.setOdometryEnabled(true);
+            robotBase.driveBase.setOdometryEnabled(true);
             if (runMode == TrcRobot.RunMode.TELEOP_MODE)
             {
                 if (endOfAutoRobotPose != null)
                 {
                     // We had a previous autonomous run that saved the robot position at the end, use it.
-                    robotDrive.driveBase.setFieldPosition(endOfAutoRobotPose);
+                    robotBase.driveBase.setFieldPosition(endOfAutoRobotPose);
                     globalTracer.traceInfo(moduleName, "Restore saved RobotPose=" + endOfAutoRobotPose);
                 }
             }
@@ -235,10 +235,10 @@ public class Robot
         //
         // Print all performance counters if there are any.
         //
-        if (robotDrive != null && robotDrive.gyro != null)
+        if (robotBase != null && robotBase.gyro != null)
         {
-            robotDrive.gyro.printElapsedTime(globalTracer);
-            robotDrive.gyro.setElapsedTimerEnabled(false);
+            robotBase.gyro.printElapsedTime(globalTracer);
+            robotBase.gyro.setElapsedTimerEnabled(false);
         }
         TrcDigitalInput.printElapsedTime(globalTracer);
         TrcDigitalInput.setElapsedTimerEnabled(false);
@@ -278,24 +278,24 @@ public class Robot
             vision.close();
        }
 
-        if (robotDrive != null)
+        if (robotBase != null)
         {
             if (runMode == TrcRobot.RunMode.AUTO_MODE)
             {
                 // Save current robot location at the end of autonomous so subsequent teleop run can restore it.
-                endOfAutoRobotPose = robotDrive.driveBase.getFieldPosition();
+                endOfAutoRobotPose = robotBase.driveBase.getFieldPosition();
                 globalTracer.traceInfo(moduleName, "Saved robot pose=" + endOfAutoRobotPose);
             }
             //
             // Disable odometry.
             //
-            robotDrive.driveBase.setOdometryEnabled(false);
+            robotBase.driveBase.setOdometryEnabled(false);
             //
             // Disable gyro task.
             //
-            if (robotDrive.gyro != null)
+            if (robotBase.gyro != null)
             {
-                robotDrive.gyro.setEnabled(false);
+                robotBase.gyro.setEnabled(false);
             }
         }
 
@@ -359,7 +359,7 @@ public class Robot
             autoChoices.startPos == FtcAuto.StartPos.FAR_CENTER? RobotParams.Game.STARTPOSE_RED_FAR_CENTER:
                 RobotParams.Game.STARTPOSE_RED_FAR_CORNER,
             autoChoices.alliance, false);
-        robotDrive.driveBase.setFieldPosition(startPose);
+        robotBase.driveBase.setFieldPosition(startPose);
     }   //setRobotStartPosition
 
     /**

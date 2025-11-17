@@ -185,24 +185,24 @@ public class FtcAuto extends FtcOpMode
         switch (autoChoices.strategy)
         {
             case DECODE_AUTO:
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     autoCommand = new CmdDecodeAuto(robot, autoChoices);
                 }
                 break;
 
             case PID_DRIVE:
-                if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
+                if (robot.robotBase != null && robot.robotBase.pidDrive != null)
                 {
-                    autoCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
+                    autoCommand = new CmdPidDrive(robot.robotBase.driveBase, robot.robotBase.pidDrive);
                 }
                 break;
 
             case TIMED_DRIVE:
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     autoCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, autoChoices.startDelay, autoChoices.driveTime,
+                        robot.robotBase.driveBase, autoChoices.startDelay, autoChoices.driveTime,
                         0.0, autoChoices.drivePower, 0.0);
                 }
                 break;

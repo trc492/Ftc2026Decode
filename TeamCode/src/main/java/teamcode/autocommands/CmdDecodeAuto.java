@@ -102,7 +102,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     {
         timer.cancel();
         sm.stop();
-        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
+        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
         if (robot.intakeSubsystem != null)
         {
             robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
@@ -188,10 +188,10 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
-                        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
+                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
                             RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
-                        robot.robotDrive.purePursuitDrive.start(
+                        robot.robotBase.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
@@ -231,13 +231,13 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex], autoChoices.alliance);
                         TrcPose2D endPose = spikeMarkPose.clone();
                         endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 24.0: -24.0;
-                        robot.robotDrive.purePursuitDrive.setWaypointEventHandler(
+                        robot.robotBase.purePursuitDrive.setWaypointEventHandler(
                             (i, wp) ->
                             {
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
-                                robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.15);
+                                robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
                             });
-                        robot.robotDrive.purePursuitDrive.start(
+                        robot.robotBase.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
@@ -252,7 +252,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case FINISH_PICKUP:
-                    robot.robotDrive.purePursuitDrive.setWaypointEventHandler(null);
+                    robot.robotBase.purePursuitDrive.setWaypointEventHandler(null);
                     if (robot.intakeSubsystem != null)
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
@@ -263,8 +263,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case OPEN_GATE:
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.85);
-                    robot.robotDrive.purePursuitDrive.start(
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.85);
+                    robot.robotBase.purePursuitDrive.start(
                         event, 0.0, false,
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                         robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
@@ -274,7 +274,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case PARK:
-                    robot.robotDrive.purePursuitDrive.start(
+                    robot.robotBase.purePursuitDrive.start(
                         event, 0.0, false,
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                         robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
@@ -294,8 +294,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
             }
             robot.globalTracer.tracePostStateInfo(
-                sm.toString(), state, robot.robotDrive.driveBase, robot.robotDrive.pidDrive,
-                robot.robotDrive.purePursuitDrive, null);
+                sm.toString(), state, robot.robotBase.driveBase, robot.robotBase.pidDrive,
+                robot.robotBase.purePursuitDrive, null);
         }
 
         return !sm.isEnabled();

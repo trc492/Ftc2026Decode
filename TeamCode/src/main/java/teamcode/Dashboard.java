@@ -26,7 +26,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 import ftclib.motor.FtcServoActuator;
 import teamcode.autotasks.TaskAutoShoot;
-import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.DriveBase;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
@@ -53,8 +53,8 @@ public class Dashboard
     @Config
     public static class Subsystem_Drivebase
     {
-        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.SwerveRobotInfo.baseParams;
-        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.SwerveRobotInfo.swerveParams;
+        public static TrcDriveBase.BaseParams driveBaseParams = DriveBase.SwerveRobotInfo.baseParams;
+        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = DriveBase.SwerveRobotInfo.swerveParams;
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
         public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
         public static double driveSlowScale = 0.3;

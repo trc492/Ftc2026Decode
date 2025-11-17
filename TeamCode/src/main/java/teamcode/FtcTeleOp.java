@@ -27,7 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.Arrays;
 import java.util.Locale;
 
-import ftclib.drivebase.FtcSwerveDrive;
+import ftclib.drivebase.FtcSwerveBase;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
 import teamcode.indicators.RumbleIndicator;
@@ -196,7 +196,7 @@ public class FtcTeleOp extends FtcOpMode
                 //
                 // DriveBase subsystem.
                 //
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
                     if (relocalizing)
@@ -206,7 +206,7 @@ public class FtcTeleOp extends FtcOpMode
                             // Use MT2 for relocalization.
                             robotFieldPose =
                                 robot.shooterSubsystem.adjustRobotFieldPosition(
-                                    robot.vision.getRobotFieldPose(robot.robotDrive.driveBase.getHeading()));
+                                    robot.vision.getRobotFieldPose(robot.robotBase.driveBase.getHeading()));
                         }
                     }
                     else
@@ -214,21 +214,21 @@ public class FtcTeleOp extends FtcOpMode
                         double[] inputs = driverGamepad.getDriveInputs(
                             Dashboard.Subsystem_Drivebase.driveMode, true, drivePowerScale, turnPowerScale);
 
-                        if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+                        if (robot.robotBase.driveBase.supportsHolonomicDrive())
                         {
-                            robot.robotDrive.driveBase.holonomicDrive(
-                                null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                            robot.robotBase.driveBase.holonomicDrive(
+                                null, inputs[0], inputs[1], inputs[2], robot.robotBase.driveBase.getDriveGyroAngle());
                         }
                         else
                         {
-                            robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
+                            robot.robotBase.driveBase.arcadeDrive(inputs[1], inputs[2]);
                         }
 
                         if (robot.dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
                                 14, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
-                                inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
+                                inputs[0], inputs[1], inputs[2], robot.robotBase.driveBase.getDriveOrientation());
                         }
                     }
                     // Check for EndGame warning.
@@ -296,10 +296,10 @@ public class FtcTeleOp extends FtcOpMode
      */
     private void setDriveOrientation(TrcDriveBase.DriveOrientation orientation)
     {
-        if (robot.robotDrive != null)
+        if (robot.robotBase != null)
         {
             robot.globalTracer.traceInfo(moduleName, "driveOrientation=" + orientation);
-            robot.robotDrive.driveBase.setDriveOrientation(
+            robot.robotBase.driveBase.setDriveOrientation(
                 orientation, orientation == TrcDriveBase.DriveOrientation.FIELD);
             if (robot.ledIndicator != null)
             {
@@ -395,25 +395,25 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case X:
-                if (robot.robotDrive != null && pressed)
+                if (robot.robotBase != null && pressed)
                 {
                     if (driverAltFunc)
                     {
-                        if (robot.robotDrive.driveBase.isGyroAssistEnabled())
+                        if (robot.robotBase.driveBase.isGyroAssistEnabled())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Disabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(null);
+                            robot.robotBase.driveBase.setGyroAssistEnabled(null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
+                            robot.robotBase.driveBase.setGyroAssistEnabled(robot.robotBase.purePursuitDrive.getTurnPidCtrl());
                         }
                     }
-                    else if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+                    else if (robot.robotBase.driveBase.supportsHolonomicDrive())
                     {
                         // Toggle between field or robot oriented driving, only applicable for holonomic drive base.
-                        if (robot.robotDrive.driveBase.getDriveOrientation() != TrcDriveBase.DriveOrientation.FIELD)
+                        if (robot.robotBase.driveBase.getDriveOrientation() != TrcDriveBase.DriveOrientation.FIELD)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling FIELD mode.");
                             setDriveOrientation(TrcDriveBase.DriveOrientation.FIELD);
@@ -508,11 +508,11 @@ public class FtcTeleOp extends FtcOpMode
                     else
                     {
                         // If drive base is SwerveDrive, set all wheels pointing forward.
-                        if (robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        if (robot.robotBase != null && robot.robotBase instanceof FtcSwerveBase)
                         {
                             // Drive base is a Swerve Drive, align all steering wheels forward.
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Set SteerAngle to zero.");
-                            ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
+                            ((FtcSwerveBase) robot.robotBase).setSteerAngle(0.0, false, false);
                         }
                     }
                 }
@@ -520,7 +520,7 @@ public class FtcTeleOp extends FtcOpMode
 
             case Start:
                 // Do AprilTag Vision re-localization.
-                if (robot.vision != null && robot.robotDrive != null && robot.shooterSubsystem != null)
+                if (robot.vision != null && robot.robotBase != null && robot.shooterSubsystem != null)
                 {
                     boolean hasAprilTagVision = robot.vision.isWebcamAprilTagVisionEnabled();
                     // If Webcam AprilTag vision is not enabled, check if we have Limelight since Limelight has
@@ -549,7 +549,7 @@ public class FtcTeleOp extends FtcOpMode
                                 // Vision found an AprilTag, set the new robot field location.
                                 robot.globalTracer.traceInfo(
                                     moduleName, ">>>>> Finish re-localizing: pose=" + robotFieldPose);
-                                robot.robotDrive.driveBase.setFieldPosition(robotFieldPose, false);
+                                robot.robotBase.driveBase.setFieldPosition(robotFieldPose, false);
                                 robotFieldPose = null;
                                 if (savedLimelightPipeline != null)
                                 {

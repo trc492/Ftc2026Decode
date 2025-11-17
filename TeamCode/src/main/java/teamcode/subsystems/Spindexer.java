@@ -63,7 +63,7 @@ public class Spindexer extends TrcSubsystem
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean DUAL_ENTRY_SENSORS          =
-            RobotParams.Preferences.robotType == BaseDrive.RobotType.DecodeRobot;
+            RobotParams.Preferences.robotType == DriveBase.RobotType.DecodeRobot;
         public static final boolean HAS_EXIT_TRIGGER            = true;
 
         public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";

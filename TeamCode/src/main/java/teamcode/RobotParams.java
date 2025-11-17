@@ -24,7 +24,7 @@ package teamcode;
 
 import android.annotation.SuppressLint;
 
-import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.DriveBase;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
@@ -43,7 +43,7 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.DecodeRobot;
+        public static final DriveBase.RobotType robotType       = DriveBase.RobotType.DecodeRobot;
         public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
