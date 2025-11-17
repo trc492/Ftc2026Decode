@@ -107,8 +107,10 @@ public class Shooter extends TrcSubsystem
         public static final boolean PAN_ENCODER_INVERTED        = false;
 
         public static final double PAN_MOTOR_PID_KP             = 0.03;
-        public static final double PAN_MOTOR_PID_KI             = 0.0;
+        public static final double PAN_MOTOR_PID_KI             = 0.003;
+        public static final double PAN_MOTOR_PID_IZONE          = 5.0;
         public static final double PAN_MOTOR_PID_KD             = 0.0;
+        public static final double PAN_MOTOR_PID_KF             = 0.0;
         public static final double PAN_PID_TOLERANCE            = 1.0;
         public static final boolean PAN_SOFTWARE_PID_ENABLED    = true;
 
@@ -202,7 +204,8 @@ public class Shooter extends TrcSubsystem
         .setPidControlParams(Params.SHOOT_PID_TOLERANCE_RPM/60.0, Params.SHOOT_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.PidParams panMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
-            Params.PAN_MOTOR_PID_KP, Params.PAN_MOTOR_PID_KI, Params.PAN_MOTOR_PID_KD)
+            Params.PAN_MOTOR_PID_KP, Params.PAN_MOTOR_PID_KI, Params.PAN_MOTOR_PID_KD, Params.PAN_MOTOR_PID_KF,
+                Params.PAN_MOTOR_PID_IZONE)
         .setPidControlParams(Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.PidParams tiltMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
@@ -611,7 +614,7 @@ public class Shooter extends TrcSubsystem
                         {
                             shooter.panMotor.setPosition(
                                 owner, 0.0,
-                                FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? 45.0 : -45.0,
+                                FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
                                 true, Params.PAN_POWER_LIMIT, null, 0.0);
                         }
                     }

@@ -29,6 +29,7 @@ import teamcode.RobotParams;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.pathdrive.TrcPose2D;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
@@ -50,6 +51,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         PICKUP_SPIKEMARK,
         BULLDOZE_INTAKE,
         OPEN_GATE,
+        DRIVE_TO_SHOOT,
         SHOOT_SPIKEMARK,
         PARK,
         DONE
@@ -159,7 +161,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
 //                        robot.shooter.shooterMotor1.setVelocity(Dashboard.Subsystem_Shooter.shootMotor1Velocity);
                         robot.shooter.panMotor.setPosition(
-                            null, 0.0, -180.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                            null, 0.0, autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? -45.0 : 45.0, true, Shooter.Params.PAN_POWER_LIMIT, null, 0.0);
+                        robot.shooter.shooterMotor1.setVelocity(67.0);
                     }
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
                     {
@@ -169,6 +172,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
 //                        robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.5);
 //                        robot.robotDrive.purePursuitDrive.setRotOutputLimit(0.1);
+//                        robot.robotDrive.purePursuitDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, false, true, false);
                         robot.robotDrive.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
@@ -185,13 +189,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case SHOOT_PRELOAD:
                     if (robot.autoShootTask != null)
                     {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, true, false, 3, false);
-                        sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
-                    }
-                    else if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
-                    {
-                        // TODO: Temporary delay to simulate shooting, will be replaced with auto shoot task
-                        timer.set(2.0, event);
+                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else
@@ -246,44 +244,55 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
                     }
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.3);
+                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.15);
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, true,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            new TrcPose2D(0.0, 20.0, 0.0)); // TODO: tune
+                            new TrcPose2D(0.0, 24.0, 0.0)); // TODO: tune
+                    currentSpikeMarkCount++;
+                    boolean openGate = (autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1);
+                    sm.waitForSingleEvent(event, openGate ? State.OPEN_GATE: State.DRIVE_TO_SHOOT);
+                    break;
+
+                case OPEN_GATE:
                     if (robot.intakeSubsystem != null)
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
                     }
-                    currentSpikeMarkCount++;
-                    boolean openGate = (autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1);
-                    sm.waitForSingleEvent(event, openGate ? State.OPEN_GATE: State.SHOOT_SPIKEMARK);
-                    break;
-
-                case OPEN_GATE:
                     robot.robotDrive.purePursuitDrive.setMoveOutputLimit(0.85);
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(RobotParams.Game.RED_OPEN_GATE_POSE, autoChoices.alliance));
-                    sm.waitForSingleEvent(event, State.SHOOT_SPIKEMARK);
+                    sm.waitForSingleEvent(event, State.DRIVE_TO_SHOOT);
                     break;
 
-                case SHOOT_SPIKEMARK:
+                case DRIVE_TO_SHOOT:
+                    if (robot.intakeSubsystem != null)
+                    {
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                    }
+                    if (robot.shooterSubsystem != null)
+                    {
+                        robot.shooter.shooterMotor1.setVelocity(67.0);
+                    }
                     robot.robotDrive.purePursuitDrive.setMoveOutputLimit(1.0);
                     TrcPose2D shootPos = autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE ?
-                        RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_FAR : RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_GOAL;
+                            RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_FAR : RobotParams.Game.RED_SPIKEMARK_SHOOT_POSE_GOAL;
                     robot.robotDrive.purePursuitDrive.start(event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             robot.adjustPoseByAlliance(
-                                shootPos, autoChoices.alliance));
+                                    shootPos, autoChoices.alliance));
+                    sm.waitForSingleEvent(event, State.SHOOT_SPIKEMARK);
+                    break;
+                case SHOOT_SPIKEMARK:
                     if (robot.autoShootTask != null)
                     {
-                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, true, false, 3, false);
+                        robot.autoShootTask.autoShoot(null, event, autoChoices.alliance, true, true, false, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else

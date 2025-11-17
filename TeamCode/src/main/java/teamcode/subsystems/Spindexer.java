@@ -74,7 +74,7 @@ public class Spindexer extends TrcSubsystem
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
-        public static final double POS_OFFSET                   = -160.0;
+        public static final double POS_OFFSET                   = -180.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 

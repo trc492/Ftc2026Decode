@@ -88,7 +88,7 @@ public class BaseDrive extends TrcSubsystem
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
             new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
         private static final TrcPidController.PidCoefficients drivePidCoeffs =
-            new TrcPidController.PidCoefficients(0.035, 0.0, 0.0, 0.0, 0.0);
+            new TrcPidController.PidCoefficients(0.033, 0.0, 0.0, 0.0, 0.0);
         private static final TrcPidController.PidCoefficients turnPidCoeffs =
             new TrcPidController.PidCoefficients(0.018, 0.0, 0.0, 0.0, 0.0);
         private static final TrcPidController.PidCoefficients velPidCoeffs =
@@ -102,7 +102,7 @@ public class BaseDrive extends TrcSubsystem
             .setYPidParams(drivePidCoeffs, 0.5)
             .setTurnPidParams(turnPidCoeffs, 0.25)
             .setVelocityPidParams(velPidCoeffs)
-            .setDriveCharacteristics(30.0, 150.0, 150.0,  15.0);
+            .setDriveCharacteristics(80.0, 350.0, 300.0,  80.0);
 
         public DecodeRobotInfo()
         {
@@ -116,7 +116,7 @@ public class BaseDrive extends TrcSubsystem
                     new boolean[] {true, false, true, false})
                 .setPinpointOdometry(
                     "pinpointOdo", 0.0, -24.0 * 8, GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD,
-                    true, false, -180.0, 180.0)
+                    true, true, -180.0, 180.0)
                 .setPidStallDetectionEnabled(true)
                 .setPidDriveParams(false)
                 .setPurePursuitDriveParams(6.0, true, false)

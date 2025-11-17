@@ -274,6 +274,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 targetPose = null;
+                motifIndex = 0;
                 if (robot.ledIndicator != null)
                 {
                     robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
@@ -381,7 +382,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // If we saw the obelisk and haven't determined the motif sequence, determine it now.
                     motifSequence = robot.vision.getMotifSequence(
                         taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
-                    motifIndex = 0;
+                    tracer.traceInfo(
+                        moduleName, "***** MotifSequence=%s (index=%d)",
+                        Arrays.toString(motifSequence), motifIndex);
                 }
 
                 if (targetPose != null && (robot.obeliskMotif == null || motifSequence != null))
