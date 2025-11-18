@@ -94,9 +94,8 @@ public class RobotParams
         public static final String TEAM_FOLDER_PATH             = "/sdcard/FIRST/ftc3543";
         public static final String LOG_FOLDER_PATH              = TEAM_FOLDER_PATH + "/tracelogs";
         public static final String STEER_ZERO_CAL_FILE          = TEAM_FOLDER_PATH + "/SteerZeroCalibration.txt";
-        //TODO: Needs adjustment with Shooter and side plates mounted.
-        public static final double ROBOT_LENGTH                 = 432.0*TrcUtil.INCHES_PER_MM;
-        public static final double ROBOT_WIDTH                  = 384.0*TrcUtil.INCHES_PER_MM;
+        public static final double ROBOT_LENGTH                 = 17.5;     //inches
+        public static final double ROBOT_WIDTH                  = 15.5;     //inches
     }   //class Robot
 
     /**

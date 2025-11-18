@@ -82,27 +82,29 @@ public class DriveBase extends TrcSubsystem
      */
     public static class DecodeRobotInfo extends FtcRobotBase.RobotInfo
     {
-        private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
+        private static final double DRIVE_MOTOR_MAX_VEL = 2500.0;
         private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
             new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
-        private static final TrcPidController.PidCoefficients drivePidCoeffs =
-            new TrcPidController.PidCoefficients(0.033, 0.0, 0.0, 0.0, 0.0);
+        private static final TrcPidController.PidCoefficients xDrivePidCoeffs =
+            new TrcPidController.PidCoefficients(0.06, 0.0, 0.0001, 0.0, 0.0);
+        private static final TrcPidController.PidCoefficients yDrivePidCoeffs =
+            new TrcPidController.PidCoefficients(0.025, 0.02, 0.003, 0.0, 5.0);
         private static final TrcPidController.PidCoefficients turnPidCoeffs =
-            new TrcPidController.PidCoefficients(0.018, 0.0, 0.0, 0.0, 0.0);
+            new TrcPidController.PidCoefficients(0.04, 0.0, 0.002, 0.0, 0.0);
         private static final TrcPidController.PidCoefficients velPidCoeffs =
-            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0125, 0.0);
+            new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-//            .setDriveMotorVelocityControl(
-//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+            .setDriveMotorVelocityControl(
+                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(2.0, 2.0)
-            .setXPidParams(drivePidCoeffs, 0.5)
-            .setYPidParams(drivePidCoeffs, 0.5)
-            .setTurnPidParams(turnPidCoeffs, 0.25)
+            .setXPidParams(xDrivePidCoeffs, 1.0)
+            .setYPidParams(yDrivePidCoeffs, 1.0)
+            .setTurnPidParams(turnPidCoeffs, 0.5)
             .setVelocityPidParams(velPidCoeffs)
-            .setDriveCharacteristics(80.0, 350.0, 300.0,  80.0);
+            .setDriveCharacteristics(40.0, 5000.0, 5000.0, 40.0);
 
         public DecodeRobotInfo()
         {
@@ -207,8 +209,6 @@ public class DriveBase extends TrcSubsystem
         // Optii Odometry Wheel
         private static final double ODWHEEL_DIAMETER_MM = 35.0;
         private static final double ODWHEEL_CPR = 4096.0;
-//        private static final double DRIVE_MOTOR_MAX_VEL = 1000.0;
-//        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
             new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
@@ -222,8 +222,6 @@ public class DriveBase extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 1.0/80.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-//            .setDriveMotorVelocityControl(
-//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(3.5, 2.5)
             .setXPidParams(xDrivePidCoeffs, 1.0)
             .setYPidParams(yDrivePidCoeffs, 1.0)
