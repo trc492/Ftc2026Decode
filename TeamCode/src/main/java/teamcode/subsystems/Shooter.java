@@ -108,10 +108,10 @@ public class Shooter extends TrcSubsystem
         public static final boolean PAN_ENCODER_INVERTED        = false;
 
         public static final double PAN_MOTOR_PID_KP             = 0.03;
-        public static final double PAN_MOTOR_PID_KI             = 0.003;
-        public static final double PAN_MOTOR_PID_IZONE          = 5.0;
+        public static final double PAN_MOTOR_PID_KI             = 0.01;
         public static final double PAN_MOTOR_PID_KD             = 0.0;
         public static final double PAN_MOTOR_PID_KF             = 0.0;
+        public static final double PAN_MOTOR_PID_IZONE          = 5.0;
         public static final double PAN_PID_TOLERANCE            = 1.0;
         public static final boolean PAN_SOFTWARE_PID_ENABLED    = true;
 
@@ -130,7 +130,7 @@ public class Shooter extends TrcSubsystem
                 0.0, 30.0, 60.0, PAN_MAX_POS
             };
 
-        public static final double PAN_ZERO_CAL_POWER           = 0.5;
+        public static final double PAN_ZERO_CAL_POWER           = 0.3;
         public static final double PAN_STALL_MIN_POWER          = Math.abs(PAN_ZERO_CAL_POWER);
         public static final double PAN_STALL_TOLERANCE          = 0.1;
         public static final double PAN_STALL_TIMEOUT            = 0.1;
@@ -145,7 +145,7 @@ public class Shooter extends TrcSubsystem
 
         public static final double TILT_MOTOR_PID_KP            = 0.06;
         public static final double TILT_MOTOR_PID_KI            = 0.005;
-        public static final double TILT_MOTOR_PID_KD            = 0.001;
+        public static final double TILT_MOTOR_PID_KD            = 0.0025;
         public static final double TILT_MOTOR_PID_KF            = 0.0;
         public static final double TILT_MOTOR_PID_IZONE         = 3.0;
         public static final double TILT_PID_TOLERANCE           = 1.0;
@@ -155,7 +155,7 @@ public class Shooter extends TrcSubsystem
 //        public static final double TILT_DEG_PER_COUNT           = 360.0/TILT_GEAR_RATIO;
         public static final double TILT_DEG_PER_COUNT           = 37.471013190648257044337576357835;
         public static final double TILT_POS_OFFSET              = 25.0;
-        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.1262125;
+        public static final double TILT_ENCODER_ZERO_OFFSET     = 0.124848;
         public static final double TILT_POWER_LIMIT             = 1.0;
         public static final double TILT_MIN_POS                 = TILT_POS_OFFSET;
         public static final double TILT_MAX_POS                 = 45.0;
@@ -206,7 +206,7 @@ public class Shooter extends TrcSubsystem
     public static final TrcMotor.PidParams panMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
             Params.PAN_MOTOR_PID_KP, Params.PAN_MOTOR_PID_KI, Params.PAN_MOTOR_PID_KD, Params.PAN_MOTOR_PID_KF,
-                Params.PAN_MOTOR_PID_IZONE)
+            Params.PAN_MOTOR_PID_IZONE)
         .setPidControlParams(Params.PAN_PID_TOLERANCE, Params.PAN_SOFTWARE_PID_ENABLED);
     public static final TrcMotor.PidParams tiltMotorPidParams = new TrcMotor.PidParams()
         .setPidCoefficients(
