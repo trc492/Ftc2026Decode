@@ -74,14 +74,16 @@ public class Spindexer extends TrcSubsystem
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
-        public static final double POS_OFFSET                   = -180.0;
+        public static final double POS_OFFSET                   = -60.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
-        public static final double MOTOR_PID_KP                 = 0.01;
-        public static final double MOTOR_PID_KI                 = 0.0;
+        public static final double MOTOR_PID_KP                 = 0.016;
+        public static final double MOTOR_PID_KI                 = 0.01;
         public static final double MOTOR_PID_KD                 = 0.0;
-        public static final double POS_PID_TOLERANCE            = 5.0;
+        public static final double MOTOR_PID_KF                 = 0.0;
+        public static final double MOTOR_PID_IZONE              = 5.0;
+        public static final double POS_PID_TOLERANCE            = 2.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
@@ -111,7 +113,8 @@ public class Spindexer extends TrcSubsystem
     }   //class Params
 
     public static final TrcMotor.PidParams motorPidParams = new TrcMotor.PidParams()
-        .setPidCoefficients(Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD)
+        .setPidCoefficients(
+            Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD, Params.MOTOR_PID_KF, Params.MOTOR_PID_IZONE)
         .setPidControlParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
     public static final TrcTriggerThresholdRange.TriggerParams entryTriggerParams =
         new TrcTriggerThresholdRange.TriggerParams(
@@ -1068,6 +1071,12 @@ public class Spindexer extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,
                     slotStates[0], slotStates[1], slotStates[2]);
             }
+        }
+
+        if (RobotParams.Preferences.showSpindexerGraph)
+        {
+            dashboard.putNumber("SpindexerTarget", spindexer.motor.getPidTarget());
+            dashboard.putNumber("SpindexerAngle", spindexer.motor.getPosition());
         }
 
         return lineNum;

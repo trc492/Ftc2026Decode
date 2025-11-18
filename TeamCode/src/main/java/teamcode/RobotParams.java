@@ -77,6 +77,7 @@ public class RobotParams
         public static final boolean showIntakeStatus            = true;
         public static final boolean useSpindexer                = true;
         public static final boolean showSpindexerStatus         = true;
+        public static final boolean showSpindexerGraph          = false;
         public static final boolean useShooter                  = true;
         public static final boolean showShooterStatus           = true;
         public static final boolean showShooterGraph            = false;
