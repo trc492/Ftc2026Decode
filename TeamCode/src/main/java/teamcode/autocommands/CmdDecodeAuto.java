@@ -182,15 +182,15 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, panAngle);
                     }
 
-                    if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                    if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE && currentSpikeMarkCount == 0)
                     {
                         sm.setState(State.SHOOT_ARTIFACTS);
                     }
                     else
                     {
-                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
                             RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         robot.robotBase.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
@@ -237,6 +237,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
                             });
+                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         robot.robotBase.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
@@ -274,6 +275,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case PARK:
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                     robot.robotBase.purePursuitDrive.start(
                         event, 0.0, false,
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,

@@ -97,8 +97,8 @@ public class DriveBase extends TrcSubsystem
             new TrcPidController.PidCoefficients(0.0, 0.0, 0.0, 0.0, 0.0);
 
         public static TrcDriveBase.BaseParams baseParams = new TrcDriveBase.BaseParams()
-            .setDriveMotorVelocityControl(
-                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
+//            .setDriveMotorVelocityControl(
+//                DRIVE_MOTOR_MAX_VEL, driveMotorVelPidCoeffs, DRIVE_MOTOR_VEL_PID_TOLERANCE, true)
             .setPidTolerances(2.0, 2.0)
             .setXPidParams(xDrivePidCoeffs, 1.0)
             .setYPidParams(yDrivePidCoeffs, 1.0)

@@ -180,6 +180,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 "AprilTag tracking is ON (Ids=%s), turning it OFF.", Arrays.toString(autoTrackAprilTagIds));
             robot.shooterSubsystem.disableAprilTagTracking(null);
         }
+        motifIndex = 0;
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
     }   //autoShoot
 
@@ -274,7 +275,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 targetPose = null;
-                motifIndex = 0;
                 if (robot.ledIndicator != null)
                 {
                     robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
