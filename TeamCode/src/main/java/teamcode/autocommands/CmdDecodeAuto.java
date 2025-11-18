@@ -235,7 +235,10 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             (i, wp) ->
                             {
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
-                                robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
+                                if (i == 1)
+                                {
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
+                                }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         robot.robotBase.purePursuitDrive.start(
