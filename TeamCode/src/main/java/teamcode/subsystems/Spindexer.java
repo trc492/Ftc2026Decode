@@ -655,6 +655,40 @@ public class Spindexer extends TrcSubsystem
         entrySlot = null;
     }   //moveToExitSlot
 
+    /**
+     * This method returns the artifact type in the current entry slot.
+     *
+     * @return artifact type in current entry slot, null if Spindexer slot is not aligned with entry.
+     */
+    public Vision.ArtifactType getEntrySlotArtifactType()
+    {
+        Vision.ArtifactType artifactType = null;
+
+        if (entrySlot != null)
+        {
+            artifactType = slotStates[entrySlot];
+        }
+
+        return artifactType;
+    }   //getExitSlotArtifactType
+
+    /**
+     * This method returns the artifact type in the current exit slot.
+     *
+     * @return artifact type in current exit slot, null if Spindexer slot is not aligned with exit.
+     */
+    public Vision.ArtifactType getExitSlotArtifactType()
+    {
+        Vision.ArtifactType artifactType = null;
+
+        if (exitSlot != null)
+        {
+            artifactType = slotStates[exitSlot];
+        }
+
+        return artifactType;
+    }   //getExitSlotArtifactType
+
     private void moveCompletionCallback(Object context, boolean canceled)
     {
         TrcEvent event = (TrcEvent) context;
@@ -789,12 +823,13 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void entrySlotUp(String owner)
+    public void entrySlotUp(String owner, TrcEvent event)
     {
         int slot = (entrySlot != null? entrySlot + 1: exitSlot + 2)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotUp: FromSlot=" + entrySlot + ", ToSlot=" + slot);
-        moveToEntrySlot(owner, slot, null);
+        moveToEntrySlot(owner, slot, event);
     }   //entrySlotUp
 
     /**
@@ -802,13 +837,14 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void entrySlotDown(String owner)
+    public void entrySlotDown(String owner, TrcEvent event)
     {
         int slot = (entrySlot != null? entrySlot - 1: exitSlot + 1)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
-        moveToEntrySlot(owner, slot, null);
+        moveToEntrySlot(owner, slot, event);
     }   //entrySlotDown
 
     /**
@@ -816,12 +852,13 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void exitSlotUp(String owner)
+    public void exitSlotUp(String owner, TrcEvent event)
     {
         int slot = (exitSlot != null? exitSlot + 1: entrySlot + 2)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotUp: FromSlot=" + exitSlot + ", ToSlot=" + slot);
-        moveToExitSlot(owner, slot, null);
+        moveToExitSlot(owner, slot, event);
     }   //exitSlotUp
 
     /**
@@ -829,13 +866,14 @@ public class Spindexer extends TrcSubsystem
      *
      * @param owner specifies the ID string of the caller for checking ownership, can be null if caller is not
      *        ownership aware.
+     * @param event specifies the event to signal when the spindexer finishes spinning, can be null if not provided.
      */
-    public void exitSlotDown(String owner)
+    public void exitSlotDown(String owner, TrcEvent event)
     {
         int slot = (exitSlot != null? exitSlot - 1: entrySlot + 1)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
-        moveToExitSlot(owner, slot, null);
+        moveToExitSlot(owner, slot, event);
     }   //exitSlotDown
 
     /**

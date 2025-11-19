@@ -832,8 +832,9 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
                                     Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
@@ -934,12 +935,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotDown(moduleName);
+                            robot.spindexerSubsystem.exitSlotDown(moduleName, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotDown(moduleName);
+                            robot.spindexerSubsystem.entrySlotDown(moduleName, null);
                         }
                     }
                     passToTeleOp = false;
@@ -954,12 +955,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotUp(moduleName);
+                            robot.spindexerSubsystem.exitSlotUp(moduleName, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotUp(moduleName);
+                            robot.spindexerSubsystem.entrySlotUp(moduleName, null);
                         }
                     }
                     passToTeleOp = false;

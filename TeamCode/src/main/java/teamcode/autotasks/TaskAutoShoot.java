@@ -56,6 +56,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     public enum State
     {
         START,
+        SETUP_VISION,
         DO_VISION,
         AIM,
         SHOOT,
@@ -69,6 +70,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
         public boolean inAuto = false;
         public boolean useAprilTagVision = true;
+        public boolean doMotif = false;
         public boolean useClassifierVision = false;
         public boolean relocalize = false;
         public int numArtifactsToShoot = 3;
@@ -86,9 +88,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return this;
         }   //setInAuto
 
-        public TaskParams setVision(boolean useAprilTagVision, boolean useClassifierVision)
+        public TaskParams setVision(boolean useAprilTagVision, boolean doMotif, boolean useClassifierVision)
         {
             this.useAprilTagVision = useAprilTagVision;
+            this.doMotif = doMotif;
             this.useClassifierVision = useClassifierVision;
             return this;
         }   //setVision
@@ -112,6 +115,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return "(alliance=" + alliance +
                    ",inAuto=" + inAuto +
                    ",useAprilTagVision=" + useAprilTagVision +
+                   ",doMotif=" + doMotif +
                    ",useClassifierVision=" + useClassifierVision +
                    ",relocalize=" + relocalize +
                    ",numArtifactsToShoot=" + numArtifactsToShoot +
@@ -153,19 +157,22 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param alliance specifies the alliance color, can be null if useClassifierVision is false.
      * @param inAuto specifies true if running in Autonomous mode, false otherwise.
      * @param useAprilTagVision specifies true to use AprilTag Vision, false otherwise.
-     * @param useClassifierVision specifies true to use Classifier Vision, false otherwise.
+     * @param doMotif specifies true to shoot motif sequence.
+     * @param useClassifierVision specifies true to use Classifier Vision, false otherwise, applicable only if doMotif
+     *        is true.
      * @param relocalize specifies true to enable relocalization, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
      * @param moveToNextExitSlot specifies true to move to next Exit slot after shooting is done.
      */
     public void autoShoot(
         String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean inAuto, boolean useAprilTagVision,
-        boolean useClassifierVision, boolean relocalize, int numArtifactsToShoot, boolean moveToNextExitSlot)
+        boolean doMotif, boolean useClassifierVision, boolean relocalize, int numArtifactsToShoot,
+        boolean moveToNextExitSlot)
     {
         autoShootParams
             .setAlliance(alliance)
             .setInAuto(inAuto)
-            .setVision(useAprilTagVision, useClassifierVision)
+            .setVision(useAprilTagVision, doMotif, useClassifierVision)
             .setRelocalizeEnabled(relocalize)
             .setNumArtifactsToShoot(numArtifactsToShoot, moveToNextExitSlot);
         tracer.traceInfo(
@@ -180,7 +187,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 "AprilTag tracking is ON (Ids=%s), turning it OFF.", Arrays.toString(autoTrackAprilTagIds));
             robot.shooterSubsystem.disableAprilTagTracking(null);
         }
-        motifIndex = 0;
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
     }   //autoShoot
 
@@ -247,10 +253,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         robot.shooter.cancel(owner);
         robot.spindexer.cancel(owner);
-        if (robot.ledIndicator != null)
-        {
-            robot.ledIndicator.setStatusPatternState(LEDIndicator.SHOOT_IN_PROGRESS, false);
-        }
+//        if (robot.ledIndicator != null)
+//        {
+//            robot.ledIndicator.setStatusPatternState(LEDIndicator.SHOOT_IN_PROGRESS, false);
+//        }
     }   //stopSubsystems
 
     /**
@@ -270,25 +276,31 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         boolean slowPeriodicLoop)
     {
         TaskParams taskParams = (TaskParams) params;
+        Vision.ArtifactType artifactType = null;
 
         switch (state)
         {
             case START:
+                motifIndex = 0;
+//                if (robot.ledIndicator != null)
+//                {
+//                    robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
+//                }
+                //
+                // Intentionally falling through.
+                //
+            case SETUP_VISION:
                 targetPose = null;
-                if (robot.ledIndicator != null)
-                {
-                    robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
-                }
                 if (!taskParams.useAprilTagVision)
                 {
                     tracer.traceInfo(moduleName, "***** Not using AprilTag Vision, aim at AprilTag using odometry.");
-                    int aprilTagIndex = taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? 0: 4;
                     TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
+                    int aprilTagIndex = taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE? 0: 4;
                     targetPose = RobotParams.Game.APRILTAG_POSES[aprilTagIndex].relativeTo(robotPose);
                     tracer.traceInfo(
                         moduleName, "robotPose=%s, aprilTagPose=%s, targetPose=%s",
                         robotPose, RobotParams.Game.APRILTAG_POSES[aprilTagIndex], targetPose);
-                    // Determine shooter speed, pan and tilt angle according to detected AprilTag pose.
+                    // Determine shooter speed, pan and tilt angle according to the AprilTag pose.
                     // Use vision distance to look up shooter parameters.
                     double shootDistance = TrcUtil.magnitude(targetPose.x, targetPose.y);
                     shootParams = Shooter.Params.shootParamTable.get(shootDistance, false);
@@ -377,9 +389,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     }
                 }
 
-                if (robot.obeliskMotif != null && motifSequence == null)
+                if (taskParams.doMotif && robot.obeliskMotif != null && motifSequence == null)
                 {
                     // If we saw the obelisk and haven't determined the motif sequence, determine it now.
+                    // Do this only once since DO_VISION gets called repeatedly.
                     motifSequence = robot.vision.getMotifSequence(
                         taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
                     tracer.traceInfo(
@@ -416,7 +429,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 // Determine what artifact type to shoot and check if Spindexer has it.
                 sm.clearEventList();
                 Vision.ArtifactType motifArtifactType = motifSequence != null? motifSequence[motifIndex++]: null;
-                Vision.ArtifactType artifactType;
                 if (motifArtifactType != null)
                 {
                     artifactType = motifArtifactType;
@@ -447,12 +459,22 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     artifactType = Vision.ArtifactType.Any;
                 }
 
+                Vision.ArtifactType exitArtifactType = robot.spindexerSubsystem.getExitSlotArtifactType();
                 tracer.traceInfo(
-                    moduleName, "***** Shooting %s artifact (MotifArtifact=%s).", artifactType, motifArtifactType);
+                    moduleName, "***** Shooting %s artifact (MotifArtifact=%s, exitArtifact=%s).",
+                    artifactType, motifArtifactType, exitArtifactType);
                 // Move Spindexer to the slot that has the correct artifact type.
                 spindexerEvent.clear();
                 sm.addEvent(spindexerEvent);
-                robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent);
+                if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(owner, artifactType, spindexerEvent) &&
+                    exitArtifactType == null)
+                {
+                    // Spindexer did not move, probably because it is empty or it doesn't know what artifacts it has.
+                    // Exit slot is not aligned, move to the next exit slot up so the launcher won't get stuck.
+                    // Clear spindexer event again since moveToExitSlotWithArtifact would have signaled it.
+                    spindexerEvent.clear();
+                    robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
+                }
 
                 // Spin the shooter flywheel up to speed and the turret pointing to the target.
                 event.clear();
@@ -488,7 +510,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                sm.setState(taskParams.numArtifactsToShoot > 0? State.START: State.NEXT_EXIT_SLOT);
+                sm.setState(taskParams.numArtifactsToShoot > 0? State.SETUP_VISION: State.NEXT_EXIT_SLOT);
                 break;
 
             case NEXT_EXIT_SLOT:
