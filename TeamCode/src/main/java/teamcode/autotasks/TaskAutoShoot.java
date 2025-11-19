@@ -253,10 +253,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         robot.shooter.cancel(owner);
         robot.spindexer.cancel(owner);
-//        if (robot.ledIndicator != null)
-//        {
-//            robot.ledIndicator.setStatusPatternState(LEDIndicator.SHOOT_IN_PROGRESS, false);
-//        }
+        if (robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.RED_APRILTAG, false);
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.BLUE_APRILTAG, false);
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.SEARCHING_RED_APRILTAG, false);
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.SEARCHING_BLUE_APRILTAG, false);
+        }
     }   //stopSubsystems
 
     /**
