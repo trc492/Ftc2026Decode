@@ -38,6 +38,7 @@ import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
+import trclib.robotcore.TrcRobot;
 import trclib.subsystem.TrcShootParamTable;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
@@ -600,24 +601,17 @@ public class Shooter extends TrcSubsystem
                 TrcEvent event = (TrcEvent) ctxt;
                 if (!canceled)
                 {
-                    if (FtcAuto.autoChoices.alliance == null)
+                    if (TrcRobot.getRunMode() != TrcRobot.RunMode.AUTO_MODE ||
+                        FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
                     {
-                        // Autonomous was not run, so we don't know the alliance color.
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
                     else
                     {
-                        if (FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
-                        {
-                            shooter.panMotor.setPosition(owner, 0.0, -180.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
-                        }
-                        else
-                        {
-                            shooter.panMotor.setPosition(
-                                owner, 0.0,
-                                FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
-                                true, Params.PAN_POWER_LIMIT, null, 0.0);
-                        }
+                        shooter.panMotor.setPosition(
+                            owner, 0.0,
+                            FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
+                            true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
 
                     if (event !=  null)
