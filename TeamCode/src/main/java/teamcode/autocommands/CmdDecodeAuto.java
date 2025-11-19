@@ -57,6 +57,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private final FtcAuto.AutoChoices autoChoices;
     private final TrcTimer timer;
     private final TrcEvent event;
+    private final TrcEvent spindexerFullEvent;
     private final TrcStateMachine<State> sm;
 
     private int currentSpikeMarkCount = 0;
@@ -75,6 +76,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
         timer = new TrcTimer(moduleName);
         event = new TrcEvent(moduleName);
+        spindexerFullEvent = new TrcEvent(moduleName + ".spindexerFull");
         sm = new TrcStateMachine<>(moduleName);
         sm.start(State.START);
     }   //CmdDecodeAuto
@@ -105,7 +107,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
         if (robot.intakeSubsystem != null)
         {
-            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+            robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
         }
         if (robot.autoShootTask != null)
         {
@@ -224,13 +226,15 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                         if (robot.intakeSubsystem != null)
                         {
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            spindexerFullEvent.clear();
+                            sm.addEvent(spindexerFullEvent);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, spindexerFullEvent);
                         }
 
                         TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
                             RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex], autoChoices.alliance);
                         TrcPose2D endPose = spikeMarkPose.clone();
-                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 24.0: -24.0;
+                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 30.0: -30.0;
                         robot.robotBase.purePursuitDrive.setWaypointEventHandler(
                             (i, wp) ->
                             {
@@ -241,13 +245,15 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                        event.clear();
+                        sm.addEvent(event);
                         robot.robotBase.purePursuitDrive.start(
                             event, 0.0, false,
                             robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             spikeMarkPose, endPose);
-                        sm.waitForSingleEvent(event, State.FINISH_PICKUP);
+                        sm.waitForEvents(State.FINISH_PICKUP, false, false);
                     }
                     else
                     {
@@ -256,10 +262,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case FINISH_PICKUP:
+                    robot.robotBase.purePursuitDrive.cancel();
                     robot.robotBase.purePursuitDrive.setWaypointEventHandler(null);
                     if (robot.intakeSubsystem != null)
                     {
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
                     }
                     currentSpikeMarkCount++;
                     sm.setState(autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1?

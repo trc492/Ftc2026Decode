@@ -427,6 +427,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         artifactType = motifIndex == motifSequence.length ? Vision.ArtifactType.Any :
                             motifSequence[motifIndex] == Vision.ArtifactType.Green ?
                                 Vision.ArtifactType.Purple : Vision.ArtifactType.Green;
+                        if (artifactType == motifArtifactType)
+                        {
+                            // Don't pick the same color that we already know we don't have. In that case, just
+                            // shoot any color.
+                            artifactType = Vision.ArtifactType.Any;
+                        }
                         if (robot.spindexerSubsystem.getNumArtifacts(artifactType) == 0 &&
                             robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) == 0)
                         {

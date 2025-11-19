@@ -41,6 +41,7 @@ import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcDataBuffer;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
@@ -60,6 +61,7 @@ public class Spindexer extends TrcSubsystem
     {
         public static final String SUBSYSTEM_NAME               = "Spindexer";
         public static final boolean NEED_ZERO_CAL               = true;
+        public static final boolean SPIN_INTAKE_ON_MOVE         = true;
 
         public static final boolean HAS_ENTRY_SENSOR            = true;
         public static final boolean DUAL_ENTRY_SENSORS          =
@@ -154,6 +156,7 @@ public class Spindexer extends TrcSubsystem
     private Vision.ArtifactType expectedArtifactType = Vision.ArtifactType.Any;
     private TrcEvent.Callback exitTriggerCallback = null;
     private int examinedSlotIndex = 0;
+    private TrcEvent slotsFullEvent = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -276,9 +279,9 @@ public class Spindexer extends TrcSubsystem
             spindexer.setEntryTriggerEnabled(false);
             spindexer.tracer.traceInfo(
                 instanceName,
-                "Entry[%d]: value=%f, artifact=%s, numPurple=%d, numGreen=%d, numUnknown=%d, expectedNext=%s",
-                entrySlot, hue, artifactType, numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
-                expectedArtifactType);
+                "Entry[%d]: value=%f, artifact=%s, slotStates=%s (P=%d, G=%d, U=%d), expectedNext=%s",
+                entrySlot, hue, artifactType, Arrays.toString(slotStates), numPurpleArtifacts, numGreenArtifacts,
+                numUnknownArtifacts, expectedArtifactType);
 
             if (robot.ledIndicator != null && artifactName != null)
             {
@@ -294,7 +297,13 @@ public class Spindexer extends TrcSubsystem
             }
             else if (robot.intakeSubsystem.isBulldozeEnabled())
             {
-                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                spindexer.tracer.traceInfo(instanceName, "Slots are full! (event=" + slotsFullEvent + ")");
+                if (slotsFullEvent != null)
+                {
+                    slotsFullEvent.signal();
+                    slotsFullEvent = null;
+                }
+                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
             }
 
             if (triggerEvent != null)
@@ -594,10 +603,17 @@ public class Spindexer extends TrcSubsystem
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
         }
         double pos = warpSpace.getOptimizedTarget(Params.entryPresetPositions[slot], spindexer.motor.getPosition());
-        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-        robot.intake.intake();
-        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+        if (Params.SPIN_INTAKE_ON_MOVE)
+        {
+            TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
+            moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
+            robot.intake.intake();
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+        }
+        else
+        {
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
+        }
         entrySlot = slot;
         exitSlot = null;
     }   //moveToEntrySlot
@@ -620,10 +636,17 @@ public class Spindexer extends TrcSubsystem
         }
         double pos = warpSpace.getOptimizedTarget(
             Params.exitPresetPositions[slot], spindexer.motor.getPosition());
-        TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-        moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-        robot.intake.intake();
-        spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+        if (Params.SPIN_INTAKE_ON_MOVE)
+        {
+            TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
+            moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
+            robot.intake.intake();
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+        }
+        else
+        {
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, event, 0.0);
+        }
         exitSlot = slot;
         if (robot.ledIndicator != null)
         {
@@ -878,10 +901,14 @@ public class Spindexer extends TrcSubsystem
      */
     public void refreshSlotStates()
     {
+        spindexer.tracer.traceInfo(instanceName, "refreshSlotStates(enabled=%s)...", sm.isEnabled());
         if (!sm.isEnabled())
         {
             clearSlotStates();
-            robot.intake.intake();
+            if (Params.SPIN_INTAKE_ON_MOVE)
+            {
+                robot.intake.intake();
+            }
             examinedSlotIndex = 0;
             sm.start(RefreshSlotState.MOVE_TO_NEXT_SLOT);
             refreshSlotStatesTaskObj.registerTask(TrcTaskMgr.TaskType.POST_PERIODIC_TASK);
@@ -895,7 +922,10 @@ public class Spindexer extends TrcSubsystem
     {
         if (sm.isEnabled())
         {
-            robot.intake.cancel();
+            if (Params.SPIN_INTAKE_ON_MOVE)
+            {
+                robot.intake.cancel();
+            }
             sm.stop();
             refreshSlotStatesTaskObj.unregisterTask();
         }
@@ -926,16 +956,18 @@ public class Spindexer extends TrcSubsystem
      * This method enables/disables AutoReceive.
      *
      * @param enabled specifies true to enable AutoReceive, false to disable.
+     * @param event specifies an event to notify if spindexer is full, null if not provided. Ignored if disabled.
      */
-    public void setAutoReceiveEnabled(boolean enabled)
+    public void setAutoReceiveEnabled(boolean enabled, TrcEvent event)
     {
+        slotsFullEvent = enabled? event: null;
         if (enabled && (entrySlot == null || slotStates[entrySlot] != Vision.ArtifactType.None))
         {
             // Entry slot is not aligned or entry slot is not vacant, find the next vacant slot.
             spindexer.tracer.traceInfo(instanceName, "Entry is not at a vacant slot, find one.");
-            TrcEvent event = new TrcEvent(Params.SUBSYSTEM_NAME + ".autoReceiveEnabled");
-            event.setCallback(this::performAutoReceiveEnabled, enabled);
-            moveToNextVacantEntrySlot(null, event);
+            TrcEvent callbackEvent = new TrcEvent(Params.SUBSYSTEM_NAME + ".autoReceiveEnabled");
+            callbackEvent.setCallback(this::performAutoReceiveEnabled, enabled);
+            moveToNextVacantEntrySlot(null, callbackEvent);
         }
         else
         {

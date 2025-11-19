@@ -332,12 +332,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (robot.intake.isActive())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, null);
                         }
                     }
                 }
@@ -591,19 +591,19 @@ public class FtcTeleOp extends FtcOpMode
                             if (robot.intake.isActive())
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
                             }
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true, null);
                             }
                         }
                     }
                     else
                     {
                         // Cancel Bulldoze Intake in case it's enabled.
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
                         if (pressed)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Start Intake Eject");

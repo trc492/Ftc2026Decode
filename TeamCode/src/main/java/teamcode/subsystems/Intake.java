@@ -28,6 +28,7 @@ import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTrigger;
 import trclib.subsystem.TrcRollerIntake;
@@ -193,8 +194,9 @@ public class Intake extends TrcSubsystem
      * turns on Spindexer auto receive.
      *
      * @param enabled specifies true to enable and false to disable.
+     * @param event specifies an event to notify if spindexer is full, null if not provided.
      */
-    public void setBulldozeIntakeEnabled(boolean enabled)
+    public void setBulldozeIntakeEnabled(boolean enabled, TrcEvent event)
     {
         boolean intakeOn = intake.isActive();
 
@@ -202,14 +204,14 @@ public class Intake extends TrcSubsystem
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
             intake.intake();
-            robot.spindexerSubsystem.setAutoReceiveEnabled(true);
+            robot.spindexerSubsystem.setAutoReceiveEnabled(true, event);
             bulldozeEnabled = true;
         }
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
             timer.set(Params.INTAKE_FINISH_DELAY, (ctxt, canceled) -> {intake.cancel();});
-            robot.spindexerSubsystem.setAutoReceiveEnabled(false);
+            robot.spindexerSubsystem.setAutoReceiveEnabled(false, null);
             bulldozeEnabled = false;
         }
     }   //setBulldozeIntakeEnabled

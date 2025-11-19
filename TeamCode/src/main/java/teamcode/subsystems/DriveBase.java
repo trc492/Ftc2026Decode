@@ -82,8 +82,8 @@ public class DriveBase extends TrcSubsystem
      */
     public static class DecodeRobotInfo extends FtcRobotBase.RobotInfo
     {
-        private static final double DRIVE_MOTOR_MAX_VEL = 2500.0;
-        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
+//        private static final double DRIVE_MOTOR_MAX_VEL = 2500.0;
+//        private static final double DRIVE_MOTOR_VEL_PID_TOLERANCE = 10.0;
 
         private static final TrcPidController.PidCoefficients driveMotorVelPidCoeffs =
             new TrcPidController.PidCoefficients(0.0001, 0.0, 0.0, 0.5);
@@ -103,8 +103,8 @@ public class DriveBase extends TrcSubsystem
             .setXPidParams(xDrivePidCoeffs, 1.0)
             .setYPidParams(yDrivePidCoeffs, 1.0)
             .setTurnPidParams(turnPidCoeffs, 0.5)
-            .setVelocityPidParams(velPidCoeffs)
-            .setDriveCharacteristics(40.0, 5000.0, 5000.0, 40.0);
+            .setVelocityPidParams(velPidCoeffs);
+//            .setDriveCharacteristics(80.0, 10000.0, 10000.0, 80.0);
 
         public DecodeRobotInfo()
         {
