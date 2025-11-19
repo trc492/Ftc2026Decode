@@ -484,9 +484,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     tracer.traceInfo(
                         moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
                         shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
+                    robot.shooter.setTiltAngle(shootParams.tiltAngle);
                     robot.shooter.aimShooter(
                         owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                        shootParams.tiltAngle, targetPose.angle, event, 0.0, null, 0.0);
+                        null, targetPose.angle, event, 0.0, null, 0.0);
                 }
                 else
                 {
