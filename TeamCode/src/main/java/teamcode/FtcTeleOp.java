@@ -360,16 +360,16 @@ public class FtcTeleOp extends FtcOpMode
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
-                                        moduleName + ".autoShoot", null,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.alliance,
-                                        false,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
-                                            Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
+                                    moduleName + ".autoShoot", null,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    false,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }
                         else
@@ -515,7 +515,7 @@ public class FtcTeleOp extends FtcOpMode
                         // Cancel all operations and zero calibrate all subsystems (arm, elevator and turret).
                         robot.globalTracer.traceInfo(moduleName, ">>>>> ZeroCalibrating.");
                         robot.cancelAll();
-                        robot.zeroCalibrate(moduleName, null);
+                        robot.zeroCalibrate(null, null);
                     }
                     else
                     {
@@ -702,12 +702,12 @@ public class FtcTeleOp extends FtcOpMode
                     if (operatorAltFunc)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
-                        robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                        robot.shooterSubsystem.setLaunchPosition(null, pressed);
                     }
                     else if (pressed)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> Shoot");
-                        robot.shooterSubsystem.shoot(moduleName, null);
+                        robot.shooterSubsystem.shoot(null, null);
                     }
                 }
                 break;
@@ -771,12 +771,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotDown(moduleName, null);
+                            robot.spindexerSubsystem.exitSlotDown(null, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotDown(moduleName, null);
+                            robot.spindexerSubsystem.entrySlotDown(null, null);
                         }
                     }
                 }
@@ -790,12 +790,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotUp(moduleName, null);
+                            robot.spindexerSubsystem.exitSlotUp(null, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotUp(moduleName, null);
+                            robot.spindexerSubsystem.entrySlotUp(null, null);
                         }
                     }
                 }
@@ -807,7 +807,7 @@ public class FtcTeleOp extends FtcOpMode
                     // Cancel all operations and zero calibrate all subsystems (arm, elevator and turret).
                     robot.globalTracer.traceInfo(moduleName, ">>>>> ZeroCalibrating.");
                     robot.cancelAll();
-                    robot.zeroCalibrate(moduleName, null);
+                    robot.zeroCalibrate(null, null);
                 }
                 break;
 
