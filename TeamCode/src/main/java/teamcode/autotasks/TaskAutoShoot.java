@@ -133,7 +133,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     TrcShootParamTable.Params shootParams = null;
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
-    int[] autoTrackAprilTagIds = null;
+    int[] autoTrackedAprilTagIds = null;
+    FtcAuto.Alliance autoTrackedAlliance = null;
 
 
     /**
@@ -178,14 +179,16 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
-        autoTrackAprilTagIds = robot.shooterSubsystem.getTrackedAprilTagIds();
+        autoTrackedAprilTagIds = robot.shooterSubsystem.getTrackedAprilTagIds();
+        autoTrackedAlliance = robot.shooterSubsystem.getTrackedAlliance();
         // Turn off AprilTag tracking if it was ON.
-        if (autoTrackAprilTagIds != null)
+        if (autoTrackedAprilTagIds != null || autoTrackedAlliance != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "AprilTag tracking is ON (Ids=%s), turning it OFF.", Arrays.toString(autoTrackAprilTagIds));
-            robot.shooterSubsystem.disableAprilTagTracking(null);
+                "Goal Tracking is ON (Ids=%s, alliance=%s), turning it OFF.",
+                Arrays.toString(autoTrackedAprilTagIds), autoTrackedAlliance);
+            robot.shooterSubsystem.disableGoalTracking(null);
         }
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
     }   //autoShoot
@@ -231,13 +234,22 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             robot.spindexer.releaseExclusiveAccess(owner);
         }
 
-        if (autoTrackAprilTagIds != null)
+        if (autoTrackedAprilTagIds != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "AprilTag tracking was ON (Id=%s), turning it back ON.", Arrays.toString(autoTrackAprilTagIds));
-            robot.shooterSubsystem.enableAprilTagTracking(null, autoTrackAprilTagIds);
-            autoTrackAprilTagIds = null;
+                "AprilTag tracking was ON (Id=%s), turning it back ON.", Arrays.toString(autoTrackedAprilTagIds));
+            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedAprilTagIds);
+            autoTrackedAprilTagIds = null;
+        }
+
+        if (autoTrackedAlliance != null)
+        {
+            tracer.traceInfo(
+                moduleName,
+                "Alliance tracking was ON (alliance=%s), turning it back ON.", autoTrackedAlliance);
+            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedAlliance);
+            autoTrackedAlliance = null;
         }
     }   //releaseSubsystemsOwnership
 

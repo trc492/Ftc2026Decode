@@ -225,6 +225,7 @@ public class Shooter extends TrcSubsystem
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private int[] trackedAprilTagIds = null;
+    private FtcAuto.Alliance trackedAlliance = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -433,22 +434,22 @@ public class Shooter extends TrcSubsystem
     }   //retractCallback
 
     /**
-     * This method checks if AprilTag tracking is enabled.
+     * This method checks if Goal Tracking is enabled.
      *
-     * @return true if AprilTag tracking is enabled, false if disabled.
+     * @return true if Goal Tracking is enabled, false if disabled.
      */
-    public boolean isAprilTagTrackingEnabled()
+    public boolean isGoalTrackingEnabled()
     {
-        return trackedAprilTagIds != null;
-    }   //isAprilTagTrackingEnabled
+        return trackedAprilTagIds != null || trackedAlliance != null;
+    }   //isGoalTrackingEnabled
 
     /**
-     * This method enables AprilTag tracking with the Turret (Pan motor).
+     * This method enables Goal Tracking with the Turret (Pan motor) using AprilTag Vision.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      * @param aprilTagIds specifies the AprilTag IDs to track.
      */
-    public void enableAprilTagTracking(String owner, int[] aprilTagIds)
+    public void enableGoalTracking(String owner, int[] aprilTagIds)
     {
         if (robot.vision != null)
         {
@@ -456,28 +457,53 @@ public class Shooter extends TrcSubsystem
             {
                 shooter.tracer.traceInfo(
                     instanceName,
-                    "Enabling AprilTag Tracking (owner=" + owner +
+                    "Enabling Goal Tracking using AprilTag (owner=" + owner +
                     ", Ids=" + Arrays.toString(aprilTagIds) + ")");
                 robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                 this.trackedAprilTagIds = aprilTagIds;
+                this.trackedAlliance = null;
                 shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
             }
         }
-    }   //enableAprilTagTracking
+    }   //enableGoalTracking
 
     /**
-     * This method disables AprilTag tracking.
+     * This method enables Goal Tracking with the Turret (Pan motor) using Odometry.
+     *
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
+     * @param alliance specifies the Alliance Goal to track.
+     */
+    public void enableGoalTracking(String owner, FtcAuto.Alliance alliance)
+    {
+        if (alliance != null)
+        {
+            if (shooter.acquireExclusiveAccess(owner))
+            {
+                shooter.tracer.traceInfo(
+                    instanceName,
+                    "Enabling Goal Tracking using Odometry (owner=" + owner + ", alliance=" + alliance + ")");
+                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
+                this.trackedAprilTagIds = null;
+                this.trackedAlliance = alliance;
+                shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+            }
+        }
+    }   //enableGoalTracking
+
+    /**
+     * This method disables Goal Tracking.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void disableAprilTagTracking(String owner)
+    public void disableGoalTracking(String owner)
     {
         shooter.releaseExclusiveAccess(owner);
         shooter.panMotor.cancel();
         this.trackedAprilTagIds = null;
+        this.trackedAlliance = null;
         shooter.tracer.traceInfo(
-            instanceName, "Disabling AprilTag Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
-    }   //disableAprilTagTracking
+            instanceName, "Disabling Goal Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
+    }   //disableGoalTracking
 
     /**
      * This method returns the array of tracked AprilTag IDs.
@@ -490,6 +516,16 @@ public class Shooter extends TrcSubsystem
     }   //getTrackedArpilTagIds
 
     /**
+     * This method returns the tracked alliance.
+     *
+     * @return tracked alliance.
+     */
+    public FtcAuto.Alliance getTrackedAlliance()
+    {
+        return trackedAlliance;
+    }   //getTrackedAlliance
+
+    /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
      * position, we can use the PID controller to track the AprilTag target.
      *
@@ -499,6 +535,7 @@ public class Shooter extends TrcSubsystem
     private double getPanPosition()
     {
         double panPosition = shooter.panMotor.getPosition();
+        Double newPanPosition = null;
 
         if (trackedAprilTagIds != null)
         {
@@ -513,20 +550,31 @@ public class Shooter extends TrcSubsystem
             }
             else
             {
-                double newPosition = panPosition + aprilTagInfo.objPose.angle;
-                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Panning: %f->%f", panPosition, newPosition);
-                // Check if we are crossing over the hard stop.
-                if (newPosition >= Params.PAN_MIN_POS && newPosition <= Params.PAN_MAX_POS)
-                {
-                    // We are moving within valid range.
-                    panPosition -= newPosition;
-                }
-                else
-                {
-                    // We are crossing over the hard stop, stop it.
-                    panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
-                }
+                newPanPosition = panPosition + aprilTagInfo.objPose.angle;
+            }
+        }
+        else if (trackedAlliance != null)
+        {
+            TrcPose2D goalPose =
+                RobotParams.Game.APRILTAG_POSES[trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE? 20: 24];
+            TrcPose2D targetPose = goalPose.relativeTo(robot.robotBase.driveBase.getFieldPosition());
+            newPanPosition = targetPose.angle;
+        }
+
+        if (newPanPosition != null)
+        {
+            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Panning: %f->%f", panPosition, newPanPosition);
+            // Check if we are crossing over the hard stop.
+            if (newPanPosition >= Params.PAN_MIN_POS && newPanPosition <= Params.PAN_MAX_POS)
+            {
+                // We are moving within valid range.
+                panPosition -= newPanPosition;
+            }
+            else
+            {
+                // We are crossing over the hard stop, stop it.
+                panPosition = 0.0;
+                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
             }
         }
 

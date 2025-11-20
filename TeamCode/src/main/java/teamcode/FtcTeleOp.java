@@ -256,7 +256,7 @@ public class FtcTeleOp extends FtcOpMode
                         double panPower = operatorGamepad.getLeftStickX(true);
                         double tiltPower = operatorGamepad.getRightStickY(true);
 
-                        if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        if (panPower != panPrevPower && !robot.shooterSubsystem.isGoalTrackingEnabled())
                         {
                             if (operatorAltFunc)
                             {
@@ -433,18 +433,29 @@ public class FtcTeleOp extends FtcOpMode
                 {
                     if (pressed)
                     {
-                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        FtcAuto.Alliance alliance = FtcAuto.autoChoices.alliance != null?
+                            FtcAuto.autoChoices.alliance: Dashboard.Subsystem_Shooter.autoShootParams.alliance;
+
+                        if (robot.shooterSubsystem.isGoalTrackingEnabled())
                         {
-                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
-                            robot.shooterSubsystem.disableAprilTagTracking(null);
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> GoalTracking is disabled.");
+                            robot.shooterSubsystem.disableGoalTracking(null);
+                        }
+                        else if (!driverAltFunc)
+                        {
+                            int[] trackedIds =
+                                alliance == FtcAuto.Alliance.BLUE_ALLIANCE? RobotParams.Game.blueGoalAprilTag:
+                                alliance == FtcAuto.Alliance.RED_ALLIANCE? RobotParams.Game.redGoalAprilTag:
+                                   Dashboard.Subsystem_Vision.trackedAprilTagIds;
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> GoalTracking by AprilTag is enabled (TrackedIds=%s).", trackedIds);
+                            robot.shooterSubsystem.enableGoalTracking(null, trackedIds);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(
-                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedIds=%s).",
-                                Arrays.toString(Dashboard.Subsystem_Vision.trackedAprilTagIds));
-                            robot.shooterSubsystem.enableAprilTagTracking(
-                                null, Dashboard.Subsystem_Vision.trackedAprilTagIds);
+                                moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).", alliance);
+                            robot.shooterSubsystem.enableGoalTracking(null, alliance);
                         }
                     }
                 }
