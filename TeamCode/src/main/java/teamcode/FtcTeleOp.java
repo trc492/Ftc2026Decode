@@ -691,14 +691,21 @@ public class FtcTeleOp extends FtcOpMode
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
+                                // Not using vision, fixed point shooting at FAR_ZONE. Get ShootParams at the fixed
+                                // point, set flywheel speed and tilt accordingly and just shoot.
+                                // Drive is responsible for driving to the FAR_ZONE_SHOOT_POINT and control the
+                                // turret to aim at the goal, the code will do the rest.
                                 TrcShootParamTable.Params manualShootParams =
                                     Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                                 // Fire and forget assuming Spindexer moves faster than aimShooter.
                                 robot.spindexerSubsystem.moveToExitSlotWithArtifact(
                                     null, Vision.ArtifactType.Any, null);
+                                // Note: since we are doing fire and forget on the tilt angle, we assume tilt will
+                                // get on target before the flywheel.
+                                robot.shooter.setPanAngle(moduleName, manualShootParams.tiltAngle, null, 0.0);
                                 robot.shooter.aimShooter(
                                     moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
-                                    manualShootParams.tiltAngle, null, null, 0.0, robot.shooterSubsystem::shoot,
+                                    null, null, null, 0.0, robot.shooterSubsystem::shoot,
                                     Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }
                         }
