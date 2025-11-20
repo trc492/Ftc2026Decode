@@ -416,6 +416,12 @@ public class Spindexer extends TrcSubsystem
             spindexer.tracer.traceInfo(
                 instanceName, "Exit[%s]: exitSensor=%s, canceled=%s",
                 exitSlot, spindexer.isExitSensorActive(), canceled);
+            if (exitTriggerCallback != null)
+            {
+                // Shooter is on the same thread, it's safe to call back on this thread.
+                exitTriggerCallback.notify(null, true);
+                exitTriggerCallback = null;
+            }
         }
     }   //velTriggerCallback
 

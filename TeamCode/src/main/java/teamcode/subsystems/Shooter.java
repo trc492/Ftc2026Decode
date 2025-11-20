@@ -382,7 +382,7 @@ public class Shooter extends TrcSubsystem
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, 0.0);
+            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, Params.LAUNCHER_LAUNCH_DURATION);
         }
         else if (completionEvent != null)
         {
@@ -405,33 +405,27 @@ public class Shooter extends TrcSubsystem
         }
         // Reset launcher, fire and forget.
         TrcEvent callbackEvent = new TrcEvent("Launcher.retractCallback");
-        callbackEvent.setCallback(this::retractCallback, null);
+        callbackEvent.setCallback(
+            (ctxt, canceld) ->
+            {
+                if (launchCompletionEvent != null)
+                {
+                    if (canceled)
+                    {
+                        launchCompletionEvent.cancel();
+                    }
+                    else
+                    {
+                        launchCompletionEvent.signal();
+                    }
+                    launchCompletionEvent = null;
+                }
+                launchOwner = null;
+            },
+            null);
         launcher.setPosition(
             launchOwner, 0.0, launcherTuneParams.restPos, callbackEvent, launcherTuneParams.retractTime);
     }   //velTriggerCallback
-
-    /**
-     * This method is called when the launcher finished retracting.
-     *
-     * @param context not used.
-     * @param canceled specifies true if the callback was canceled, false otherwise.
-     */
-    private void retractCallback(Object context, boolean canceled)
-    {
-        if (launchCompletionEvent != null)
-        {
-            if (canceled)
-            {
-                launchCompletionEvent.cancel();
-            }
-            else
-            {
-                launchCompletionEvent.signal();
-            }
-            launchCompletionEvent = null;
-        }
-        launchOwner = null;
-    }   //retractCallback
 
     /**
      * This method checks if Goal Tracking is enabled.
