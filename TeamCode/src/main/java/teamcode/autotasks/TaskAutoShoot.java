@@ -267,8 +267,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         robot.spindexer.cancel(owner);
         if (robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusPatternState(LEDIndicator.RED_APRILTAG, false);
-            robot.ledIndicator.setStatusPatternState(LEDIndicator.BLUE_APRILTAG, false);
             robot.ledIndicator.setStatusPatternState(LEDIndicator.SEARCHING_RED_APRILTAG, false);
             robot.ledIndicator.setStatusPatternState(LEDIndicator.SEARCHING_BLUE_APRILTAG, false);
         }
@@ -297,10 +295,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 motifIndex = 0;
-//                if (robot.ledIndicator != null)
-//                {
-//                    robot.ledIndicator.setStatusPatternOn(LEDIndicator.SHOOT_IN_PROGRESS, false);
-//                }
                 //
                 // Intentionally falling through.
                 //
@@ -544,12 +538,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case DONE:
             default:
-                if (robot.ledIndicator != null)
-                {
-                    // We are done, turn off all LED patterns in case the "SEARCHING" and found AprilTag pattern is
-                    // still ON.
-                    robot.ledIndicator.resetStatusPatterns();
-                }
                 // Stop task.
                 stopAutoTask(true);
                 break;

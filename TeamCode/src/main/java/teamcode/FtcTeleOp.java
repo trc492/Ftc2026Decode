@@ -30,6 +30,7 @@ import java.util.Locale;
 import ftclib.drivebase.FtcSwerveBase;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
+import teamcode.indicators.LEDIndicator;
 import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
@@ -447,15 +448,30 @@ public class FtcTeleOp extends FtcOpMode
                                 alliance == FtcAuto.Alliance.BLUE_ALLIANCE? RobotParams.Game.blueGoalAprilTag:
                                 alliance == FtcAuto.Alliance.RED_ALLIANCE? RobotParams.Game.redGoalAprilTag:
                                    Dashboard.Subsystem_Vision.trackedAprilTagIds;
-                            robot.globalTracer.traceInfo(
-                                moduleName, ">>>>> GoalTracking by AprilTag is enabled (TrackedIds=%s).", trackedIds);
                             robot.shooterSubsystem.enableGoalTracking(null, trackedIds);
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> GoalTracking by AprilTag is enabled (TrackedIds=%s).",
+                                Arrays.toString(trackedIds));
+                            if (robot.ledIndicator != null)
+                            {
+                                robot.ledIndicator.setStatusPatternOn(
+                                    alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                        LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG,
+                                    true);
+                            }
                         }
                         else
                         {
+                            robot.shooterSubsystem.enableGoalTracking(null, alliance);
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).", alliance);
-                            robot.shooterSubsystem.enableGoalTracking(null, alliance);
+                            if (robot.ledIndicator != null)
+                            {
+                                robot.ledIndicator.setStatusPatternOn(
+                                    alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                        LEDIndicator.BLUE_GOAL: LEDIndicator.RED_GOAL,
+                                    true);
+                            }
                         }
                     }
                 }
