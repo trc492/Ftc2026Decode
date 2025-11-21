@@ -206,8 +206,7 @@ public class FtcTeleOp extends FtcOpMode
                         {
                             // Use MT2 for relocalization.
                             robotFieldPose =
-                                robot.shooterSubsystem.adjustRobotFieldPosition(
-                                    robot.vision.getRobotFieldPose(robot.robotBase.driveBase.getHeading()));
+                                robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
                         }
                     }
                     else

@@ -354,7 +354,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
                             taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                                 RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                            robot.robotBase.driveBase.getHeading(), null);
+                            null, null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
