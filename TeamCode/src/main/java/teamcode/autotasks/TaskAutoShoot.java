@@ -134,7 +134,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
     int[] autoTrackedAprilTagIds = null;
-    FtcAuto.Alliance autoTrackedAlliance = null;
+    Double autoTrackedGoalFieldHeading = null;
 
 
     /**
@@ -180,14 +180,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
         autoTrackedAprilTagIds = robot.shooterSubsystem.getTrackedAprilTagIds();
-        autoTrackedAlliance = robot.shooterSubsystem.getTrackedAlliance();
+        autoTrackedGoalFieldHeading = robot.shooterSubsystem.getTrackedGoalFieldHeading();
         // Turn off AprilTag tracking if it was ON.
-        if (autoTrackedAprilTagIds != null || autoTrackedAlliance != null)
+        if (autoTrackedAprilTagIds != null || autoTrackedGoalFieldHeading != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "Goal Tracking is ON (Ids=%s, alliance=%s), turning it OFF.",
-                Arrays.toString(autoTrackedAprilTagIds), autoTrackedAlliance);
+                "Goal Tracking is ON (Ids=%s, goalFieldHeading=%f), turning it OFF.",
+                Arrays.toString(autoTrackedAprilTagIds), autoTrackedGoalFieldHeading);
             robot.shooterSubsystem.disableGoalTracking(null);
         }
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
@@ -243,13 +243,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             autoTrackedAprilTagIds = null;
         }
 
-        if (autoTrackedAlliance != null)
+        if (autoTrackedGoalFieldHeading != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "Alliance tracking was ON (alliance=%s), turning it back ON.", autoTrackedAlliance);
-            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedAlliance);
-            autoTrackedAlliance = null;
+                "Goal tracking was ON (goalFieldHeading=%f), turning it back ON.", autoTrackedGoalFieldHeading);
+            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedGoalFieldHeading);
+            autoTrackedGoalFieldHeading = null;
         }
     }   //releaseSubsystemsOwnership
 

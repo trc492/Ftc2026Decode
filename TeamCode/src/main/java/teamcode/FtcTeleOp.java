@@ -408,7 +408,8 @@ public class FtcTeleOp extends FtcOpMode
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling GyroAssist.");
-                            robot.robotBase.driveBase.setGyroAssistEnabled(robot.robotBase.purePursuitDrive.getTurnPidCtrl());
+                            robot.robotBase.driveBase.setGyroAssistEnabled(
+                                robot.robotBase.purePursuitDrive.getTurnPidCtrl());
                         }
                     }
                     else if (robot.robotBase.driveBase.supportsHolonomicDrive())
@@ -461,7 +462,8 @@ public class FtcTeleOp extends FtcOpMode
                         }
                         else
                         {
-                            robot.shooterSubsystem.enableGoalTracking(null, alliance);
+                            robot.shooterSubsystem.enableGoalTracking(
+                                null, robot.robotBase.driveBase.getHeading() + robot.shooter.getPanAngle());
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).", alliance);
                             if (robot.ledIndicator != null)

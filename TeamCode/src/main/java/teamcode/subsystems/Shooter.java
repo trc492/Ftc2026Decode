@@ -225,7 +225,7 @@ public class Shooter extends TrcSubsystem
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
     private int[] trackedAprilTagIds = null;
-    private FtcAuto.Alliance trackedAlliance = null;
+    private Double goalFieldHeading = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -434,7 +434,7 @@ public class Shooter extends TrcSubsystem
      */
     public boolean isGoalTrackingEnabled()
     {
-        return trackedAprilTagIds != null || trackedAlliance != null;
+        return trackedAprilTagIds != null || goalFieldHeading != null;
     }   //isGoalTrackingEnabled
 
     /**
@@ -455,7 +455,7 @@ public class Shooter extends TrcSubsystem
                     ", Ids=" + Arrays.toString(aprilTagIds) + ")");
                 robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                 this.trackedAprilTagIds = aprilTagIds;
-                this.trackedAlliance = null;
+                this.goalFieldHeading = null;
                 shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
             }
         }
@@ -465,22 +465,19 @@ public class Shooter extends TrcSubsystem
      * This method enables Goal Tracking with the Turret (Pan motor) using Odometry.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
-     * @param alliance specifies the Alliance Goal to track.
+     * @param goalFieldHeading specifies the Alliance Goal to track.
      */
-    public void enableGoalTracking(String owner, FtcAuto.Alliance alliance)
+    public void enableGoalTracking(String owner, double goalFieldHeading)
     {
-        if (alliance != null)
+        if (shooter.acquireExclusiveAccess(owner))
         {
-            if (shooter.acquireExclusiveAccess(owner))
-            {
-                shooter.tracer.traceInfo(
-                    instanceName,
-                    "Enabling Goal Tracking using Odometry (owner=" + owner + ", alliance=" + alliance + ")");
-                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
-                this.trackedAprilTagIds = null;
-                this.trackedAlliance = alliance;
-                shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
-            }
+            shooter.tracer.traceInfo(
+                instanceName,
+                "Enabling Goal Tracking using Odometry (owner=" + owner +
+                ", goalFieldHeading=" + goalFieldHeading + ")");
+            this.trackedAprilTagIds = null;
+            this.goalFieldHeading = goalFieldHeading;
+            shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
         }
     }   //enableGoalTracking
 
@@ -494,7 +491,7 @@ public class Shooter extends TrcSubsystem
         shooter.releaseExclusiveAccess(owner);
         shooter.panMotor.cancel();
         this.trackedAprilTagIds = null;
-        this.trackedAlliance = null;
+        this.goalFieldHeading = null;
         shooter.tracer.traceInfo(
             instanceName, "Disabling Goal Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
     }   //disableGoalTracking
@@ -510,14 +507,14 @@ public class Shooter extends TrcSubsystem
     }   //getTrackedArpilTagIds
 
     /**
-     * This method returns the tracked alliance.
+     * This method returns the tracked goal field heading.
      *
      * @return tracked alliance.
      */
-    public FtcAuto.Alliance getTrackedAlliance()
+    public Double getTrackedGoalFieldHeading()
     {
-        return trackedAlliance;
-    }   //getTrackedAlliance
+        return goalFieldHeading;
+    }   //getTrackedGoalFieldHeading
 
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
@@ -553,14 +550,18 @@ public class Shooter extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, "AdjustedPoseFromAprilTag{" + aprilTagId + "}=" + targetPose);
             }
         }
-        else if (trackedAlliance != null)
+        else if (goalFieldHeading != null)
         {
-            TrcPose2D goalPose = trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE;
-            TrcPose2D targetPose = goalPose.relativeTo(robot.robotBase.driveBase.getFieldPosition());
-            newPanPosition = targetPose.angle;
-            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AdjustedPoseFromOdometry=" + targetPose);
+            newPanPosition = goalFieldHeading - robot.robotBase.driveBase.getHeading();
         }
+//        else if (trackedAlliance != null)
+//        {
+//            TrcPose2D goalPose = trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+//                RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE;
+//            TrcPose2D targetPose = goalPose.relativeTo(robot.robotBase.driveBase.getFieldPosition());
+//            newPanPosition = targetPose.angle;
+//            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AdjustedPoseFromOdometry=" + targetPose);
+//        }
 
         if (newPanPosition != null)
         {
