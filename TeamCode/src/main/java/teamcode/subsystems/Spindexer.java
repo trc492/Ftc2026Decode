@@ -367,7 +367,7 @@ public class Spindexer extends TrcSubsystem
             {
                 // This gets called only if the exit trigger is enabled which is controlled by the Shooter subsystem.
                 // In other words, if this gets called, it is guaranteed that the Shooter is active and an artifact has
-                //
+                // just left the exit slot of the Spindexer.
                 double vel = ((TrcTriggerThresholdRange) shootVelTrigger).getTriggeredAverageValue();
                 Vision.ArtifactType artifactType = slotStates[exitSlot];
                 slotStates[exitSlot] = Vision.ArtifactType.None;
