@@ -108,7 +108,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
         if (robot.intakeSubsystem != null)
         {
-            robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
+            robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
         }
         if (robot.autoShootTask != null)
         {
@@ -229,7 +229,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         {
                             spindexerFullEvent.clear();
                             sm.addEvent(spindexerFullEvent);
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, spindexerFullEvent);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 0.5, spindexerFullEvent);
                         }
 
                         TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
@@ -306,7 +306,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     robot.robotBase.purePursuitDrive.setWaypointEventHandler(null);
                     if (robot.intakeSubsystem != null)
                     {
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
                     }
                     currentSpikeMarkCount++;
                     sm.setState(

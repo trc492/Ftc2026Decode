@@ -194,17 +194,18 @@ public class Intake extends TrcSubsystem
      * turns on Spindexer auto receive.
      *
      * @param enabled specifies true to enable and false to disable.
+     * @param power specifies the intake power, if null use default power (only applicable for enabling).
      * @param event specifies an event to notify if spindexer is full (only applicable for enabling), null if not
      *        provided.
      */
-    public void setBulldozeIntakeEnabled(boolean enabled, TrcEvent event)
+    public void setBulldozeIntakeEnabled(boolean enabled, Double power, TrcEvent event)
     {
         boolean intakeOn = intake.isActive();
 
         if (!intakeOn && enabled)
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
-            intake.intake();
+            intake.intake(power);
             robot.spindexerSubsystem.setAutoReceiveEnabled(true, event);
             bulldozeEnabled = true;
         }

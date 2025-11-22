@@ -554,8 +554,9 @@ public class Shooter extends TrcSubsystem
         {
             TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
             TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
-            newPanPosition = targetPose.angle;
-            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "robotPose=%s, targetPose=%s", robotPose, targetPose);
+//            newPanPosition = targetPose.angle;
+            newPanPosition = (Math.signum(robotPose.x) * 90.0) - Math.toDegrees(Math.atan2(robotPose.x, robotPose.y));
+            shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "robotPose=%s, targetPose=%s", robotPose, targetPose);
         }
 
         if (newPanPosition != null)

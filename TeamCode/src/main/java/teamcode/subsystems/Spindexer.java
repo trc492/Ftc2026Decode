@@ -302,7 +302,7 @@ public class Spindexer extends TrcSubsystem
                     slotsFullEvent.signal();
                     slotsFullEvent = null;
                 }
-                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null);
+                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
             }
 
             if (triggerEvent != null)
