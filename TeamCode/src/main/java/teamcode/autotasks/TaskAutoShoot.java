@@ -134,7 +134,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
     int[] autoTrackedAprilTagIds = null;
-    Double autoTrackedGoalFieldHeading = null;
+    TrcPose2D autoTrackedGoalFieldPose = null;
 
 
     /**
@@ -180,14 +180,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             moduleName,
             "autoShoot(owner=" + owner + ", event=" + completionEvent + ", taskParams=" + autoShootParams + ")");
         autoTrackedAprilTagIds = robot.shooterSubsystem.getTrackedAprilTagIds();
-        autoTrackedGoalFieldHeading = robot.shooterSubsystem.getTrackedGoalFieldHeading();
+        autoTrackedGoalFieldPose = robot.shooterSubsystem.getTrackedGoalFieldPose();
         // Turn off AprilTag tracking if it was ON.
-        if (autoTrackedAprilTagIds != null || autoTrackedGoalFieldHeading != null)
+        if (autoTrackedAprilTagIds != null || autoTrackedGoalFieldPose != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "Goal Tracking is ON (Ids=%s, goalFieldHeading=%f), turning it OFF.",
-                Arrays.toString(autoTrackedAprilTagIds), autoTrackedGoalFieldHeading);
+                "Goal Tracking is ON (Ids=%s, goalFieldPose=%s), turning it OFF.",
+                Arrays.toString(autoTrackedAprilTagIds), autoTrackedGoalFieldPose);
             robot.shooterSubsystem.disableGoalTracking(null);
         }
         startAutoTask(owner, State.START, autoShootParams, completionEvent);
@@ -243,13 +243,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             autoTrackedAprilTagIds = null;
         }
 
-        if (autoTrackedGoalFieldHeading != null)
+        if (autoTrackedGoalFieldPose != null)
         {
             tracer.traceInfo(
                 moduleName,
-                "Goal tracking was ON (goalFieldHeading=%f), turning it back ON.", autoTrackedGoalFieldHeading);
-            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedGoalFieldHeading);
-            autoTrackedGoalFieldHeading = null;
+                "Goal tracking was ON (goalFieldPose=%s), turning it back ON.", autoTrackedGoalFieldPose);
+            robot.shooterSubsystem.enableGoalTracking(null, autoTrackedGoalFieldPose);
+            autoTrackedGoalFieldPose = null;
         }
     }   //releaseSubsystemsOwnership
 

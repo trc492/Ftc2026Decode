@@ -463,7 +463,9 @@ public class FtcTeleOp extends FtcOpMode
                         else
                         {
                             robot.shooterSubsystem.enableGoalTracking(
-                                null, robot.robotBase.driveBase.getHeading() + robot.shooter.getPanAngle());
+                                null,
+                                alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                    RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE);
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).", alliance);
                             if (robot.ledIndicator != null)
