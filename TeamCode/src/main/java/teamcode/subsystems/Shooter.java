@@ -654,6 +654,7 @@ public class Shooter extends TrcSubsystem
                     }
                     else
                     {
+                        // In autonomous mode starting at GOAL_ZONE, initialize the Turret to turn to the obelisk.
                         shooter.panMotor.setPosition(
                             owner, 0.0,
                             FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
