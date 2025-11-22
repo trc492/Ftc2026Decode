@@ -552,7 +552,7 @@ public class Shooter extends TrcSubsystem
         else if (goalFieldPose != null)
         {
             TrcPose2D targetPose = goalFieldPose.relativeTo(robot.robotBase.driveBase.getFieldPosition());
-            newPanPosition = targetPose.angle;
+            newPanPosition = panPosition + targetPose.angle;
             shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AdjustedPoseFromOdometry=" + targetPose);
         }
 
