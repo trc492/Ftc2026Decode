@@ -231,8 +231,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.intakeSubsystem.setBulldozeIntakeEnabled(true, spindexerFullEvent);
                         }
 
-                        TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ?
-                            RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex] : RobotParams.Game.BLUE_SPIKEMARK_POSES[spikeMarkIndex], autoChoices.alliance);
+                        TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
+                            autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ?
+                                RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex] :
+                                RobotParams.Game.BLUE_SPIKEMARK_POSES[spikeMarkIndex],
+                            autoChoices.alliance);
                         TrcPose2D endPose = spikeMarkPose.clone();
                         endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 27.0: -27.0;
                         robot.robotBase.purePursuitDrive.setWaypointEventHandler(
