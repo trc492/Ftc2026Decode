@@ -96,7 +96,7 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR2_PID_KD          = 0.0;
         public static final double SHOOT_MOTOR2_PID_KF          = 0.0125;
 
-        public static final double SHOOT_PID_TOLERANCE_RPM      = 75.0;
+        public static final double SHOOT_PID_TOLERANCE_RPM      = 100.0;
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
         public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 350.0;    // in RPM

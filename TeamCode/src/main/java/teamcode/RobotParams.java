@@ -147,11 +147,22 @@ public class RobotParams
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+4.0, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
             new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
             {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
+
+        // NOTE: Blue spikemark poses are in terms of the red coordinate system
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_1 =
+                new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_2 =
+                new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_3 =
+                new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+        public static final TrcPose2D[] BLUE_SPIKEMARK_POSES     =
+                {BLUE_SPIKEMARK_PICKUP_POSE_1, BLUE_SPIKEMARK_PICKUP_POSE_2, BLUE_SPIKEMARK_PICKUP_POSE_3};
+
         public static final TrcPose2D RED_OPEN_GATE_POSE        =
             new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_ClASSIFIER_PARK_POSE  =
