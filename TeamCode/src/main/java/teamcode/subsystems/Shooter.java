@@ -546,14 +546,16 @@ public class Shooter extends TrcSubsystem
                          RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER);
                 newPanPosition = panPosition + targetPose.angle;
                 shooter.tracer.traceDebug(
-                    Params.SUBSYSTEM_NAME, "AdjustedPoseFromAprilTag{" + aprilTagId + "}=" + targetPose);
+                    Params.SUBSYSTEM_NAME, "aprilTagPose{%d}=%s, targetPose=%s",
+                    aprilTagId, aprilTagInfo.objPose, targetPose);
             }
         }
         else if (goalFieldPose != null)
         {
-            TrcPose2D targetPose = goalFieldPose.relativeTo(robot.robotBase.driveBase.getFieldPosition());
-            newPanPosition = panPosition + targetPose.angle;
-            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AdjustedPoseFromOdometry=" + targetPose);
+            TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
+            TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
+            newPanPosition = targetPose.angle;
+            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "robotPose=%s, targetPose=%s", robotPose, targetPose);
         }
 
         if (newPanPosition != null)
