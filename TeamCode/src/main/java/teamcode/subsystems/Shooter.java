@@ -456,7 +456,7 @@ public class Shooter extends TrcSubsystem
                 robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                 this.trackedAprilTagIds = aprilTagIds;
                 this.goalFieldPose = null;
-                shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+                shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
             }
         }
     }   //enableGoalTracking
@@ -476,7 +476,7 @@ public class Shooter extends TrcSubsystem
                 "Enabling Goal Tracking using Odometry (owner=" + owner + ", goalFieldPose=" + goalFieldPose + ")");
             this.trackedAprilTagIds = null;
             this.goalFieldPose = goalFieldPose;
-            shooter.panMotor.setPosition(0.0, true, Params.PAN_POWER_LIMIT);
+            shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
         }
     }   //enableGoalTracking
 
