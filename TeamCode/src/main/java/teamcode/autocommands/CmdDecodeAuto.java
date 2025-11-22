@@ -234,7 +234,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
                             RobotParams.Game.RED_SPIKEMARK_POSES[spikeMarkIndex], autoChoices.alliance);
                         TrcPose2D endPose = spikeMarkPose.clone();
-                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 30.0: -30.0;
+                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 26.0: -26.0;
                         robot.robotBase.purePursuitDrive.setWaypointEventHandler(
                             (i, wp) ->
                             {
