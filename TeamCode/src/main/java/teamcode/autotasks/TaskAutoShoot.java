@@ -520,7 +520,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                sm.setState(taskParams.numArtifactsToShoot > 0? State.SETUP_VISION: State.NEXT_EXIT_SLOT);
+                sm.setState(
+                    taskParams.numArtifactsToShoot > 0 &&
+                    robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) > 0?
+                        State.SETUP_VISION: State.NEXT_EXIT_SLOT);
                 break;
 
             case NEXT_EXIT_SLOT:
