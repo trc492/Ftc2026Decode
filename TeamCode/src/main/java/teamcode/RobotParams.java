@@ -134,35 +134,69 @@ public class RobotParams
         // Robot start locations.
         public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE   = new TrcPose2D(
             -Field.HALF_FIELD_INCHES+22.0+Robot.ROBOT_WIDTH/2, Field.HALF_FIELD_INCHES-7.0-Robot.ROBOT_LENGTH/2, 0.0);
-        public static final TrcPose2D STARTPOSE_RED_FAR_CENTER = new TrcPose2D(
+        public static final TrcPose2D STARTPOSE_RED_FAR_CENTER  = new TrcPose2D(
             Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D STARTPOSE_RED_FAR_CORNER = new TrcPose2D(
+        public static final TrcPose2D STARTPOSE_RED_FAR_CORNER  = new TrcPose2D(
             Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0, 0.0);
 
-        public static final TrcPose2D RED_GOAL_ZONE_SHOOT_POSE =
+        public static final TrcPose2D RED_GOAL_ZONE_SHOOT_POSE  =
             new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_FAR_ZONE_SHOOT_POSE =
+        public static final TrcPose2D RED_FAR_ZONE_SHOOT_POSE   =
             new TrcPose2D(2.0*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
 
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
-            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
-        // NOTE: Compensating x because of drift and y because of mecanum wheels
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+2.0, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
-            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK1_POSE       =
+            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK2_POSE       =
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK3_POSE       =
+            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
-            {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
+            {RED_SPIKEMARK1_POSE, RED_SPIKEMARK2_POSE, RED_SPIKEMARK3_POSE};
 
-        // NOTE: Blue spikemark poses are in terms of the red coordinate system
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_1 =
-                new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_2 =
-                new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
-        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_3 =
-                new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
-        public static final TrcPose2D[] BLUE_SPIKEMARK_POSES     =
-                {BLUE_SPIKEMARK_PICKUP_POSE_1, BLUE_SPIKEMARK_PICKUP_POSE_2, BLUE_SPIKEMARK_PICKUP_POSE_3};
+        public static final TrcPose2D[] RED_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES - 6.0, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+            };
+        public static final TrcPose2D[] BLUE_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+            };
+        public static final TrcPose2D[] RED_SPIKEMARK_FAR_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+            };
+        public static final TrcPose2D[] BLUE_SPIKEMARK_FAR_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES - 6.0, 0.0),
+                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+            };
+
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
+//            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        // NOTE: Compensating x because of drift and y because of mecanum wheels
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
+//            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+2.0, 0.0);
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
+//            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
+//            {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
+//
+//        // NOTE: Blue spikemark poses are in terms of the red coordinate system
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_1 =
+//                new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_2 =
+//                new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_3 =
+//                new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D[] BLUE_SPIKEMARK_POSES     =
+//                {BLUE_SPIKEMARK_PICKUP_POSE_1, BLUE_SPIKEMARK_PICKUP_POSE_2, BLUE_SPIKEMARK_PICKUP_POSE_3};
 
         public static final TrcPose2D RED_OPEN_GATE_POSE        =
             new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);

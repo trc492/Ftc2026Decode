@@ -75,7 +75,7 @@ public class LEDIndicator
         new TrcPriorityIndicator.Pattern(BLUE_GOAL, TrcRevBlinkin.RevLedPattern.SolidAqua, 1.0, 0.0),
         new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.2, 0.2),
         new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.2, 0.2),
-        new TrcPriorityIndicator.Pattern(INTAKE_ACTIVE, TrcRevBlinkin.RevLedPattern.SolidGreen, 0.2,0.2),
+        new TrcPriorityIndicator.Pattern(INTAKE_ACTIVE, TrcRevBlinkin.RevLedPattern.SolidGreen, 0.2, 0.2),
         new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),
@@ -86,13 +86,20 @@ public class LEDIndicator
     public final TrcPriorityIndicator.Pattern[] spindexerLEDPatternPriorities = new TrcPriorityIndicator.Pattern[]
     {
         // Highest priority.
-        new TrcPriorityIndicator.Pattern(PURPLE_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Violet, 0.25, 0.25),
-        new TrcPriorityIndicator.Pattern(PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
-        new TrcPriorityIndicator.Pattern(GREEN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Green, 0.25, 0.25),
-        new TrcPriorityIndicator.Pattern(GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
-        new TrcPriorityIndicator.Pattern(UNKNOWN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow, 0.25, 0.25),
-        new TrcPriorityIndicator.Pattern(UNKNOWN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow),
-        new TrcPriorityIndicator.Pattern(OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
+        new TrcPriorityIndicator.Pattern(
+            PURPLE_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Violet, 0.25, 0.25),
+        new TrcPriorityIndicator.Pattern(
+            PURPLE_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Violet),
+        new TrcPriorityIndicator.Pattern(
+            GREEN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Green, 0.25, 0.25),
+        new TrcPriorityIndicator.Pattern(
+            GREEN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Green),
+        new TrcPriorityIndicator.Pattern(
+            UNKNOWN_SELECTED, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow, 0.25, 0.25),
+        new TrcPriorityIndicator.Pattern(
+            UNKNOWN_BLOB, TrcGobildaIndicatorLight.GobildaLedPattern.Yellow),
+        new TrcPriorityIndicator.Pattern(
+            OFF_PATTERN, TrcGobildaIndicatorLight.GobildaLedPattern.Black)
         // Lowest priority.
     };
 
