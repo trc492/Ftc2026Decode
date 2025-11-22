@@ -642,7 +642,8 @@ public class Shooter extends TrcSubsystem
         // Zero calibrate turret (pan).
         TrcEvent callbackEvent = new TrcEvent(Params.PAN_MOTOR_NAME + ".callbackEvent");
         callbackEvent.setCallback(
-            (ctxt, canceled) -> {
+            (ctxt, canceled) ->
+            {
                 TrcEvent event = (TrcEvent) ctxt;
                 if (!canceled)
                 {
