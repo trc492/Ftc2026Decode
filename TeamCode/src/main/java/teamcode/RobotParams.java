@@ -155,27 +155,27 @@ public class RobotParams
 
         public static final TrcPose2D[] RED_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
             {
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES - 6.0, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(-1.5, -0.35*Field.FULL_TILE_INCHES - 4.0, 0.0),
+                new TrcPose2D(-1.5, -0.35*Field.FULL_TILE_INCHES - 4.0, 0.0)
             };
         public static final TrcPose2D[] BLUE_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
             {
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES, 0.0)
             };
         public static final TrcPose2D[] RED_SPIKEMARK_FAR_ZONE_POSE_ADJS =
             {
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+                new TrcPose2D(1.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0),
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0),
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0)
             };
         public static final TrcPose2D[] BLUE_SPIKEMARK_FAR_ZONE_POSE_ADJS =
             {
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES - 6.0, 0.0),
-                new TrcPose2D(0.0, -0.5*Field.FULL_TILE_INCHES, 0.0)
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 5.0, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 4.0, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 4.0, 0.0)
             };
 
 //        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =

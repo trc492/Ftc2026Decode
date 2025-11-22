@@ -75,7 +75,7 @@ public class Spindexer extends TrcSubsystem
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
-        public static final double POS_OFFSET                   = -60.0;
+        public static final double POS_OFFSET                   = -63.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
@@ -612,7 +612,7 @@ public class Spindexer extends TrcSubsystem
         {
             TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
             moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-            robot.intake.intake();
+            robot.intake.intake(Intake.Params.INTAKE_POWER);
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
         }
         else
@@ -645,7 +645,7 @@ public class Spindexer extends TrcSubsystem
         {
             TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
             moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-            robot.intake.intake();
+            robot.intake.intake(0.25);
             spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
         }
         else
@@ -950,7 +950,7 @@ public class Spindexer extends TrcSubsystem
             clearSlotStates();
             if (Params.SPIN_INTAKE_ON_MOVE)
             {
-                robot.intake.intake();
+                robot.intake.intake(0.25);
             }
             examinedSlotIndex = 0;
             sm.start(RefreshSlotState.MOVE_TO_NEXT_SLOT);

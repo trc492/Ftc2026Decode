@@ -182,7 +182,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         else
                         {
                             shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
-                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -20.0 : 20.0;
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
                         robot.shooter.aimShooter(
                             shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, panAngle);
@@ -253,14 +253,29 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         spikeMarkPose.y += spikeMarkPoseAdj.y;
 
                         TrcPose2D endPose = spikeMarkPose.clone();
-                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 27.0: -27.0;
+                        endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 29.0: -29.0;
+                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            if (currentSpikeMarkCount == 1 || currentSpikeMarkCount == 2)
+                            {
+                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 10.0: -10.0;
+                            }
+                        }
+                        else
+                        {
+                            if (currentSpikeMarkCount == 0 || currentSpikeMarkCount == 1)
+                            {
+                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 10.0: -10.0;
+                            }
+                        }
+
                         robot.robotBase.purePursuitDrive.setWaypointEventHandler(
                             (i, wp) ->
                             {
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.2);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.21);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
@@ -268,7 +283,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         sm.addEvent(event);
                         // We will be moving slowly while picking up artifacts, disable stall detection so
                         // PurePursuit drive won't terminate prematurely near the end.
-                        robot.robotBase.purePursuitDrive.setStallDetectionEnabled(false);
+//                        robot.robotBase.purePursuitDrive.setStallDetectionEnabled(false);
                         robot.robotBase.purePursuitDrive.start(
                             // If there is no intake subsystem, there is no spindexerFullEvent. So, we must wait
                             // for PurePursuit drive event instead. This is for testing pathing only.
@@ -277,7 +292,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             spikeMarkPose, endPose);
-                        sm.waitForEvents(State.FINISH_PICKUP, false, false);
+                        sm.waitForEvents(State.FINISH_PICKUP, false, false, 7.0);
                     }
                     else
                     {
@@ -286,7 +301,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case FINISH_PICKUP:
-                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(true);
+//                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(true);
                     robot.robotBase.purePursuitDrive.cancel();
                     robot.robotBase.purePursuitDrive.setWaypointEventHandler(null);
                     if (robot.intakeSubsystem != null)

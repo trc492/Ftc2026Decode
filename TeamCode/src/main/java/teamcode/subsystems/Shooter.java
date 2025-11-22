@@ -647,20 +647,27 @@ public class Shooter extends TrcSubsystem
                 TrcEvent event = (TrcEvent) ctxt;
                 if (!canceled)
                 {
-                    if (TrcRobot.getRunMode() != TrcRobot.RunMode.AUTO_MODE ||
-                        FtcAuto.autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                    if (TrcRobot.getRunMode() != TrcRobot.RunMode.AUTO_MODE)
                     {
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
-                    else
-                    {
-                        // In autonomous mode starting at GOAL_ZONE, initialize the Turret to turn to the obelisk.
-                        shooter.panMotor.setPosition(
-                            owner, 0.0,
-                            FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
-                            true, Params.PAN_POWER_LIMIT, null, 0.0);
+                    else {
+                        if (FtcAuto.autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            // In autonomous mode starting at GOAL_ZONE, initialize the Turret to turn to the obelisk.
+                            shooter.panMotor.setPosition(
+                                    owner, 0.0,
+                                    FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -130.0 : -230.0,
+                                    true, Params.PAN_POWER_LIMIT, null, 0.0);
+                        }
+                        else
+                        {
+                            shooter.panMotor.setPosition(
+                                    owner, 0.0,
+                                    FtcAuto.autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -90.0 : 80.0,
+                                    true, Params.PAN_POWER_LIMIT, null, 0.0);
+                        }
                     }
-
                     if (event !=  null)
                     {
                         event.signal();
