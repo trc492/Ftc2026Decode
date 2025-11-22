@@ -56,6 +56,7 @@ public class LEDIndicator
     public static final String NOT_FOUND = "NotFound";
     public static final String SEARCHING_RED_APRILTAG = "SearchingRedAprilTag";
     public static final String SEARCHING_BLUE_APRILTAG = "SearchingBlueAprilTag";
+    public static final String INTAKE_ACTIVE = "IntakeActive";
     public static final String DRIVE_FIELD_MODE = "FieldMode";
     public static final String DRIVE_ROBOT_MODE = "RobotMode";
     public static final String DRIVE_INVERTED_MODE = "InvertedMode";
@@ -74,6 +75,7 @@ public class LEDIndicator
         new TrcPriorityIndicator.Pattern(BLUE_GOAL, TrcRevBlinkin.RevLedPattern.SolidAqua, 1.0, 0.0),
         new TrcPriorityIndicator.Pattern(SEARCHING_RED_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidRed, 0.2, 0.2),
         new TrcPriorityIndicator.Pattern(SEARCHING_BLUE_APRILTAG, TrcRevBlinkin.RevLedPattern.SolidBlue, 0.2, 0.2),
+        new TrcPriorityIndicator.Pattern(INTAKE_ACTIVE, TrcRevBlinkin.RevLedPattern.SolidGreen, 0.2,0.2),
         new TrcPriorityIndicator.Pattern(DRIVE_FIELD_MODE, TrcRevBlinkin.RevLedPattern.SolidAqua, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_ROBOT_MODE, TrcRevBlinkin.RevLedPattern.SolidWhite, 0.5, 0.0),
         new TrcPriorityIndicator.Pattern(DRIVE_INVERTED_MODE, TrcRevBlinkin.RevLedPattern.SolidOrange, 0.5, 0.0),

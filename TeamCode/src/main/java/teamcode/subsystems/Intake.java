@@ -27,6 +27,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
 import teamcode.RobotParams;
+import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
@@ -199,7 +200,7 @@ public class Intake extends TrcSubsystem
     public void setBulldozeIntakeEnabled(boolean enabled, TrcEvent event)
     {
         boolean intakeOn = intake.isActive();
-
+        robot.ledIndicator.setStatusPatternState(LEDIndicator.INTAKE_ACTIVE, enabled);
         if (!intakeOn && enabled)
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.

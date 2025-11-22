@@ -210,7 +210,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     {
         return owner == null ||
                robot.shooter.acquireExclusiveAccess(owner) &&
-               robot.spindexer.acquireExclusiveAccess(owner);
+               robot.spindexer.acquireExclusiveAccess(owner) &&
+               robot.intake.acquireExclusiveAccess(owner);
     }   //acquireSubsystemsOwnership
 
     /**
@@ -229,9 +230,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 moduleName,
                 "Releasing subsystem ownership on behalf of " + owner +
                 "\n\tshooter=" + ownershipMgr.getOwner(robot.shooter) +
-                "\n\tspindexer=" + ownershipMgr.getOwner(robot.spindexer));
+                "\n\tspindexer=" + ownershipMgr.getOwner(robot.spindexer) +
+                "\n\tintake=" + ownershipMgr.getOwner(robot.intake));
             robot.shooter.releaseExclusiveAccess(owner);
             robot.spindexer.releaseExclusiveAccess(owner);
+            robot.intake.releaseExclusiveAccess(owner);
         }
 
         if (autoTrackedAprilTagIds != null)

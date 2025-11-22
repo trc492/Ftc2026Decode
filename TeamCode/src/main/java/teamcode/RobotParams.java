@@ -146,8 +146,9 @@ public class RobotParams
 
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
             new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+        // NOTE: Compensating x because of drift and y because of mecanum wheels
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+4.0, 0.0);
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+2.0, 0.0);
         public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
             new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
         public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
