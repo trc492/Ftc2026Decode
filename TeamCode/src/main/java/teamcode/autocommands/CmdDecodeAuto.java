@@ -194,16 +194,34 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
-                        TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
-                            RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
-                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
-                        robot.robotBase.purePursuitDrive.start(
-                            event, 0.0, false,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
-                        sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
+                        if (currentSpikeMarkCount == 1)
+                        {
+                            TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
+                                    RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                            robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                            TrcPose2D intermediatePose = robot.robotBase.driveBase.getFieldPosition();
+                            intermediatePose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -12.0 : 12.0;
+                            robot.robotBase.purePursuitDrive.start(
+                                    event, 0.0, false,
+                                    robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                    robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                    robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                                    intermediatePose, robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
+                            sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
+                        }
+                        else
+                        {
+                            TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
+                                    RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                            robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                            robot.robotBase.purePursuitDrive.start(
+                                    event, 0.0, false,
+                                    robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                    robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                    robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                                    robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
+                            sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
+                        }
                     }
                     break;
 
@@ -229,7 +247,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         {
                             spindexerFullEvent.clear();
                             sm.addEvent(spindexerFullEvent);
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 0.5, spindexerFullEvent);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 1.0, spindexerFullEvent);
                         }
 
                         TrcPose2D spikeMarkPose = robot.adjustPoseByAlliance(
@@ -258,14 +276,14 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         {
                             if (currentSpikeMarkCount == 1 || currentSpikeMarkCount == 2)
                             {
-                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 10.0: -10.0;
+                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 9.0: -9.0;
                             }
                         }
                         else
                         {
                             if (currentSpikeMarkCount == 0 || currentSpikeMarkCount == 1)
                             {
-                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 10.0: -10.0;
+                                endPose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE? 9.0: -9.0;
                             }
                         }
 
@@ -275,7 +293,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.21);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.2);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
