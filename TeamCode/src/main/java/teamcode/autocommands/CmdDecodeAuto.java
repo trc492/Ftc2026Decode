@@ -194,34 +194,32 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
-                        if (currentSpikeMarkCount == 1)
+                        TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
+                            RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                        if (currentSpikeMarkCount == 2 && autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
-                            TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
-                                    RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
-                            robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                             TrcPose2D intermediatePose = robot.robotBase.driveBase.getFieldPosition();
                             intermediatePose.y += autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -12.0 : 12.0;
+                            robot.globalTracer.traceInfo(moduleName, "intermediatePose=%s", intermediatePose);
                             robot.robotBase.purePursuitDrive.start(
-                                    event, 0.0, false,
-                                    robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                                    robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                                    robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                                    intermediatePose, robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
-                            sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
+                                event, 0.0, false,
+                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                                intermediatePose,
+                                robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
                         }
                         else
                         {
-                            TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
-                                    RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
-                            robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                             robot.robotBase.purePursuitDrive.start(
-                                    event, 0.0, false,
-                                    robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                                    robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                                    robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                                    robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
-                            sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
+                                event, 0.0, false,
+                                robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                                robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                                robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                                robot.adjustPoseByAlliance(shootPose, autoChoices.alliance));
                         }
+                        sm.waitForSingleEvent(event, State.SHOOT_ARTIFACTS);
                     }
                     break;
 
@@ -293,7 +291,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.2);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
