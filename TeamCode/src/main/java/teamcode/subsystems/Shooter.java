@@ -56,8 +56,8 @@ import trclib.vision.TrcVisionTargetInfo;
 public class Shooter extends TrcSubsystem
 {
     // NOTE: Changed these for new table, change back to commented lines if using old table
-    public static final String FAR_ZONE_SHOOT_POINT             = "Target_10.22ft_1"; // "Target_9.44ft_2";
-    public static final String GOAL_ZONE_SHOOT_POINT            = "Target_3.43ft"; // "Target_2.93ft_2";
+    public static final String FAR_ZONE_SHOOT_POINT             = "FarZoneShootPoint";
+    public static final String GOAL_ZONE_SHOOT_POINT            = "GoalZoneShootPoint";
 
     public static final class Params
     {
@@ -166,20 +166,21 @@ public class Shooter extends TrcSubsystem
             {TILT_MIN_POS, 30.0, 35.0, 40.0, TILT_MAX_POS};
 
         public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
+            //   entry_name,            dist,           shoot1_vel, shoot2_vel, tilt_angle
+            .add("Target_2.48ft",       29.8,           3375.0,     0.0,        26.0)
+            .add(GOAL_ZONE_SHOOT_POINT, 41.2,           3475.0,     0.0,        26.0)
+            .add("Target_4.42ft",       53.0,           3650.0,     0.0,        26.0)
+            .add("Target_5.61ft",       67.4,           3875.0,     0.0,        26.0)
+            .add("Target_5.61ft_1",     67.4000000001,  3875.0,     0.0,        30.0)
+            .add("Target_6.76ft",       81.1,           4090.0,     0.0,        30.0)
+            .add("Target_6.76ft_1",     81.20000000001, 4090.0,     0.0,        35.0)
+            .add("Target_8.67ft",       104.1,          4355.0,     0.0,        35.0)
+            .add("Target_8.67ft_1",     104.1000000001, 4335.0,     0.0,        38.0)
+            .add("Target_10.22ft",      122.7,          4680.0,     0.0,        38.0)
+            .add(FAR_ZONE_SHOOT_POINT,  122.7,          4680.0,     0.0,        42.0)
+            .add("Target_11.71ft",      140.5,          4985.0,     0.0,        42.0);
+//        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
 //            //   entry_name,            dist,           shoot1_vel, shoot2_vel, tilt_angle
-                .add("Target_2.48ft",    29.8,   3375.0, 0.0, 26.0)
-                .add(GOAL_ZONE_SHOOT_POINT,    41.2,   3475.0, 0.0, 26.0)
-                .add("Target_4.42ft",    53.0,   3650.0, 0.0, 26.0)
-                .add("Target_5.61ft",    67.4,   3875.0, 0.0, 26.0)
-                .add("Target_5.61ft_1",  67.4000000001, 3875.0, 0.0, 30.0)
-                .add("Target_6.76ft",    81.1,   4090.0, 0.0, 30.0)
-                .add("Target_6.76ft_1",  81.20000000001, 4090.0, 0.0, 35.0)
-                .add("Target_8.67ft",    104.1,  4355,  0.0,  35.0)
-                .add("Target_8.67ft_1",  104.10000000001, 4335.0, 0.0, 38.0)
-                .add("Target_10.22ft",    122.7,  4680.0, 0.0, 38.0)
-                .add(FAR_ZONE_SHOOT_POINT,  122.7,  4680.0,   0.0, 42.0)
-                .add("Target_11.71ft",  140.5,  4985.0, 0.0, 42.0);
-
 //            .add("Target_2.14ft",       25.7,           3500.0,     0.0,        26.0)
 //            .add("Target_2.49ft",       29.9,           3600.0,     0.0,        26.0)
 //            .add("Target_2.93ft_1",     35.25,          3650.0,     0.0,        26.0)
@@ -194,10 +195,6 @@ public class Shooter extends TrcSubsystem
 //            .add("Target_9.44ft_1",     111.3,          4760,       0.0,        38.0)
 //            .add(FAR_ZONE_SHOOT_POINT,  111.3000001,    4750.0,     0.0,        42.0)
 //            .add("Target_10.65ft",      127.8,          5000.0,     0.0,        42.0);
-
-//        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
-                //entry name,                dist,           shoot1_vel,  shoot2_vel, tilt angle
-//                .add("Target 2ft",
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
