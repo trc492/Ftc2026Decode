@@ -705,7 +705,7 @@ public class FtcTeleOp extends FtcOpMode
                                     null, Vision.ArtifactType.Any, null);
                                 // Note: since we are doing fire and forget on the tilt angle, we assume tilt will
                                 // get on target before the flywheel.
-                                robot.shooter.setPanAngle(moduleName, manualShootParams.tiltAngle, null, 0.0);
+                                robot.shooter.setTiltAngle(moduleName, manualShootParams.tiltAngle, null, 0.0);
                                 robot.shooter.aimShooter(
                                     moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
                                     null, null, null, 0.0, robot.shooterSubsystem::shoot,
