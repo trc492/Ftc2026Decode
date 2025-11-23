@@ -601,8 +601,15 @@ public class Spindexer extends TrcSubsystem
      */
     public void moveToEntrySlot(String owner, int slot, TrcEvent event)
     {
-        spindexer.tracer.traceInfo(
-            instanceName, "MoveToEntrySlot: Slot=" + slot + ", event=" + event);
+        spindexer.tracer.traceInfo(instanceName, "MoveToEntrySlot: Slot=%d, event=%s", slot, event);
+
+        if (robot.shooterSubsystem != null &&
+            robot.shooterSubsystem.getLauncherPosition() != Shooter.Params.LAUNCHER_REST_POS)
+        {
+            spindexer.tracer.traceWarn(instanceName, "Launcher is still UP, do not move!!! Let's bring it down.");
+            robot.shooterSubsystem.setLauncherPosition(owner, false);
+        }
+
         if (exitSlot != null && robot.ledIndicator != null)
         {
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
@@ -633,8 +640,15 @@ public class Spindexer extends TrcSubsystem
      */
     public void moveToExitSlot(String owner, int slot, TrcEvent event)
     {
-        spindexer.tracer.traceInfo(
-            instanceName, "MoveToExitSlot: Slot=" + slot + ", event=" + event);
+        spindexer.tracer.traceInfo(instanceName, "MoveToExitSlot: Slot=%d, event=%s", slot, event);
+
+        if (robot.shooterSubsystem != null &&
+            robot.shooterSubsystem.getLauncherPosition() != Shooter.Params.LAUNCHER_REST_POS)
+        {
+            spindexer.tracer.traceWarn(instanceName, "Launcher is still UP, do not move!!! Let's bring it down.");
+            robot.shooterSubsystem.setLauncherPosition(owner, false);
+        }
+
         if (exitSlot != null && robot.ledIndicator != null)
         {
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);

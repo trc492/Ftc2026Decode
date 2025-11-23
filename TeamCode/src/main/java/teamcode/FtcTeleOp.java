@@ -728,7 +728,7 @@ public class FtcTeleOp extends FtcOpMode
                     if (operatorAltFunc)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
-                        robot.shooterSubsystem.setLaunchPosition(null, pressed);
+                        robot.shooterSubsystem.setLauncherPosition(null, pressed);
                     }
                     else if (pressed)
                     {

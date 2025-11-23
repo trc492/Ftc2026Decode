@@ -340,12 +340,22 @@ public class Shooter extends TrcSubsystem
     }   //getFlywheelRPM
 
     /**
+     * This method returns the launcher servo position.
+     *
+     * @return launcher servo position, null if there is no launcher.
+     */
+    public Double getLauncherPosition()
+    {
+        return launcher != null? launcher.getPosition(): null;
+    }   //getLauncherPosition
+
+    /**
      * This method sets the launcher servo position.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      * @param launch specifies true to set servo to launch position, false to set to rest position.
      */
-    public void setLaunchPosition(String owner, boolean launch)
+    public void setLauncherPosition(String owner, boolean launch)
     {
         if (launch)
         {
@@ -355,7 +365,7 @@ public class Shooter extends TrcSubsystem
         {
             launcher.setPosition(owner, 0.0, launcherTuneParams.restPos, null, 0.0);
         }
-    }   //setLaunchPosition
+    }   //setLauncherPosition
 
     /**
      * This method is called to launch the game piece into the shooter, typically when TrcShooter has reached shooting
