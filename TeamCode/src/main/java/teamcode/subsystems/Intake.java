@@ -27,12 +27,14 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.subsystem.FtcRollerIntake;
 import teamcode.RobotParams;
+import teamcode.indicators.LEDIndicator;
 import teamcode.vision.Vision;
 import trclib.robotcore.TrcEvent;
 import trclib.sensor.TrcTrigger;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcSubsystem;
 import trclib.subsystem.TrcRollerIntake.TriggerAction;
+import trclib.timer.TrcTimer;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 import trclib.vision.TrcVisionTargetInfo;
 
@@ -54,7 +56,8 @@ public class Intake extends TrcSubsystem
 
         public static final String MOTOR_NAME                   = SUBSYSTEM_NAME + ".Motor";
         public static final MotorType MOTOR_TYPE                = MotorType.DcMotor;
-        public static final boolean MOTOR_INVERTED              = true;
+        public static final boolean MOTOR_INVERTED              =
+            RobotParams.Preferences.robotType == DriveBase.RobotType.SwerveRobot;
 
         public static final String FRONT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".FrontTrigger";
         public static final String BACK_TRIGGER_NAME             = SUBSYSTEM_NAME + ".BackTrigger";
@@ -62,13 +65,14 @@ public class Intake extends TrcSubsystem
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
         public static final double EJECT_POWER                  = -1.0;
         public static final double RETAIN_POWER                 = 0.0;
-        public static final double INTAKE_FINISH_DELAY          = 1.0;
+        public static final double INTAKE_FINISH_DELAY          = 0.5;
         public static final double EJECT_FINISH_DELAY           = 0.5;
     }   //class Params
 
     private final FtcDashboard dashboard;
     private final Robot robot;
     private final TrcRollerIntake intake;
+    private final TrcTimer timer;
     private Vision.ArtifactType pickupArtifactType = Vision.ArtifactType.Any;
     private String detectedArtifactName = null;
     private boolean bulldozeEnabled = false;
@@ -103,6 +107,7 @@ public class Intake extends TrcSubsystem
                 null, null, null);
         }
         intake = new FtcRollerIntake(Params.SUBSYSTEM_NAME, intakeParams).getIntake();
+        timer = new TrcTimer(Params.SUBSYSTEM_NAME + ".timer");
     }   //Intake
 
     /**
@@ -189,24 +194,32 @@ public class Intake extends TrcSubsystem
      * turns on Spindexer auto receive.
      *
      * @param enabled specifies true to enable and false to disable.
+     * @param power specifies the intake power, if null use default power (only applicable for enabling).
+     * @param event specifies an event to notify if spindexer is full (only applicable for enabling), null if not
+     *        provided.
      */
-    public void setBulldozeIntakeEnabled(boolean enabled)
+    public void setBulldozeIntakeEnabled(boolean enabled, Double power, TrcEvent event)
     {
         boolean intakeOn = intake.isActive();
 
         if (!intakeOn && enabled)
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
-            intake.intake();
-            robot.spindexerSubsystem.setAutoReceiveEnabled(true);
+            intake.intake(power);
+            robot.spindexerSubsystem.setAutoReceiveEnabled(true, event);
             bulldozeEnabled = true;
         }
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
-            intake.cancel();
-            robot.spindexerSubsystem.setAutoReceiveEnabled(false);
+            timer.set(Params.INTAKE_FINISH_DELAY, (ctxt, canceled) -> {intake.cancel();});
+            robot.spindexerSubsystem.setAutoReceiveEnabled(false, null);
             bulldozeEnabled = false;
+        }
+
+        if (robot.ledIndicator != null)
+        {
+            robot.ledIndicator.setStatusPatternState(LEDIndicator.INTAKE_ACTIVE, enabled);
         }
     }   //setBulldozeIntakeEnabled
 

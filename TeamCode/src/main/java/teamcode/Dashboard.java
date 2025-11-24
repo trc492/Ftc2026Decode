@@ -24,16 +24,16 @@ package teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import ftclib.motor.FtcServoActuator;
 import teamcode.autotasks.TaskAutoShoot;
-import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.DriveBase;
 import teamcode.subsystems.Shooter;
 import teamcode.subsystems.Spindexer;
 import teamcode.vision.Vision;
 import trclib.drivebase.TrcDriveBase;
-import trclib.drivebase.TrcSwerveDriveBase;
+import trclib.drivebase.TrcSwerveDrive;
 import trclib.driverio.TrcGameController;
 import trclib.motor.TrcMotor;
-import trclib.motor.TrcServo;
 import trclib.sensor.TrcTriggerThresholdRange;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 
@@ -53,21 +53,21 @@ public class Dashboard
     @Config
     public static class Subsystem_Drivebase
     {
-        public static TrcDriveBase.BaseParams driveBaseParams = BaseDrive.SwerveRobotInfo.baseParams;
-        public static TrcSwerveDriveBase.SwerveParams swerveDriveParams = BaseDrive.SwerveRobotInfo.swerveParams;
+        public static TrcDriveBase.BaseParams driveBaseParams = DriveBase.DecodeRobotInfo.baseParams;
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
         public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
         public static double driveSlowScale = 0.3;
-        public static double driveNormalScale = 0.6;
-        public static double turnSlowScale = 0.2;
-        public static double turnNormalScale = 0.3;
+        public static double driveNormalScale = 1.0;
+        public static double turnSlowScale = 0.3;
+        public static double turnNormalScale = 0.5;
         public static double steerPowerCompConstant = 0.0;
     }   //class Subsystem_Drivebase
 
     @Config
     public static class Subsystem_Vision
     {
-        public static int[] trackedAprilTagIds = new int[] {20, 24};
+        public static int[] trackedAprilTagIds =
+            new int[] {RobotParams.Game.blueGoalAprilTag[0], RobotParams.Game.redGoalAprilTag[0]};
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
     }   //class Subsystem_Vision
@@ -83,7 +83,7 @@ public class Dashboard
         public static TrcMotor.PidParams shootMotor2Pid = Shooter.shootMotor1PidParams;
         public static TrcMotor.PidParams panMotorPid = Shooter.panMotorPidParams;
         public static TrcMotor.PidParams tiltMotorPid = Shooter.tiltMotorPidParams;
-        public static TrcServo.TuneParams launcherPos = Shooter.launcherParams;
+        public static FtcServoActuator.TuneParams launcherPos = Shooter.launcherTuneParams;
     }   //class Subsystem_Shooter
 
     @Config

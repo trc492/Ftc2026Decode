@@ -124,9 +124,9 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
 
         if (owner != null)
         {
-            if (useVision && robot.robotDrive != null)
+            if (useVision && robot.robotBase != null)
             {
-                success = robot.robotDrive.driveBase.acquireExclusiveAccess(owner);
+                success = robot.robotBase.driveBase.acquireExclusiveAccess(owner);
             }
 
             success &= robot.intake.acquireExclusiveAccess(owner);
@@ -151,12 +151,12 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                 moduleName,
                 "Releasing subsystem ownership on behalf of " + owner +
                 "\n\tintake=" + ownershipMgr.getOwner(robot.intake) +
-                (useVision && robot.robotDrive != null?
-                    ("\n\tdriveBase=" + ownershipMgr.getOwner(robot.robotDrive.driveBase)): ""));
+                (useVision && robot.robotBase != null?
+                    ("\n\tdriveBase=" + ownershipMgr.getOwner(robot.robotBase.driveBase)): ""));
             robot.intake.releaseExclusiveAccess(owner);
-            if (useVision && robot.robotDrive != null)
+            if (useVision && robot.robotBase != null)
             {
-                robot.robotDrive.driveBase.releaseExclusiveAccess(owner);
+                robot.robotBase.driveBase.releaseExclusiveAccess(owner);
             }
         }
     }   //releaseSubsystemsOwnership
@@ -172,9 +172,9 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
     {
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         robot.intake.cancel();
-        if (useVision && robot.robotDrive != null)
+        if (useVision && robot.robotBase != null)
         {
-            robot.robotDrive.cancel();
+            robot.robotBase.cancel();
         }
     }   //stopSubsystems
 
@@ -232,8 +232,8 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                         moduleName, "***** Vision found object: objPose=" + objPose);
                     if (robot.ledIndicator != null)
                     {
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(object.detectedObj.label, true);
+                        // Artifact pattern will turn itself off.
+                        robot.ledIndicator.setStatusPatternOn(object.detectedObj.label, false);
                     }
                     sm.setState(State.PICKUP_OBJ);
                 }
@@ -249,8 +249,7 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                     if (robot.ledIndicator != null)
                     {
                         // Indicate we timed out and found nothing.
-                        robot.ledIndicator.setStatusVisionPatternsOff();
-                        robot.ledIndicator.setStatusPattern(LEDIndicator.NOT_FOUND, true);
+                        robot.ledIndicator.setStatusPatternOn(LEDIndicator.NOT_FOUND, false);
                     }
                     sm.setState(State.DONE);
                 }
@@ -260,9 +259,9 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                 robot.intake.autoIntake(owner, pickupEvent, 0.0);
                 sm.addEvent(pickupEvent);
                 tracer.traceInfo(moduleName, "***** AutoIntakeForward");
-                if (objPose != null && robot.robotDrive != null)
+                if (objPose != null && robot.robotBase != null)
                 {
-                    robot.robotDrive.purePursuitDrive.start(owner, driveEvent, 0.0, true, objPose);
+                    robot.robotBase.purePursuitDrive.start(owner, driveEvent, 0.0, true, objPose);
                     sm.addEvent(driveEvent);
                     tracer.traceInfo(moduleName, "***** Drive to object at " + objPose);
                 }

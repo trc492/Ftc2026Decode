@@ -27,9 +27,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.Arrays;
 import java.util.Locale;
 
-import ftclib.drivebase.FtcSwerveDrive;
+import ftclib.drivebase.FtcSwerveBase;
 import ftclib.driverio.FtcGamepad;
 import ftclib.robotcore.FtcOpMode;
+import teamcode.indicators.LEDIndicator;
 import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
@@ -196,14 +197,16 @@ public class FtcTeleOp extends FtcOpMode
                 //
                 // DriveBase subsystem.
                 //
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
                     if (relocalizing)
                     {
                         if (robotFieldPose == null)
                         {
-                            robotFieldPose = robot.vision.getRobotFieldPose();
+                            // Use MT2 for relocalization.
+                            robotFieldPose =
+                                robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
                         }
                     }
                     else
@@ -211,21 +214,21 @@ public class FtcTeleOp extends FtcOpMode
                         double[] inputs = driverGamepad.getDriveInputs(
                             Dashboard.Subsystem_Drivebase.driveMode, true, drivePowerScale, turnPowerScale);
 
-                        if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+                        if (robot.robotBase.driveBase.supportsHolonomicDrive())
                         {
-                            robot.robotDrive.driveBase.holonomicDrive(
-                                null, inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveGyroAngle());
+                            robot.robotBase.driveBase.holonomicDrive(
+                                null, inputs[0], inputs[1], inputs[2], robot.robotBase.driveBase.getDriveGyroAngle());
                         }
                         else
                         {
-                            robot.robotDrive.driveBase.arcadeDrive(inputs[1], inputs[2]);
+                            robot.robotBase.driveBase.arcadeDrive(inputs[1], inputs[2]);
                         }
 
                         if (robot.dashboard.isDashboardUpdateEnabled() && RobotParams.Preferences.showDriveBaseStatus)
                         {
                             robot.dashboard.displayPrintf(
                                 14, "RobotDrive: Power=(%.2f,y=%.2f,rot=%.2f),Mode:%s",
-                                inputs[0], inputs[1], inputs[2], robot.robotDrive.driveBase.getDriveOrientation());
+                                inputs[0], inputs[1], inputs[2], robot.robotBase.driveBase.getDriveOrientation());
                         }
                     }
                     // Check for EndGame warning.
@@ -253,7 +256,7 @@ public class FtcTeleOp extends FtcOpMode
                         double panPower = operatorGamepad.getLeftStickX(true);
                         double tiltPower = operatorGamepad.getRightStickY(true);
 
-                        if (panPower != panPrevPower && !robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        if (panPower != panPrevPower && !robot.shooterSubsystem.isGoalTrackingEnabled())
                         {
                             if (operatorAltFunc)
                             {
@@ -293,10 +296,10 @@ public class FtcTeleOp extends FtcOpMode
      */
     private void setDriveOrientation(TrcDriveBase.DriveOrientation orientation)
     {
-        if (robot.robotDrive != null)
+        if (robot.robotBase != null)
         {
             robot.globalTracer.traceInfo(moduleName, "driveOrientation=" + orientation);
-            robot.robotDrive.driveBase.setDriveOrientation(
+            robot.robotBase.driveBase.setDriveOrientation(
                 orientation, orientation == TrcDriveBase.DriveOrientation.FIELD);
             if (robot.ledIndicator != null)
             {
@@ -329,12 +332,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (robot.intake.isActive())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                            robot.intakeSubsystem.setBulldozeIntakeEnabled(true, null, null);
                         }
                     }
                 }
@@ -357,14 +360,16 @@ public class FtcTeleOp extends FtcOpMode
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
-                                        moduleName + ".autoShoot", null,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.alliance,
-                                        false,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
-                                                Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
-                                        Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
+                                    moduleName + ".autoShoot", null,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    false,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
+                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }
                         else
@@ -391,25 +396,26 @@ public class FtcTeleOp extends FtcOpMode
                 break;
 
             case X:
-                if (robot.robotDrive != null && pressed)
+                if (robot.robotBase != null && pressed)
                 {
                     if (driverAltFunc)
                     {
-                        if (robot.robotDrive.driveBase.isGyroAssistEnabled())
+                        if (robot.robotBase.driveBase.isGyroAssistEnabled())
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Disabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(null);
+                            robot.robotBase.driveBase.setGyroAssistEnabled(null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling GyroAssist.");
-                            robot.robotDrive.driveBase.setGyroAssistEnabled(robot.robotDrive.purePursuitDrive.getTurnPidCtrl());
+                            robot.robotBase.driveBase.setGyroAssistEnabled(
+                                robot.robotBase.purePursuitDrive.getTurnPidCtrl());
                         }
                     }
-                    else if (robot.robotDrive.driveBase.supportsHolonomicDrive())
+                    else if (robot.robotBase.driveBase.supportsHolonomicDrive())
                     {
                         // Toggle between field or robot oriented driving, only applicable for holonomic drive base.
-                        if (robot.robotDrive.driveBase.getDriveOrientation() != TrcDriveBase.DriveOrientation.FIELD)
+                        if (robot.robotBase.driveBase.getDriveOrientation() != TrcDriveBase.DriveOrientation.FIELD)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Enabling FIELD mode.");
                             setDriveOrientation(TrcDriveBase.DriveOrientation.FIELD);
@@ -428,18 +434,47 @@ public class FtcTeleOp extends FtcOpMode
                 {
                     if (pressed)
                     {
-                        if (robot.shooterSubsystem.isAprilTagTrackingEnabled())
+                        FtcAuto.Alliance alliance = FtcAuto.autoChoices.alliance != null?
+                            FtcAuto.autoChoices.alliance: Dashboard.Subsystem_Shooter.autoShootParams.alliance;
+
+                        if (robot.shooterSubsystem.isGoalTrackingEnabled())
                         {
-                            robot.globalTracer.traceInfo(moduleName, ">>>>> AprilTagTracking is disabled.");
-                            robot.shooterSubsystem.disableAprilTagTracking(null);
+                            robot.globalTracer.traceInfo(moduleName, ">>>>> GoalTracking is disabled.");
+                            robot.shooterSubsystem.disableGoalTracking(null);
+                        }
+                        else if (!driverAltFunc)
+                        {
+                            int[] trackedIds =
+                                alliance == FtcAuto.Alliance.BLUE_ALLIANCE? RobotParams.Game.blueGoalAprilTag:
+                                alliance == FtcAuto.Alliance.RED_ALLIANCE? RobotParams.Game.redGoalAprilTag:
+                                   Dashboard.Subsystem_Vision.trackedAprilTagIds;
+                            robot.shooterSubsystem.enableGoalTracking(null, trackedIds);
+                            robot.globalTracer.traceInfo(
+                                moduleName, ">>>>> GoalTracking by AprilTag is enabled (TrackedIds=%s).",
+                                Arrays.toString(trackedIds));
+                            if (robot.ledIndicator != null)
+                            {
+                                robot.ledIndicator.setStatusPatternOn(
+                                    alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                        LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG,
+                                    true);
+                            }
                         }
                         else
                         {
+                            robot.shooterSubsystem.enableGoalTracking(
+                                null,
+                                alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                    RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE);
                             robot.globalTracer.traceInfo(
-                                moduleName, ">>>>> AprilTagTracking is enabled (TrackedIds=%s).",
-                                Arrays.toString(Dashboard.Subsystem_Vision.trackedAprilTagIds));
-                            robot.shooterSubsystem.enableAprilTagTracking(
-                                null, Dashboard.Subsystem_Vision.trackedAprilTagIds);
+                                moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).", alliance);
+                            if (robot.ledIndicator != null)
+                            {
+                                robot.ledIndicator.setStatusPatternOn(
+                                    alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                                        LEDIndicator.BLUE_GOAL: LEDIndicator.RED_GOAL,
+                                    true);
+                            }
                         }
                     }
                 }
@@ -499,16 +534,16 @@ public class FtcTeleOp extends FtcOpMode
                         // Cancel all operations and zero calibrate all subsystems (arm, elevator and turret).
                         robot.globalTracer.traceInfo(moduleName, ">>>>> ZeroCalibrating.");
                         robot.cancelAll();
-                        robot.zeroCalibrate(moduleName, null);
+                        robot.zeroCalibrate(null, null);
                     }
                     else
                     {
                         // If drive base is SwerveDrive, set all wheels pointing forward.
-                        if (robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                        if (robot.robotBase != null && robot.robotBase instanceof FtcSwerveBase)
                         {
                             // Drive base is a Swerve Drive, align all steering wheels forward.
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Set SteerAngle to zero.");
-                            ((FtcSwerveDrive) robot.robotDrive).setSteerAngle(0.0, false, false);
+                            ((FtcSwerveBase) robot.robotBase).setSteerAngle(0.0, false, false);
                         }
                     }
                 }
@@ -516,7 +551,7 @@ public class FtcTeleOp extends FtcOpMode
 
             case Start:
                 // Do AprilTag Vision re-localization.
-                if (robot.vision != null && robot.robotDrive != null)
+                if (robot.vision != null && robot.robotBase != null && robot.shooterSubsystem != null)
                 {
                     boolean hasAprilTagVision = robot.vision.isWebcamAprilTagVisionEnabled();
                     // If Webcam AprilTag vision is not enabled, check if we have Limelight since Limelight has
@@ -545,7 +580,7 @@ public class FtcTeleOp extends FtcOpMode
                                 // Vision found an AprilTag, set the new robot field location.
                                 robot.globalTracer.traceInfo(
                                     moduleName, ">>>>> Finish re-localizing: pose=" + robotFieldPose);
-                                robot.robotDrive.driveBase.setFieldPosition(robotFieldPose, false);
+                                robot.robotBase.driveBase.setFieldPosition(robotFieldPose, false);
                                 robotFieldPose = null;
                                 if (savedLimelightPipeline != null)
                                 {
@@ -587,19 +622,19 @@ public class FtcTeleOp extends FtcOpMode
                             if (robot.intake.isActive())
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Cancel Bulldoze Intake");
-                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
                             }
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Bulldoze Intake");
-                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true);
+                                robot.intakeSubsystem.setBulldozeIntakeEnabled(true, null, null);
                             }
                         }
                     }
                     else
                     {
                         // Cancel Bulldoze Intake in case it's enabled.
-                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false);
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
                         if (pressed)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Start Intake Eject");
@@ -635,7 +670,9 @@ public class FtcTeleOp extends FtcOpMode
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
                                     Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
@@ -657,15 +694,18 @@ public class FtcTeleOp extends FtcOpMode
                             else
                             {
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Manual Shoot");
+                                // Not using vision, fixed point shooting at FAR_ZONE. Get ShootParams at the fixed
+                                // point, set flywheel speed and tilt accordingly and just shoot.
+                                // Drive is responsible for driving to the FAR_ZONE_SHOOT_POINT and control the
+                                // turret to aim at the goal, the code will do the rest.
                                 TrcShootParamTable.Params manualShootParams =
                                     Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                                 // Fire and forget assuming Spindexer moves faster than aimShooter.
                                 robot.spindexerSubsystem.moveToExitSlotWithArtifact(
                                     null, Vision.ArtifactType.Any, null);
-                                // Fire and forget assuming Tilter moves faster than aimShooter.
-                                robot.shooter.tiltMotor.setPosition(
-                                    moduleName, 0.0, manualShootParams.tiltAngle, true,
-                                    Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
+                                // Note: since we are doing fire and forget on the tilt angle, we assume tilt will
+                                // get on target before the flywheel.
+                                robot.shooter.setTiltAngle(moduleName, manualShootParams.tiltAngle, null, 0.0);
                                 robot.shooter.aimShooter(
                                     moduleName, manualShootParams.shooter1Velocity / 60.0, 0.0,
                                     null, null, null, 0.0, robot.shooterSubsystem::shoot,
@@ -688,12 +728,12 @@ public class FtcTeleOp extends FtcOpMode
                     if (operatorAltFunc)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> setLaunchPosition=" + pressed);
-                        robot.shooterSubsystem.setLaunchPosition(moduleName, pressed);
+                        robot.shooterSubsystem.setLauncherPosition(null, pressed);
                     }
                     else if (pressed)
                     {
                         robot.globalTracer.traceInfo(moduleName, ">>>>> Shoot");
-                        robot.shooterSubsystem.shoot(moduleName, null);
+                        robot.shooterSubsystem.shoot(null, null);
                     }
                 }
                 break;
@@ -757,12 +797,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotDown(moduleName);
+                            robot.spindexerSubsystem.exitSlotDown(null, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotDown(moduleName);
+                            robot.spindexerSubsystem.entrySlotDown(null, null);
                         }
                     }
                 }
@@ -776,12 +816,12 @@ public class FtcTeleOp extends FtcOpMode
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotUp(moduleName);
+                            robot.spindexerSubsystem.exitSlotUp(null, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotUp(moduleName);
+                            robot.spindexerSubsystem.entrySlotUp(null, null);
                         }
                     }
                 }
@@ -793,7 +833,7 @@ public class FtcTeleOp extends FtcOpMode
                     // Cancel all operations and zero calibrate all subsystems (arm, elevator and turret).
                     robot.globalTracer.traceInfo(moduleName, ">>>>> ZeroCalibrating.");
                     robot.cancelAll();
-                    robot.zeroCalibrate(moduleName, null);
+                    robot.zeroCalibrate(null, null);
                 }
                 break;
 

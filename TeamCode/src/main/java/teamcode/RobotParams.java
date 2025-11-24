@@ -24,7 +24,7 @@ package teamcode;
 
 import android.annotation.SuppressLint;
 
-import teamcode.subsystems.BaseDrive;
+import teamcode.subsystems.DriveBase;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
@@ -43,8 +43,8 @@ public class RobotParams
     public static class Preferences
     {
         // Global config
-        public static final BaseDrive.RobotType robotType       = BaseDrive.RobotType.SwerveRobot;
-        public static final boolean inCompetition               = true;
+        public static final DriveBase.RobotType robotType       = DriveBase.RobotType.DecodeRobot;
+        public static final boolean inCompetition               = false;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback
@@ -53,7 +53,7 @@ public class RobotParams
         public static final boolean useRumble                   = false;
         // Vision
         public static final boolean useVision                   = true;
-        public static final boolean showVisionStatus            = true;
+        public static final boolean showVisionStatus            = false;
         public static final boolean useLimelightVision          = true;
         public static final boolean useWebCam                   = true;
         public static final boolean useWebcamAprilTagVision     = false;
@@ -77,9 +77,10 @@ public class RobotParams
         public static final boolean showIntakeStatus            = true;
         public static final boolean useSpindexer                = true;
         public static final boolean showSpindexerStatus         = true;
+        public static final boolean showSpindexerGraph          = false;
         public static final boolean useShooter                  = true;
         public static final boolean showShooterStatus           = true;
-        public static final boolean showShooterGraph            = true;
+        public static final boolean showShooterGraph            = false;
         // Auto Tasks
         public static final boolean useAutoPickup               = false;
         public static final boolean useAutoShoot                = true;
@@ -90,15 +91,12 @@ public class RobotParams
      */
     public static class Robot
     {
-//        public static final String TEAM_FOLDER_PATH             =
-//            Environment.getExternalStorageDirectory().getPath() + "/FIRST/ftc3543";
         @SuppressLint("SdCardPath")
         public static final String TEAM_FOLDER_PATH             = "/sdcard/FIRST/ftc3543";
         public static final String LOG_FOLDER_PATH              = TEAM_FOLDER_PATH + "/tracelogs";
         public static final String STEER_ZERO_CAL_FILE          = TEAM_FOLDER_PATH + "/SteerZeroCalibration.txt";
-        //TODO: Needs adjustment with Shooter and side plates mounted.
-        public static final double ROBOT_LENGTH                 = 432.0*TrcUtil.INCHES_PER_MM;
-        public static final double ROBOT_WIDTH                  = 384.0*TrcUtil.INCHES_PER_MM;
+        public static final double ROBOT_LENGTH                 = 17.5;     //inches
+        public static final double ROBOT_WIDTH                  = 15.5;     //inches
     }   //class Robot
 
     /**
@@ -109,18 +107,19 @@ public class RobotParams
         public static final boolean fieldIsMirrored             = true;
         // AprilTag locations.
         public static final TrcPose2D[] APRILTAG_POSES          = new TrcPose2D[] {
-            new TrcPose2D(-58.3727, -55.6425, 215.5),   // TagId 20: z = 29.5 in
-            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 21: z =
-            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 22: z =
-            new TrcPose2D(-72.0, 0.0, -90.0),           // TagId 23: z =
-            new TrcPose2D(-58.3727, 55.6425, -35.5)     // TagId 24: z = 29.5 in
+            new TrcPose2D(-58.3727, -55.6425, -133.62826142189439980808796560491),  // TagId 20: z = 29.5 in
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 21: z = 18.75 in
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 22: z = 18.75 in
+            new TrcPose2D(-72.0, 0.0, -90.0),                                       // TagId 23: z = 18.75 in
+            new TrcPose2D(-58.3727, 55.6425, -46.371738578105600191912034395085)    // TagId 24: z = 29.5 in
         };
-        public static final TrcPose2D BLUE_CORNER               =
-            new TrcPose2D(-Field.HALF_FIELD_INCHES, -Field.HALF_FIELD_INCHES, 0.0);
-        public static final TrcPose2D RED_CORNER                =
-            new TrcPose2D(-Field.HALF_FIELD_INCHES, Field.HALF_FIELD_INCHES, 0.0);
-        public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER.subtractRelativePose(APRILTAG_POSES[0]);
-        public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER.subtractRelativePose(APRILTAG_POSES[4]);
+        public static final TrcPose2D BLUE_CORNER_POSE          =
+            new TrcPose2D(-Field.HALF_FIELD_INCHES, -Field.HALF_FIELD_INCHES, -135.0);
+        public static final TrcPose2D RED_CORNER_POSE           =
+            new TrcPose2D(-Field.HALF_FIELD_INCHES, Field.HALF_FIELD_INCHES, -45.0);
+        public static final TrcPose2D BLUE_APRILTAG_TO_CORNER   = BLUE_CORNER_POSE.relativeTo(APRILTAG_POSES[0]);
+        public static final TrcPose2D RED_APRILTAG_TO_CORNER    = RED_CORNER_POSE.relativeTo(APRILTAG_POSES[4]);
+
         public static final int[] blueGoalAprilTag              = new int[] {20};
         public static final int[] redGoalAprilTag               = new int[] {24};
         public static final int[] anyGoalAprilTags              = new int[] {20, 24};
@@ -133,32 +132,78 @@ public class RobotParams
                 {Vision.ArtifactType.Purple, Vision.ArtifactType.Purple, Vision.ArtifactType.Green}     // AprilTag 23
             };
         // Robot start locations.
-        public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE       =
-            new TrcPose2D(-2.0*Field.FULL_TILE_INCHES, 2.0*Field.FULL_TILE_INCHES, 144.5);
-        public static final TrcPose2D STARTPOSE_RED_LOAD_CENTER     =
-            new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, -90.0);
-        public static final TrcPose2D STARTPOSE_RED_LOAD_CORNER     =
-            new TrcPose2D(Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0,
-                          Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0,
-                          -90.0);
+        public static final TrcPose2D STARTPOSE_RED_GOAL_ZONE   = new TrcPose2D(
+            -Field.HALF_FIELD_INCHES+22.0+Robot.ROBOT_WIDTH/2, Field.HALF_FIELD_INCHES-7.0-Robot.ROBOT_LENGTH/2, 0.0);
+        public static final TrcPose2D STARTPOSE_RED_FAR_CENTER  = new TrcPose2D(
+            Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, 0.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D STARTPOSE_RED_FAR_CORNER  = new TrcPose2D(
+            Field.HALF_FIELD_INCHES - Robot.ROBOT_LENGTH/2.0, Field.FULL_TILE_INCHES + Robot.ROBOT_WIDTH/2.0, 0.0);
 
-        public static final TrcPose2D RED_PRELOAD_LAUNCH_SHOOT_POSE =
-            new TrcPose2D(0.0, 0.0, 0.0); // TODO: Determine if we can shoot from starting position
-        public static final TrcPose2D RED_PRELOAD_GOAL_SHOOT_POSE   =
-            new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 135.0); //TODO: Can be changed to 1
-        // .0 if using motif vision for preload
-        public static final TrcPose2D RED_SPIKEMARK_SHOOT_POSE      =
-            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_GOAL_ZONE_SHOOT_POSE  =
+            new TrcPose2D(-Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_FAR_ZONE_SHOOT_POSE   =
+            new TrcPose2D(2.0*Field.FULL_TILE_INCHES, 0.5*Field.FULL_TILE_INCHES, 0.0);
 
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1   =
-            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2   =
-            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3   =
-            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES, 0.0);
-        public static final TrcPose2D[] RED_SPIKEMARK_POS           =
-            {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
-        public static final TrcPose2D RED_PARK_POSE                 = new TrcPose2D(0.0, 0.0, 0.0); //TODO: Not sure about this
+        public static final TrcPose2D RED_SPIKEMARK1_POSE       =
+            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK2_POSE       =
+            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_SPIKEMARK3_POSE       =
+            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
+            {RED_SPIKEMARK1_POSE, RED_SPIKEMARK2_POSE, RED_SPIKEMARK3_POSE};
+
+        public static final TrcPose2D[] RED_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(-1.5, -0.35*Field.FULL_TILE_INCHES - 4.0, 0.0),
+                new TrcPose2D(-1.5, -0.35*Field.FULL_TILE_INCHES - 4.0, 0.0)
+            };
+        public static final TrcPose2D[] BLUE_SPIKEMARK_GOAL_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 3.0, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 3.0, 0.0)
+            };
+        public static final TrcPose2D[] RED_SPIKEMARK_FAR_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(1.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0),
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0),
+                new TrcPose2D(0.0, -0.35*Field.FULL_TILE_INCHES + 6.0, 0.0)
+            };
+        public static final TrcPose2D[] BLUE_SPIKEMARK_FAR_ZONE_POSE_ADJS =
+            {
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 5.0, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 4.0, 0.0),
+                new TrcPose2D(0.0, 0.35*Field.FULL_TILE_INCHES - 4.0, 0.0)
+            };
+
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_1 =
+//            new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        // NOTE: Compensating x because of drift and y because of mecanum wheels
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_2 =
+//            new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+2.0, 0.0);
+//        public static final TrcPose2D RED_SPIKEMARK_PICKUP_POSE_3 =
+//            new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D[] RED_SPIKEMARK_POSES     =
+//            {RED_SPIKEMARK_PICKUP_POSE_1, RED_SPIKEMARK_PICKUP_POSE_2, RED_SPIKEMARK_PICKUP_POSE_3};
+//
+//        // NOTE: Blue spikemark poses are in terms of the red coordinate system
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_1 =
+//                new TrcPose2D(-0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_2 =
+//                new TrcPose2D(0.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D BLUE_SPIKEMARK_PICKUP_POSE_3 =
+//                new TrcPose2D(1.5*Field.FULL_TILE_INCHES, Field.FULL_TILE_INCHES+8.0, 0.0);
+//        public static final TrcPose2D[] BLUE_SPIKEMARK_POSES     =
+//                {BLUE_SPIKEMARK_PICKUP_POSE_1, BLUE_SPIKEMARK_PICKUP_POSE_2, BLUE_SPIKEMARK_PICKUP_POSE_3};
+
+        public static final TrcPose2D RED_OPEN_GATE_POSE        =
+            new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);
+        public static final TrcPose2D RED_ClASSIFIER_PARK_POSE  =
+            new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
+        public static final TrcPose2D RED_SQUARE_PARK_POSE      =
+            new TrcPose2D(2.25*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
         // Game elapsed times.
         public static final double AUTO_PERIOD                  = 30.0;     // 30 seconds auto period
         public static final double TELEOP_PERIOD                = 120.0;    // 2 minutes teleop period
@@ -186,6 +231,10 @@ public class RobotParams
             (((1.0+46.0/17.0)*(1.0+46.0/17.0)*(1.0+46.0/11.0))*28.0);
         public static final double GOBILDA_84_MAX_RPM           = 84.0;
         public static final double GOBILDA_84_MAX_VEL_PPS       = GOBILDA_84_ENC_PPR*GOBILDA_84_MAX_RPM/60.0;
+        //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-26-9-1-ratio-24mm-length-8mm-rex-shaft-223-rpm-3-3-5v-encoder/
+        public static final double GOBILDA_223_ENC_PPR          = (((1.0+46.0/11.0)*(1.0+46.0/11.0))*28.0);
+        public static final double GOBILDA_223_MAX_RPM          = 223.0;
+        public static final double GOBILA_223_MAX_VEL_PPS       = GOBILDA_223_ENC_PPR*GOBILDA_223_MAX_RPM/60.0;
         //https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
         public static final double GOBILDA_312_ENC_PPR          = (((1.0+46.0/17.0)*(1.0+46.0/11.0))*28.0);
         public static final double GOBILDA_312_MAX_RPM          = 312.0;

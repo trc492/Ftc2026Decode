@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
 
-import ftclib.drivebase.FtcRobotDrive;
 import ftclib.driverio.FtcDashboard;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcEocvColorBlobProcessor;
@@ -45,11 +44,13 @@ import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
+import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 import trclib.vision.TrcOpenCvDetector;
+import trclib.vision.TrcVision;
 import trclib.vision.TrcVisionTargetInfo;
 
 /**
@@ -76,7 +77,7 @@ public class Vision
             .setDistortionCoefficents(0.154576, -1.19143, 0, 0, 2.06105, 0, 0, 0);
 
     // Front camera properties
-    public static final FtcRobotDrive.VisionInfo frontCamParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo frontCamParams = new TrcVision.CameraInfo()
         .setCameraInfo("Webcam 1", 320, 240)
         .setCameraPose(0.0, 8.75, 11.0, 0.0, 0.0, 0.0)
         .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
@@ -93,10 +94,31 @@ public class Vision
                 6.25, 9.0));                    // World Bottom Right
     // Limelight camera properties
     public static final int NUM_LIMELIGHT_PIPELINES = 2;
-    public static final FtcRobotDrive.VisionInfo limelightParams = new FtcRobotDrive.VisionInfo()
+    public static final TrcVision.CameraInfo limelightParams = new TrcVision.CameraInfo()
+        .setCameraInfo("Limelight3a", 640, 480)
+        .setCameraFOV(54.505, 42.239)
+        .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
+
+    // IntoTheDeep Robot
+    public static final TrcVision.CameraInfo sampleCamParams = new TrcVision.CameraInfo()
+        .setCameraInfo("Webcam 1", 640, 480)
+        .setCameraPose(-4.25, 5.5, 10.608, -2.0, -32.346629699, 0.0)
+        .setLensProperties(logitechC920At640x480)   // TODO: Need to calibrate camera for 320x480 for SolvePnp
+        .setHomographyParams(
+            new TrcHomographyMapper.Rectangle(
+                14.0, 28.0,                     // Camera Top Left
+                612.0, 33.0,                    // Camera Top Right
+                56.0, 448.0,                    // Camera Bottom Left
+                581.0, 430.5),                  // Camera Bottom Right
+            new TrcHomographyMapper.Rectangle(
+                -19.0, 37.5,                    // World Top Left
+                24.0, 37.5,                     // World Top Right
+                -4.75, 9.0,                     // World Bottom Left
+                6.25, 9.0));                    // World Bottom Right
+    public static final TrcVision.CameraInfo intoTheDeepLimelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.5, 42.0)
-        .setCameraPose(0.0, 0.0, 16.361, 0.0, 18.0, 0.0);
+        .setCameraPose(135.47*TrcUtil.INCHES_PER_MM, 2.073, 10.758, -3.438, 0.0, 0.0);
 
     public enum ArtifactType
     {
@@ -229,9 +251,7 @@ public class Vision
         if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
         {
             tracer.traceInfo(moduleName, "Starting LimelightVision...");
-            limelightVision = new FtcLimelightVision(
-                robot.robotInfo.limelight.camName, robot.robotInfo.limelight.camPose,
-                this::getLimelightTargetGroundOffset);
+            limelightVision = new FtcLimelightVision(robot.robotInfo.limelight, this::getLimelightTargetGroundOffset);
             setLimelightPipeline(LimelightPipelineType.APRIL_TAG);
         }
 
@@ -451,12 +471,13 @@ public class Vision
      *
      * @param resultType specifies the result type to look for.
      * @param matchIds specifies the object ID(s) to match for, null if no matching required.
+     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, Object matchIds,
+        FtcLimelightVision.ResultType resultType, Object matchIds, Double robotHeading,
         Comparator<? super TrcVisionTargetInfo<FtcLimelightVision.DetectedObject>> comparator, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
@@ -465,7 +486,6 @@ public class Vision
         {
             String objectName = null;
             int pipelineIndex = -1;
-            Double robotHeading = robot.robotDrive != null? robot.robotDrive.driveBase.getHeading(): null;
 
             limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, comparator);
             if (limelightInfo != null)
@@ -474,23 +494,28 @@ public class Vision
                 switch (pipelineIndex)
                 {
                     case 0:
-                        objectName = (int) limelightInfo.detectedObj.objId == 20?
+                        objectName = (int) limelightInfo.detectedObj.objId == RobotParams.Game.blueGoalAprilTag[0]?
                             LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG;
+                        if (robot.ledIndicator != null)
+                        {
+                            // Clear all previously set states first.
+                            robot.ledIndicator.setStatusPatternOn(objectName, true);
+                        }
                         break;
 
                     case 1:
                         objectName = (String)limelightInfo.detectedObj.objId;
+                        if (robot.ledIndicator != null)
+                        {
+                            // Artifact states will turn itself off and it is the highest priority,
+                            // so no need to clear previous states.
+                            robot.ledIndicator.setStatusPatternOn(objectName, false);
+                        }
                         break;
 
                     default:
                         break;
                 }
-            }
-
-            if (objectName != null && robot.ledIndicator != null)
-            {
-                robot.ledIndicator.setStatusVisionPatternsOff();
-                robot.ledIndicator.setStatusPattern(objectName, true);
             }
 
             if (lineNum != -1)
@@ -552,27 +577,29 @@ public class Vision
     /**
      * This method calls Webcam AprilTag vision to detect the AprilTag object.
      *
-     * @param id specifies the AprilTag ID to look for, null if match to any ID.
+     * @param aprilTagIds specifies an array of AprilTag ID to look for, null if match to any ID.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected AprilTag object info.
      */
-    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getWebcamDetectedAprilTag(Integer id, int lineNum)
+    public TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> getWebcamDetectedAprilTag(
+        int[] aprilTagIds, int lineNum)
     {
         TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo =
-            webcamAprilTagVision.getBestDetectedTargetInfo(id, null);
+            webcamAprilTagVision.getBestDetectedTargetInfo(aprilTagIds, null);
 
         if (aprilTagInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusVisionPatternsOff();
-            robot.ledIndicator.setStatusPattern(
-                aprilTagInfo.detectedObj.aprilTagDetection.id == 20 ?
+            // This is assuming vision is looking for either 20 or 24 and not the obelisk.
+            robot.ledIndicator.setStatusPatternOn(
+                aprilTagInfo.detectedObj.aprilTagDetection.id == RobotParams.Game.blueGoalAprilTag[0] ?
                     LEDIndicator.BLUE_APRILTAG : LEDIndicator.RED_APRILTAG, true);
         }
 
         if (lineNum != -1)
         {
             robot.dashboard.displayPrintf(
-                lineNum, "AprilTag[%s]: %s", id, aprilTagInfo != null ? aprilTagInfo : "Not found.");
+                lineNum, "AprilTag[%s]: %s",
+                Arrays.toString(aprilTagIds), aprilTagInfo != null ? aprilTagInfo : "Not found.");
         }
 
         return aprilTagInfo;
@@ -590,19 +617,58 @@ public class Vision
 
         if (aprilTagInfo != null)
         {
-            TrcPose2D aprilTagPose =
+            TrcPose2D aprilTagFieldPose =
                 RobotParams.Game.APRILTAG_POSES[aprilTagInfo.detectedObj.aprilTagDetection.id - 1];
-            TrcPose2D cameraPose = aprilTagPose.subtractRelativePose(aprilTagInfo.objPose);
-            robotPose = cameraPose.subtractRelativePose(
-                new TrcPose2D(robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
-                              robot.robotInfo.webCam1.camPose.yaw));
+            TrcPose2D camPoseOnBot = new TrcPose2D(
+                robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
+                robot.robotInfo.webCam1.camPose.yaw);
+            robotPose = aprilTagFieldPose.addRelativePose(aprilTagInfo.objPose.invert())
+                                         .addRelativePose(camPoseOnBot.invert());
             tracer.traceInfo(
                 moduleName,
                 "AprilTagId=" + aprilTagInfo.detectedObj.aprilTagDetection.id +
-                ", aprilTagFieldPose=" + aprilTagPose +
+                ", aprilTagFieldPose=" + aprilTagFieldPose +
                 ", aprilTagPoseFromCamera=" + aprilTagInfo.objPose +
-                ", cameraPose=" + cameraPose +
+                ", cameraPose=" + camPoseOnBot +
                 ", robotPose=%s" + robotPose);
+        }
+
+        return robotPose;
+    }   //getRobotFieldPose
+
+    /**
+     * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
+     * position from the camera to calculate the robot's absolute field location.
+     *
+     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
+     * @return robot field location.
+     */
+    public TrcPose2D getRobotFieldPose(Double robotHeading)
+    {
+        TrcPose2D robotPose = null;
+
+        if (isLimelightVisionEnabled())
+        {
+            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
+                getLimelightDetectedObject(
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, robotHeading, null, -1);
+
+            if (aprilTagInfo != null)
+            {
+                robotPose = aprilTagInfo.detectedObj.robotPose;
+                tracer.traceInfo(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
+            }
+        }
+        else if (isWebcamAprilTagVisionEnabled())
+        {
+            // Find any AprilTag in view.
+            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getWebcamDetectedAprilTag(
+                RobotParams.Game.anyGoalAprilTags, -1);
+
+            if (aprilTagInfo != null)
+            {
+                robotPose = getRobotFieldPose(aprilTagInfo);
+            }
         }
 
         return robotPose;
@@ -616,31 +682,7 @@ public class Vision
      */
     public TrcPose2D getRobotFieldPose()
     {
-        TrcPose2D robotPose = null;
-
-        if (isLimelightVisionEnabled())
-        {
-            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
-                getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, null, -1);
-
-            if (aprilTagInfo != null)
-            {
-                robotPose = aprilTagInfo.detectedObj.robotPose;
-            }
-        }
-        else if (isWebcamAprilTagVisionEnabled())
-        {
-            // Find any AprilTag in view.
-            TrcVisionTargetInfo<FtcVisionAprilTag.DetectedObject> aprilTagInfo = getWebcamDetectedAprilTag(null, -1);
-
-            if (aprilTagInfo != null)
-            {
-                robotPose = getRobotFieldPose(aprilTagInfo);
-            }
-        }
-
-        return robotPose;
+        return getRobotFieldPose((Double) null);
     }   //getRobotFieldPose
 
     /**
@@ -779,8 +821,8 @@ public class Vision
 
         if (artifactInfo != null && robot.ledIndicator != null)
         {
-            robot.ledIndicator.setStatusVisionPatternsOff();
-            robot.ledIndicator.setStatusPattern(artifactInfo.detectedObj.label, true);
+            // Artifact state will turn itself off and is the highest priority.
+            robot.ledIndicator.setStatusPatternOn(artifactInfo.detectedObj.label, false);
         }
 
         if (lineNum != -1)

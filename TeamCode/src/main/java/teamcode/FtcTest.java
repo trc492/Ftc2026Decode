@@ -28,8 +28,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.util.Arrays;
 
-import ftclib.drivebase.FtcRobotDrive;
-import ftclib.drivebase.FtcSwerveDrive;
+import ftclib.drivebase.FtcRobotBase;
+import ftclib.drivebase.FtcSwerveBase;
 import ftclib.driverio.FtcChoiceMenu;
 import ftclib.driverio.FtcGamepad;
 import ftclib.driverio.FtcMenu;
@@ -155,19 +155,19 @@ public class FtcTest extends FtcTeleOp
         switch (testChoices.test)
         {
             case DRIVE_MOTORS_TEST:
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     testCommand = new CmdDriveMotorsTest(
-                        robot.robotDrive.driveBase, robot.robotDrive.driveMotors, 5.0, 0.5);
+                        robot.robotBase.driveBase, robot.robotBase.driveMotors, 5.0, 0.5);
                 }
                 break;
 
             case X_TIMED_DRIVE:
-                if (robot.robotDrive != null && robot.robotDrive.driveBase.supportsHolonomicDrive())
+                if (robot.robotBase != null && robot.robotBase.driveBase.supportsHolonomicDrive())
                 {
-                    robot.robotDrive.driveBase.resetOdometry();
+                    robot.robotBase.driveBase.resetOdometry();
                     testCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, 0.0,
+                        robot.robotBase.driveBase, 0.0,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.driveTime,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.xDrivePowerLimit, 0.0, 0.0);
                     robot.dashboard.disableDashboardUpdate();
@@ -175,11 +175,11 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case Y_TIMED_DRIVE:
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
-                    robot.robotDrive.driveBase.resetOdometry();
+                    robot.robotBase.driveBase.resetOdometry();
                     testCommand = new CmdTimedDrive(
-                        robot.robotDrive.driveBase, 0.0,
+                        robot.robotBase.driveBase, 0.0,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.driveTime,
                         0.0, Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit, 0.0);
                     robot.dashboard.disableDashboardUpdate();
@@ -187,31 +187,31 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case PP_DRIVE:
-                if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
+                if (robot.robotBase != null && robot.robotBase.purePursuitDrive != null)
                 {
-                    robot.robotDrive.driveBase.resetOdometry();
-                    robot.robotDrive.purePursuitDrive.setMoveOutputLimit(
+                    robot.robotBase.driveBase.resetOdometry();
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(
                         Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit);
-                    robot.robotDrive.purePursuitDrive.setRotOutputLimit(
+                    robot.robotBase.purePursuitDrive.setRotOutputLimit(
                         Dashboard.Subsystem_Drivebase.driveBaseParams.turnPowerLimit);
-                    robot.robotDrive.purePursuitDrive.start(
+                    robot.robotBase.purePursuitDrive.start(
                         true, Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
                         Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
                         new TrcPose2D(Dashboard.Subsystem_Drivebase.driveBaseParams.xDriveTarget*12.0,
                                       Dashboard.Subsystem_Drivebase.driveBaseParams.yDriveTarget*12.0,
                                       Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
-                    robot.robotDrive.purePursuitDrive.setTraceLevel(
+                    robot.robotBase.purePursuitDrive.setTraceLevel(
                         TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
                     robot.dashboard.disableDashboardUpdate();
                 }
                 break;
 
             case PID_DRIVE:
-                if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
+                if (robot.robotBase != null && robot.robotBase.pidDrive != null)
                 {
-                    testCommand = new CmdPidDrive(robot.robotDrive.driveBase, robot.robotDrive.pidDrive);
-                    robot.robotDrive.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
+                    testCommand = new CmdPidDrive(robot.robotBase.driveBase, robot.robotBase.pidDrive);
+                    robot.robotBase.pidDrive.setTraceLevel(TrcDbgTrace.MsgLevel.INFO, logEvents, debugPid, false);
                     robot.dashboard.disableDashboardUpdate();
                 }
                 break;
@@ -290,10 +290,10 @@ public class FtcTest extends FtcTeleOp
         switch (testChoices.test)
         {
             case DRIVE_SPEED_TEST:
-                if (robot.robotDrive != null)
+                if (robot.robotBase != null)
                 {
                     double currTime = TrcTimer.getCurrentTime();
-                    TrcPose2D velPose = robot.robotDrive.driveBase.getFieldVelocity();
+                    TrcPose2D velPose = robot.robotBase.driveBase.getFieldVelocity();
                     double velocity = TrcUtil.magnitude(velPose.x, velPose.y);
                     double acceleration = 0.0;
                     double deceleration = 0.0;
@@ -345,16 +345,16 @@ public class FtcTest extends FtcTeleOp
                 break;
 
             case TUNE_PP_DRIVE:
-                if (robot.robotDrive != null && robot.robotDrive.purePursuitDrive != null)
+                if (robot.robotBase != null && robot.robotBase.purePursuitDrive != null)
                 {
                     robot.dashboard.putNumber(
-                        "robotVelocity", robot.robotDrive.purePursuitDrive.getPathRobotVelocity());
+                        "robotVelocity", robot.robotBase.purePursuitDrive.getPathRobotVelocity());
                     robot.dashboard.putNumber(
-                        "targetVelocity", robot.robotDrive.purePursuitDrive.getPathTargetVelocity());
+                        "targetVelocity", robot.robotBase.purePursuitDrive.getPathTargetVelocity());
                     robot.dashboard.putNumber(
-                        "robotPosition", robot.robotDrive.purePursuitDrive.getPathRelativePosition());
+                        "robotPosition", robot.robotBase.purePursuitDrive.getPathRelativePosition());
                     robot.dashboard.putNumber(
-                        "targetPosition", robot.robotDrive.purePursuitDrive.getPathPositionTarget());
+                        "targetPosition", robot.robotBase.purePursuitDrive.getPathPositionTarget());
                 }
                 break;
 
@@ -373,18 +373,18 @@ public class FtcTest extends FtcTeleOp
             {
                 case X_TIMED_DRIVE:
                 case Y_TIMED_DRIVE:
-                    if (robot.robotDrive != null)
+                    if (robot.robotBase != null)
                     {
                         robot.dashboard.displayPrintf(
                             lineNum++, "Timed Drive: %.0f sec", Dashboard.Subsystem_Drivebase.driveBaseParams.driveTime);
                         robot.dashboard.displayPrintf(
-                            lineNum++, "RobotPose=%s", robot.robotDrive.driveBase.getFieldPosition());
+                            lineNum++, "RobotPose=%s", robot.robotBase.driveBase.getFieldPosition());
                         robot.dashboard.displayPrintf(
                             lineNum++, "rawEnc=lf:%.0f,rf:%.0f,lb:%.0f,rb:%.0f",
-                            robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_LEFT].getPosition(),
-                            robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_FRONT_RIGHT].getPosition(),
-                            robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_LEFT].getPosition(),
-                            robot.robotDrive.driveMotors[FtcRobotDrive.INDEX_BACK_RIGHT].getPosition());
+                            robot.robotBase.driveMotors[FtcRobotBase.INDEX_FRONT_LEFT].getPosition(),
+                            robot.robotBase.driveMotors[FtcRobotBase.INDEX_FRONT_RIGHT].getPosition(),
+                            robot.robotBase.driveMotors[FtcRobotBase.INDEX_BACK_LEFT].getPosition(),
+                            robot.robotBase.driveMotors[FtcRobotBase.INDEX_BACK_RIGHT].getPosition());
                     }
                     break;
 
@@ -392,27 +392,27 @@ public class FtcTest extends FtcTeleOp
                 case PID_DRIVE:
                 case TUNE_PP_DRIVE:
                 case TUNE_PID_DRIVE:
-                    if (robot.robotDrive != null)
+                    if (robot.robotBase != null)
                     {
                         TrcPidController xPidCtrl = null, yPidCtrl = null, turnPidCtrl = null;
 
                         if ((testChoices.test == Test.PID_DRIVE || testChoices.test == Test.TUNE_PID_DRIVE) &&
-                            robot.robotDrive.pidDrive != null)
+                            robot.robotBase.pidDrive != null)
                         {
-                            xPidCtrl = robot.robotDrive.pidDrive.getXPidCtrl();
-                            yPidCtrl = robot.robotDrive.pidDrive.getYPidCtrl();
-                            turnPidCtrl = robot.robotDrive.pidDrive.getTurnPidCtrl();
+                            xPidCtrl = robot.robotBase.pidDrive.getXPidCtrl();
+                            yPidCtrl = robot.robotBase.pidDrive.getYPidCtrl();
+                            turnPidCtrl = robot.robotBase.pidDrive.getTurnPidCtrl();
                         }
                         else if ((testChoices.test == Test.PP_DRIVE || testChoices.test == Test.TUNE_PP_DRIVE) &&
-                                 robot.robotDrive.purePursuitDrive != null)
+                                 robot.robotBase.purePursuitDrive != null)
                         {
-                            xPidCtrl = robot.robotDrive.purePursuitDrive.getXPosPidCtrl();
-                            yPidCtrl = robot.robotDrive.purePursuitDrive.getYPosPidCtrl();
-                            turnPidCtrl = robot.robotDrive.purePursuitDrive.getTurnPidCtrl();
+                            xPidCtrl = robot.robotBase.purePursuitDrive.getXPosPidCtrl();
+                            yPidCtrl = robot.robotBase.purePursuitDrive.getYPosPidCtrl();
+                            turnPidCtrl = robot.robotBase.purePursuitDrive.getTurnPidCtrl();
                         }
 
                         robot.dashboard.displayPrintf(
-                            lineNum++, "RobotPose=%s", robot.robotDrive.driveBase.getFieldPosition());
+                            lineNum++, "RobotPose=%s", robot.robotBase.driveBase.getFieldPosition());
 
                         if (xPidCtrl != null)
                         {
@@ -443,9 +443,9 @@ public class FtcTest extends FtcTeleOp
                     break;
 
                 case CALIBRATE_SWERVE_STEERING:
-                    if (robot.robotDrive != null && (robot.robotDrive instanceof FtcSwerveDrive) && steerCalibrating)
+                    if (robot.robotBase != null && (robot.robotBase instanceof FtcSwerveBase) && steerCalibrating)
                     {
-                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
+                        FtcSwerveBase swerveDrive = (FtcSwerveBase) robot.robotBase;
                         swerveDrive.runSteeringCalibration();
                         swerveDrive.displaySteerZeroCalibration(lineNum);
                     }
@@ -480,9 +480,9 @@ public class FtcTest extends FtcTeleOp
      */
     private void tuneDriveMotors(double velocity, double steerAngle)
     {
-        if (robot.robotDrive instanceof FtcSwerveDrive)
+        if (robot.robotBase instanceof FtcSwerveBase)
         {
-            FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
+            FtcSwerveBase swerveDrive = (FtcSwerveBase) robot.robotBase;
             swerveDrive.setSteerAngle(steerAngle, false, true);
         }
         else if (steerAngle == 180.0 || steerAngle == 270.0)
@@ -494,7 +494,7 @@ public class FtcTest extends FtcTeleOp
             Dashboard.Subsystem_Drivebase.driveBaseParams.driveMotorVelPidCoeffs != null)
         {
             // DriveMotor velocity control is enabled, let's tune DriveMotor velocity PID.
-            for (TrcMotor motor: robot.robotDrive.driveMotors)
+            for (TrcMotor motor: robot.robotBase.driveMotors)
             {
                 motor.setVelocity(velocity);
             }
@@ -533,7 +533,7 @@ public class FtcTest extends FtcTeleOp
             case DpadUp:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotBase != null)
                     {
                         // We are controlling drive base motors, make sure TeleOp doesn't interfere.
                         if (pressed)
@@ -543,7 +543,7 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
-                            robot.robotDrive.cancel();
+                            robot.robotBase.cancel();
                             teleOpControlEnabled = true;
                         }
                     }
@@ -580,7 +580,7 @@ public class FtcTest extends FtcTeleOp
             case DpadDown:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotBase != null)
                     {
                         // We are controlling drive base motors, make sure TeleOp doesn't interfere.
                         if (pressed)
@@ -590,7 +590,7 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
-                            robot.robotDrive.cancel();
+                            robot.robotBase.cancel();
                             teleOpControlEnabled = true;
                         }
                     }
@@ -601,7 +601,7 @@ public class FtcTest extends FtcTeleOp
             case DpadLeft:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotBase != null)
                     {
                         // We are controlling drive base motors, make sure TeleOp doesn't interfere.
                         if (pressed)
@@ -611,7 +611,7 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
-                            robot.robotDrive.cancel();
+                            robot.robotBase.cancel();
                             teleOpControlEnabled = true;
                         }
                     }
@@ -622,7 +622,7 @@ public class FtcTest extends FtcTeleOp
             case DpadRight:
                 if (testChoices.test == Test.SUBSYSTEMS_TEST)
                 {
-                    if (RobotParams.Preferences.tuneDriveBase && robot.robotDrive != null)
+                    if (RobotParams.Preferences.tuneDriveBase && robot.robotBase != null)
                     {
                         // We are controlling drive base motors, make sure TeleOp doesn't interfere.
                         if (pressed)
@@ -632,7 +632,7 @@ public class FtcTest extends FtcTeleOp
                         }
                         else
                         {
-                            robot.robotDrive.cancel();
+                            robot.robotBase.cancel();
                             teleOpControlEnabled = true;
                         }
                     }
@@ -684,16 +684,16 @@ public class FtcTest extends FtcTeleOp
             case Start:
                 if (testChoices.test == Test.TUNE_PP_DRIVE || testChoices.test == Test.TUNE_PID_DRIVE)
                 {
-                    if (robot.robotDrive != null &&
-                        (robot.robotDrive.purePursuitDrive != null || robot.robotDrive.pidDrive != null))
+                    if (robot.robotBase != null &&
+                        (robot.robotBase.purePursuitDrive != null || robot.robotBase.pidDrive != null))
                     {
                         if (pressed)
                         {
                             if (!tuneDriveAtEndPoint)
                             {
                                 // At starting point.
-                                robot.robotDrive.driveBase.resetOdometry();
-                                tuneDriveStartPoint = robot.robotDrive.driveBase.getFieldPosition();
+                                robot.robotBase.driveBase.resetOdometry();
+                                tuneDriveStartPoint = robot.robotBase.driveBase.getFieldPosition();
                                 tuneDriveEndPoint = tuneDriveStartPoint.addRelativePose(
                                     new TrcPose2D(
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.xDriveTarget*12.0,
@@ -701,38 +701,38 @@ public class FtcTest extends FtcTeleOp
                                         Dashboard.Subsystem_Drivebase.driveBaseParams.turnTarget));
                             }
 
-                            if (testChoices.test == Test.TUNE_PP_DRIVE && robot.robotDrive.purePursuitDrive != null)
+                            if (testChoices.test == Test.TUNE_PP_DRIVE && robot.robotBase.purePursuitDrive != null)
                             {
-                                robot.robotDrive.purePursuitDrive.start(
+                                robot.robotBase.purePursuitDrive.start(
                                     false,
                                     Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveVelocity,
                                     Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveAcceleration,
                                     Dashboard.Subsystem_Drivebase.driveBaseParams.profiledMaxDriveDeceleration,
                                     tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint);
                             }
-                            else if (robot.robotDrive.pidDrive != null)
+                            else if (robot.robotBase.pidDrive != null)
                             {
-                                robot.robotDrive.pidDrive.setAbsoluteTarget(
+                                robot.robotBase.pidDrive.setAbsoluteTarget(
                                     tuneDriveAtEndPoint ? tuneDriveStartPoint : tuneDriveEndPoint, true);
                                 TrcDbgTrace.globalTraceInfo(
-                                    moduleName, "PidDrivePose=" + robot.robotDrive.pidDrive.getAbsoluteTargetPose());
+                                    moduleName, "PidDrivePose=" + robot.robotBase.pidDrive.getAbsoluteTargetPose());
                             }
                             tuneDriveAtEndPoint = !tuneDriveAtEndPoint;
                         }
                         else
                         {
-                            robot.robotDrive.cancel();
+                            robot.robotBase.cancel();
                         }
                         passToTeleOp = false;
                     }
                 }
                 else if (testChoices.test == Test.PID_DRIVE)
                 {
-                    if (robot.robotDrive != null && robot.robotDrive.pidDrive != null)
+                    if (robot.robotBase != null && robot.robotBase.pidDrive != null)
                     {
                         if (pressed)
                         {
-                            robot.robotDrive.driveBase.resetOdometry();
+                            robot.robotBase.driveBase.resetOdometry();
                             ((CmdPidDrive) testCommand).start(
                                 0.0, Dashboard.Subsystem_Drivebase.driveBaseParams.yDrivePowerLimit, null,
                                 new TrcPose2D(
@@ -762,9 +762,9 @@ public class FtcTest extends FtcTeleOp
                 }
                 else if (testChoices.test == Test.CALIBRATE_SWERVE_STEERING)
                 {
-                    if (pressed && robot.robotDrive != null && robot.robotDrive instanceof FtcSwerveDrive)
+                    if (pressed && robot.robotBase != null && robot.robotBase instanceof FtcSwerveBase)
                     {
-                        FtcSwerveDrive swerveDrive = (FtcSwerveDrive) robot.robotDrive;
+                        FtcSwerveBase swerveDrive = (FtcSwerveBase) robot.robotBase;
 
                         steerCalibrating = !steerCalibrating;
                         if (steerCalibrating)
@@ -832,7 +832,9 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Shooter.autoShootParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
                                     Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
@@ -933,12 +935,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotDown(moduleName);
+                            robot.spindexerSubsystem.exitSlotDown(moduleName, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Backup Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotDown(moduleName);
+                            robot.spindexerSubsystem.entrySlotDown(moduleName, null);
                         }
                     }
                     passToTeleOp = false;
@@ -953,12 +955,12 @@ public class FtcTest extends FtcTeleOp
                         if (operatorAltFunc)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer exit position.");
-                            robot.spindexerSubsystem.exitSlotUp(moduleName);
+                            robot.spindexerSubsystem.exitSlotUp(moduleName, null);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Advance Spindexer entry position.");
-                            robot.spindexerSubsystem.entrySlotUp(moduleName);
+                            robot.spindexerSubsystem.entrySlotUp(moduleName, null);
                         }
                     }
                     passToTeleOp = false;
@@ -1026,7 +1028,8 @@ public class FtcTest extends FtcTeleOp
             {
                 robot.vision.getLimelightDetectedObject(
                     robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
-                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python, null, null, -1);
+                        FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python,
+                    null, null, null, -1);
             }
 
             if (robot.vision.webcamAprilTagVision != null)
