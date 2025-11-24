@@ -1,0 +1,657 @@
+FtcAuto.startMode_INFO [0.005121376] ***** Starting autonomous: 20251123@141539 *****
+FtcAuto.startMode_INFO [0.005901293] <Info name="MatchInfo" date="Sun Nov 23 14:13:30 PST 2025" type="QUALIFICATION" number=9 />
+FtcAuto.startMode_INFO [0.00772596] <Info name="AutoChoices" startDelay=0 alliance="BLUE_ALLIANCE" startPos="GOAL_ZONE" strategy="DECODE_AUTO" pickupOption="SPIKEMARKS" openGate="NO" spikeMarkCount=3 shootDelay1=0 shootDelay2=0 shootDelay3=0 parkOption="CLASSIFIER_PARK" xTarget=4.0 yTarget=4.0 turnTarget=90 driveTime=5 drivePower=0.5 />
+FtcAuto.startMode_INFO [0.00846446] Obelisk AprilTag 23: [Purple, Purple, Green]
+CmdDecodeAuto.cmdPeriodic_INFO [0.021280586] <Event name="StateInfo" time="0.020985128" tag="vvvvv" CmdDecodeAuto.state="START" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.064772465] <Event name="StateInfo" time="0.06445834" tag="^^^^^" CmdDecodeAuto.state="START" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.065855424] <Event name="StateInfo" time="0.065522632" tag="vvvvv" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+purePursuitDrive.start_INFO [0.070432258] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=-40.870001,y=-54.870000,angle=-179.999995),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-23.540000,y=-23.540000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [0.073139799] <Event name="StateInfo" time="0.072796508" tag="^^^^^" CmdDecodeAuto.state="GOTO_SHOOT_POS" RobotPose=(x=-40.870001,y=-54.870000,angle=-179.999995) TargetPose=(x=-23.540000,y=-23.540000,angle=180.000000) vel=(x=-0.000000,y=0.000000,angle=-0.000000) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-17.329998,y=-31.330001,angle=359.999995),vel=0.0)]) />
+Shooter.TiltMotor.pidCtrlTask_INFO [0.968072389] controlMode: Position,onTarget=true(29.950733849922347/30.0), stalled=false, expired=false, event=(Shooter.tiltOnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [1.472716148] controlMode: Position,onTarget=true(44.37185067932987/45.0), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+purePursuitDrive.driveTask_INFO [1.656805667] Done: index=1/2, stalled=false, timeout=false, posOnTarget=true, headingOnTarget=true, robotPose=(x=-22.183708,y=-24.614628,angle=-179.796592)
+purePursuitDrive.driveTask_INFO [1.717714715] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [1.72171609] <Event name="StateInfo" time="1.720787715" tag="vvvvv" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoShoot_INFO [1.723472799] autoShoot(owner=null, event=(CmdDecodeAuto=SIGNALED), taskParams=(alliance=BLUE_ALLIANCE,inAuto=true,useAprilTagVision=true,doMotif=true,useClassifierVision=false,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+CmdDecodeAuto.cmdPeriodic_INFO [1.725957507] <Event name="StateInfo" time="1.725608674" tag="^^^^^" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoTask_INFO [1.727491382] <Event name="StateInfo" time="1.727167049" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [1.728924633] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [1.730716924] <Event name="StateInfo" time="1.730371299" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [1.732708716] <Event name="StateInfo" time="1.732383216" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [1.734160633] ***** Vision found AprilTag 20: aprilTagPose=(x=3.720680,y=51.744127,angle=4.112795)
+TaskAutoShoot.runTaskState_INFO [1.736699008] adjustedTargetPose=(x=2.712964,y=71.065265,angle=2.741056)
+TaskAutoShoot.runTaskState_INFO [1.745025509] ***** ShootParams: distance=51.8777228489546, params={loc=Interpolated, distance=51.8777228489546, shooter1Vel=3918.8256312293643, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.runTaskState_INFO [1.747385384] ***** MotifSequence=[Purple, Purple, Green] (index=0)
+TaskAutoShoot.autoTask_INFO [1.749686343] <Event name="StateInfo" time="1.749364926" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [1.751431385] <Event name="StateInfo" time="1.751073218" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [1.752920635] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=null).
+Spindexer.findSlot_INFO [1.754386552] find slot for Purple (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [1.75581601] MoveToExitSlot: FromSlot=null, ToSlot=1, artifactType=Purple
+Spindexer.moveToExitSlot_INFO [1.757358927] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [1.773800179] ***** Aiming: vel=3918.825631 RPM, tilt=33.000000, pan=47.112907, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [1.782337555] <Event name="StateInfo" time="1.78201643" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [2.179210761] controlMode: Position,onTarget=true(-59.64819944598338/-59.999999999999986), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [2.179376428] intakeCompletionCallback(canceled=false)
+Shooter.PanMotor.pidCtrlTask_INFO [2.228034016] controlMode: Position,onTarget=true(46.363777865716884/47.11290711593257), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Shooter.ShootMotor1.pidCtrlTask_INFO [2.388015532] controlMode: Velocity,onTarget=true(65.0/65.31376052048941), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [2.401350825] <Event name="StateInfo" time="2.400969033" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [2.403277575] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [2.40502845] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [2.407776242] Enabling exit trigger: lowThreshold=3550.000000, highThreshold=4250.000000
+TaskAutoShoot.autoTask_INFO [2.415509785] <Event name="StateInfo" time="2.415141701" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [2.61191493] Expect to pick up artifact Purple
+Spindexer.setExitTriggerEnabled_INFO [2.612512263] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [2.614322055] Exit[1]: vel=4020.000000, artifact=Purple, numPurple=1, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.disableExitTrigger_INFO [2.621782306] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [2.878178623] <Event name="StateInfo" time="2.877844956" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [2.88013279] <Event name="StateInfo" time="2.87974604" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [2.882054873] <Event name="StateInfo" time="2.881705165" tag="vvvvv" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.runTaskState_INFO [2.88346654] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [2.885195249] <Event name="StateInfo" time="2.88478779" tag="^^^^^" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.autoTask_INFO [2.887240999] <Event name="StateInfo" time="2.886883999" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [2.889483041] ***** Vision found AprilTag 20: aprilTagPose=(x=3.383136,y=51.868850,angle=3.731821)
+TaskAutoShoot.runTaskState_INFO [2.891933333] adjustedTargetPose=(x=2.246972,y=71.182860,angle=2.360082)
+TaskAutoShoot.runTaskState_INFO [2.894799833] ***** ShootParams: distance=51.979064870484585, params={loc=Interpolated, distance=51.979064870484585, shooter1Vel=3921.6406876957594, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [2.895498375] <Event name="StateInfo" time="2.895117166" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [2.896835375] <Event name="StateInfo" time="2.896070625" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [2.897570083] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=None).
+Spindexer.findSlot_INFO [2.898231875] find slot for Purple (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [2.898763] MoveToExitSlot: FromSlot=1, ToSlot=2, artifactType=Purple
+Spindexer.moveToExitSlot_INFO [2.899553125] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [2.919036752] ***** Aiming: vel=3921.640688 RPM, tilt=33.000000, pan=48.557866, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [2.931072962] <Event name="StateInfo" time="2.930732878" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.ShootMotor1.pidCtrlTask_INFO [3.198531905] controlMode: Velocity,onTarget=true(63.0/65.36067812826266), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [3.356302296] controlMode: Position,onTarget=true(47.69172932330824/48.557866179631716), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [3.413804093] intakeCompletionCallback(canceled=false)
+Spindexer.Motor.pidCtrlTask_INFO [3.413730885] controlMode: Position,onTarget=true(60.53779184804117/60.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+TaskAutoShoot.autoTask_INFO [3.42419997] <Event name="StateInfo" time="3.423746719" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [3.424804595] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [3.425574595] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [3.426366178] Enabling exit trigger: lowThreshold=3490.000000, highThreshold=4190.000000
+TaskAutoShoot.autoTask_INFO [3.432625054] <Event name="StateInfo" time="3.432305095" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [3.66196141] Expect to pick up artifact Purple
+Spindexer.setExitTriggerEnabled_INFO [3.663282952] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [3.66456016] Exit[2]: vel=3840.000000, artifact=Purple, numPurple=0, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.disableExitTrigger_INFO [3.671926786] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [3.92769252] <Event name="StateInfo" time="3.927376062" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [3.928337103] <Event name="StateInfo" time="3.928020353" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [3.929775604] <Event name="StateInfo" time="3.929450979" tag="vvvvv" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.runTaskState_INFO [3.930500979] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [3.932092312] <Event name="StateInfo" time="3.931722479" tag="^^^^^" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.autoTask_INFO [3.933632604] <Event name="StateInfo" time="3.933285229" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [3.935149271] ***** Vision found AprilTag 20: aprilTagPose=(x=2.179541,y=51.785295,angle=2.410044)
+TaskAutoShoot.runTaskState_INFO [3.937128229] adjustedTargetPose=(x=0.598157,y=71.067958,angle=1.038306)
+TaskAutoShoot.runTaskState_INFO [3.951958898] ***** ShootParams: distance=51.831141369927984, params={loc=Interpolated, distance=51.831141369927984, shooter1Vel=3917.5317011126326, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [3.952632064] <Event name="StateInfo" time="3.952288481" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [3.953439689] <Event name="StateInfo" time="3.953134898" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [3.954170898] ***** Shooting Green artifact (MotifArtifact=Green, exitArtifact=None).
+Spindexer.findSlot_INFO [3.954897439] find slot for Green (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [3.955566523] MoveToExitSlot: FromSlot=2, ToSlot=0, artifactType=Green
+Spindexer.moveToExitSlot_INFO [3.956303565] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [3.986499818] ***** Aiming: vel=3917.531701 RPM, tilt=33.000000, pan=48.730035, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [3.997678527] <Event name="StateInfo" time="3.997352444" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.ShootMotor1.pidCtrlTask_INFO [5.249265236] controlMode: Velocity,onTarget=true(67.0/65.29219501854388), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [5.442342172] controlMode: Position,onTarget=true(48.02371718770607/48.73003488843431), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Spindexer.Motor.pidCtrlTask_INFO [6.055786067] controlMode: Position,onTarget=true(178.3296398891967/180.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [6.055907692] intakeCompletionCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [6.068444402] <Event name="StateInfo" time="6.068126777" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [6.070260027] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [6.072655194] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [6.073635486] Enabling exit trigger: lowThreshold=3190.000000, highThreshold=3890.000000
+TaskAutoShoot.autoTask_INFO [6.084405278] <Event name="StateInfo" time="6.084060237" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [6.282708882] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [6.283850173] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [6.28556284] Exit[0]: vel=3540.000000, artifact=Green, numPurple=0, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [6.286809715] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [6.54633095] <Event name="StateInfo" time="6.545977742" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [6.548842783] <Event name="StateInfo" time="6.548433867" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [6.550559242] <Event name="StateInfo" time="6.55024745" tag="vvvvv" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [6.552295242] <Event name="StateInfo" time="6.551969742" tag="^^^^^" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [6.554140909] <Event name="StateInfo" time="6.553801409" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [6.555495117] Stopping subsystems.
+Shooter.cancel_INFO [6.556618909] owner=null
+Spindexer.cancel_INFO [6.561200993] cancel(owner=null)
+TaskAutoShoot.autoTask_INFO [6.564568577] <Event name="StateInfo" time="6.564263202" tag="^^^^^" TaskAutoShoot.state="DONE" />
+CmdDecodeAuto.cmdPeriodic_INFO [6.565779285] <Event name="StateInfo" time="6.565452035" tag="vvvvv" CmdDecodeAuto.state="PICKUP_SPIKEMARK" />
+Spindexer.setAutoReceiveEnabled_INFO [6.585030454] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [6.585991787] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [6.586553537] moveToNextVacantSlot: FromSlot=null, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [6.587401996] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+purePursuitDrive.start_INFO [6.605746664] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=-22.230357,y=-24.454665,angle=-180.268790),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-11.770000,y=-27.071000,angle=180.000000),vel=0.0), Waypoint(simple=true,index=2,pose=(x=-11.770000,y=-56.071000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [6.608205998] <Event name="StateInfo" time="6.607857748" tag="^^^^^" CmdDecodeAuto.state="PICKUP_SPIKEMARK" RobotPose=(x=-22.230357,y=-24.454665,angle=-180.268790) TargetPose=(x=-11.770000,y=-56.071000,angle=180.000000) vel=(x=0.297820,y=0.001378,angle=-2.257425) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-10.447968,y=2.665378,angle=360.268790),vel=0.0), Waypoint(simple=true,index=2,pose=(x=-10.311921,y=31.665059,angle=360.268790),vel=0.0)]) />
+CmdDecodeAuto.lambda$cmdPeriodic$0$teamcode-autocommands-CmdDecodeAuto_INFO [7.186609639] WaypointHandler: index=1
+Spindexer.Motor.pidCtrlTask_INFO [7.234001977] controlMode: Position,onTarget=true(121.34903047091416/120.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [7.276615648] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [7.334145737] spinCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [7.372487658] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [7.373695158] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [8.921271939] onEntryTrigger(active=true, numObj=1, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [8.994630779] EntryArtifact: hue=228.000, type=Purple
+Spindexer.entryTriggerCallback_INFO [8.996705696] hue=228.000000 (228.000000/228.000000), count=1
+Intake.setPickupArtifactType_INFO [8.99798378] Expect to pick up artifact Any
+Spindexer.setEntryTriggerEnabled_INFO [8.999334196] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [9.002644613] Entry[1]: value=228.000000, artifact=Purple, slotStates=[None, Purple, None] (P=1, G=0, U=0), expectedNext=Any
+Spindexer.findSlot_INFO [9.004247322] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [9.00539328] moveToNextVacantSlot: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [9.007196072] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [9.723109186] controlMode: Position,onTarget=true(239.14087851206966/240.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [9.754829397] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [9.817577987] spinCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [9.81818057] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [9.904076996] onEntryTrigger(active=true, numObj=2, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [9.995002338] EntryArtifact: hue=228.000, type=Purple
+Spindexer.entryTriggerCallback_INFO [9.995931296] hue=228.000000 (228.000000/228.000000), count=1
+Intake.setPickupArtifactType_INFO [9.996550213] Expect to pick up artifact Green
+Spindexer.setEntryTriggerEnabled_INFO [9.997157172] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [9.999632547] Entry[2]: value=228.000000, artifact=Purple, slotStates=[None, Purple, Purple] (P=2, G=0, U=0), expectedNext=Green
+Spindexer.findSlot_INFO [10.00059038] find slot for None (0=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [10.00115738] moveToNextVacantSlot: FromSlot=2, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [10.002035589] MoveToEntrySlot: Slot=0, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [10.548117894] controlMode: Position,onTarget=true(360.2845271072418/360.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [10.592536981] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [10.642899361] spinCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [10.64348707] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [10.708257785] onEntryTrigger(active=true, numObj=3, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [10.79654121] EntryArtifact: hue=160.000, type=Green
+Spindexer.entryTriggerCallback_INFO [10.797347085] hue=160.000000 (160.000000/160.000000), count=1
+Intake.setPickupArtifactType_INFO [10.797875585] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [10.799119836] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [10.800502336] Entry[0]: value=160.000000, artifact=Green, slotStates=[Green, Purple, Purple] (P=2, G=1, U=0), expectedNext=None
+Spindexer.entryTriggerCallback_INFO [10.801180752] Slots are full! (event=(CmdDecodeAuto.spindexerFull=CLEARED))
+Spindexer.performAutoReceiveEnabled_INFO [10.804581003] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [10.805509086] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [10.806896253] cancel(owner=null)
+CmdDecodeAuto.cmdPeriodic_INFO [10.810128503] <Event name="StateInfo" time="10.809735337" tag="vvvvv" CmdDecodeAuto.state="FINISH_PICKUP" />
+CmdDecodeAuto.lambda$cmdPeriodic$0$teamcode-autocommands-CmdDecodeAuto_INFO [10.83104713] WaypointHandler: index=-1
+Spindexer.performAutoReceiveEnabled_INFO [10.833391839] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [10.834013381] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [10.834573381] cancel(owner=null)
+CmdDecodeAuto.cmdPeriodic_INFO [10.835555131] <Event name="StateInfo" time="10.835115881" tag="^^^^^" CmdDecodeAuto.state="FINISH_PICKUP" />
+CmdDecodeAuto.cmdPeriodic_INFO [10.836974673] <Event name="StateInfo" time="10.836682131" tag="vvvvv" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+purePursuitDrive.start_INFO [10.852050341] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=-12.369737,y=-48.854226,angle=-180.037998),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-23.540000,y=-23.540000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [10.855191883] <Event name="StateInfo" time="10.854420133" tag="^^^^^" CmdDecodeAuto.state="GOTO_SHOOT_POS" RobotPose=(x=-12.369737,y=-48.854226,angle=-180.037998) TargetPose=(x=-23.540000,y=-23.540000,angle=180.000000) vel=(x=0.366882,y=-7.081051,angle=-2.749583) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=11.153473,y=-25.321628,angle=360.037998),vel=0.0)]) />
+Shooter.TiltMotor.pidCtrlTask_INFO [11.513884366] controlMode: Position,onTarget=true(30.825057491037473/30.0), stalled=false, expired=false, event=(Shooter.tiltOnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [11.719001595] controlMode: Position,onTarget=true(45.69980213692122/45.0), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Shooter.ShootMotor1.pidCtrlTask_INFO [12.115017884] controlMode: Velocity,onTarget=true(61.0/60.0), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+purePursuitDrive.driveTask_INFO [12.454482919] Done: index=1/2, stalled=false, timeout=false, posOnTarget=true, headingOnTarget=true, robotPose=(x=-23.211920,y=-23.778823,angle=-179.784858)
+purePursuitDrive.driveTask_INFO [12.47037817] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [12.472460962] <Event name="StateInfo" time="12.47218592" tag="vvvvv" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoShoot_INFO [12.473649212] autoShoot(owner=null, event=(CmdDecodeAuto=SIGNALED), taskParams=(alliance=BLUE_ALLIANCE,inAuto=true,useAprilTagVision=true,doMotif=true,useClassifierVision=false,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+CmdDecodeAuto.cmdPeriodic_INFO [12.475156546] <Event name="StateInfo" time="12.474796921" tag="^^^^^" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoTask_INFO [12.476765962] <Event name="StateInfo" time="12.476434046" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [12.477927963] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [12.479999963] <Event name="StateInfo" time="12.479321546" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [12.482070796] <Event name="StateInfo" time="12.481715546" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [12.484102255] ***** Vision found AprilTag 20: aprilTagPose=(x=2.245143,y=51.622895,angle=2.490294)
+TaskAutoShoot.runTaskState_INFO [12.486025797] adjustedTargetPose=(x=0.690768,y=70.907754,angle=1.118556)
+TaskAutoShoot.runTaskState_INFO [12.491098464] ***** ShootParams: distance=51.6716937777941, params={loc=Interpolated, distance=51.6716937777941, shooter1Vel=3913.102600839014, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [12.492487089] <Event name="StateInfo" time="12.492172672" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [12.494343839] <Event name="StateInfo" time="12.494029131" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [12.497216756] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=null).
+Spindexer.findSlot_INFO [12.498804881] find slot for Purple (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [12.500206923] MoveToExitSlot: FromSlot=null, ToSlot=1, artifactType=Purple
+Spindexer.moveToExitSlot_INFO [12.501513007] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [12.527528509] ***** Aiming: vel=3913.102601 RPM, tilt=33.000000, pan=46.486370, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [12.538114552] <Event name="StateInfo" time="12.537805969" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [13.143771529] controlMode: Position,onTarget=true(298.0368025326474/300.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [13.143812071] intakeCompletionCallback(canceled=false)
+Shooter.ShootMotor1.pidCtrlTask_INFO [13.14629153] controlMode: Velocity,onTarget=true(66.0/65.21837668065024), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [13.425257891] controlMode: Position,onTarget=true(45.69980213692122/46.486369801681704), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [13.431586183] <Event name="StateInfo" time="13.431260975" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [13.43376085] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [13.435920059] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [13.437885601] Enabling exit trigger: lowThreshold=3430.000000, highThreshold=4130.000000
+TaskAutoShoot.autoTask_INFO [13.445688268] <Event name="StateInfo" time="13.44527031" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [13.698346293] Expect to pick up artifact Purple
+Spindexer.setExitTriggerEnabled_INFO [13.699346419] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [13.701787377] Exit[1]: vel=3720.000000, artifact=Purple, numPurple=1, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.disableExitTrigger_INFO [13.708038378] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [13.964322695] <Event name="StateInfo" time="13.963982029" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [13.965351695] <Event name="StateInfo" time="13.964842737" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [13.966684029] <Event name="StateInfo" time="13.966315362" tag="vvvvv" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.runTaskState_INFO [13.967666362] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [13.969078029] <Event name="StateInfo" time="13.968642571" tag="^^^^^" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.autoTask_INFO [13.970376821] <Event name="StateInfo" time="13.970006696" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [13.972406529] ***** Vision found AprilTag 20: aprilTagPose=(x=1.282498,y=52.103958,angle=1.410006)
+TaskAutoShoot.runTaskState_INFO [13.974106363] adjustedTargetPose=(x=-0.635187,y=71.356084,angle=0.038267)
+TaskAutoShoot.runTaskState_INFO [13.983842781] ***** ShootParams: distance=52.11973963990505, params={loc=Interpolated, distance=52.11973963990505, shooter1Vel=3925.548320613843, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [13.984531114] <Event name="StateInfo" time="13.984186364" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [13.985915947] <Event name="StateInfo" time="13.985571489" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [13.986634031] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=None).
+Spindexer.findSlot_INFO [13.987344239] find slot for Purple (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [13.987893156] MoveToExitSlot: FromSlot=1, ToSlot=2, artifactType=Purple
+Spindexer.moveToExitSlot_INFO [13.989014031] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [14.007918991] ***** Aiming: vel=3925.548321 RPM, tilt=33.000000, pan=45.738070, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [14.017501701] <Event name="StateInfo" time="14.017163076" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.PanMotor.pidCtrlTask_INFO [14.239874223] controlMode: Position,onTarget=true(45.69980213692122/45.73806957742153), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Shooter.ShootMotor1.pidCtrlTask_INFO [14.423806241] controlMode: Velocity,onTarget=true(66.0/65.42580534356405), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Spindexer.Motor.pidCtrlTask_INFO [14.630441595] controlMode: Position,onTarget=true(421.5745943806886/420.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [14.630805012] intakeCompletionCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [14.64200093] <Event name="StateInfo" time="14.64164393" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [14.643126763] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [14.643881888] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [14.648377639] Enabling exit trigger: lowThreshold=3550.000000, highThreshold=4250.000000
+TaskAutoShoot.autoTask_INFO [14.659945432] <Event name="StateInfo" time="14.65960739" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [14.891587122] Expect to pick up artifact Purple
+Spindexer.setExitTriggerEnabled_INFO [14.893099997] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [14.894433205] Exit[2]: vel=3960.000000, artifact=Purple, numPurple=0, numGreen=1, numUnknown=0, expectedNext=Purple
+Spindexer.disableExitTrigger_INFO [14.895733164] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [15.151383981] <Event name="StateInfo" time="15.150949106" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [15.15241094] <Event name="StateInfo" time="15.15196469" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [15.153831648] <Event name="StateInfo" time="15.153329106" tag="vvvvv" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.runTaskState_INFO [15.154868523] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [15.156634857] <Event name="StateInfo" time="15.156285148" tag="^^^^^" TaskAutoShoot.state="SETUP_VISION" />
+TaskAutoShoot.autoTask_INFO [15.157653357] <Event name="StateInfo" time="15.157292857" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [15.160696899] ***** Vision found AprilTag 20: aprilTagPose=(x=1.439320,y=52.202199,angle=1.579360)
+TaskAutoShoot.runTaskState_INFO [15.163143107] adjustedTargetPose=(x=-0.421452,y=71.459909,angle=0.207621)
+TaskAutoShoot.runTaskState_INFO [15.168593775] ***** ShootParams: distance=52.22203759900015, params={loc=Interpolated, distance=52.22203759900015, shooter1Vel=3928.389930904441, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [15.169304275] <Event name="StateInfo" time="15.168964483" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [15.170509733] <Event name="StateInfo" time="15.170016816" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [15.171488858] ***** Shooting Green artifact (MotifArtifact=Green, exitArtifact=None).
+Spindexer.findSlot_INFO [15.172313983] find slot for Green (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [15.173005817] MoveToExitSlot: FromSlot=2, ToSlot=0, artifactType=Green
+Spindexer.moveToExitSlot_INFO [15.173863608] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [15.19309786] ***** Aiming: vel=3928.389931 RPM, tilt=33.000000, pan=45.907423, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [15.200566569] <Event name="StateInfo" time="15.200165236" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.PanMotor.pidCtrlTask_INFO [15.422131758] controlMode: Position,onTarget=true(45.69980213692122/45.907423339271425), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Spindexer.Motor.pidCtrlTask_INFO [15.726261372] controlMode: Position,onTarget=true(538.4087851206966/540.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [15.726371622] intakeCompletionCallback(canceled=false)
+Shooter.ShootMotor1.pidCtrlTask_INFO [15.797957713] controlMode: Velocity,onTarget=true(64.0/65.47316551507402), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [15.810205089] <Event name="StateInfo" time="15.809891547" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [15.812038214] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [15.813719381] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [15.81633184] Enabling exit trigger: lowThreshold=3490.000000, highThreshold=4190.000000
+TaskAutoShoot.autoTask_INFO [15.824357924] <Event name="StateInfo" time="15.824064507" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [16.075181366] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [16.076600324] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [16.078099783] Exit[0]: vel=3780.000000, artifact=Green, numPurple=0, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [16.079351033] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [16.337157267] <Event name="StateInfo" time="16.336790642" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [16.33880635] <Event name="StateInfo" time="16.338416975" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [16.340129934] <Event name="StateInfo" time="16.339744934" tag="vvvvv" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [16.341261017] <Event name="StateInfo" time="16.340819142" tag="^^^^^" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [16.342697476] <Event name="StateInfo" time="16.342243934" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [16.343760018] Stopping subsystems.
+Shooter.cancel_INFO [16.344429393] owner=null
+Spindexer.cancel_INFO [16.348521185] cancel(owner=null)
+TaskAutoShoot.autoTask_INFO [16.356040061] <Event name="StateInfo" time="16.355720394" tag="^^^^^" TaskAutoShoot.state="DONE" />
+CmdDecodeAuto.cmdPeriodic_INFO [16.359714478] <Event name="StateInfo" time="16.359400644" tag="vvvvv" CmdDecodeAuto.state="PICKUP_SPIKEMARK" />
+Spindexer.setAutoReceiveEnabled_INFO [16.370644687] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [16.37159727] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [16.372608771] moveToNextVacantSlot: FromSlot=null, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [16.375504437] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+purePursuitDrive.start_INFO [16.394105773] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=-23.193828,y=-23.133648,angle=-179.768875),vel=0.0), Waypoint(simple=true,index=1,pose=(x=11.770000,y=-30.071000,angle=180.000000),vel=0.0), Waypoint(simple=true,index=2,pose=(x=11.770000,y=-68.071000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [16.398678815] <Event name="StateInfo" time="16.396969648" tag="^^^^^" CmdDecodeAuto.state="PICKUP_SPIKEMARK" RobotPose=(x=-23.193828,y=-23.133648,angle=-179.768875) TargetPose=(x=11.770000,y=-68.071000,angle=180.000000) vel=(x=-0.365435,y=0.001450,angle=2.769932) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-34.991528,y=6.796255,angle=359.768875),vel=0.0), Waypoint(simple=true,index=2,pose=(x=-35.144815,y=44.795946,angle=359.768875),vel=0.0)]) />
+Spindexer.Motor.pidCtrlTask_INFO [17.174614601] controlMode: Position,onTarget=true(481.90700435298777/480.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [17.18497431] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [17.221578481] spinCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [17.251211817] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [17.252428359] setEntryTriggerEnabled(enabled=true)
+CmdDecodeAuto.lambda$cmdPeriodic$0$teamcode-autocommands-CmdDecodeAuto_INFO [17.953234304] WaypointHandler: index=1
+Spindexer.onEntryTrigger_INFO [18.783599179] onEntryTrigger(active=true, numObj=4, advOnTrigger=false)
+Spindexer.onEntryTrigger_INFO [18.842873727] onEntryTrigger(active=false, numObj=4, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [18.844585519] EntryArtifact: hue=228.000, type=Purple
+Spindexer.entryTriggerCallback_INFO [18.846125811] hue=228.000000 (228.000000/228.000000), count=1
+Intake.setPickupArtifactType_INFO [18.847441228] Expect to pick up artifact Any
+Spindexer.setEntryTriggerEnabled_INFO [18.850480103] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [18.852527895] Entry[1]: value=228.000000, artifact=Purple, slotStates=[None, Purple, None] (P=1, G=0, U=0), expectedNext=Any
+Spindexer.findSlot_INFO [18.853973395] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [18.855159312] moveToNextVacantSlot: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [18.856664603] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.getEntryArtifactType_INFO [18.932265778] EntryArtifact: hue=228.000, type=Purple
+Spindexer.entryTriggerCallback_INFO [18.933473861] hue=228.000000 (228.000000/228.000000), count=1
+Intake.setPickupArtifactType_INFO [18.934092195] Expect to pick up artifact Green
+Spindexer.setEntryTriggerEnabled_INFO [18.935536528] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [18.937282153] Entry[2]: value=228.000000, artifact=Purple, slotStates=[None, Purple, Purple] (P=2, G=0, U=0), expectedNext=Green
+Spindexer.findSlot_INFO [18.939422695] find slot for None (0=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [18.940568654] moveToNextVacantSlot: FromSlot=2, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [18.942436779] MoveToEntrySlot: Slot=0, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.moveCompletionCallback_INFO [19.016390328] intakeCompletionCallback(canceled=true)
+Spindexer.spinCompletionCallback_INFO [19.055957832] spinCompletionCallback(autoReceive=true, canceled=true)
+Spindexer.Motor.pidCtrlTask_INFO [19.793172531] controlMode: Position,onTarget=true(360.7633557578156/360.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [19.832435243] intakeCompletionCallback(canceled=false)
+Spindexer.spinCompletionCallback_INFO [19.871138539] spinCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [19.872887372] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [20.476868433] onEntryTrigger(active=true, numObj=5, advOnTrigger=false)
+Spindexer.getEntryArtifactType_INFO [20.540651856] EntryArtifact: hue=228.000, type=Purple
+Spindexer.entryTriggerCallback_INFO [20.542111939] hue=228.000000 (228.000000/228.000000), count=1
+Intake.setPickupArtifactType_INFO [20.544030815] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [20.545591231] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [20.549395732] Entry[0]: value=228.000000, artifact=Purple, slotStates=[Purple, Purple, Purple] (P=3, G=0, U=0), expectedNext=None
+Spindexer.entryTriggerCallback_INFO [20.550043524] Slots are full! (event=(CmdDecodeAuto.spindexerFull=CLEARED))
+Spindexer.performAutoReceiveEnabled_INFO [20.554385857] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [20.555578482] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [20.556790358] cancel(owner=null)
+CmdDecodeAuto.cmdPeriodic_INFO [20.5627599] <Event name="StateInfo" time="20.562474942" tag="vvvvv" CmdDecodeAuto.state="FINISH_PICKUP" />
+CmdDecodeAuto.lambda$cmdPeriodic$0$teamcode-autocommands-CmdDecodeAuto_INFO [20.589382069] WaypointHandler: index=-1
+Spindexer.performAutoReceiveEnabled_INFO [20.590508778] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [20.591418486] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [20.592173028] cancel(owner=null)
+CmdDecodeAuto.cmdPeriodic_INFO [20.594004403] <Event name="StateInfo" time="20.593557861" tag="^^^^^" CmdDecodeAuto.state="FINISH_PICKUP" />
+CmdDecodeAuto.cmdPeriodic_INFO [20.598779278] <Event name="StateInfo" time="20.595971695" tag="vvvvv" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+CmdDecodeAuto.cmdPeriodic_INFO [20.61494753] intermediatePose=(x=11.864050,y=-34.154362,angle=-180.071985)
+purePursuitDrive.start_INFO [20.617492614] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=11.864050,y=-46.154362,angle=-180.071985),vel=0.0), Waypoint(simple=true,index=1,pose=(x=11.864050,y=-34.154362,angle=-180.071985),vel=0.0), Waypoint(simple=true,index=2,pose=(x=-23.540000,y=-23.540000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [20.620812947] <Event name="StateInfo" time="20.620387406" tag="^^^^^" CmdDecodeAuto.state="GOTO_SHOOT_POS" RobotPose=(x=11.864050,y=-46.154362,angle=-180.071985) TargetPose=(x=-23.540000,y=-23.540000,angle=180.000000) vel=(x=-1.037898,y=-6.266708,angle=1.129819) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-0.015077,y=-11.999991,angle=0.000000),vel=0.0), Waypoint(simple=true,index=2,pose=(x=35.375610,y=-22.658825,angle=360.071985),vel=0.0)]) />
+Shooter.PanMotor.pidCtrlTask_INFO [20.832838594] controlMode: Position,onTarget=true(45.36781427252339/45.0), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Shooter.TiltMotor.pidCtrlTask_INFO [21.185527504] controlMode: Position,onTarget=true(29.326216963411543/30.0), stalled=false, expired=false, event=(Shooter.tiltOnTarget=SIGNALED)
+Shooter.ShootMotor1.pidCtrlTask_INFO [21.910069577] controlMode: Velocity,onTarget=true(59.0/60.0), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+purePursuitDrive.xPosPid.isStalled_INFO [23.609358539] PID stalled (stallTime=0.2125716209411621/0.2, error=-2.2856696349261263, errorRate=0.01851197243155137/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.609982123] PID stalled (stallTime=2.493581533432007/0.2, error=0.18110575263098028, errorRate=-0.009411292401990292/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.664788628] PID stalled (stallTime=0.26799464225769043/0.2, error=-2.284200456587044, errorRate=0.02650924735356839/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.665443128] PID stalled (stallTime=2.549025297164917/0.2, error=0.18153391531917507, errorRate=0.007725889891140506/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.727407718] PID stalled (stallTime=0.3305211067199707/0.2, error=-2.282963417581932, errorRate=0.019804031585943863/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.729044551] PID stalled (stallTime=2.612528085708618/0.2, error=0.1813131093107252, errorRate=-0.0035346490052643085/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.76677018] PID stalled (stallTime=0.3699634075164795/0.2, error=-2.2823630541834348, errorRate=0.015204029704997846/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.767381805] PID stalled (stallTime=2.6510186195373535/0.2, error=0.18346807413484356, errorRate=0.054579793733561345/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.834048062] PID stalled (stallTime=0.43724799156188965/0.2, error=-2.281282265648951, errorRate=0.0160793535610305/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.835560062] PID stalled (stallTime=2.718853712081909/0.2, error=0.1857541130505318, errorRate=0.03400977610755487/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.899297985] PID stalled (stallTime=0.5023972988128662/0.2, error=-2.2796713100959884, errorRate=0.024699834476098317/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.90004786] PID stalled (stallTime=2.783574104309082/0.2, error=0.18564394586743305, errorRate=-0.0016891286554947431/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.954723991] PID stalled (stallTime=0.557945728302002/0.2, error=-2.277805148984868, errorRate=0.03360155494270073/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.955411741] PID stalled (stallTime=2.83896541595459/0.2, error=0.18618729170350434, errorRate=0.00978362131064834/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [23.990969994] PID stalled (stallTime=0.5941636562347412/0.2, error=-2.278568607499711, errorRate=-0.021069033803600822/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [23.992671869] PID stalled (stallTime=2.8759331703186035/0.2, error=0.18596228076707888, errorRate=-0.006209220565897757/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.031735957] PID stalled (stallTime=0.6334843635559082/0.2, error=-2.27624588964963, errorRate=0.0591169924419219/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.033308624] PID stalled (stallTime=2.916092872619629/0.2, error=0.18804451461707927, errorRate=0.052999494893297604/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.089718421] PID stalled (stallTime=0.6929385662078857/0.2, error=-2.275622827258001, errorRate=0.010475502292702544/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.090345796] PID stalled (stallTime=2.9739620685577393/0.2, error=0.18822570133936978, errorRate=0.003046218018911608/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.129861092] PID stalled (stallTime=0.73305344581604/0.2, error=-2.274211725970222, errorRate=0.035191774194094735/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.130514717] PID stalled (stallTime=3.014101266860962/0.2, error=0.18862780742636076, errorRate=0.010028095402571179/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.167907845] PID stalled (stallTime=0.7710990905761719/0.2, error=-2.276034457848418, errorRate=-0.04789557453730832/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.168593846] PID stalled (stallTime=3.052149534225464/0.2, error=0.18809480720425498, errorRate=-0.014005368705937639/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.207535433] PID stalled (stallTime=0.8107113838195801/0.2, error=-2.273902835597127, errorRate=0.053802748518598446/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.209791475] PID stalled (stallTime=3.0929927825927734/0.2, error=0.19070013042009748, errorRate=0.06575988629621583/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.257465271] PID stalled (stallTime=0.8606743812561035/0.2, error=-2.2762083473113854, errorRate=-0.046132936116064206/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.259035021] PID stalled (stallTime=3.142543315887451/0.2, error=0.1900238422212368, errorRate=-0.01353274603249951/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.292665941] PID stalled (stallTime=0.8958747386932373/0.2, error=-2.272806826377984, errorRate=0.09663182715773659/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.295193233] PID stalled (stallTime=3.1787984371185303/0.2, error=0.19043967013712404, errorRate=0.011813013085059854/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.360391823] PID stalled (stallTime=0.9635829925537109/0.2, error=-2.2728487591990856, errorRate=-6.193947564489522E-4/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.36174399] PID stalled (stallTime=3.24513578414917/0.2, error=0.19042918656186458, errorRate=-1.5485306349611916E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.400227952] PID stalled (stallTime=1.0034723281860352/0.2, error=-2.2711585151925213, errorRate=0.04236497449942624/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.400848327] PID stalled (stallTime=3.284453868865967/0.2, error=0.19232650120227746, errorRate=0.04755593102309262/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.438948456] PID stalled (stallTime=1.0420687198638916/0.2, error=-2.271212631829311, errorRate=-0.0014021771096318972/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.441744665] PID stalled (stallTime=3.325289011001587/0.2, error=0.1923072263102874, errorRate=-4.994085567388306E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.484585544] PID stalled (stallTime=1.087723731994629/0.2, error=-2.2688283264344555, errorRate=0.05223967223790507/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.485683086] PID stalled (stallTime=3.3688290119171143/0.2, error=0.19497308982644768, errorRate=0.05840855647757773/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.534675216] PID stalled (stallTime=1.1378898620605469/0.2, error=-2.2695824833848235, errorRate=-0.015030046724997732/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.536133841] PID stalled (stallTime=3.4195847511291504/0.2, error=0.1947581310002029, errorRate=-0.004284043528118916/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.572561261] PID stalled (stallTime=1.175771713256836/0.2, error=-2.2691831506943174, errorRate=0.01054073443121697/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.573946095] PID stalled (stallTime=3.4572384357452393/0.2, error=0.19488100452137047, errorRate=0.0032436803034116236/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.611794223] PID stalled (stallTime=1.215005874633789/0.2, error=-2.2679481004183373, errorRate=0.031550081386357294/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.612999098] PID stalled (stallTime=3.4963817596435547/0.2, error=0.19523046162451152, errorRate=0.008926216165968838/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.668197312] PID stalled (stallTime=1.271385669708252/0.2, error=-2.268705736132695, errorRate=-0.01342921230306147/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.669282896] PID stalled (stallTime=3.55277156829834/0.2, error=0.1969778286018382, errorRate=0.030972354741449746/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.714733609] PID stalled (stallTime=1.317803144454956/0.2, error=-2.267014266048328, errorRate=0.03646640833071834/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.716007609] PID stalled (stallTime=3.5993759632110596/0.2, error=0.19747434991338153, errorRate=0.010704559381396911/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.769300364] PID stalled (stallTime=1.372462511062622/0.2, error=-2.266784891433044, errorRate=0.0041918298391484315/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.770042364] PID stalled (stallTime=3.6535468101501465/0.2, error=0.19697976560457775, errorRate=-0.009038113918782733/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.810966993] PID stalled (stallTime=1.414182186126709/0.2, error=-2.264477157563057, errorRate=0.055412775590502526/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.812534119] PID stalled (stallTime=3.696148633956909/0.2, error=0.19963103249452274, errorRate=0.06366489180367234/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.887678251] PID stalled (stallTime=1.4909026622772217/0.2, error=-2.265865613367847, errorRate=-0.018075403297039314/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.88899396] PID stalled (stallTime=3.7725958824157715/0.2, error=0.19922203603795197, errorRate=-0.005324442397320273/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.93899759] PID stalled (stallTime=1.5421438217163086/0.2, error=-2.2626376125180094, errorRate=0.06300621664631645/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.941318965] PID stalled (stallTime=3.8239502906799316/0.2, error=0.1995871127280111, errorRate=0.00712553861849654/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [24.988770511] PID stalled (stallTime=1.591881513595581/0.2, error=-2.2639471082593445, errorRate=-0.02645969074543311/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [24.98975372] PID stalled (stallTime=3.873056411743164/0.2, error=0.19920618427473258, errorRate=-0.007697453991983007/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.026829807] PID stalled (stallTime=1.6299505233764648/0.2, error=-2.2638857047175875, errorRate=0.0016033438386696254/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.028758015] PID stalled (stallTime=3.9122252464294434/0.2, error=0.19922109979863833, errorRate=3.894728290211511E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.076111562] PID stalled (stallTime=1.679330587387085/0.2, error=-2.2644233877156026, errorRate=-0.010882465385853064/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.076716478] PID stalled (stallTime=3.960347890853882/0.2, error=0.1990723900981095, errorRate=-0.0030097602829941474/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.119894233] PID stalled (stallTime=1.7231299877166748/0.2, error=-2.2641990075403875, errorRate=0.0051225426947673226/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.121401858] PID stalled (stallTime=4.0047926902771/0.2, error=0.19914127001406712, errorRate=0.0015724853966855947/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.169159946] PID stalled (stallTime=1.7723429203033447/0.2, error=-2.2621840635934447, errorRate=0.04096203691565503/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.170055654] PID stalled (stallTime=4.053627252578735/0.2, error=0.20170925134686968, errorRate=0.05219316348671346/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.205985783] PID stalled (stallTime=1.8090996742248535/0.2, error=-2.263321285224997, errorRate=-0.030936110349360335/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.208494117] PID stalled (stallTime=4.090281963348389/0.2, error=0.20137995824315524, errorRate=-0.00895934938233414/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.243922287] PID stalled (stallTime=1.8471426963806152/0.2, error=-2.262783520928295, errorRate=0.014130020677538532/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.245724204] PID stalled (stallTime=4.129323244094849/0.2, error=0.2015461213677341, errorRate=0.004366509981038435/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.287832416] PID stalled (stallTime=1.8909361362457275/0.2, error=-2.2635582244808603, errorRate=-0.017695243695619086/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.288726375] PID stalled (stallTime=4.172210931777954/0.2, error=0.2013196498488803, errorRate=-0.005172849738139547/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.337442588] PID stalled (stallTime=1.9391522407531738/0.2, error=-2.260818102864061, errorRate=0.056817646385048944/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.338578338] PID stalled (stallTime=4.2216796875/0.2, error=0.20155108725852955, errorRate=0.004799242840044148/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.401998344] PID stalled (stallTime=2.0051257610321045/0.2, error=-2.2608062339530655, errorRate=1.7988921160776096E-4/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.402603261] PID stalled (stallTime=4.286229610443115/0.2, error=0.20353859817479503, errorRate=0.030123058138303453/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.454144558] PID stalled (stallTime=2.0570645332336426/0.2, error=-2.261331983361991, errorRate=-0.010142457610936817/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.455716058] PID stalled (stallTime=4.33927321434021/0.2, error=0.20338562382783465, errorRate=-0.0029510530967721527/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.515724439] PID stalled (stallTime=2.118943929672241/0.2, error=-2.2624697426286744, errorRate=-0.01837228144251712/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.516281523] PID stalled (stallTime=4.399924039840698/0.2, error=0.20306693564092626, errorRate=-0.00514598649130361/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.568595153] PID stalled (stallTime=2.171708822250366/0.2, error=-2.2603524167483435, errorRate=0.04010218200411501/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.569311778] PID stalled (stallTime=4.452875375747681/0.2, error=0.20367362590674531, errorRate=0.01149103351916911/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.607264032] PID stalled (stallTime=2.2103700637817383/0.2, error=-2.2608338382615116, errorRate=-0.012452764265203536/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.608106657] PID stalled (stallTime=4.491549968719482/0.2, error=0.20353722814208197, errorRate=-0.0035280016398729513/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.648373869] PID stalled (stallTime=2.251615285873413/0.2, error=-2.2576914516742903, errorRate=0.0761386000122973/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.649594494] PID stalled (stallTime=4.533247470855713/0.2, error=0.20387233647226566, errorRate=0.008120179381735584/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.706351958] PID stalled (stallTime=2.3095221519470215/0.2, error=-2.258002183899361, errorRate=-0.0053696503110311836/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.707198958] PID stalled (stallTime=4.590627431869507/0.2, error=0.20378753458462384, errorRate=-0.0014652131860105624/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.767035548] PID stalled (stallTime=2.370208501815796/0.2, error=-2.2593940591464623, errorRate=-0.022927180286762414/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.768398215] PID stalled (stallTime=4.651724100112915/0.2, error=0.20339524591611635, errorRate=-0.0064625998879640194/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.801979551] PID stalled (stallTime=2.4051127433776855/0.2, error=-2.258863600241437, errorRate=0.01519609534115062/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.803313051] PID stalled (stallTime=4.686683893203735/0.2, error=0.20354699747723615, errorRate=0.004347060011412459/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.841800514] PID stalled (stallTime=2.4450247287750244/0.2, error=-2.257639502602757, errorRate=0.030663331854022962/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.84328218] PID stalled (stallTime=4.726633071899414/0.2, error=0.20390939187492663, errorRate=0.00907826623232578/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.923294813] PID stalled (stallTime=2.526484251022339/0.2, error=-2.259574048679262, errorRate=-0.02377137718879874/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.924091064] PID stalled (stallTime=4.807535409927368/0.2, error=0.20336814768230127, errorRate=-0.006649646249645725/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [25.972609527] PID stalled (stallTime=2.575747013092041/0.2, error=-2.258001139695409, errorRate=0.031903487835901995/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [25.973277444] PID stalled (stallTime=4.856846809387207/0.2, error=0.20325403470818415, errorRate=-0.002314980357005926/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.021086865] PID stalled (stallTime=2.624220371246338/0.2, error=-2.256152688353634, errorRate=0.038120596207167644/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.02180524] PID stalled (stallTime=4.905372619628906/0.2, error=0.2037943179254178, errorRate=0.011142858838741245/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.077309121] PID stalled (stallTime=2.68045973777771/0.2, error=-2.25592837482305, errorRate=0.0039890912499834594/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.078035662] PID stalled (stallTime=4.961551904678345/0.2, error=0.20385834115386103, errorRate=0.0011385217698236065/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.138247918] PID stalled (stallTime=2.7414798736572266/0.2, error=-2.2575768294481087, errorRate=-0.0270353158928563/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.139078002] PID stalled (stallTime=5.022463321685791/0.2, error=0.20337485882128448, errorRate=-0.007924067481742557/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.191329215] PID stalled (stallTime=2.79453182220459/0.2, error=-2.256527868751739, errorRate=0.01974570966459052/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.191945799] PID stalled (stallTime=5.075563192367554/0.2, error=0.20369252520213266, errorRate=0.005984823884942806/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.229563511] PID stalled (stallTime=2.8327436447143555/0.2, error=-2.2556149019995537, errorRate=0.02389389870622547/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.230198761] PID stalled (stallTime=5.1138081550598145/0.2, error=0.20395829132877452, errorRate=0.006955292905204926/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.264112889] PID stalled (stallTime=2.8673179149627686/0.2, error=-2.2569105446590676, errorRate=-0.03747056926111108/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.265212473] PID stalled (stallTime=5.148385763168335/0.2, error=0.20358749246788932, errorRate=-0.010723152495975111/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.328289188] PID stalled (stallTime=2.931448221206665/0.2, error=-2.255938484511031, errorRate=0.015158141989319028/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.329416479] PID stalled (stallTime=5.212984800338745/0.2, error=0.20387595045626128, errorRate=0.004498215387128121/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.384661068] PID stalled (stallTime=2.9878618717193604/0.2, error=-2.256054419318506, errorRate=-0.0020551364132197296/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.386015568] PID stalled (stallTime=5.269281625747681/0.2, error=0.20384780848783635, errorRate=-4.988208204055685E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.443947574] PID stalled (stallTime=3.0471270084381104/0.2, error=-2.2550670234252834, errorRate=0.01666353580621767/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.444576991] PID stalled (stallTime=5.328172922134399/0.2, error=0.20414808482234292, errorRate=0.005067618792681238/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.492429287] PID stalled (stallTime=3.095628023147583/0.2, error=-2.2560788352136143, errorRate=-0.020880651392881127/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.492984329] PID stalled (stallTime=5.376614332199097/0.2, error=0.20385747009764188, errorRate=-0.005998152232699463/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.545567459] PID stalled (stallTime=3.1486432552337646/0.2, error=-2.2544553118798056, errorRate=0.030590972206141105/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.546170334] PID stalled (stallTime=5.429799318313599/0.2, error=0.2043339332905525, errorRate=0.008977316621869564/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.595715464] PID stalled (stallTime=3.198923110961914/0.2, error=-2.2553907364872288, errorRate=-0.018616631898520822/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.598248881] PID stalled (stallTime=5.4806437492370605/0.2, error=0.20405750550103363, errorRate=-0.005501618962001518/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.63918576] PID stalled (stallTime=3.2420952320098877/0.2, error=-2.254662778492367, errorRate=0.01688441957640664/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.640338427] PID stalled (stallTime=5.523401975631714/0.2, error=0.2042680639804857, errorRate=0.004883632160274373/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.675151181] PID stalled (stallTime=3.2783572673797607/0.2, error=-2.255699187128492, errorRate=-0.028883998485926987/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.676171722] PID stalled (stallTime=5.559754133224487/0.2, error=0.20199245941476462, errorRate=-0.06341827572007108/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.732146645] PID stalled (stallTime=3.3353271484375/0.2, error=-2.254309662157681, errorRate=0.024197505317198865/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.732757978] PID stalled (stallTime=5.61637806892395/0.2, error=0.204383071825756, errorRate=0.04163067072666431/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.792398276] PID stalled (stallTime=3.395609140396118/0.2, error=-2.2523765643946554, errorRate=0.0320797629225051/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.793050151] PID stalled (stallTime=5.676632404327393/0.2, error=0.20437331403018177, errorRate=-1.6193192693020016E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.834022905] PID stalled (stallTime=3.4372398853302/0.2, error=-2.2517402425242743, errorRate=0.015277028117748575/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.835104405] PID stalled (stallTime=5.7187042236328125/0.2, error=0.20258228706100923, errorRate=-0.04299834340300216/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.874972909] PID stalled (stallTime=3.4781558513641357/0.2, error=-2.2520066565798516, errorRate=-0.0065099974888224894/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.876041868] PID stalled (stallTime=5.759622097015381/0.2, error=0.20250890587396952, errorRate=-0.001793168375603664/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [26.929336373] PID stalled (stallTime=3.532510757446289/0.2, error=-2.2524040828907097, errorRate=-0.007314771772330721/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [26.930348165] PID stalled (stallTime=5.813585519790649/0.2, error=0.2023975763657333, errorRate=-0.002049112913929007/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.006806547] PID stalled (stallTime=3.6096932888031006/0.2, error=-2.2502892533415846, errorRate=0.027392326763511075/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.008148214] PID stalled (stallTime=5.891568660736084/0.2, error=0.20302446481080239, errorRate=0.008119696480219386/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.042487593] PID stalled (stallTime=3.645667791366577/0.2, error=-2.2505507212067997, errorRate=-0.007268144007098491/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.043176509] PID stalled (stallTime=5.9267072677612305/0.2, error=0.20295517515372197, errorRate=-0.0019260385699016215/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.074551387] PID stalled (stallTime=3.677780866622925/0.2, error=-2.251192356091508, errorRate=-0.01997084948070501/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.075149888] PID stalled (stallTime=5.958757400512695/0.2, error=0.20277275367358527, errorRate=-0.00567794251659134/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.124834434] PID stalled (stallTime=3.7280428409576416/0.2, error=-2.249181402122524, errorRate=0.040013056647102044/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.125525393] PID stalled (stallTime=6.009098529815674/0.2, error=0.20335414750336156, errorRate=0.011568093139939029/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.16953848] PID stalled (stallTime=3.7727572917938232/0.2, error=-2.2499368884002777, errorRate=-0.016898409833392736/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.170190939] PID stalled (stallTime=6.0537590980529785/0.2, error=0.20313832667680387, errorRate=-0.00482741822625387/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.218940694] PID stalled (stallTime=3.8220877647399902/0.2, error=-2.248082205526888, errorRate=0.03763111355741892/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.219572735] PID stalled (stallTime=6.103185176849365/0.2, error=0.203115973167332, errorRate=-4.530875861013932E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.260592156] PID stalled (stallTime=3.8637876510620117/0.2, error=-2.249104421082862, errorRate=-0.024529757906956457/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.26158674] PID stalled (stallTime=6.14482045173645/0.2, error=0.20084475021961268, errorRate=-0.05456701013020478/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.295310118] PID stalled (stallTime=3.8984577655792236/0.2, error=-2.2489586532003933, errorRate=0.0041951064396145024/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.29599116] PID stalled (stallTime=6.179519891738892/0.2, error=0.2008820261101505, errorRate=0.0010727836528747492/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.344722248] PID stalled (stallTime=3.947932720184326/0.2, error=-2.2471255825864205, errorRate=0.03704958320949914/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.34538404] PID stalled (stallTime=6.2289533615112305/0.2, error=0.2014008683018389, errorRate=0.010487168652769042/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.389372627] PID stalled (stallTime=3.9925320148468018/0.2, error=-2.2470492566908824, errorRate=0.0017111321828591512/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.391292669] PID stalled (stallTime=6.274026393890381/0.2, error=0.20142331822266613, errorRate=5.032806298655483E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.441501341] PID stalled (stallTime=4.044288396835327/0.2, error=-2.2472489824382933, errorRate=-0.0038634080821488806/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.442291466] PID stalled (stallTime=6.325754404067993/0.2, error=0.2013788184717349, errorRate=-8.607600297452114E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.488658012] PID stalled (stallTime=4.091612100601196/0.2, error=-2.245550076732865, errorRate=0.03603419989936876/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.490040513] PID stalled (stallTime=6.37312650680542/0.2, error=0.20129622066879804, errorRate=-0.001749468732637248/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.562502187] PID stalled (stallTime=4.165703296661377/0.2, error=-2.244252344392276, errorRate=0.017462404747668428/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.564192687] PID stalled (stallTime=6.447839260101318/0.2, error=0.2016604926590979, errorRate=0.004905643154148495/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.608191774] PID stalled (stallTime=4.211333990097046/0.2, error=-2.2458633022347136, errorRate=-0.035304997373711684/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.609567858] PID stalled (stallTime=6.49260139465332/0.2, error=0.20119844649180507, errorRate=-0.010127627787561419/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.646450862] PID stalled (stallTime=4.2496418952941895/0.2, error=-2.245629131746128, errorRate=0.006116352396936236/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.647770362] PID stalled (stallTime=6.531225204467773/0.2, error=0.20126096550078643, errorRate=0.0016329482538408819/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.685671574] PID stalled (stallTime=4.288913726806641/0.2, error=-2.2446126730390894, errorRate=0.025888613193868894/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.686191032] PID stalled (stallTime=6.569854974746704/0.2, error=0.20154936372634324, errorRate=0.007345692230894542/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.731166328] PID stalled (stallTime=4.33432936668396/0.2, error=-2.246357616428316, errorRate=-0.038386576369614796/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.732121245] PID stalled (stallTime=6.61539363861084/0.2, error=0.1990685449463676, errorRate=-0.054573485215648976/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.768737957] PID stalled (stallTime=4.371924877166748/0.2, error=-2.2461823839311457, errorRate=0.004660492846167312/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.769365916] PID stalled (stallTime=6.652953624725342/0.2, error=0.1991246116540637, errorRate=0.0014911720609538225/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.816604545] PID stalled (stallTime=4.419819116592407/0.2, error=-2.245210719367062, errorRate=0.02029225827679067/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.817373379] PID stalled (stallTime=6.700820207595825/0.2, error=0.19941516516076874, errorRate=0.0060676823804654695/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.851858299] PID stalled (stallTime=4.45506477355957/0.2, error=-2.2463007903583154, errorRate=-0.03092509076389921/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.852973632] PID stalled (stallTime=6.736464023590088/0.2, error=0.19910655160475343, errorRate=-0.0087554218182195/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.887843261] PID stalled (stallTime=4.491059303283691/0.2, error=-2.2457531761743574, errorRate=0.01524461469486836/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.888465386] PID stalled (stallTime=6.772072792053223/0.2, error=0.19926636472600023, errorRate=0.004449063557485857/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.924496431] PID stalled (stallTime=4.527685880661011/0.2, error=-2.245664304660739, errorRate=0.0024218181792288553/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.925150348] PID stalled (stallTime=6.808708667755127/0.2, error=0.19929037769558988, errorRate=6.543636791370741E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [27.984861229] PID stalled (stallTime=4.586339473724365/0.2, error=-2.2465746171636027, errorRate=-0.015526712830507234/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [27.986265604] PID stalled (stallTime=6.869291543960571/0.2, error=0.1990206088913986, errorRate=-0.004601245880585059/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.063059403] PID stalled (stallTime=4.666035890579224/0.2, error=-2.2460565299827415, errorRate=0.00653860892300238/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.064375987] PID stalled (stallTime=6.9479405879974365/0.2, error=0.19915679547115062, errorRate=0.001718745610519832/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.099545449] PID stalled (stallTime=4.702753305435181/0.2, error=-2.245790098440544, errorRate=0.007162005519190183/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.101159532] PID stalled (stallTime=6.984529972076416/0.2, error=0.19922911016604772, errorRate=0.0019438824740003384/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.139202203] PID stalled (stallTime=4.742300271987915/0.2, error=-2.245215512817037, errorRate=0.014544804151141481/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.141172703] PID stalled (stallTime=7.024569988250732/0.2, error=0.19938555289802906, errorRate=0.003956038805777446/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.189882208] PID stalled (stallTime=4.7917640209198/0.2, error=-2.2446210913367572, errorRate=0.012007707831270892/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.191213083] PID stalled (stallTime=7.074188709259033/0.2, error=0.19955546096015553, errorRate=0.0034351838452160188/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.235122337] PID stalled (stallTime=4.838236331939697/0.2, error=-2.243640996195836, errorRate=0.021083058794894024/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.235889713] PID stalled (stallTime=7.119383811950684/0.2, error=0.1972854789561893, errorRate=-0.04883187382568807/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.270493049] PID stalled (stallTime=4.873672008514404/0.2, error=-2.242237830191044, errorRate=0.03974784749073332/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.271784549] PID stalled (stallTime=7.155278921127319/0.2, error=0.19768053943052877, errorRate=0.011190527093332238/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.307046178] PID stalled (stallTime=4.910257816314697/0.2, error=-2.242841823682866, errorRate=-0.01645138496076474/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.30765547] PID stalled (stallTime=7.191266775131226/0.2, error=0.19750741287430884, errorRate=-0.004715229917269249/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.366357184] PID stalled (stallTime=4.969576120376587/0.2, error=-2.243029390640892, errorRate=-0.003162257889700362/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.367968934] PID stalled (stallTime=7.251539945602417/0.2, error=0.19745203175265047, errorRate=-9.337575376509156E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.416615439] PID stalled (stallTime=5.019788026809692/0.2, error=-2.242962799721461, errorRate=0.0013263993300789791/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.417276647] PID stalled (stallTime=7.300820350646973/0.2, error=0.1974643370366742, errorRate=2.450996409937763E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.453214943] PID stalled (stallTime=5.056378364562988/0.2, error=-2.2423489047913847, errorRate=0.016773252301468974/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.454034818] PID stalled (stallTime=7.337547302246094/0.2, error=0.19764305197580256, errorRate=0.004882779541193201/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.493457072] PID stalled (stallTime=5.096583843231201/0.2, error=-2.2434314531314676, errorRate=-0.02693737405302098/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.49412528] PID stalled (stallTime=7.377687931060791/0.2, error=0.1973287936999526, errorRate=-0.007819365143031979/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.566874537] PID stalled (stallTime=5.170083045959473/0.2, error=-2.2409409471163357, errorRate=0.033875243108951354/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.567501621] PID stalled (stallTime=7.451098203659058/0.2, error=0.1974761387450954, errorRate=0.0020042481343363833/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.616123917] PID stalled (stallTime=5.219317197799683/0.2, error=-2.240571060951389, errorRate=0.007520262053830413/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.616770251] PID stalled (stallTime=7.50036358833313/0.2, error=0.1975771890430167, errorRate=0.0020545922368954855/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.658187797] PID stalled (stallTime=5.261399745941162/0.2, error=-2.2413931983595816, errorRate=-0.019514633139970938/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.65996463] PID stalled (stallTime=7.5435826778411865/0.2, error=0.1953627418919055, errorRate=-0.05255897589758913/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.697549384] PID stalled (stallTime=5.300727844238281/0.2, error=-2.240325762681916, errorRate=0.027142136697795846/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.699302009] PID stalled (stallTime=7.582849025726318/0.2, error=0.19567196127190556, errorRate=0.00786241312834112/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.770775808] PID stalled (stallTime=5.373868465423584/0.2, error=-2.2418692137618237, errorRate=-0.021105129617196353/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.772124766] PID stalled (stallTime=7.655629873275757/0.2, error=0.19521261262001133, errorRate=-0.006281270724432911/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.817243854] PID stalled (stallTime=5.4204394817352295/0.2, error=-2.241997470772585, errorRate=-0.0027536568416135303/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.817902729] PID stalled (stallTime=7.701449871063232/0.2, error=0.19517517156399222, errorRate=-8.038368312422937E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.854335983] PID stalled (stallTime=5.457504749298096/0.2, error=-2.2416550842368395, errorRate=0.00924048630034806/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.855070983] PID stalled (stallTime=7.738558769226074/0.2, error=0.19527001333767657, errorRate=0.002559666626330316/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.887158111] PID stalled (stallTime=5.4903724193573/0.2, error=-2.240713288438659, errorRate=0.028634852363109243/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.888316028] PID stalled (stallTime=7.771756410598755/0.2, error=0.19554456882942972, errorRate=0.008347789380729075/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.923661365] PID stalled (stallTime=5.526714086532593/0.2, error=-2.241311194552413, errorRate=-0.016457756398836274/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.92454599] PID stalled (stallTime=7.807994365692139/0.2, error=0.19338156233012072, errorRate=-0.059537776282018916/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [28.979872829] PID stalled (stallTime=5.583091974258423/0.2, error=-2.240887358093868, errorRate=0.0075167292606730845/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [28.980400746] PID stalled (stallTime=7.864076614379883/0.2, error=0.193494983039038, errorRate=0.002011556035648349/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [29.028901417] PID stalled (stallTime=5.631552457809448/0.2, error=-2.240867498851717, errorRate=4.0985926679989337E-4/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [29.029537834] PID stalled (stallTime=7.913108587265015/0.2, error=0.1934999788292835, errorRate=1.0309809493023316E-4/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [29.090274798] PID stalled (stallTime=5.693480968475342/0.2, error=-2.241488404811829, errorRate=-0.01002439770171296/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [29.090924632] PID stalled (stallTime=7.974477052688599/0.2, error=0.19332216989393558, errorRate=-0.002870787765087487/0.1).
+purePursuitDrive.xPosPid.isStalled_INFO [29.129922802] PID stalled (stallTime=5.733133316040039/0.2, error=-2.2411628463125837, errorRate=0.008211802191540721/0.1).
+purePursuitDrive.yPosPid.isStalled_INFO [29.131189511] PID stalled (stallTime=8.01478886604309/0.2, error=0.1934133011725514, errorRate=0.0022986852920830435/0.1).
+purePursuitDrive.turnPid.isStalled_INFO [29.133006303] PID stalled (stallTime=0.2078845500946045/0.2, error=0.23947508372265247, errorRate=0.06271097562766792/0.1).
+purePursuitDrive.driveTask_INFO [29.134283511] Done: index=2/3, stalled=true, timeout=false, posOnTarget=false, headingOnTarget=true, robotPose=(x=-25.781952,y=-23.355956,angle=-180.239475)
+purePursuitDrive.driveTask_INFO [29.162401347] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [29.164857473] <Event name="StateInfo" time="29.164142597" tag="vvvvv" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoShoot_INFO [29.165560973] autoShoot(owner=null, event=(CmdDecodeAuto=SIGNALED), taskParams=(alliance=BLUE_ALLIANCE,inAuto=true,useAprilTagVision=true,doMotif=true,useClassifierVision=false,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+CmdDecodeAuto.cmdPeriodic_INFO [29.166999473] <Event name="StateInfo" time="29.166606889" tag="^^^^^" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoTask_INFO [29.168863806] <Event name="StateInfo" time="29.168488431" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [29.170254473] ***** Using AprilTag Vision.
+TaskAutoShoot.autoTask_INFO [29.171980557] <Event name="StateInfo" time="29.171627932" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [29.173877848] <Event name="StateInfo" time="29.173579182" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [29.17657839] ***** Vision found AprilTag 20: aprilTagPose=(x=0.250948,y=50.189709,angle=0.286476)
+TaskAutoShoot.runTaskState_INFO [29.179049391] adjustedTargetPose=(x=-2.043864,y=69.400532,angle=-1.085262)
+TaskAutoShoot.runTaskState_INFO [29.182841933] ***** ShootParams: distance=50.19033685430304, params={loc=Interpolated, distance=50.19033685430304, shooter1Vel=3871.953792836617, shooter2Vel=0.0, tiltAngle=33.0}
+TaskAutoShoot.autoTask_INFO [29.183417391] <Event name="StateInfo" time="29.183123974" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [29.185123641] <Event name="StateInfo" time="29.184809516" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [29.186939266] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=null).
+Spindexer.findSlot_INFO [29.188186433] find slot for Purple (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [29.189380225] MoveToExitSlot: FromSlot=null, ToSlot=1, artifactType=Purple
+Spindexer.moveToExitSlot_INFO [29.190698267] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [29.21900452] ***** Aiming: vel=3871.953793 RPM, tilt=33.000000, pan=44.282552, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [29.22687952] <Event name="StateInfo" time="29.226558979" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.ShootMotor1.pidCtrlTask_INFO [29.528983217] controlMode: Velocity,onTarget=true(64.0/64.53256321394362), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+Shooter.PanMotor.pidCtrlTask_INFO [29.536857927] controlMode: Position,onTarget=true(45.201820340324474/44.28255214081108), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Spindexer.Motor.pidCtrlTask_INFO [29.719839403] controlMode: Position,onTarget=true(298.0368025326474/300.0), stalled=false, expired=false, event=(Spindexer.moveCallback=SIGNALED)
+Spindexer.moveCompletionCallback_INFO [29.720078278] intakeCompletionCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [29.739159697] <Event name="StateInfo" time="29.738817864" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [29.739921239] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [29.741764864] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [29.744797031] Enabling exit trigger: lowThreshold=3490.000000, highThreshold=4190.000000
+TaskAutoShoot.autoTask_INFO [29.75457574] <Event name="StateInfo" time="29.754273282" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [29.966364261] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [29.968243762] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [29.971245595] Exit[1]: vel=3780.000000, artifact=Purple, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Spindexer.disableExitTrigger_INFO [29.980033221] Disabling exit trigger.
+TaskAutoShoot.cancel_INFO [30.087894482] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [30.088483357] Stopping subsystems.
+Shooter.cancel_INFO [30.089000774] owner=null
+Spindexer.cancel_INFO [30.096599858] cancel(owner=null)
+Shooter.cancel_INFO [30.101190983] owner=null
+Robot.cancelAll_INFO [30.102689567] Cancel all operations.
+TaskAutoShoot.cancel_INFO [30.103173733] Canceling auto task operation.
+Spindexer.cancel_INFO [30.111341859] cancel(owner=null)
+Shooter.cancel_INFO [30.112017651] owner=null
+TrcDigitalInput.getInput.printElapsedTime_INFO [30.113371568] TrcDigitalInput.getInput: avgElapsed=0.008092627809523809, minElapsed=7.4083E-5, maxElapsed=0.018986627
+TrcMotor.getPos.printElapsedTime_INFO [30.114018485] TrcMotor.getPos: avgElapsed=0.002068002910973085, minElapsed=1.458E-6, maxElapsed=0.017590126
+TrcMotor.setPower.printElapsedTime_INFO [30.114532985] TrcMotor.setPower: avgElapsed=0.0032943243920922566, minElapsed=4.375E-6, maxElapsed=0.018762627
+TrcMotor.setVel.printElapsedTime_INFO [30.11502036] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [30.11583411] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [30.116342485] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [30.116855526] TrcServo.setPos: avgElapsed=0.005313729642857143, minElapsed=0.002298625, maxElapsed=0.009189251
+Robot.stopMode_INFO [30.117283693] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [30.118145568] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [30.118632943] Disabling ArtifactVision.
+Robot.stopMode_INFO [30.119144527] Disabling ClassifierVision.
+Robot.stopMode_INFO [30.120246444] Saved robot pose=(x=-25.813618,y=-23.360043,angle=-180.179205)
+Robot.stopMode_INFO [30.120971235] Turning all LED indicators OFF.
+FtcAuto.stopMode_INFO [30.124705736] ***** Stopping autonomous: 20251123@141609 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.125531736] FtcDashboard.task: STANDALONE_TASK=0.0056162271452850875/0.015180033113377194
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.126207819] TrcWatchdogMgr: STANDALONE_TASK=1.5352162589928056E-4/0.9932877302014389
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.126826736] flDriveMotor.pidCtrlTask: OUTPUT_TASK=1.399519440874036E-5/0.014827985235539846
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.127566694] frDriveMotor.pidCtrlTask: OUTPUT_TASK=1.6995328084832904E-5/0.014827972832904884
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.128198736] blDriveMotor.pidCtrlTask: OUTPUT_TASK=3.2329171165381315E-5/0.014827966678449014
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.128847694] brDriveMotor.pidCtrlTask: OUTPUT_TASK=1.4768481310913571E-5/0.014827267117596658
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.129389611] TrcMecanumDrive.odometryTask: INPUT_TASK=0.008484127903787879/0.022793517409848484
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.130091653] purePursuitDrive.driveTask: POST_PERIODIC_TASK=0.04437242759259259/0.07173077160987654
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.131025861] TrcMecanumDrive.absOdoHeadingWrap.converterTask: INPUT_TASK=2.6307017564528222E-5/0.01482793444928778
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.131640111] StatusLED: OUTPUT_TASK=8.149031938524151E-4/0.014827254622469744
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.13226632] Spindexer1LED: OUTPUT_TASK=7.346539530898576E-5/0.014825999365534968
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.132891945] Spindexer2LED: OUTPUT_TASK=5.921399132483667E-5/0.014824857220306308
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.133462737] Spindexer3LED: OUTPUT_TASK=5.330612080968191E-5/0.014823362463746386
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.13413182] Intake.Motor.pidCtrlTask: OUTPUT_TASK=7.641278247831209E-6/0.014822244371639714
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.134632612] Spindexer.EntryTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=0.029093720574074073/0.24272965864814816
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.135648195] Spindexer.ShootVelTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=3.386545562965869E-4/0.01080623472342095
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.136223945] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.002144910948377423/0.014822239061154546
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.136853945] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=1.689156598479169E-4/0.014821572822855306
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.137415695] Shooter.TiltEncoder.converterTask: INPUT_TASK=0.00266125043011674/0.014829067722823176
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.137961112] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=1.1248457095426797E-4/0.014821567168790833
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.138503904] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=0.006774640186034058/0.014821563951269144
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.139354404] TaskAutoShoot: POST_PERIODIC_TASK=2.0253692363364114E-5/7.077384965809833E-4
+FtcOpMode.printPerformanceMetrics_INFO [30.140834612] [FtcAutonomous] Main robot thread average elapsed times:
+       robotInit=22.804168s
+    initPeriodic=0.000011s
+       startMode=0.000042s
+    loopInterval=0.000743s (1346.308Hz)
+             sdk=0.000026s
+ prePeriodicTask=0.000106s
+        periodic=0.000034s
+postPeriodicTask=0.000510s
+         loopSum=0.000716s
+        stopMode=0.000000s
