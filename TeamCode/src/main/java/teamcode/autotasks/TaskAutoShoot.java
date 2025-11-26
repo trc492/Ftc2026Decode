@@ -347,18 +347,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 // Use vision to determine the appropriate AprilTag location.
                 if (targetPose == null)
                 {
-                    if (taskParams.alliance == null)
-                    {
-                        TrcDbgTrace.globalTraceErr(moduleName, "Alliance is NULL!!!!!");
-                        TrcDbgTrace.printThreadStack();
-                    }
+                    int[] goalAprilTags =
+                        taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
+                        taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                            RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag;
                     TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                         robot.vision.limelightVision.getBestDetectedTargetInfo(
-                            FtcLimelightVision.ResultType.Fiducial,
-                            taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
-                            taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                                RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                            null, null);
+                            FtcLimelightVision.ResultType.Fiducial, goalAprilTags, null, null);
                     if (aprilTagInfo != null)
                     {
                         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
@@ -399,6 +394,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             moduleName,
                             "***** ShootParams: distance=" + aprilTagInfo.detectedObj.targetDepth +
                             ", params=" + shootParams);
+                        robot.shooterSubsystem.enableGoalTracking(owner, goalAprilTags);
                     }
                 }
 
@@ -503,7 +499,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         robot.shooter.setTiltAngle(shootParams.tiltAngle);
                         robot.shooter.aimShooter(
                             owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                            null, targetPose.angle, event, 0.0, null, 0.0);
+                            null, null, event, 0.0, null, 0.0);
                     }
                     else
                     {
