@@ -471,7 +471,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     artifactType = Vision.ArtifactType.Any;
                 }
-
+                // Spin the Spindexer to the exit slot that contains the artifact we want.
                 Vision.ArtifactType exitArtifactType = robot.spindexerSubsystem.getExitSlotArtifactType();
                 tracer.traceInfo(
                     moduleName, "***** Shooting %s artifact (MotifArtifact=%s, exitArtifact=%s).",
@@ -488,30 +488,32 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     spindexerEvent.clear();
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
                 }
+
                 if (numBallsShot == 0)
                 {
-                    // Spin the shooter flywheel up to speed and the turret pointing to the target.
+                    // Spin the shooter flywheel up to speed and the turret pointing to the target for the first
+                    // artifact to be shot. Subsequent artifacts will be shot at the same setting unchanged.
                     event.clear();
                     sm.addEvent(event);
                     if (shootParams != null)
                     {
                         tracer.traceInfo(
-                                moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
-                                shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
+                            moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
+                            shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
                         robot.shooter.setTiltAngle(shootParams.tiltAngle);
                         robot.shooter.aimShooter(
-                                owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                                null, targetPose.angle, event, 0.0, null, 0.0);
+                            owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
+                            null, targetPose.angle, event, 0.0, null, 0.0);
                     }
                     else
                     {
                         // We did not use vision, just shoot assuming operator manually aimed.
                         double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
                         tracer.traceInfo(
-                                moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
+                            moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
                         // ShooterVel is in RPM, aimShooter wants RPS.
                         robot.shooter.aimShooter(
-                                owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
+                            owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
                     }
                 }
                 // Wait for Spindexer and Shooter to be ready before shooting.
