@@ -133,9 +133,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     TrcShootParamTable.Params shootParams = null;
     Vision.ArtifactType[] motifSequence = null;
     int motifIndex = 0;
+    int numBallsShot = 0;
     int[] autoTrackedAprilTagIds = null;
     TrcPose2D autoTrackedGoalFieldPose = null;
-
 
     /**
      * Constructor: Create an instance of the object.
@@ -298,6 +298,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 motifIndex = 0;
+                numBallsShot = 0;
                 //
                 // Intentionally falling through.
                 //
@@ -487,29 +488,31 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     spindexerEvent.clear();
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
                 }
-
-                // Spin the shooter flywheel up to speed and the turret pointing to the target.
-                event.clear();
-                sm.addEvent(event);
-                if (shootParams != null)
+                if (numBallsShot == 0)
                 {
-                    tracer.traceInfo(
-                        moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
-                        shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
-                    robot.shooter.setTiltAngle(shootParams.tiltAngle);
-                    robot.shooter.aimShooter(
-                        owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                        null, targetPose.angle, event, 0.0, null, 0.0);
-                }
-                else
-                {
-                    // We did not use vision, just shoot assuming operator manually aimed.
-                    double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
-                    tracer.traceInfo(
-                        moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
-                    // ShooterVel is in RPM, aimShooter wants RPS.
-                    robot.shooter.aimShooter(
-                        owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
+                    // Spin the shooter flywheel up to speed and the turret pointing to the target.
+                    event.clear();
+                    sm.addEvent(event);
+                    if (shootParams != null)
+                    {
+                        tracer.traceInfo(
+                                moduleName, "***** Aiming: vel=%f RPM, tilt=%f, pan=%f, event=%s",
+                                shootParams.shooter1Velocity, shootParams.tiltAngle, targetPose.angle, event);
+                        robot.shooter.setTiltAngle(shootParams.tiltAngle);
+                        robot.shooter.aimShooter(
+                                owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
+                                null, targetPose.angle, event, 0.0, null, 0.0);
+                    }
+                    else
+                    {
+                        // We did not use vision, just shoot assuming operator manually aimed.
+                        double shooterVel = Dashboard.Subsystem_Shooter.shootMotor1Velocity;
+                        tracer.traceInfo(
+                                moduleName, "***** ManualShoot: vel=%f RPM, event=%s", shooterVel, event);
+                        // ShooterVel is in RPM, aimShooter wants RPS.
+                        robot.shooter.aimShooter(
+                                owner, shooterVel/60.0, 0.0, null, null, event, 0.0, null, 0.0);
+                    }
                 }
                 // Wait for Spindexer and Shooter to be ready before shooting.
                 sm.waitForEvents(State.SHOOT, false, true);
@@ -523,10 +526,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
+                numBallsShot++;
                 sm.setState(
                     taskParams.numArtifactsToShoot > 0 &&
                     robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) > 0?
-                        State.SETUP_VISION: State.NEXT_EXIT_SLOT);
+                        State.AIM: State.NEXT_EXIT_SLOT);
                 break;
 
             case NEXT_EXIT_SLOT:
