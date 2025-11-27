@@ -108,6 +108,7 @@ public class Shooter extends TrcSubsystem
         public static final boolean PAN_MOTOR_INVERTED          = true;
         public static final String PAN_ENCODER_NAME             = null;
         public static final boolean PAN_ENCODER_INVERTED        = false;
+        public static final boolean PAN_ENCODER_WRAPPED         = false;
 
         public static final double PAN_MOTOR_PID_KP             = 0.03;
         public static final double PAN_MOTOR_PID_KI             = 0.01;
@@ -144,6 +145,7 @@ public class Shooter extends TrcSubsystem
         public static final boolean TILT_MOTOR_INVERTED         = false;
         public static final String TILT_ENCODER_NAME            = SUBSYSTEM_NAME + ".TiltEncoder";
         public static final boolean TILT_ENCODER_INVERTED       = false;
+        public static final boolean TILT_ENCODER_WRAPPED        = false;
 
         public static final double TILT_MOTOR_PID_KP            = 0.06;
         public static final double TILT_MOTOR_PID_KI            = 0.005;
@@ -267,7 +269,7 @@ public class Shooter extends TrcSubsystem
             shooterParams
                 .setPanMotor(
                     Params.PAN_MOTOR_NAME, Params.PAN_MOTOR_TYPE, Params.PAN_MOTOR_INVERTED,
-                    Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED,
+                    Params.PAN_ENCODER_NAME, Params.PAN_ENCODER_INVERTED, Params.PAN_ENCODER_WRAPPED,
                     new TrcShooter.PanTiltParams(Params.PAN_POWER_LIMIT, Params.PAN_MIN_POS, Params.PAN_MAX_POS))
                 .setPanMotorPosPresets(Params.PAN_POS_PRESET_TOLERANCE, Params.PAN_POS_PRESETS);
         }
@@ -277,7 +279,7 @@ public class Shooter extends TrcSubsystem
             shooterParams
                 .setTiltMotor(
                     Params.TILT_MOTOR_NAME, Params.TILT_MOTOR_TYPE, Params.TILT_MOTOR_INVERTED,
-                    Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED,
+                    Params.TILT_ENCODER_NAME, Params.TILT_ENCODER_INVERTED, Params.TILT_ENCODER_WRAPPED,
                     new TrcShooter.PanTiltParams(Params.TILT_POWER_LIMIT, Params.TILT_MIN_POS, Params.TILT_MAX_POS))
                 .setTiltMotorPosPresets(Params.TILT_POS_PRESET_TOLERANCE, Params.TILT_POS_PRESETS);
         }
@@ -318,6 +320,15 @@ public class Shooter extends TrcSubsystem
                 Params.TILT_DEG_PER_COUNT, Params.TILT_POS_OFFSET, Params.TILT_ENCODER_ZERO_OFFSET);
             motor.setPositionPidParameters(tiltMotorPidParams, null);
             motor.setSoftPositionLimits(Params.TILT_MIN_POS, Params.TILT_MAX_POS, false);
+
+            if (motor.getEncoderRawPosition() == 0)
+            {
+                motor.getEncoder().reset();
+                shooter.tracer.traceInfo(
+                    instanceName, "Detected Axon zero encoder reading, reset and retry (reading=%f)",
+                    motor.getEncoderRawPosition());
+
+            }
         }
 
         if (Params.HAS_LAUNCHER)
