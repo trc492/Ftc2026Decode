@@ -40,6 +40,7 @@ import trclib.timer.TrcTimer;
 public class CmdDecodeAuto implements TrcRobot.RobotCommand
 {
     private static final String moduleName = CmdDecodeAuto.class.getSimpleName();
+    private static final boolean useAutoGoalTracking = false;
 
     private enum State
     {
@@ -154,6 +155,42 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         autoChoices.openGate == FtcAuto.OpenGate.YES? new int[] {1, 0, 2}: new int[] {2, 1, 0};
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     currentSpikeMarkCount = 0;
+                    if (robot.shooterSubsystem != null)
+                    {
+                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        TrcShootParamTable.Params shootParams;
+                        double panAngle;
+
+                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shootParams = Shooter.Params.shootParamTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
+                        }
+                        else
+                        {
+                            shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
+                        }
+
+                        TrcEvent callbackEvent = new TrcEvent(moduleName + ".callbackEvent");
+                        callbackEvent.setCallback(
+                            (ctxt, canceled) ->
+                            {
+                                robot.globalTracer.traceInfo(moduleName, "callback(canceled=%s)", canceled);
+                                if (!canceled)
+                                {
+                                    if (useAutoGoalTracking)
+                                    {
+                                        robot.globalTracer.traceInfo(moduleName, "enabling tracking");
+                                        robot.shooterSubsystem.enableGoalTracking(
+                                            null, true, autoChoices.alliance, true);
+                                    }
+                                }
+                            }, null);
+                        robot.globalTracer.traceInfo(moduleName, "Arm callback event=%s", callbackEvent);
+                        robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
+                        robot.shooter.aimShooter(shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, null);
+                    }
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)
                     {
@@ -169,25 +206,6 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_SHOOT_POS:
-                    if (robot.shooterSubsystem != null && !robot.shooterSubsystem.isGoalTrackingEnabled())
-                    {
-                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                        TrcShootParamTable.Params shootParams;
-                        double panAngle;
-                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
-                        {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
-                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
-                        }
-                        else
-                        {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
-                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
-                        }
-                        robot.shooter.aimShooter(
-                            shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, panAngle);
-                    }
-
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE && currentSpikeMarkCount == 0)
                     {
                         sm.setState(State.SHOOT_ARTIFACTS);

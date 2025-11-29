@@ -202,7 +202,7 @@ public class Shooter extends TrcSubsystem
         public static double LAUNCHER_REST_POS                  = 0.47;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.75;     // in seconds
-        public static double LAUNCHER_RETRACT_TIME              = 0.25;     // in seconds
+        public static double LAUNCHER_RETRACT_TIME              = 0.06;     // in seconds
 
         public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
         public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
@@ -474,6 +474,17 @@ public class Shooter extends TrcSubsystem
     {
         return trackedAlliance != null;
     }   //isGoalTrackingEnabled
+
+    /**
+     * This method checks if Goal Tracking is ON and in vision tracking mode.
+     *
+     * @return true if GoalTracking is ON and in vision tracking mode, null if GoalTracking is OFF, false if
+     *         GoalTrackiing is ON but not in vision tracking mode.
+     */
+    public Boolean getGoalVisionTrackingModeOn()
+    {
+        return trackedAlliance != null && visionTracking;
+    }   //getGoalTrackingModeOn
 
     /**
      * This method enables Goal Tracking with the Turret (Pan motor) using AprilTag Vision.
