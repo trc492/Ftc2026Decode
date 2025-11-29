@@ -87,6 +87,7 @@ public class Spindexer extends TrcSubsystem
         public static final double MOTOR_PID_KF                 = 0.0;
         public static final double MOTOR_PID_IZONE              = 5.0;
         public static final double POS_PID_TOLERANCE            = 2.0;
+        public static final double RELAXED_POS_PID_TOLERANCE    = 5.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
@@ -709,6 +710,8 @@ public class Spindexer extends TrcSubsystem
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
         }
         double pos = warpSpace.getOptimizedTarget(Params.entryPresetPositions[slot], spindexer.motor.getPosition());
+        spindexer.motor.getPositionPidParameters().setPidControlParams(
+            Params.RELAXED_POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
         if (Params.SPIN_INTAKE_ON_MOVE)
         {
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".stopIntakeCallback");
@@ -748,6 +751,8 @@ public class Spindexer extends TrcSubsystem
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
         }
         double pos = warpSpace.getOptimizedTarget(Params.exitPresetPositions[slot], spindexer.motor.getPosition());
+        spindexer.motor.getPositionPidParameters().setPidControlParams(
+            Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
         if (Params.SPIN_INTAKE_ON_MOVE)
         {
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".stopIntakeCallback");
