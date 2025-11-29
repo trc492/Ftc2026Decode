@@ -22,13 +22,12 @@
 
 package teamcode.subsystems;
 
-import java.util.Arrays;
-
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
 import ftclib.vision.FtcLimelightVision;
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -55,7 +54,6 @@ import trclib.vision.TrcVisionTargetInfo;
  */
 public class Shooter extends TrcSubsystem
 {
-    // NOTE: Changed these for new table, change back to commented lines if using old table
     public static final String FAR_ZONE_SHOOT_POINT             = "FarZoneShootPoint";
     public static final String GOAL_ZONE_SHOOT_POINT            = "GoalZoneShootPoint";
 
@@ -241,8 +239,12 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-    private int[] trackedAprilTagIds = null;
-    private TrcPose2D goalFieldPose = null;
+    private FtcAuto.Alliance trackedAlliance = null;
+    private boolean visionTracking = false;
+    private boolean flywheelTracking = false;
+    private FtcAuto.Alliance savedTrackedAlliance = null;
+    private boolean savedVisionTracking = false;
+    private boolean savedFlywheelTracking = false;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -470,49 +472,61 @@ public class Shooter extends TrcSubsystem
      */
     public boolean isGoalTrackingEnabled()
     {
-        return trackedAprilTagIds != null || goalFieldPose != null;
+        return trackedAlliance != null;
     }   //isGoalTrackingEnabled
 
     /**
      * This method enables Goal Tracking with the Turret (Pan motor) using AprilTag Vision.
      *
      * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
-     * @param aprilTagIds specifies the AprilTag IDs to track.
+     * @param useVision specifies true to use AprilTag Vision, false to use odometry.
+     * @param alliance specifies the alliance goal to track.
+     * @param flywheelTrackingEnabled specifies true to enable flywheel tracking, false to disable.
      */
-    public void enableGoalTracking(String owner, int[] aprilTagIds)
+    public void enableGoalTracking(
+        String owner, boolean useVision, FtcAuto.Alliance alliance, boolean flywheelTrackingEnabled)
     {
-        if (robot.vision != null)
+        if (alliance == null)
+        {
+            // Unknown alliance, probably because we are running standalone FtcTeleOp or FtcTest.
+            alliance = Dashboard.Subsystem_Shooter.autoShootParams.alliance;
+        }
+
+        shooter.tracer.traceInfo(
+            instanceName,
+            "enableGoalTracking(owner=" + owner +
+            ", useVision=" + useVision +
+            ", alliance=" + alliance +
+            ", flywheelTracking=" + flywheelTrackingEnabled + ")");
+        if (useVision)
+        {
+            if (robot.vision != null)
+            {
+                if (shooter.acquireExclusiveAccess(owner))
+                {
+                    if (this.trackedAlliance == null)
+                    {
+                        robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
+                        shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                    }
+                    this.trackedAlliance = alliance;
+                    this.visionTracking = true;
+                    this.flywheelTracking = flywheelTrackingEnabled;
+                }
+            }
+        }
+        else
         {
             if (shooter.acquireExclusiveAccess(owner))
             {
-                shooter.tracer.traceInfo(
-                    instanceName,
-                    "Enabling Goal Tracking using AprilTag (owner=" + owner +
-                    ", Ids=" + Arrays.toString(aprilTagIds) + ")");
-                robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
-                this.trackedAprilTagIds = aprilTagIds;
-                this.goalFieldPose = null;
-                shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                if (trackedAlliance ==  null)
+                {
+                    shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
+                }
+                this.trackedAlliance = alliance;
+                this.visionTracking = false;
+                this.flywheelTracking = flywheelTrackingEnabled;
             }
-        }
-    }   //enableGoalTracking
-
-    /**
-     * This method enables Goal Tracking with the Turret (Pan motor) using Odometry.
-     *
-     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
-     * @param goalFieldPose specifies the field pose of the goal to track.
-     */
-    public void enableGoalTracking(String owner, TrcPose2D goalFieldPose)
-    {
-        if (shooter.acquireExclusiveAccess(owner))
-        {
-            shooter.tracer.traceInfo(
-                instanceName,
-                "Enabling Goal Tracking using Odometry (owner=" + owner + ", goalFieldPose=" + goalFieldPose + ")");
-            this.trackedAprilTagIds = null;
-            this.goalFieldPose = goalFieldPose;
-            shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
         }
     }   //enableGoalTracking
 
@@ -523,33 +537,57 @@ public class Shooter extends TrcSubsystem
      */
     public void disableGoalTracking(String owner)
     {
-        shooter.releaseExclusiveAccess(owner);
-        shooter.panMotor.cancel();
-        this.trackedAprilTagIds = null;
-        this.goalFieldPose = null;
-        shooter.tracer.traceInfo(
-            instanceName, "Disabling Goal Tracking (turretPos=" + shooter.panMotor.getPosition() + ")");
+        if (shooter.validateOwnership(owner))
+        {
+            shooter.tracer.traceInfo(
+                instanceName, "disableGoalTracking(turretPos=" + shooter.panMotor.getPosition() + ")");
+            shooter.releaseExclusiveAccess(owner);
+            shooter.panMotor.cancel();
+            shooter.stopShooter();
+            this.trackedAlliance = null;
+            this.visionTracking = false;
+            this.flywheelTracking = false;
+        }
     }   //disableGoalTracking
 
     /**
-     * This method returns the array of tracked AprilTag IDs.
+     * This method pauses the current Goal Tracking session and save the tracking parameters for the session.
      *
-     * @return tracked AprilTag IDs.
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public int[] getTrackedAprilTagIds()
+    public void pauseGoalTracking(String owner)
     {
-        return trackedAprilTagIds;
-    }   //getTrackedArpilTagIds
+        // Only do this if Goal Tracking was enabled.
+        if (trackedAlliance != null)
+        {
+            if (shooter.validateOwnership(owner))
+            {
+                this.savedTrackedAlliance = trackedAlliance;
+                this.savedVisionTracking = visionTracking;
+                this.savedFlywheelTracking = flywheelTracking;
+                disableGoalTracking(owner);
+            }
+        }
+    }   //pauseGoalTracking
 
     /**
-     * This method returns the field pose of the tracked gaol.
+     * This method restores the saved Goal Tracking parameters and resumes the saved Goal Tracking session.
      *
-     * @return field pose of the tracked goal.
+     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public TrcPose2D getTrackedGoalFieldPose()
+    public void resumeGoalTracking(String owner)
     {
-        return goalFieldPose;
-    }   //getTrackedGoalFieldPose
+        if (savedTrackedAlliance != null)
+        {
+            if (shooter.validateOwnership(owner))
+            {
+                enableGoalTracking(owner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
+                this.savedTrackedAlliance = null;
+                this.savedVisionTracking = false;
+                this.savedFlywheelTracking = false;
+            }
+        }
+    }   //resumeGoalTracking
 
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
@@ -560,55 +598,61 @@ public class Shooter extends TrcSubsystem
      */
     private double getPanPosition()
     {
-        double panPosition = shooter.panMotor.getPosition();
-        Double newPanPosition = null;
+        double panPosition = shooter.getPanAngle();
 
-        if (trackedAprilTagIds != null)
+        if (trackedAlliance != null)
         {
-            TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
-                robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, trackedAprilTagIds, null, null, -1);
-            if (aprilTagInfo == null)
+            // Goal Tracking is ON.
+            double[] aimInfo = null;
+
+            if (visionTracking)
             {
-                // Not detecting AprilTag or vision is still processing the frame, don't move.
-                panPosition = 0.0;
-                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
+                TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
+                    robot.vision.getLimelightDetectedObject(
+                        FtcLimelightVision.ResultType.Fiducial,
+                        trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                            RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
+                        null, null, -1);
+                if (aprilTagInfo == null)
+                {
+                    // Not detecting AprilTag or vision is still processing the frame, don't move.
+                    panPosition = 0.0;
+                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
+                }
+                else
+                {
+                    aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
+                }
             }
             else
             {
-                int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
-                TrcPose2D targetPose = aprilTagInfo.objPose.addRelativePose(
-                     aprilTagId == 20?
-                         RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER);
-                newPanPosition = panPosition + targetPose.angle;
+                aimInfo = robot.vision.getAimInfoByOdometry(trackedAlliance);
+            }
+
+            if (aimInfo != null)
+            {
+                TrcShootParamTable.Params shootParams = Params.shootParamTable.get(aimInfo[0], false);
                 shooter.tracer.traceDebug(
-                    Params.SUBSYSTEM_NAME, "aprilTagPose{%d}=%s, targetPose=%s",
-                    aprilTagId, aprilTagInfo.objPose, targetPose);
-            }
-        }
-        else if (goalFieldPose != null)
-        {
-            TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
-            TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
-            newPanPosition = targetPose.angle;
-//            newPanPosition = (Math.signum(robotPose.x) * 90.0) - Math.toDegrees(Math.atan2(robotPose.x, robotPose.y));
-            shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "robotPose=%s, targetPose=%s", robotPose, targetPose);
-        }
+                    Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
+                    aimInfo[0], panPosition, aimInfo[1], shootParams);
 
-        if (newPanPosition != null)
-        {
-            shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Panning: %f->%f", panPosition, newPanPosition);
-            // Check if we are crossing over the hard stop.
-            if (newPanPosition >= Params.PAN_MIN_POS && newPanPosition <= Params.PAN_MAX_POS)
-            {
-                // We are moving within valid range.
-                panPosition -= newPanPosition;
-            }
-            else
-            {
-                // We are crossing over the hard stop, stop it.
-                panPosition = 0.0;
-                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
+                shooter.setTiltAngle(shootParams.tiltAngle);
+                if (flywheelTracking)
+                {
+                    shooter.setShooterMotorRPM(shootParams.shooter1Velocity, shootParams.shooter2Velocity);
+                }
+                // Check if we are crossing over the hard stop.
+                if (aimInfo[1] >= Params.PAN_MIN_POS && aimInfo[1] <= Params.PAN_MAX_POS)
+                {
+                    // We are moving within valid range.
+                    panPosition -= aimInfo[1];
+                }
+                else
+                {
+                    // We are crossing over the hard stop, stop it.
+                    panPosition = 0.0;
+                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
+                }
             }
         }
 

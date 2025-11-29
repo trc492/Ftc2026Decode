@@ -637,6 +637,55 @@ public class Vision
     }   //getRobotFieldPose
 
     /**
+     * This method determines the target depth and bearing by using AprilTag Vision.
+     *
+     * @param aprilTagInfo specifies the detected AprilTag info.
+     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     */
+    public double[] getAimInfoByVision(TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo)
+    {
+        int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
+        TrcPose2D targetPose = aprilTagInfo.objPose.addRelativePose(
+            aprilTagId == 20?
+                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER);
+        double targetDepth = aprilTagInfo.objDepth;
+        // targetPose is in camera space and the camera is mounted on a turret. Adjust angle to robot space by adding
+        // turret angle.
+        double targetBearing = targetPose.angle + robot.shooter.getPanAngle();
+        tracer.traceDebug(
+            moduleName, "aprilTagPose{%d}=%s, targetPose=%s, depth=%f, bearing=%f",
+            aprilTagId, aprilTagInfo.objPose, targetPose, targetDepth, targetBearing, targetBearing);
+
+        return new double[] {targetDepth, targetBearing};
+    }   //getAimInfoByVision
+
+    /**
+     * This method determines the target depth and bearing by using Odometry.
+     *
+     * @param alliance specifies the alliance goal to shoot at.
+     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     */
+    public double[] getAimInfoByOdometry(FtcAuto.Alliance alliance)
+    {
+        TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
+        TrcPose2D goalFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+            RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE;
+        TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
+        // TODO: Fix this code, it doesn't work.
+        TrcPose2D aprilTagToCornerPose =
+            alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER;
+        TrcPose2D aprilTagPose = targetPose.addRelativePose(aprilTagToCornerPose.invert());
+        double targetDepth = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
+        double targetBearing = targetPose.angle;
+        tracer.traceDebug(
+            moduleName, "robotPose=%s, targetPose=%s, aprilTagPose=%s, depth=%f, bearing=%f",
+            robotPose, targetPose, aprilTagPose, targetDepth, targetBearing);
+
+        return new double[] {targetDepth, targetBearing};
+    }   //getAimInfoByOdometry
+
+    /**
      * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
      * position from the camera to calculate the robot's absolute field location.
      *

@@ -169,7 +169,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_SHOOT_POS:
-                    if (robot.shooterSubsystem != null)
+                    if (robot.shooterSubsystem != null && !robot.shooterSubsystem.isGoalTrackingEnabled())
                     {
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
                         TrcShootParamTable.Params shootParams;
@@ -227,7 +227,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true, false, false, 3, false);
+                            null, event, autoChoices.alliance, true, true, true, false, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else
