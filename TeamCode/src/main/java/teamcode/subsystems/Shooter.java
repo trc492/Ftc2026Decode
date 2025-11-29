@@ -38,7 +38,7 @@ import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
-import trclib.subsystem.TrcShootParamTable;
+import trclib.subsystem.TrcShootParams;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
 import trclib.vision.TrcVisionTargetInfo;
@@ -165,6 +165,30 @@ public class Shooter extends TrcSubsystem
         public static final double[] TILT_POS_PRESETS           =
             {TILT_MIN_POS, 30.0, 35.0, 40.0, TILT_MAX_POS};
 
+        public static final TrcShootParams.Region[] shootRegions =
+            {
+                new TrcShootParams.Region(26.0, null),
+                new TrcShootParams.Region(30.0, null),
+                new TrcShootParams.Region(33.0, null),
+                new TrcShootParams.Region(38.0, null),
+                new TrcShootParams.Region(42.0, null)
+            };
+        public static final TrcShootParams shootParamsTable = new TrcShootParams()
+            //        name,                     distance
+            .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
+            .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
+            .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
+            .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
+            .addEntry("Target_3.67ft",          44.0,       shootRegions[1],    3650.0)
+            .addEntry("Target_3.67ft",          44.0000001, shootRegions[2],    3700.0)
+            .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
+            .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
+            .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
+            .addEntry("Target_8.29ft",          85.4,       shootRegions[3],    4300.0)
+            .addEntry("Target_8.29ft",          99.5,       shootRegions[3],    4600.0)
+            .addEntry("Target_9.44ft_1",        111.3,      shootRegions[3],    4760.0)
+            .addEntry(FAR_ZONE_SHOOT_POINT,     111.300001, shootRegions[4],    4750.0)
+            .addEntry("Target_10.65ft",         127.8,      shootRegions[4],    5000.0);
 //        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
 //            //   entry_name,            dist,           shoot1_vel, shoot2_vel, tilt_angle
 //            .add("Target_2.48ft",       29.8,           3375.0,     0.0,        26.0)
@@ -179,22 +203,22 @@ public class Shooter extends TrcSubsystem
 //            .add("Target_10.22ft",      122.7,          4680.0,     0.0,        38.0)
 //            .add(FAR_ZONE_SHOOT_POINT,  122.7,          4680.0,     0.0,        42.0)
 //            .add("Target_11.71ft",      140.5,          4985.0,     0.0,        42.0);
-        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
-            //   entry_name,            dist,           shoot1_vel, shoot2_vel, tilt_angle
-            .add("Target_2.14ft",       25.7,           3500.0,     0.0,        26.0)
-            .add("Target_2.49ft",       29.9,           3600.0,     0.0,        26.0)
-            .add("Target_2.93ft_1",     35.25,          3650.0,     0.0,        26.0)
-            .add(GOAL_ZONE_SHOOT_POINT, 35.25000001,    3600.0,     0.0,        30.0)
-            .add("Target_3.67ft",       44.0,           3650.0,     0.0,        30.0)
-            .add("Target_3.67ft",       44.000001,      3700.0,     0.0,        33.0)
-            .add("Target_4.42ft",       53.0,           3950.0,     0.0,        33.0)
-            .add("Target_5.43ft_1",     65.2,           4125.0,     0.0,        33.0)
-            .add("Target_5.43ft_2",     65.2000001,     4025.0,     0.0,        38.0)
-            .add("Target_8.29ft",       85.4,           4300.0,     0.0,        38.0)
-            .add("Target_8.29ft",       99.5,           4600.0,     0.0,        38.0)
-            .add("Target_9.44ft_1",     111.3,          4760,       0.0,        38.0)
-            .add(FAR_ZONE_SHOOT_POINT,  111.3000001,    4750.0,     0.0,        42.0)
-            .add("Target_10.65ft",      127.8,          5000.0,     0.0,        42.0);
+//        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
+//            //   entry_name,            dist,           shoot1_vel, shoot2_vel, tilt_angle
+//            .add("Target_2.14ft",       25.7,           3500.0,     0.0,        26.0)
+//            .add("Target_2.49ft",       29.9,           3600.0,     0.0,        26.0)
+//            .add("Target_2.93ft_1",     35.25,          3650.0,     0.0,        26.0)
+//            .add(GOAL_ZONE_SHOOT_POINT, 35.25000001,    3600.0,     0.0,        30.0)
+//            .add("Target_3.67ft",       44.0,           3650.0,     0.0,        30.0)
+//            .add("Target_3.67ft",       44.000001,      3700.0,     0.0,        33.0)
+//            .add("Target_4.42ft",       53.0,           3950.0,     0.0,        33.0)
+//            .add("Target_5.43ft_1",     65.2,           4125.0,     0.0,        33.0)
+//            .add("Target_5.43ft_2",     65.2000001,     4025.0,     0.0,        38.0)
+//            .add("Target_8.29ft",       85.4,           4300.0,     0.0,        38.0)
+//            .add("Target_8.29ft",       99.5,           4600.0,     0.0,        38.0)
+//            .add("Target_9.44ft_1",     111.3,          4760,       0.0,        38.0)
+//            .add(FAR_ZONE_SHOOT_POINT,  111.3000001,    4750.0,     0.0,        42.0)
+//            .add("Target_10.65ft",      127.8,          5000.0,     0.0,        42.0);
 
         // Launcher
         public static final String LAUNCHER_SERVO_NAME          = SUBSYSTEM_NAME + ".Launcher";
@@ -642,15 +666,15 @@ public class Shooter extends TrcSubsystem
 
             if (aimInfo != null)
             {
-                TrcShootParamTable.Params shootParams = Params.shootParamTable.get(aimInfo[0], false);
+                TrcShootParams.Entry shootParams = Params.shootParamsTable.get(aimInfo[0], false);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
                     aimInfo[0], panPosition, aimInfo[1], shootParams);
 
-                shooter.setTiltAngle(shootParams.tiltAngle);
+                shooter.setTiltAngle(shootParams.region.tiltAngle);
                 if (flywheelTracking)
                 {
-                    shooter.setShooterMotorRPM(shootParams.shooter1Velocity, shootParams.shooter2Velocity);
+                    shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                 }
                 // Check if we are crossing over the hard stop.
                 if (aimInfo[1] >= Params.PAN_MIN_POS && aimInfo[1] <= Params.PAN_MAX_POS)

@@ -39,7 +39,7 @@ import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcOwnershipMgr;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcTaskMgr;
-import trclib.subsystem.TrcShootParamTable;
+import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 import trclib.vision.TrcVisionTargetInfo;
 
@@ -461,14 +461,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // artifact to be shot. Subsequent artifacts will be shot at the same setting unchanged.
                     event.clear();
                     sm.addEvent(event);
-                    TrcShootParamTable.Params shootParams = Shooter.Params.shootParamTable.get(aimInfo[0], false);
+                    TrcShootParams.Entry shootParams = Shooter.Params.shootParamsTable.get(aimInfo[0], false);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
                         aimInfo[0], aimInfo[1], shootParams, event);
-                    robot.shooter.setTiltAngle(shootParams.tiltAngle);
+                    robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
                     robot.shooter.aimShooter(
-                        owner, shootParams.shooter1Velocity/60.0, shootParams.shooter2Velocity/60.0,
-                        null, aimInfo[1], event, 0.0, null, 0.0);
+                        owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
                 }
                 // Wait for Spindexer and Shooter to be ready before shooting.
                 sm.waitForEvents(State.SHOOT, false, true);

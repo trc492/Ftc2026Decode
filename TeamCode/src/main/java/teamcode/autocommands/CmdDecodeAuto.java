@@ -31,7 +31,7 @@ import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
-import trclib.subsystem.TrcShootParamTable;
+import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 
 /**
@@ -158,17 +158,17 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.shooterSubsystem != null)
                     {
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                        TrcShootParamTable.Params shootParams;
+                        TrcShootParams.Entry shootParams;
                         double panAngle;
 
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
+                            shootParams = Shooter.Params.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
                         }
                         else
                         {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                            shootParams = Shooter.Params.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
@@ -189,7 +189,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             }, null);
                         robot.globalTracer.traceInfo(moduleName, "Arm callback event=%s", callbackEvent);
                         robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
-                        robot.shooter.aimShooter(shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, null);
+                        robot.shooter.aimShooter(shootParams.outputs[0]/60.0, 0.0, shootParams.region.tiltAngle, null);
                     }
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)
