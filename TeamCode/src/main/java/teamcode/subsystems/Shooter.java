@@ -109,7 +109,7 @@ public class Shooter extends TrcSubsystem
         public static final boolean PAN_ENCODER_WRAPPED         = false;
 
         public static final double PAN_MOTOR_PID_KP             = 0.03;
-        public static final double PAN_MOTOR_PID_KI             = 0.01;
+        public static final double PAN_MOTOR_PID_KI             = 0.02;
         public static final double PAN_MOTOR_PID_KD             = 0.0;
         public static final double PAN_MOTOR_PID_KF             = 0.0;
         public static final double PAN_MOTOR_PID_IZONE          = 5.0;

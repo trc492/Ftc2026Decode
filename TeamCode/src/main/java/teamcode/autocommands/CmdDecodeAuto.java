@@ -40,7 +40,7 @@ import trclib.timer.TrcTimer;
 public class CmdDecodeAuto implements TrcRobot.RobotCommand
 {
     private static final String moduleName = CmdDecodeAuto.class.getSimpleName();
-    private static final boolean useAutoGoalTracking = false;
+    private static final boolean useAutoGoalTracking = true;
 
     private enum State
     {
@@ -309,7 +309,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.25);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);

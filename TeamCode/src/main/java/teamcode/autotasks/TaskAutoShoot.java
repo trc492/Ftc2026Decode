@@ -247,7 +247,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             robot.shooterSubsystem.resumeGoalTracking(owner);
             pausedPrevGoalTracking = false;
         }
-        robot.shooter.cancel(owner);
+        if (!robot.shooterSubsystem.isGoalTrackingEnabled()) robot.shooter.cancel(owner);
         robot.spindexer.cancel(owner);
         if (robot.ledIndicator != null)
         {
@@ -285,6 +285,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 //
             case SETUP_VISION:
                 aimInfo = null;
+                tracer.traceInfo(moduleName, "*()* %s", robot.shooterSubsystem.getGoalVisionTrackingModeOn());
                 if (!taskParams.useAprilTagVision)
                 {
                     Boolean visionTrackingOn = robot.shooterSubsystem.getGoalVisionTrackingModeOn();
