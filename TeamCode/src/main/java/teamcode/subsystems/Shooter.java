@@ -179,29 +179,25 @@ public class Shooter extends TrcSubsystem
                 new TrcShootParams.Region(42.0, new double[][]{{3063.63635, 15.15152}})
             };
 
-//        public static final TrcShootParams.Region[] shootRegions =
-//            {
-//                new TrcShootParams.Region(26.0, null),
-//                new TrcShootParams.Region(30.0, null),
-//                new TrcShootParams.Region(33.0, null),
-//                new TrcShootParams.Region(38.0, null),
-//                new TrcShootParams.Region(42.0, null)
-//            };
-
         public static final TrcShootParams shootParamsTable = new TrcShootParams()
-            //        name,                     distance
+            //        name,                     distance,   region,             shooterVel
+            // Region 1: tilt 26°
             .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
             .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
             .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
+            // Region 2: tilt 30°
             .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
             .addEntry("Target_3.67ft_1",        44.0,       shootRegions[1],    3650.0)
+            // Region 3: tilt 33°
             .addEntry("Target_3.67ft_2",        44.0000001, shootRegions[2],    3700.0)
             .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
             .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
+            // Region 4: tilt 38°
             .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
             .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
             .addEntry("Target_8.29ft",          99.5,       shootRegions[3],    4600.0)
             .addEntry("Target_9.44ft_1",        111.3,      shootRegions[3],    4760.0)
+            // Region 5: tilt 42°
             .addEntry(FAR_ZONE_SHOOT_POINT,     111.300001, shootRegions[4],    4750.0)
             .addEntry("Target_10.65ft",         127.8,      shootRegions[4],    5000.0);
 //        public static final TrcShootParamTable shootParamTable = new TrcShootParamTable()
