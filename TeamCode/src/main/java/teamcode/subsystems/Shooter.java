@@ -59,15 +59,15 @@ public class Shooter extends TrcSubsystem
     public static final TrcShootParams.Region[] shootRegions    =
         {
             // Region 1: tilt 26°, y = 15.42211x + 3116.30051
-            new TrcShootParams.Region(26.0, new double[][]{{3116.30051, 15.42211}}),
+            new TrcShootParams.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
             // Region 2: tilt 30°, y = 5.71429x + 3398.57143
-            new TrcShootParams.Region(30.0, new double[][]{{3398.57143, 5.71429}}),
+            new TrcShootParams.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
             // Region 3: tilt 33°, y = 19.71941x + 2858.83725
-            new TrcShootParams.Region(33.0, new double[][]{{2858.83725, 19.71941}}),
+            new TrcShootParams.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
             // Region 4: tilt 38°, y = 16.3593x + 2943.18711
-            new TrcShootParams.Region(38.0, new double[][]{{2943.18711, 16.3593}}),
+            new TrcShootParams.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
             // Region 5: tilt 42°, y = 15.15152x + 3063.63635
-            new TrcShootParams.Region(42.0, new double[][]{{3063.63635, 15.15152}})
+            new TrcShootParams.Region(42.0, new double[][] {{3063.63635, 15.15152}})
         };
 
     public static final TrcShootParams shootParamsTable         = new TrcShootParams()
