@@ -235,6 +235,10 @@ public class Spindexer extends TrcSubsystem
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
         entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
+        // Initialize Spindexer to entry slot 0.
+        spindexer.motor.setPosition(Params.entryPresetPositions[0], true, Params.MOVE_POWER);
+        entrySlot = 0;
+        exitSlot = null;
     }   //Spindexer
 
     /**
@@ -915,7 +919,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void entrySlotUp(String owner, TrcEvent event)
     {
-        int slot = (entrySlot != null? entrySlot + 1: exitSlot + 2)%slotStates.length;
+        int slot = (entrySlot != null? entrySlot + 1: exitSlot != null? exitSlot + 2: 0)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotUp: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToEntrySlot(owner, slot, event);
     }   //entrySlotUp
@@ -929,7 +933,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void entrySlotDown(String owner, TrcEvent event)
     {
-        int slot = (entrySlot != null? entrySlot - 1: exitSlot + 1)%slotStates.length;
+        int slot = (entrySlot != null? entrySlot - 1: exitSlot != null? exitSlot + 1: 0)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToEntrySlot(owner, slot, event);
@@ -944,7 +948,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void exitSlotUp(String owner, TrcEvent event)
     {
-        int slot = (exitSlot != null? exitSlot + 1: entrySlot + 2)%slotStates.length;
+        int slot = (exitSlot != null? exitSlot + 1: entrySlot != null? entrySlot + 2: 0)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotUp: FromSlot=" + exitSlot + ", ToSlot=" + slot);
         moveToExitSlot(owner, slot, event);
     }   //exitSlotUp
@@ -958,7 +962,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void exitSlotDown(String owner, TrcEvent event)
     {
-        int slot = (exitSlot != null? exitSlot - 1: entrySlot + 1)%slotStates.length;
+        int slot = (exitSlot != null? exitSlot - 1: entrySlot != null? entrySlot + 1: 0)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToExitSlot(owner, slot, event);
