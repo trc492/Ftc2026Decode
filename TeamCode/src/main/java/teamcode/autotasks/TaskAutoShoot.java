@@ -461,7 +461,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // artifact to be shot. Subsequent artifacts will be shot at the same setting unchanged.
                     event.clear();
                     sm.addEvent(event);
-                    TrcShootParams.Entry shootParams = Shooter.Params.shootParamsTable.get(aimInfo[0], false);
+                    TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(aimInfo[0], false);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
                         aimInfo[0], aimInfo[1], shootParams, event);

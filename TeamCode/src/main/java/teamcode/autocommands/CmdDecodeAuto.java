@@ -163,12 +163,12 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
-                            shootParams = Shooter.Params.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
+                            shootParams = Shooter.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
                         }
                         else
                         {
-                            shootParams = Shooter.Params.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                            shootParams = Shooter.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
