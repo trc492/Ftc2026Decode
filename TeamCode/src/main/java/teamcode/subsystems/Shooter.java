@@ -167,24 +167,39 @@ public class Shooter extends TrcSubsystem
 
         public static final TrcShootParams.Region[] shootRegions =
             {
-                new TrcShootParams.Region(26.0, null),
-                new TrcShootParams.Region(30.0, null),
-                new TrcShootParams.Region(33.0, null),
-                new TrcShootParams.Region(38.0, null),
-                new TrcShootParams.Region(42.0, null)
+                // Region 1: tilt 26°, y = 15.42211x + 3116.30051
+                new TrcShootParams.Region(26.0, new double[][]{{3116.30051, 15.42211}}),
+                // Region 2: tilt 30°, y = 5.71429x + 3398.57143
+                new TrcShootParams.Region(30.0, new double[][]{{3398.57143, 5.71429}}),
+                // Region 3: tilt 33°, y = 19.71941x + 2858.83725
+                new TrcShootParams.Region(33.0, new double[][]{{2858.83725, 19.71941}}),
+                // Region 4: tilt 38°, y = 16.3593x + 2943.18711
+                new TrcShootParams.Region(38.0, new double[][]{{2943.18711, 16.3593}}),
+                // Region 5: tilt 42°, y = 15.15152x + 3063.63635
+                new TrcShootParams.Region(42.0, new double[][]{{3063.63635, 15.15152}})
             };
+
+//        public static final TrcShootParams.Region[] shootRegions =
+//            {
+//                new TrcShootParams.Region(26.0, null),
+//                new TrcShootParams.Region(30.0, null),
+//                new TrcShootParams.Region(33.0, null),
+//                new TrcShootParams.Region(38.0, null),
+//                new TrcShootParams.Region(42.0, null)
+//            };
+
         public static final TrcShootParams shootParamsTable = new TrcShootParams()
             //        name,                     distance
             .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
             .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
             .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
             .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
-            .addEntry("Target_3.67ft",          44.0,       shootRegions[1],    3650.0)
-            .addEntry("Target_3.67ft",          44.0000001, shootRegions[2],    3700.0)
+            .addEntry("Target_3.67ft_1",        44.0,       shootRegions[1],    3650.0)
+            .addEntry("Target_3.67ft_2",        44.0000001, shootRegions[2],    3700.0)
             .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
             .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
             .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
-            .addEntry("Target_8.29ft",          85.4,       shootRegions[3],    4300.0)
+            .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
             .addEntry("Target_8.29ft",          99.5,       shootRegions[3],    4600.0)
             .addEntry("Target_9.44ft_1",        111.3,      shootRegions[3],    4760.0)
             .addEntry(FAR_ZONE_SHOOT_POINT,     111.300001, shootRegions[4],    4750.0)
