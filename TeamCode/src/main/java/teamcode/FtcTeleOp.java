@@ -542,6 +542,7 @@ public class FtcTeleOp extends FtcOpMode
                         Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                         Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                         Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                        Dashboard.Subsystem_Shooter.autoShootParams.useRegression,
                         Dashboard.Subsystem_Shooter.autoShootParams.flywheelTracking,
                         Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0 ?

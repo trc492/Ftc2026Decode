@@ -676,7 +676,8 @@ public class Shooter extends TrcSubsystem
 
             if (aimInfo != null)
             {
-                TrcShootParams.Entry shootParams = shootParamsTable.get(aimInfo[0], false);
+                TrcShootParams.Entry shootParams = shootParamsTable.get(
+                    aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
                     aimInfo[0], panPosition, aimInfo[1], shootParams);

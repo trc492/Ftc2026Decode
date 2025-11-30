@@ -643,21 +643,35 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (testVisionArtifactType == Vision.ArtifactType.Any)
+                        if (robot.vision.artifactVision != null)
                         {
-                            testVisionArtifactType = Vision.ArtifactType.Purple;
-                        }
-                        else if (testVisionArtifactType == Vision.ArtifactType.Purple)
-                        {
-                            testVisionArtifactType = Vision.ArtifactType.Green;
-                        }
-                        else if (testVisionArtifactType == Vision.ArtifactType.Green)
-                        {
-                            testVisionArtifactType = Vision.ArtifactType.None;
+                            // ArtifactVision is enabled, cycle through different color pipelines and
+                            // also allow switching to ClassifierVision in the cycle (using None type).
+                            if (testVisionArtifactType == Vision.ArtifactType.Any)
+                            {
+                                // Switch to artifact purple pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Purple;
+                            }
+                            else if (testVisionArtifactType == Vision.ArtifactType.Purple)
+                            {
+                                // Switch to artifact green pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Green;
+                            }
+                            else if (testVisionArtifactType == Vision.ArtifactType.Green)
+                            {
+                                // Switch to classifier pipeline
+                                testVisionArtifactType = Vision.ArtifactType.None;
+                            }
+                            else
+                            {
+                                // Switch to artifact purple and green pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Any;
+                            }
                         }
                         else
                         {
-                            testVisionArtifactType = Vision.ArtifactType.Any;
+                            // Only ClassifierVision is enabled.
+                            testVisionArtifactType = Vision.ArtifactType.None;
                         }
 
                         if (testVisionArtifactType == Vision.ArtifactType.None)
@@ -834,6 +848,7 @@ public class FtcTest extends FtcTeleOp
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useRegression,
                                     Dashboard.Subsystem_Shooter.autoShootParams.flywheelTracking,
                                     Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?

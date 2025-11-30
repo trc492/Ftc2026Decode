@@ -69,6 +69,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public boolean useAprilTagVision = true;
         public boolean doMotif = false;
         public boolean useClassifierVision = false;
+        public boolean useRegression = false;
         public boolean flywheelTracking = true;
         public boolean relocalize = false;
         public int numArtifactsToShoot = 3;
@@ -86,11 +87,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             return this;
         }   //setInAuto
 
-        public TaskParams setVision(boolean useAprilTagVision, boolean doMotif, boolean useClassifierVision)
+        public TaskParams setVision(
+            boolean useAprilTagVision, boolean doMotif, boolean useClassifierVision, boolean useRegression)
         {
             this.useAprilTagVision = useAprilTagVision;
             this.doMotif = doMotif;
             this.useClassifierVision = useClassifierVision;
+            this.useRegression = useRegression;
             return this;
         }   //setVision
 
@@ -121,6 +124,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                    ",useAprilTagVision=" + useAprilTagVision +
                    ",doMotif=" + doMotif +
                    ",useClassifierVision=" + useClassifierVision +
+                   ",useRegression=" + useRegression +
                    ",flywheelTracking=" + flywheelTracking +
                    ",relocalize=" + relocalize +
                    ",numArtifactsToShoot=" + numArtifactsToShoot +
@@ -164,6 +168,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      * @param doMotif specifies true to shoot motif sequence.
      * @param useClassifierVision specifies true to use Classifier Vision, false otherwise, applicable only if doMotif
      *        is true.
+     * @param useRegression specifies true to use polynomial regression determining shooter speed, false to use
+     *        table lookup with linear interpolation/extrapolation.
      * @param flywheelTracking specifies true to spin the flywheel according to goal tracking.
      * @param relocalize specifies true to enable relocalization, false otherwise.
      * @param numArtifactsToShoot specifies the number of artifacts to shoot.
@@ -171,13 +177,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
      */
     public void autoShoot(
         String owner, TrcEvent completionEvent, FtcAuto.Alliance alliance, boolean inAuto, boolean useAprilTagVision,
-        boolean doMotif, boolean useClassifierVision, boolean flywheelTracking, boolean relocalize,
-        int numArtifactsToShoot, boolean moveToNextExitSlot)
+        boolean doMotif, boolean useClassifierVision, boolean useRegression, boolean flywheelTracking,
+        boolean relocalize, int numArtifactsToShoot, boolean moveToNextExitSlot)
     {
         autoShootParams
             .setAlliance(alliance)
             .setInAuto(inAuto)
-            .setVision(useAprilTagVision, doMotif, useClassifierVision)
+            .setVision(useAprilTagVision, doMotif, useClassifierVision, useRegression)
             .setFlywheelTracking(flywheelTracking)
             .setRelocalizeEnabled(relocalize)
             .setNumArtifactsToShoot(numArtifactsToShoot, moveToNextExitSlot);
@@ -461,7 +467,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // artifact to be shot. Subsequent artifacts will be shot at the same setting unchanged.
                     event.clear();
                     sm.addEvent(event);
-                    TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(aimInfo[0], false);
+                    TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(
+                        aimInfo[0], taskParams.useRegression);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
                         aimInfo[0], aimInfo[1], shootParams, event);

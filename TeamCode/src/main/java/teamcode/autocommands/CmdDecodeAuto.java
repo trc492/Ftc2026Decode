@@ -22,6 +22,7 @@
 
 package teamcode.autocommands;
 
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -245,7 +246,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true, false, true, false, 3, false);
+                            null, event, autoChoices.alliance, true, true, true, false,
+                            Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3,
+                        false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else
