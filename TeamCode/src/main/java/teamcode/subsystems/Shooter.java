@@ -236,7 +236,7 @@ public class Shooter extends TrcSubsystem
         public static double LAUNCHER_REST_POS                  = 0.47;
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.75;     // in seconds
-        public static double LAUNCHER_RETRACT_TIME              = 0.06;     // in seconds
+        public static double LAUNCHER_RETRACT_TIME              = 0.10;     // in seconds
 
         public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
         public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center

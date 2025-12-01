@@ -77,7 +77,7 @@ public class Spindexer extends TrcSubsystem
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
-        public static final double POS_OFFSET                   = -63.0;
+        public static final double POS_OFFSET                   = -68.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
@@ -87,7 +87,7 @@ public class Spindexer extends TrcSubsystem
         public static final double MOTOR_PID_KF                 = 0.0;
         public static final double MOTOR_PID_IZONE              = 5.0;
         public static final double POS_PID_TOLERANCE            = 2.0;
-        public static final double RELAXED_POS_PID_TOLERANCE    = 5.0;
+        public static final double RELAXED_POS_PID_TOLERANCE    = 10.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
