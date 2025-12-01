@@ -169,7 +169,7 @@ public class Vision
             .setAspectRatioRange(0.5, 2.0);
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams classifierBlobFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(200.0)
+            .setMinArea(160.0)
             .setMinPerimeter(50.0)
             .setWidthRange(20.0, 250.0)
             .setHeightRange(10.0, 60.0)
@@ -206,7 +206,7 @@ public class Vision
     public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setAnnotation(true, false)
-            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
+//            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
