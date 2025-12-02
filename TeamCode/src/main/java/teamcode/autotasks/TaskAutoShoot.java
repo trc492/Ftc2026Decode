@@ -294,11 +294,15 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 //
             case SETUP_VISION:
                 aimInfo = null;
+                motifSequence = null;
                 if (!taskParams.useAprilTagVision)
                 {
                     Boolean visionTrackingOn = robot.shooterSubsystem.getGoalVisionTrackingModeOn();
                     if (visionTrackingOn == null || visionTrackingOn)
                     {
+                        // GoalTracking is not ON or GoalTracking is ON and in vision mode.
+                        // Since we don't want to use Vision, let's turn ON GoalTracking by Odometry.
+                        // Pause previous GoalTracking mode if any and set GoalTracking to odometry mode.
                         robot.shooterSubsystem.pauseGoalTracking(owner);
                         pausedPrevGoalTracking = true;
                         robot.shooterSubsystem.enableGoalTracking(
@@ -309,10 +313,20 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         moduleName, "***** Shoot using odometry: depth=%f, bearing=%f", aimInfo[0], aimInfo[1]);
                     sm.setState(State.AIM);
                 }
-                else if (robot.vision != null && robot.vision.isLimelightVisionEnabled() &&
-                         (!taskParams.useClassifierVision || robot.vision.isClassifierVisionEnabled()))
+                else if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
                 {
-                    tracer.traceInfo(moduleName, "***** Setting up AprilTag Vision.");
+                    boolean classifierVisionEnabled = robot.vision.isClassifierVisionEnabled();
+                    tracer.traceInfo(
+                        moduleName,
+                        "***** Setting up Vision (useClassifierVision=" + taskParams.useClassifierVision +
+                        ", classifierVisionEnabled=" + classifierVisionEnabled + ")");
+                    if (taskParams.useClassifierVision && !classifierVisionEnabled)
+                    {
+                        // Turn on ClassifierVision.
+                        // Turn off ArtifactVision just in case it exists.
+                        robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
+                        robot.vision.setClassifierVisionEnabled(true);
+                    }
                     visionExpiredTime = null;
                     if (robot.ledIndicator != null)
                     {
@@ -332,7 +346,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 break;
 
             case DO_VISION:
-                // Use vision to determine the appropriate AprilTag location.
+                // If GoalTracking is not ON, use vision to determine the appropriate AprilTag location.
                 if (aimInfo == null && !robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
                     int[] goalAprilTags =
@@ -371,7 +385,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
                     }
                 }
-
+                // If we are doing motif, determine the shooting sequence.
                 if (taskParams.doMotif && robot.obeliskMotif != null && motifSequence == null)
                 {
                     // If we saw the obelisk and haven't determined the motif sequence, determine it now.

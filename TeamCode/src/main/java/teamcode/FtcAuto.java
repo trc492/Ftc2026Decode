@@ -75,6 +75,12 @@ public class FtcAuto extends FtcOpMode
         DO_NOTHING
     }   //enum AutoStrategy
 
+    public enum ClassifierVision
+    {
+        YES,
+        NO
+    }   //enum ClassifierVision
+
     public enum PickupOption
     {
         SPIKEMARKS,
@@ -104,6 +110,7 @@ public class FtcAuto extends FtcOpMode
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
+        public ClassifierVision classifierVision = ClassifierVision.YES;
         public PickupOption pickupOption = PickupOption.SPIKEMARKS;
         public OpenGate openGate = OpenGate.NO;
         public double spikeMarkCount = 0.0;
@@ -127,6 +134,7 @@ public class FtcAuto extends FtcOpMode
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
+                "classifierVision=\"%s\" " +
                 "pickupOption=\"%s\" " +
                 "openGate=\"%s\" " +
                 "spikeMarkCount=%.0f " +
@@ -139,7 +147,7 @@ public class FtcAuto extends FtcOpMode
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                startDelay, alliance, startPos, strategy, pickupOption, openGate, spikeMarkCount,
+                startDelay, alliance, startPos, strategy, classifierVision, pickupOption, openGate, spikeMarkCount,
                 shootDelay1, shootDelay2, shootDelay3, parkOption,
                 xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
@@ -385,7 +393,9 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", startDelayMenu);
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
-        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
+        FtcChoiceMenu<ClassifierVision> classifierVisionMenu =
+            new FtcChoiceMenu<>("Use Classifier Vision:", strategyMenu);
+        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", classifierVisionMenu);
         FtcChoiceMenu<OpenGate> openGateMenu = new FtcChoiceMenu<>("Open Gate:", pickupOptionMenu);
         FtcValueMenu spikeMarkCountMenu =
             new FtcValueMenu("SpikeMark Count:", openGateMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
@@ -428,10 +438,13 @@ public class FtcAuto extends FtcOpMode
         startPosMenu.addChoice("Start Position Far Zone Center", StartPos.FAR_CENTER, false, strategyMenu);
         startPosMenu.addChoice("Start Position Far Zone Corner", StartPos.FAR_CORNER, false, strategyMenu);
 
-        strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
+        strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, classifierVisionMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
+
+        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, true, pickupOptionMenu);
+        classifierVisionMenu.addChoice("No", ClassifierVision.NO, false, pickupOptionMenu);
 
         pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
         pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
@@ -454,6 +467,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.alliance = allianceMenu.getCurrentChoiceObject();
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
+        autoChoices.classifierVision = classifierVisionMenu.getCurrentChoiceObject();
         autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
         autoChoices.spikeMarkCount = spikeMarkCountMenu.getCurrentValue();
         autoChoices.openGate = openGateMenu.getCurrentChoiceObject();

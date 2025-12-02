@@ -517,7 +517,7 @@ public class Shooter extends TrcSubsystem
      */
     public Boolean getGoalVisionTrackingModeOn()
     {
-        return trackedAlliance != null && visionTracking;
+        return trackedAlliance != null? visionTracking: null;
     }   //getGoalTrackingModeOn
 
     /**
@@ -626,10 +626,13 @@ public class Shooter extends TrcSubsystem
         {
             if (shooter.validateOwnership(owner))
             {
-                enableGoalTracking(owner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
-                this.savedTrackedAlliance = null;
-                this.savedVisionTracking = false;
-                this.savedFlywheelTracking = false;
+                if (savedTrackedAlliance != null)
+                {
+                    enableGoalTracking(owner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
+                    this.savedTrackedAlliance = null;
+                    this.savedVisionTracking = false;
+                    this.savedFlywheelTracking = false;
+                }
             }
         }
     }   //resumeGoalTracking

@@ -161,7 +161,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
                         TrcShootParams.Entry shootParams;
                         double panAngle;
-
+                        // Turret was turned towards Obelisk before Auton is started, turn it back to the goal AprilTag.
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
                             shootParams = Shooter.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
@@ -173,24 +173,28 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
-                        TrcEvent callbackEvent = new TrcEvent(moduleName + ".callbackEvent");
-                        callbackEvent.setCallback(
-                            (ctxt, canceled) ->
-                            {
-                                robot.globalTracer.traceInfo(moduleName, "callback(canceled=%s)", canceled);
-                                if (!canceled)
+                        TrcEvent callbackEvent = useAutoGoalTracking? new TrcEvent(moduleName + ".callbackEvent"): null;
+                        if (callbackEvent != null)
+                        {
+                            // Turn on AutoGoalTracking once the turret is facing the goal AprilTag.
+                            callbackEvent.setCallback(
+                                (ctxt, canceled) ->
                                 {
-                                    if (useAutoGoalTracking)
+                                    robot.globalTracer.traceInfo(
+                                        moduleName, "GoalTrackingCallback(canceled=%s)", canceled);
+                                    if (!canceled)
                                     {
                                         robot.globalTracer.traceInfo(moduleName, "enabling tracking");
                                         robot.shooterSubsystem.enableGoalTracking(
                                             null, true, autoChoices.alliance, true);
                                     }
-                                }
-                            }, null);
-                        robot.globalTracer.traceInfo(moduleName, "Arm callback event=%s", callbackEvent);
+                                }, null);
+                            robot.globalTracer.traceInfo(
+                                moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
+                        }
                         robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
-                        robot.shooter.aimShooter(shootParams.outputs[0]/60.0, 0.0, shootParams.region.tiltAngle, null);
+                        robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                        robot.shooter.aimShooter(shootParams.outputs[0]/60.0, 0.0, null, null);
                     }
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)
@@ -246,9 +250,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true, false,
-                            Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3,
-                        false);
+                            null, event, autoChoices.alliance, true, true, true,
+                            currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
+                            Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else

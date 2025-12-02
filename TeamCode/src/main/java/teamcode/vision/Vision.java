@@ -180,9 +180,9 @@ public class Vision
     private static final double artifactHeight = 5.0; // inches
 
     private static final int CLASSIFIER_ROI_LEFT = 0;
-    private static final int CLASSIFIER_ROI_TOP = 0;
+    private static final int CLASSIFIER_ROI_TOP = 50;
     private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
-    private static final int CLASSIFIER_ROI_BOTTOM = 90;
+    private static final int CLASSIFIER_ROI_BOTTOM = 150;
     private static final double RECT_ANGLE_THRESHOLD = 3.0;
     private static final double ONE_BALL_THRESHOLD = 3.0;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
@@ -206,7 +206,7 @@ public class Vision
     public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setAnnotation(true, false)
-//            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
+            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
@@ -1019,13 +1019,14 @@ public class Vision
 
             if (classifierArtifacts != null)
             {
+                tracer.traceInfo(moduleName, "***** ClassifierArtifacts=" + Arrays.toString(classifierArtifacts));
                 int noneIndex = -1;
                 for (int i = 0; i < classifierArtifacts.length; i++)
                 {
                     if (classifierArtifacts[i] == Vision.ArtifactType.None)
                     {
-                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
                         noneIndex = i%obeliskMotif.length;
+                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
                         break;
                     }
                 }
@@ -1038,8 +1039,6 @@ public class Vision
                         motifSequence[i] = obeliskMotif[noneIndex];
                         noneIndex = (noneIndex + 1)%obeliskMotif.length;
                     }
-                    tracer.traceInfo(
-                        moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
                 }
             }
         }

@@ -57,12 +57,12 @@ public class RobotParams
         public static final boolean useLimelightVision          = true;
         public static final boolean useWebCam                   = true;
         public static final boolean useWebcamAprilTagVision     = false;
-        public static final boolean useArtifactVision           = true;
+        public static final boolean useArtifactVision           = false;
         public static final boolean useClassifierVision         = true;
         public static final boolean useSolvePnp                 = false;
-        public static final boolean streamWebcamToDashboard     = false;
         public static final boolean showVisionView              = false;    // For both HDMI and Dashboard
         public static final boolean showVisionStat              = false;    // For HDMI
+        public static final boolean streamWebcamToDashboard     = false;
         // Master switches for Subsystems
         public static final boolean useSubsystems               = true;
         // Drive Base Subsystem
