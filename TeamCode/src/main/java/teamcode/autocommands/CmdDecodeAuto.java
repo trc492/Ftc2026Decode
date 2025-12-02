@@ -217,8 +217,26 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     }
                     else
                     {
-                        TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
-                            RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        TrcPose2D shootPose;
+
+                        if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shootPose = RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        }
+                        else if (currentSpikeMarkCount == 0 ||
+                                 autoChoices.classifierVision == FtcAuto.ClassifierVision.NO)
+                        {
+                            // Shoot in the GOAL_ZONE but not using ClassifierVision.
+                            shootPose = RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE;
+                        }
+                        else
+                        {
+                            // Shoot in the GOAL_ZONE but with ClassifierVision.
+                            // Need to back up a bit to see the entire classifier ramp.
+                            shootPose = RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE.clone();
+                            shootPose.x += RobotParams.Robot.ROBOT_WIDTH/2.0;
+                            shootPose.y -= 12.0;
+                        }
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         if (currentSpikeMarkCount == 2 && autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
