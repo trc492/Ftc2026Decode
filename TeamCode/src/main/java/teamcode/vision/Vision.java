@@ -181,8 +181,8 @@ public class Vision
 
     private static final int CLASSIFIER_ROI_LEFT = 0;
     private static final int CLASSIFIER_ROI_TOP = 50;
-    private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
-    private static final int CLASSIFIER_ROI_BOTTOM = 150;
+    private static final int CLASSIFIER_ROI_WIDTH = frontCamParams.camImageWidth;
+    private static final int CLASSIFIER_ROI_HEIGHT = 100;
     private static final double RECT_ANGLE_THRESHOLD = 3.0;
     private static final double ONE_BALL_THRESHOLD = 3.0;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
@@ -206,7 +206,7 @@ public class Vision
     public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setAnnotation(true, false)
-            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
+            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_WIDTH, CLASSIFIER_ROI_HEIGHT)
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
