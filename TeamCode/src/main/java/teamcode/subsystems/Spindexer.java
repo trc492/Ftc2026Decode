@@ -81,8 +81,8 @@ public class Spindexer extends TrcSubsystem
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
-        public static final double MOTOR_PID_KP                 = 0.016;
-        public static final double MOTOR_PID_KI                 = 0.01;
+        public static final double MOTOR_PID_KP                 = 0.018;
+        public static final double MOTOR_PID_KI                 = 0.03;
         public static final double MOTOR_PID_KD                 = 0.0003;
         public static final double MOTOR_PID_KF                 = 0.0;
         public static final double MOTOR_PID_IZONE              = 5.0;
