@@ -284,6 +284,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         TaskParams taskParams = (TaskParams) params;
         Vision.ArtifactType artifactType;
 
+        robot.vision.detectClassifierArtifacts(taskParams.alliance);
         switch (state)
         {
             case START:
@@ -325,7 +326,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         // Turn on ClassifierVision.
                         // Turn off ArtifactVision just in case it exists.
                         robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
-                        robot.vision.setClassifierVisionEnabled(true);
+                        robot.vision.setClassifierVisionEnabled(true, true);
                     }
                     visionExpiredTime = null;
                     if (robot.ledIndicator != null)
@@ -390,6 +391,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 {
                     // If we saw the obelisk and haven't determined the motif sequence, determine it now.
                     // Do this only once since DO_VISION gets called repeatedly.
+                    robot.vision.resetClassifierArtifactsFilter();
                     motifSequence = robot.vision.getMotifSequence(
                         taskParams.alliance, robot.obeliskMotif, taskParams.useClassifierVision);
                     tracer.traceInfo(

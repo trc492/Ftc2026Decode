@@ -40,6 +40,7 @@ import ftclib.vision.FtcLimelightVision;
 import ftclib.vision.FtcVision;
 import ftclib.vision.FtcVisionAprilTag;
 import ftclib.vision.FtcVisionEocvColorBlob;
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -169,7 +170,7 @@ public class Vision
             .setAspectRatioRange(0.5, 2.0);
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams classifierBlobFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(160.0)
+            .setMinArea(50.0)
             .setMinPerimeter(50.0)
             .setWidthRange(20.0, 250.0)
             .setHeightRange(10.0, 60.0)
@@ -308,7 +309,6 @@ public class Vision
                         robot.robotInfo.webCam1.worldRect);
                     classifierProcessor = classifierVision.getVisionProcessor();
                     visionProcessorsList.add(classifierProcessor);
-                    //                classifierProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
                 }
             }
 
@@ -893,8 +893,9 @@ public class Vision
      * This method enables/disables Classifier vision.
      *
      * @param enabled specifies true to enable, false to disable.
+     * @param useSamplingFilter specifies true to enable Sampling filter, false to disable.
      */
-    public void setClassifierVisionEnabled(boolean enabled)
+    public void setClassifierVisionEnabled(boolean enabled, boolean useSamplingFilter)
     {
         TrcOpenCvColorBlobPipeline classifierPipeline =
             classifierProcessor != null? classifierProcessor.getPipeline(): null;
@@ -909,6 +910,7 @@ public class Vision
                 // Start Dashboard Stream before turning on Classifier Processor.
                 setDashboardStreamEnabled(classifierProcessor, true);
                 setVisionProcessorEnabled(classifierProcessor, true);
+                setClassifierArtifactsFilterEnabled(useSamplingFilter);
             }
             else
             {
@@ -916,6 +918,7 @@ public class Vision
                 // the color threshold set.
                 setVisionProcessorEnabled(classifierProcessor, false);
                 setDashboardStreamEnabled(classifierProcessor, false);
+                setClassifierArtifactsFilterEnabled(false);
             }
         }
     }   //setClassifierVisionEnabled
@@ -932,18 +935,16 @@ public class Vision
 
     /**
      * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
-     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts.
-     *
-     * @param alliance specifies the alliance color for sorting the array.
+     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts. It also
+     * assume appropriate alliance has been set by either getBestClassifierArtifacts or detectClassifierArtifacts.
      */
-    public ArtifactType[] getClassifierArtifacts(FtcAuto.Alliance alliance)
+    private ArtifactType[] getClassifierArtifacts()
     {
         ArtifactType[] artifacts = null;
 
         if (isClassifierVisionEnabled())
         {
             // compareDistanceX is using alliance to determine the sort order of color blobs in the classifier.
-            this.alliance = alliance;
             ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> blobs =
                 classifierVision.getDetectedTargetsInfo(null, null, this::compareDistanceX, 0.0, 0.0);
 
@@ -993,12 +994,171 @@ public class Vision
                     artifacts[k] = ArtifactType.None;
                 }
 
-                robot.dashboard.putString("Classifier", Arrays.toString(artifacts));
+                robot.dashboard.putString("Unfiltered", Arrays.toString(artifacts));
             }
         }
 
         return artifacts;
     }   //getClassifierArtifacts
+
+    private static final int CLASSIFIER_ARTIFACTS_LIST_SIZE = 10;
+    private ArrayList<ClassifierArtifactsEntry> classifierArtifactsList = null;
+    private int totalSampleCount = 0;
+
+    private static class ClassifierArtifactsEntry
+    {
+        ArtifactType[] classifierArtifacts = null;
+        int sampleCount = 0;
+
+        ClassifierArtifactsEntry(ArtifactType[] classifierArtifacts)
+        {
+            this.classifierArtifacts = classifierArtifacts;
+            this.sampleCount = 1;
+        }
+    }   //class ClassifierArtifactsEntry
+
+    private void setClassifierArtifactsFilterEnabled(boolean enabled)
+    {
+        if (isClassifierVisionEnabled())
+        {
+            if (classifierArtifactsList == null && enabled)
+            {
+                // Enabling ClassifierArtifactsFilter.
+                classifierArtifactsList = new ArrayList<>();
+                totalSampleCount = 0;
+            }
+            else if (classifierArtifactsList != null && !enabled)
+            {
+                // Disabling ClassifierArtifactsFilter.
+                classifierArtifactsList.clear();
+                classifierArtifactsList = null;
+                totalSampleCount = 0;
+            }
+        }
+    }   //setClassifierArtifactsFilterEnabled
+
+    public void resetClassifierArtifactsFilter()
+    {
+        if (classifierArtifactsList != null)
+        {
+            classifierArtifactsList.clear();
+        }
+    }   //resetClassifierArtifactsFilter
+
+    /**
+     * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
+     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts.
+     *
+     * @param alliance specifies the alliance color for sorting the array.
+     */
+    public void detectClassifierArtifacts(FtcAuto.Alliance alliance)
+    {
+        if (classifierArtifactsList != null)
+        {
+            if (alliance != this.alliance)
+            {
+                // We have changed alliance, flush the buffer clean and start again.
+                tracer.traceInfo(
+                    moduleName, "Reset ClassifierFilter because alliance changed: " + this.alliance + "->" + alliance);
+                classifierArtifactsList.clear();
+                this.alliance = alliance;
+            }
+            ArtifactType[] classifierArtifacts = getClassifierArtifacts();
+
+            if (classifierArtifacts != null)
+            {
+                addClassifierArtifactsEntry(classifierArtifacts);
+            }
+        }
+    }   //detectClassifierArtifacts
+
+    public ArtifactType[] getBestClassifierArtifacts(FtcAuto.Alliance alliance, int minSampleCount)
+    {
+        ArtifactType[] bestClassifierArtifacts = null;
+
+        if (classifierArtifactsList == null)
+        {
+            this.alliance = alliance;
+            bestClassifierArtifacts = getClassifierArtifacts();
+            tracer.traceInfo(
+                moduleName, "getBestClassifierArtifacts(alliance=%s)=%s",
+                alliance, Arrays.toString(bestClassifierArtifacts));
+        }
+        else if (!classifierArtifactsList.isEmpty())
+        {
+            int maxCount = Integer.MIN_VALUE;
+            ClassifierArtifactsEntry maxEntry = null;
+
+            for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+            {
+                if (entry.sampleCount > maxCount)
+                {
+                    maxCount = entry.sampleCount;
+                    maxEntry = entry;
+                }
+            }
+            // maxEntry will not be null, checking it anyway to make compiler happy.
+            bestClassifierArtifacts = maxEntry != null ? maxEntry.classifierArtifacts : null;
+            robot.dashboard.putString(
+                "Filtered",
+                "[" + classifierArtifactsList.size() + "]: " + Arrays.toString(bestClassifierArtifacts));
+            tracer.traceInfo(
+                moduleName, "getBestClassifierArtifacts(alliance=%s, minSampleCount=%d, listSize=%d)=%s",
+                alliance, minSampleCount, classifierArtifactsList != null? classifierArtifactsList.size(): 0,
+                Arrays.toString(bestClassifierArtifacts));
+            if (tracer.isMsgLevelEnabled(TrcDbgTrace.MsgLevel.INFO))
+            {
+                for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+                {
+                    tracer.traceInfo(
+                        moduleName, "[" + entry.sampleCount + "] = " + Arrays.toString(entry.classifierArtifacts));
+                }
+            }
+
+            if (totalSampleCount < minSampleCount)
+            {
+                // We did not satisfy the minSampleCount required, so pretend we did not see anything until we have
+                // at least minSampleCount.
+                bestClassifierArtifacts = null;
+            }
+        }
+
+        return bestClassifierArtifacts;
+    }   //getBestClassifierArtifacts
+
+    private void addClassifierArtifactsEntry(ArtifactType[] classifierArtifacts)
+    {
+        if (classifierArtifactsList != null)
+        {
+            ClassifierArtifactsEntry newEntry = null;
+
+            for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+            {
+                if (Arrays.equals(classifierArtifacts, entry.classifierArtifacts))
+                {
+                    entry.sampleCount++;
+                    // move the entry to the end of list to make it most current.
+                    classifierArtifactsList.remove(entry);
+                    newEntry = entry;
+                    break;
+                }
+            }
+
+            if (newEntry == null)
+            {
+                newEntry = new ClassifierArtifactsEntry(classifierArtifacts);
+            }
+
+            if (classifierArtifactsList.size() >= CLASSIFIER_ARTIFACTS_LIST_SIZE)
+            {
+                // Remove the oldest entry in the list.
+                classifierArtifactsList.remove(0);
+            }
+
+            classifierArtifactsList.add(newEntry);
+            totalSampleCount++;
+        }
+    }   //addClassifierArtifactsEntry
 
     /**
      * This method calls Classifier Vision to determine motif sequence to shoot next. It assumes Classifier Vision
@@ -1015,7 +1175,8 @@ public class Vision
 
         if (useVision)
         {
-            ArtifactType[] classifierArtifacts = getClassifierArtifacts(alliance);
+            ArtifactType[] classifierArtifacts = getBestClassifierArtifacts(
+                alliance, Dashboard.Subsystem_Vision.minClassifierSampleCount);
 
             if (classifierArtifacts != null)
             {

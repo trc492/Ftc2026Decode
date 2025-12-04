@@ -236,6 +236,11 @@ public class FtcTest extends FtcTeleOp
                         robot.globalTracer.traceInfo(moduleName, "Enabling ArtifactVision.");
                         robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
                     }
+                    else if (robot.vision.classifierVision != null)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, "Enabling ClassifierVision.");
+                        robot.vision.setClassifierVisionEnabled(true, true);
+                    }
                 }
                 break;
 
@@ -678,13 +683,13 @@ public class FtcTest extends FtcTeleOp
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Switch to Classifier Vision");
                             robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
-                            robot.vision.setClassifierVisionEnabled(true);
+                            robot.vision.setClassifierVisionEnabled(true, true);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> Switch to Artifact Vision %s", testVisionArtifactType);
-                            robot.vision.setClassifierVisionEnabled(false);
+                            robot.vision.setClassifierVisionEnabled(false, false);
                             robot.vision.setArtifactVisionEnabled(testVisionArtifactType, true);
                         }
                     }
@@ -1059,10 +1064,13 @@ public class FtcTest extends FtcTeleOp
             }
             else if (robot.vision.isClassifierVisionEnabled())
             {
-                Vision.ArtifactType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
-                if (blobs != null)
+                robot.vision.detectClassifierArtifacts(Dashboard.Subsystem_Shooter.autoShootParams.alliance);
+                Vision.ArtifactType[] classifierArtifacts = robot.vision.getBestClassifierArtifacts(
+                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                    Dashboard.Subsystem_Vision.minClassifierSampleCount);
+                if (classifierArtifacts != null)
                 {
-                    robot.dashboard.displayPrintf(15, "Blobs=%s", Arrays.toString(blobs));
+                    robot.dashboard.displayPrintf(15, "classifier=%s", Arrays.toString(classifierArtifacts));
                 }
             }
         }

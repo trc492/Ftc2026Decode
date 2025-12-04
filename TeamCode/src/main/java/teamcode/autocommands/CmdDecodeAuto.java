@@ -159,17 +159,17 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                     if (robot.shooterSubsystem != null)
                     {
-                        String shootLoc;
+                        TrcShootParams.Entry shootParams;
                         double panAngle;
                         // Turret was turned towards Obelisk before Auton is started, turn it back to the goal AprilTag.
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
-                            shootLoc = Shooter.GOAL_ZONE_SHOOT_POINT;
+                            shootParams = Shooter.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
                         }
                         else
                         {
-                            shootLoc = Shooter.FAR_ZONE_SHOOT_POINT;
+                            shootParams = Shooter.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
@@ -193,15 +193,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.globalTracer.traceInfo(
                                 moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
                         }
-                        else
-                        {
-                            // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                            TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(shootLoc);
-                            robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
-                            robot.shooter.aimShooter(shootParams.outputs[0]/60.0, 0.0, null, panAngle);
-                            robot.globalTracer.traceInfo(
-                                moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");
-                        }
+                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                        robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
+                        robot.globalTracer.traceInfo(
+                            moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");
                     }
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)
@@ -242,7 +238,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             // Need to back up a bit to see the entire classifier ramp.
                             shootPose = RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE.clone();
                             shootPose.x += RobotParams.Robot.ROBOT_WIDTH/2.0;
-                            shootPose.y -= 12.0;
+                            shootPose.y -= RobotParams.Robot.ROBOT_LENGTH/2.0;
                         }
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         if (currentSpikeMarkCount == 2 && autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)

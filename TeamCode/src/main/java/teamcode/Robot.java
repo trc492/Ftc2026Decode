@@ -272,7 +272,7 @@ public class Robot
             if (vision.classifierVision != null)
             {
                 globalTracer.traceInfo(moduleName, "Disabling ClassifierVision.");
-                vision.setClassifierVisionEnabled(false);
+                vision.setClassifierVisionEnabled(false, false);
             }
 
             vision.close();

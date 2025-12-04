@@ -70,6 +70,7 @@ public class Dashboard
             new int[] {RobotParams.Game.blueGoalAprilTag[0], RobotParams.Game.redGoalAprilTag[0]};
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
+        public static int minClassifierSampleCount = 3;
     }   //class Subsystem_Vision
 
     @Config

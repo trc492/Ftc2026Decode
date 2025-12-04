@@ -470,8 +470,7 @@ public class FtcTeleOp extends FtcOpMode
                 if (operatorAltFunc && pressed)
                 {
                     Dashboard.Subsystem_Shooter.autoShootParams.alliance =
-                        Dashboard.Subsystem_Shooter.autoShootParams.alliance ==
-                            FtcAuto.Alliance.BLUE_ALLIANCE?
+                        Dashboard.Subsystem_Shooter.autoShootParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                             FtcAuto.Alliance.RED_ALLIANCE: FtcAuto.Alliance.BLUE_ALLIANCE;
                 }
                 break;
