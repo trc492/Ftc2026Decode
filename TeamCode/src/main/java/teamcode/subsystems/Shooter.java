@@ -184,7 +184,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_GEAR_RATIO               = 75.0/26.0;
         public static final double PAN_DEG_PER_COUNT            =
             360.0/(RobotParams.MotorSpec.GOBILDA_223_ENC_PPR*PAN_GEAR_RATIO);
-        public static final double PAN_POS_OFFSET               = 95.0;
+        public static final double PAN_POS_OFFSET               = 92.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -345.0;
@@ -240,7 +240,8 @@ public class Shooter extends TrcSubsystem
 
         public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
         public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
-        public static TrcPose2D CAMERA_POSE_ON_TURRET           = new TrcPose2D(0.0, -2.9837, 0.0);
+        public static double CAM_DISTANCE_FROM_TURRET           = 2.9837;   // inches from turret center
+        public static TrcPose2D CAM_POSE_ON_TURRET              = new TrcPose2D(0.0, -CAM_DISTANCE_FROM_TURRET, 0.0);
     }   //class Params
 
     public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
@@ -660,7 +661,7 @@ public class Shooter extends TrcSubsystem
                         FtcLimelightVision.ResultType.Fiducial,
                         trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                             RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                        null, null, -1);
+                        null, -1);
                 if (aprilTagInfo == null)
                 {
                     // Not detecting AprilTag or vision is still processing the frame, don't move.
@@ -714,11 +715,20 @@ public class Shooter extends TrcSubsystem
      * @param turretAngleDeg specifies the turret heading in degrees.
      * @return camera pose relative to the robot center.
      */
-    public TrcPose2D getCameraPoseOnRobot(double turretAngleDeg)
+    public TrcPose2D getInvertedCamPoseOnRobot(double turretAngleDeg)
     {
+//        if (useTrig)
+//        {
+//            double turretAngleRad = Math.toRadians(turretAngleDeg + 180.0);
+//            return new TrcPose2D(
+//                -(Params.CAM_DISTANCE_FROM_TURRET*Math.sin(turretAngleRad) + Params.TURRET_X_OFFSET),
+//                -(Params.CAM_DISTANCE_FROM_TURRET*Math.cos(turretAngleRad) + Params.TURRET_Y_OFFSET),
+//                turretAngleDeg);
+//        }
         TrcPose2D turretPoseOnRobot = new TrcPose2D(Params.TURRET_X_OFFSET, Params.TURRET_Y_OFFSET, turretAngleDeg);
-        return turretPoseOnRobot.addRelativePose(Params.CAMERA_POSE_ON_TURRET);
-    }   //getCameraPoseOnRobot
+        TrcPose2D camPoseOnRobot = turretPoseOnRobot.addRelativePose(Params.CAM_POSE_ON_TURRET);
+        return camPoseOnRobot.invert();
+    }   //getInvertedCamPoseOnRobot
 
     /**
      * This method returns the Robot Field position adjusted by the camera position on the robot's turret.
@@ -728,13 +738,21 @@ public class Shooter extends TrcSubsystem
      */
     public TrcPose2D adjustRobotFieldPosition(TrcPose2D camFieldPose)
     {
-        double turretAngleDeg = shooter.panMotor.getPosition();
-        TrcPose2D cameraPoseOnRobot = getCameraPoseOnRobot(turretAngleDeg);
-        TrcPose2D adjustedRobotFieldPose = camFieldPose.addRelativePose(cameraPoseOnRobot.invert());
-        shooter.tracer.traceInfo(
-            Params.SUBSYSTEM_NAME, "turretAngle=%f, camFieldPose=%s, cameraPoseOnRobot=%s, adjustedPose=%s",
-            turretAngleDeg, camFieldPose, cameraPoseOnRobot, adjustedRobotFieldPose);
-        return adjustedRobotFieldPose;
+        TrcPose2D robotFieldPose = null;
+
+        if (camFieldPose != null)
+        {
+            double turretAngleDeg = shooter.getPanAngle();
+
+            TrcPose2D invertedCamPoseOnRobot = getInvertedCamPoseOnRobot(turretAngleDeg);
+            robotFieldPose = camFieldPose.addRelativePose(invertedCamPoseOnRobot);
+            robotFieldPose.angle = camFieldPose.angle - turretAngleDeg;
+            shooter.tracer.traceInfo(
+                Params.SUBSYSTEM_NAME, "turretAngle=%f, camFieldPose=%s, invCamPoseOnRobot=%s, robotFieldPose=%s",
+                turretAngleDeg, camFieldPose, invertedCamPoseOnRobot, robotFieldPose);
+        }
+
+        return robotFieldPose;
     }   //adjustRobotFieldPosition
 
     //

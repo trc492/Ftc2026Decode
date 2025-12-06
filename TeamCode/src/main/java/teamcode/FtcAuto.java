@@ -249,7 +249,7 @@ public class FtcAuto extends FtcOpMode
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> detectedAprilTag =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, null,
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags,
                     this::compareObeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {
@@ -355,6 +355,7 @@ public class FtcAuto extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
+        robot.periodic(elapsedTime, slowPeriodicLoop);
         if (autoCommand != null)
         {
             //

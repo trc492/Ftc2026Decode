@@ -307,6 +307,22 @@ public class Robot
     }   //stopMode
 
     /**
+     * This method is called periodically on the main robot thread. Typically, you put code here that requires to be
+     * run regardless of RobotMode (autonomous or teleop).
+     *
+     * @param elapsedTime specifies the elapsed time since the mode started.
+     * @param slowPeriodicLoop specifies true if it is running the slow periodic loop on the main robot thread,
+     *        false otherwise.
+     */
+    public void periodic(double elapsedTime, boolean slowPeriodicLoop)
+    {
+        if (robotBase != null && vision != null && vision.limelightVision != null)
+        {
+            vision.limelightVision.updateRobotHeading(robotBase.driveBase.getHeading());
+        }
+    }   //periodic
+
+    /**
      * This method is called to cancel all pending operations and release the ownership of all subsystems.
      */
     public void cancelAll()

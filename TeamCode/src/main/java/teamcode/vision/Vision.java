@@ -471,13 +471,12 @@ public class Vision
      *
      * @param resultType specifies the result type to look for.
      * @param matchIds specifies the object ID(s) to match for, null if no matching required.
-     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, Object matchIds, Double robotHeading,
+        FtcLimelightVision.ResultType resultType, Object matchIds,
         Comparator<? super TrcVisionTargetInfo<FtcLimelightVision.DetectedObject>> comparator, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
@@ -487,7 +486,7 @@ public class Vision
             String objectName = null;
             int pipelineIndex = -1;
 
-            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, comparator);
+            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, comparator);
             if (limelightInfo != null)
             {
                 pipelineIndex = limelightVision.getPipeline();
@@ -670,12 +669,10 @@ public class Vision
         TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
         TrcPose2D goalFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
             RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE;
+        TrcPose2D aprilTagFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+            RobotParams.Game.APRILTAG_POSES[0]: RobotParams.Game.APRILTAG_POSES[4];
         TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
-        // TODO: Fix this code, it doesn't work.
-        TrcPose2D aprilTagToCornerPose =
-            alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER;
-        TrcPose2D aprilTagPose = targetPose.addRelativePose(aprilTagToCornerPose.invert());
+        TrcPose2D aprilTagPose = aprilTagFieldPose.relativeTo(robotPose);
         double targetDepth = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
         double targetBearing = targetPose.angle;
         tracer.traceDebug(
@@ -688,11 +685,9 @@ public class Vision
     /**
      * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
      * position from the camera to calculate the robot's absolute field location.
-     *
-     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @return robot field location.
      */
-    public TrcPose2D getRobotFieldPose(Double robotHeading)
+    public TrcPose2D getRobotFieldPose()
     {
         TrcPose2D robotPose = null;
 
@@ -700,7 +695,7 @@ public class Vision
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, robotHeading, null, -1);
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, null, -1);
 
             if (aprilTagInfo != null)
             {
@@ -721,17 +716,6 @@ public class Vision
         }
 
         return robotPose;
-    }   //getRobotFieldPose
-
-    /**
-     * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
-     * position from the camera to calculate the robot's absolute field location.
-     *
-     * @return robot field location.
-     */
-    public TrcPose2D getRobotFieldPose()
-    {
-        return getRobotFieldPose((Double) null);
     }   //getRobotFieldPose
 
     /**
@@ -1305,23 +1289,6 @@ public class Vision
 
         return match;
     }   //artifactFilter
-
-//    /**
-//     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
-//     * vertical position is in the ROI of the classifier.
-//     *
-//     * @param blobInfo specifies the detected blob info.
-//     * @param context not used.
-//     * @return true if it matches expectation, false otherwise.
-//     */
-//    public boolean classifierBlobFilter(
-//        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blobInfo, Object context)
-//    {
-//        return (blobInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
-//                blobInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
-//               blobInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
-//               blobInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
-//    }   //classifierBlobFilter
 
     /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction

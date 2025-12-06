@@ -189,6 +189,7 @@ public class FtcTeleOp extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
+        robot.periodic(elapsedTime, slowPeriodicLoop);
         if (allowAnalogControl)
         {
             if (slowPeriodicLoop)
@@ -203,7 +204,6 @@ public class FtcTeleOp extends FtcOpMode
                     {
                         if (robotFieldPose == null)
                         {
-                            // Use MT2 for relocalization.
                             robotFieldPose =
                                 robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
                         }
