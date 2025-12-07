@@ -213,7 +213,6 @@ public class Shooter extends TrcSubsystem
         public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
         public static double CAM_DISTANCE_FROM_TURRET           = 2.9837;   // inches from turret center
         public static TrcPose2D CAM_POSE_ON_TURRET              = new TrcPose2D(0.0, -CAM_DISTANCE_FROM_TURRET, 0.0);
-        public static double TRACKING_FAILSAFE_DELAY            = 0.1;      // in seconds
     }   //class Params
 
     public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
@@ -633,6 +632,18 @@ public class Shooter extends TrcSubsystem
     }   //resumeGoalTracking
 
     /**
+     * This method checks for Shooter encoder failure and turn ON FailSafe mode if it happens.
+     */
+    public void checkFailSafe()
+    {
+        if (!failSafeMode && shooter.shooterMotor1.getPidTarget() > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
+        {
+            shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
+            failSafeMode = true;
+        }
+    }   //checkFailSafe
+
+    /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
      * position, we can use the PID controller to track the AprilTag target.
      *
@@ -647,14 +658,6 @@ public class Shooter extends TrcSubsystem
         {
             // Goal Tracking is ON.
             double[] aimInfo = null;
-
-            if (!failSafeMode &&
-                TrcTimer.getCurrentTime() > trackingStartTimestamp + Params.TRACKING_FAILSAFE_DELAY &&
-                getFlywheelRPM() == 0.0)
-            {
-                shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
-                failSafeMode = true;
-            }
 
             if (visionTracking)
             {

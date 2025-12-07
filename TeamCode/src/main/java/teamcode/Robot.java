@@ -320,6 +320,14 @@ public class Robot
         {
             vision.limelightVision.updateRobotHeading(robotBase.driveBase.getHeading());
         }
+
+        if (slowPeriodicLoop)
+        {
+            if (shooterSubsystem != null)
+            {
+                shooterSubsystem.checkFailSafe();
+            }
+        }
     }   //periodic
 
     /**
