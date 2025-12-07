@@ -253,6 +253,7 @@ public class Shooter extends TrcSubsystem
     private boolean savedVisionTracking = false;
     private boolean savedFlywheelTracking = false;
     private boolean failSafeMode = false;
+    private Double prevShooterPidTarget = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -374,6 +375,24 @@ public class Shooter extends TrcSubsystem
     {
         return shooter.shooterMotor1.getVelocity()*60.0;
     }   //getFlywheelRPM
+
+    /**
+     * This method sets the flywheel speed with the given shoot params. If failsafe mode is ON, it will spin up the
+     * flywheel with percentage power, otherwise it will velocity controlled the flywheel with velocity in the params.
+     *
+     * @param shootParams specifies the shoot params.
+     */
+    public void setFlywheelSpeed(TrcShootParams.Entry shootParams)
+    {
+        if (isFailSafeModeOn())
+        {
+            shooter.shooterMotor1.setPower(shootParams.outputs[1]);
+        }
+        else
+        {
+            shooter.setShooterMotorVelocity(shootParams.outputs[0]/60.0, 0.0);
+        }
+    }   //setFlywheelSpeed
 
     /**
      * This method returns the launcher servo position.
@@ -636,10 +655,26 @@ public class Shooter extends TrcSubsystem
      */
     public void checkFailSafe()
     {
-        if (!failSafeMode && shooter.shooterMotor1.getPidTarget() > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
+        if (!failSafeMode)
         {
-            shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
-            failSafeMode = true;
+            double pidTarget = shooter.shooterMotor1.getPidTarget();
+            if (prevShooterPidTarget == null && pidTarget > 0.0)
+            {
+                // Detected shooter startup.
+                shooter.tracer.traceInfo(instanceName, "Detected shooter startup.");
+                prevShooterPidTarget = pidTarget;
+            }
+            else if (prevShooterPidTarget != null && pidTarget == 0.0)
+            {
+                // Detected shooter stop.
+                shooter.tracer.traceInfo(instanceName, "Detected shooter stop.");
+                prevShooterPidTarget = null;
+            }
+            else if (pidTarget > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
+            {
+                shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
+                failSafeMode = true;
+            }
         }
     }   //checkFailSafe
 
@@ -694,8 +729,7 @@ public class Shooter extends TrcSubsystem
                 shooter.setTiltAngle(shootParams.region.tiltAngle);
                 if (flywheelTracking)
                 {
-                    shooter.setShooterMotorRPM(
-                        isFailSafeModeOn()? shootParams.outputs[1]: shootParams.outputs[0], 0.0);
+                    setFlywheelSpeed(shootParams);
                 }
                 // Check if we are crossing over the hard stop.
                 if (aimInfo[1] >= Params.PAN_MIN_POS && aimInfo[1] <= Params.PAN_MAX_POS)
