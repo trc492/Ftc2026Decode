@@ -36,7 +36,6 @@ import ftclib.driverio.FtcValueMenu;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcLimelightVision;
 import teamcode.autocommands.CmdDecodeAuto;
-import teamcode.autotasks.TaskAutoShoot;
 import teamcode.vision.Vision;
 import trclib.command.CmdPidDrive;
 import trclib.command.CmdTimedDrive;
@@ -110,7 +109,7 @@ public class FtcAuto extends FtcOpMode
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
-        public ClassifierVision classifierVision = ClassifierVision.YES;
+        public ClassifierVision classifierVision = ClassifierVision.NO;
         public PickupOption pickupOption = PickupOption.SPIKEMARKS;
         public OpenGate openGate = OpenGate.NO;
         public double spikeMarkCount = 0.0;
@@ -444,8 +443,8 @@ public class FtcAuto extends FtcOpMode
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
 
-        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, true, pickupOptionMenu);
-        classifierVisionMenu.addChoice("No", ClassifierVision.NO, false, pickupOptionMenu);
+        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, false, pickupOptionMenu);
+        classifierVisionMenu.addChoice("No", ClassifierVision.NO, true, pickupOptionMenu);
 
         pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
         pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
