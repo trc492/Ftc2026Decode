@@ -173,6 +173,11 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_STALL_TIMEOUT            = 0.1;
         public static final double PAN_STALL_RESET_TIMEOUT      = 0.0;
 
+        public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
+        public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
+        public static double CAM_DISTANCE_FROM_TURRET           = 2.9837;   // inches from turret center
+        public static TrcPose2D CAM_POSE_ON_TURRET              = new TrcPose2D(0.0, -CAM_DISTANCE_FROM_TURRET, 0.0);
+
         // Tilt Motor
         public static final String TILT_MOTOR_NAME              = SUBSYSTEM_NAME + ".TiltMotor";
         public static final MotorType TILT_MOTOR_TYPE           = MotorType.CRServo;
@@ -208,11 +213,6 @@ public class Shooter extends TrcSubsystem
         public static double LAUNCHER_LAUNCH_POS                = 1.0;
         public static double LAUNCHER_LAUNCH_DURATION           = 0.75;     // in seconds
         public static double LAUNCHER_RETRACT_TIME              = 0.10;     // in seconds
-
-        public static double TURRET_X_OFFSET                    = 0.0;      // inches from robot center
-        public static double TURRET_Y_OFFSET                    = -3.246;   // inches from robot center
-        public static double CAM_DISTANCE_FROM_TURRET           = 2.9837;   // inches from turret center
-        public static TrcPose2D CAM_POSE_ON_TURRET              = new TrcPose2D(0.0, -CAM_DISTANCE_FROM_TURRET, 0.0);
     }   //class Params
 
     public static final TrcMotor.PidParams shootMotor1PidParams = new TrcMotor.PidParams()
