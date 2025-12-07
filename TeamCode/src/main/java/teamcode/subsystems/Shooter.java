@@ -135,6 +135,7 @@ public class Shooter extends TrcSubsystem
         public static final boolean SHOOT_SOFTWARE_PID_ENABLED  = true;
         public static final double SHOOT_MOTOR_OFF_DELAY        = 0.5;      // in sec
         public static final double SHOOT_VEL_TRIGGER_THRESHOLD  = 350.0;    // in RPM
+        public static final double SHOOT_FAILSAFE_CHECK_INTERVAL= 0.1;      // in sec
 
         // Pan Motor
         public static final String PAN_MOTOR_NAME               = SUBSYSTEM_NAME + ".PanMotor";
@@ -254,6 +255,7 @@ public class Shooter extends TrcSubsystem
     private boolean savedFlywheelTracking = false;
     private boolean failSafeMode = false;
     private Double prevShooterPidTarget = null;
+    private Double nextFailSafeCheckTime = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -657,23 +659,28 @@ public class Shooter extends TrcSubsystem
     {
         if (!failSafeMode)
         {
-            double pidTarget = shooter.shooterMotor1.getPidTarget();
-            if (prevShooterPidTarget == null && pidTarget > 0.0)
+            double currTime = TrcTimer.getCurrentTime();
+            if (nextFailSafeCheckTime == null || currTime > nextFailSafeCheckTime)
             {
-                // Detected shooter startup.
-                shooter.tracer.traceInfo(instanceName, "Detected shooter startup.");
-                prevShooterPidTarget = pidTarget;
-            }
-            else if (prevShooterPidTarget != null && pidTarget == 0.0)
-            {
-                // Detected shooter stop.
-                shooter.tracer.traceInfo(instanceName, "Detected shooter stop.");
-                prevShooterPidTarget = null;
-            }
-            else if (pidTarget > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
-            {
-                shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
-                failSafeMode = true;
+                double pidTarget = shooter.shooterMotor1.getPidTarget();
+                nextFailSafeCheckTime = currTime + Params.SHOOT_FAILSAFE_CHECK_INTERVAL;
+                if (prevShooterPidTarget == null && pidTarget > 0.0)
+                {
+                    // Detected shooter startup.
+                    shooter.tracer.traceInfo(instanceName, "Detected shooter startup.");
+                    prevShooterPidTarget = pidTarget;
+                }
+                else if (prevShooterPidTarget != null && pidTarget == 0.0)
+                {
+                    // Detected shooter stop.
+                    shooter.tracer.traceInfo(instanceName, "Detected shooter stop.");
+                    prevShooterPidTarget = null;
+                }
+                else if (pidTarget > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
+                {
+                    shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
+                    failSafeMode = true;
+                }
             }
         }
     }   //checkFailSafe
