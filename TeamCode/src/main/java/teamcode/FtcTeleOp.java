@@ -617,9 +617,11 @@ public class FtcTeleOp extends FtcOpMode
                     // Note: since we are doing fire and forget on the tilt angle, we assume tilt will
                     // get on target before the flywheel.
                     robot.shooter.setTiltAngle(moduleName, manualShootParams.region.tiltAngle, null, 0.0);
+                    boolean powerMode = robot.shooterSubsystem.isFailSafeModeOn();
                     robot.shooter.aimShooter(
-                        moduleName, manualShootParams.outputs[0]/60.0, 0.0, null, null, null, 0.0,
-                        robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
+                        moduleName, powerMode,
+                        powerMode? manualShootParams.outputs[1]: manualShootParams.outputs[0]/60.0, 0.0, null,
+                        null, null, 0.0, robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                 }
             }
         }
