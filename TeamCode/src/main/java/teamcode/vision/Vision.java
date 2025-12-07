@@ -226,6 +226,7 @@ public class Vision
     private FtcEocvColorBlobProcessor classifierProcessor;
     public FtcVision ftcVision;
     private FtcAuto.Alliance alliance = null;
+    public Integer lastFieldAprilTagId = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -699,8 +700,13 @@ public class Vision
 
             if (aprilTagInfo != null)
             {
+                lastFieldAprilTagId = (int) aprilTagInfo.detectedObj.objId;
                 robotPose = aprilTagInfo.detectedObj.robotPose;
                 tracer.traceInfo(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
+            }
+            else
+            {
+                lastFieldAprilTagId = null;
             }
         }
         else if (isWebcamAprilTagVisionEnabled())
@@ -711,7 +717,12 @@ public class Vision
 
             if (aprilTagInfo != null)
             {
+                lastFieldAprilTagId = aprilTagInfo.detectedObj.aprilTagDetection.id;
                 robotPose = getRobotFieldPose(aprilTagInfo);
+            }
+            else
+            {
+                lastFieldAprilTagId = null;
             }
         }
 

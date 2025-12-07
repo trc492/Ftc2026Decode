@@ -481,7 +481,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.turnTarget = turnTargetMenu.getCurrentValue();
         autoChoices.driveTime = driveTimeMenu.getCurrentValue();
         autoChoices.drivePower = drivePowerMenu.getCurrentValue();
-        TaskAutoShoot.autoShootParams.alliance = autoChoices.alliance;
+        Dashboard.DashboardParams.alliance = autoChoices.alliance;
         Dashboard.Subsystem_Vision.trackedAprilTagIds = autoChoices.alliance == Alliance.BLUE_ALLIANCE?
             RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag;
         //

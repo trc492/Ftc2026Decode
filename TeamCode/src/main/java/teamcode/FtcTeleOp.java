@@ -206,6 +206,12 @@ public class FtcTeleOp extends FtcOpMode
                         {
                             robotFieldPose =
                                 robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
+                            if (robotFieldPose != null)
+                            {
+                                Dashboard.DashboardParams.alliance =
+                                    robot.vision.lastFieldAprilTagId == 24?
+                                        FtcAuto.Alliance.RED_ALLIANCE: FtcAuto.Alliance.BLUE_ALLIANCE;
+                            }
                         }
                     }
                     else
@@ -298,8 +304,12 @@ public class FtcTeleOp extends FtcOpMode
         if (robot.robotBase != null)
         {
             robot.globalTracer.traceInfo(moduleName, "driveOrientation=" + orientation);
-            robot.robotBase.driveBase.setDriveOrientation(
-                orientation, orientation == TrcDriveBase.DriveOrientation.FIELD);
+            robot.robotBase.driveBase.setDriveOrientation(orientation, false);
+            if (orientation == TrcDriveBase.DriveOrientation.FIELD)
+            {
+                robot.robotBase.driveBase.setFieldForwardHeading(
+                    Dashboard.DashboardParams.alliance == FtcAuto.Alliance.RED_ALLIANCE? 0.0: 180.0);
+            }
             if (robot.ledIndicator != null)
             {
                 robot.ledIndicator.setDriveOrientation(orientation);
@@ -469,8 +479,8 @@ public class FtcTeleOp extends FtcOpMode
             case Start:
                 if (operatorAltFunc && pressed)
                 {
-                    Dashboard.Subsystem_Shooter.autoShootParams.alliance =
-                        Dashboard.Subsystem_Shooter.autoShootParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+                    Dashboard.DashboardParams.alliance =
+                        Dashboard.DashboardParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
                             FtcAuto.Alliance.RED_ALLIANCE: FtcAuto.Alliance.BLUE_ALLIANCE;
                 }
                 break;
@@ -543,7 +553,7 @@ public class FtcTeleOp extends FtcOpMode
                     robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                     robot.autoShootTask.autoShoot(
                         moduleName + ".autoShoot", null,
-                        Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                        Dashboard.DashboardParams.alliance,
                         false,
                         Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                         Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
@@ -666,14 +676,14 @@ public class FtcTeleOp extends FtcOpMode
         {
             if (robot.shooterSubsystem.isGoalTrackingEnabled())
             {
-                robot.globalTracer.traceInfo(moduleName, ">>>>> GoalTracking is disabled.");
+                robot.globalTracer.traceInfo(moduleName, ">>>>> Disable GoalTracking.");
                 robot.shooterSubsystem.disableGoalTracking(null);
             }
             else if (!altFunc && robot.vision != null)
             {
-                robot.shooterSubsystem.enableGoalTracking(null, true, FtcAuto.autoChoices.alliance, true);
+                robot.shooterSubsystem.enableGoalTracking(null, true, Dashboard.DashboardParams.alliance, true);
                 robot.globalTracer.traceInfo(
-                    moduleName, ">>>>> GoalTracking by AprilTag is enabled (alliance=%s).",
+                    moduleName, ">>>>> Enable GoalTracking by AprilTag (alliance=%s).",
                     FtcAuto.autoChoices.alliance);
                 if (robot.ledIndicator != null)
                 {
@@ -685,9 +695,9 @@ public class FtcTeleOp extends FtcOpMode
             }
             else
             {
-                robot.shooterSubsystem.enableGoalTracking(null, false, FtcAuto.autoChoices.alliance, true);
+                robot.shooterSubsystem.enableGoalTracking(null, false, Dashboard.DashboardParams.alliance, true);
                 robot.globalTracer.traceInfo(
-                    moduleName, ">>>>> GoalTracking by Odometry is enabled (alliance=%s).",
+                    moduleName, ">>>>> Enable GoalTracking by Odometry (alliance=%s).",
                     FtcAuto.autoChoices.alliance);
                 if (robot.ledIndicator != null)
                 {

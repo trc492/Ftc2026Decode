@@ -848,7 +848,7 @@ public class FtcTest extends FtcTeleOp
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
                                     moduleName + ".autoShoot", null,
-                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    Dashboard.DashboardParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
@@ -1064,9 +1064,9 @@ public class FtcTest extends FtcTeleOp
             }
             else if (robot.vision.isClassifierVisionEnabled())
             {
-                robot.vision.detectClassifierArtifacts(Dashboard.Subsystem_Shooter.autoShootParams.alliance);
+                robot.vision.detectClassifierArtifacts(Dashboard.DashboardParams.alliance);
                 Vision.ArtifactType[] classifierArtifacts = robot.vision.getBestClassifierArtifacts(
-                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                    Dashboard.DashboardParams.alliance,
                     Dashboard.Subsystem_Vision.minClassifierSampleCount);
                 if (classifierArtifacts != null)
                 {

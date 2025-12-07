@@ -64,7 +64,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
     public static class TaskParams
     {
-        public FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
+        private FtcAuto.Alliance alliance = null;
         public boolean inAuto = false;
         public boolean useAprilTagVision = true;
         public boolean doMotif = false;
@@ -490,7 +490,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         aimInfo[0], aimInfo[1], shootParams, event);
                     robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
                     robot.shooter.aimShooter(
-                        owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
+                        owner,
+                        (robot.shooterSubsystem.isFailSafeModeOn()?
+                            shootParams.outputs[1]: shootParams.outputs[0])/60.0,
+                        0.0, null, aimInfo[1], event, 0.0, null, 0.0);
                 }
                 // Wait for Spindexer and Shooter to be ready before shooting.
                 sm.waitForEvents(State.SHOOT, false, true);
