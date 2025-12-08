@@ -323,7 +323,7 @@ public class Robot
 
         if (slowPeriodicLoop)
         {
-            if (shooterSubsystem != null)
+            if (RobotParams.Preferences.shooterFailSafe && shooterSubsystem != null)
             {
                 shooterSubsystem.checkFailSafe();
             }

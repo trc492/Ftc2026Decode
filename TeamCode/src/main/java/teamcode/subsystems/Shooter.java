@@ -653,7 +653,7 @@ public class Shooter extends TrcSubsystem
     }   //resumeGoalTracking
 
     /**
-     * This method checks for Shooter encoder failure and turn ON FailSafe mode if it happens.
+     * This method is called periodically to check for Shooter encoder failure and turn ON FailSafe mode if it happens.
      */
     public void checkFailSafe()
     {
