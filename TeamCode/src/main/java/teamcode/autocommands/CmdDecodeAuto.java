@@ -195,7 +195,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
                         robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
-                        robot.shooterSubsystem.setFlywheelSpeed(shootParams);
+                        robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
                             moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");
                     }

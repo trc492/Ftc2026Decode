@@ -882,7 +882,7 @@ public class FtcTest extends FtcTeleOp
                                     moduleName, 0.0, Dashboard.Subsystem_Shooter.tiltAngle, true,
                                     Shooter.Params.TILT_POWER_LIMIT, null, 0.0);
                                 robot.shooter.aimShooter(
-                                    moduleName, false, Dashboard.Subsystem_Shooter.shootMotor1Velocity / 60.0, 0.0,
+                                    moduleName, Dashboard.Subsystem_Shooter.shootMotor1Velocity / 60.0, 0.0,
                                     null, null, null, 0.0, robot.shooterSubsystem::shoot,
                                     Shooter.Params.SHOOT_MOTOR_OFF_DELAY);
                             }

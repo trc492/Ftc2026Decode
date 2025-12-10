@@ -489,10 +489,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
                         aimInfo[0], aimInfo[1], shootParams, event);
                     robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
-                    boolean powerMode = robot.shooterSubsystem.isFailSafeModeOn();
                     robot.shooter.aimShooter(
-                        owner, powerMode, powerMode? shootParams.outputs[1]: shootParams.outputs[0]/60.0,
-                        0.0, null, aimInfo[1], event, 0.0, null, 0.0);
+                        owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
                 }
                 // Wait for Spindexer and Shooter to be ready before shooting.
                 sm.waitForEvents(State.SHOOT, false, true);
