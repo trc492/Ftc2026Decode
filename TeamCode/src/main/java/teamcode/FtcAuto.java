@@ -48,7 +48,7 @@ import trclib.vision.TrcVisionTargetInfo;
 /**
  * This class contains the Autonomous Mode program.
  */
-@Autonomous(name="FtcAutonomous", group="FtcTeam")
+@Autonomous(name="FtcAutonomous", group="Ftc3543", preselectTeleOp="FtcTeleOp")
 public class FtcAuto extends FtcOpMode
 {
     private final String moduleName = getClass().getSimpleName();

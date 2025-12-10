@@ -702,7 +702,7 @@ public class Vision
             {
                 lastFieldAprilTagId = (int) aprilTagInfo.detectedObj.objId;
                 robotPose = aprilTagInfo.detectedObj.robotPose;
-                tracer.traceInfo(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
+                tracer.traceDebug(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
             }
             else
             {

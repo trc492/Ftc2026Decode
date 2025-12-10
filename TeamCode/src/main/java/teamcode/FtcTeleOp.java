@@ -44,7 +44,7 @@ import trclib.timer.TrcTimer;
 /**
  * This class contains the TeleOp Mode program.
  */
-@TeleOp(name="FtcTeleOp", group="FtcTeam")
+@TeleOp(name="FtcTeleOp", group="Ftc3543")
 public class FtcTeleOp extends FtcOpMode
 {
     private final String moduleName = getClass().getSimpleName();
@@ -60,7 +60,7 @@ public class FtcTeleOp extends FtcOpMode
     protected boolean operatorAltFunc = false;
     protected boolean allowAnalogControl = true;
     private boolean relocalizing = false;
-    private TrcPose2D robotFieldPose = null;
+    private int relocalizeCount = 0;
     private Integer savedLimelightPipeline = null;
 
     private double panPrevPower = 0.0;
@@ -202,15 +202,23 @@ public class FtcTeleOp extends FtcOpMode
                     // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
                     if (relocalizing)
                     {
-                        if (robotFieldPose == null)
+                        if (relocalizeCount < 2)
                         {
-                            robotFieldPose =
-                                robot.shooterSubsystem.adjustRobotFieldPosition(robot.vision.getRobotFieldPose());
+                            TrcPose2D robotFieldPose = robot.vision.getRobotFieldPose();
                             if (robotFieldPose != null)
                             {
+                                robot.relocalizedRobotPose =
+                                    robot.shooterSubsystem.adjustRobotFieldPosition(robotFieldPose);
+                                // Vision found an AprilTag, set the new robot field location.
+                                robot.globalTracer.traceInfo(
+                                    moduleName,
+                                    ">>>>> Relocalizing: pose=" + robotFieldPose +
+                                    ", adjPose=" + robot.relocalizedRobotPose);
+                                robot.robotBase.driveBase.setFieldPosition(robot.relocalizedRobotPose, false);
                                 Dashboard.DashboardParams.alliance =
-                                    robot.vision.lastFieldAprilTagId == 24?
-                                        FtcAuto.Alliance.RED_ALLIANCE: FtcAuto.Alliance.BLUE_ALLIANCE;
+                                    robot.vision.lastFieldAprilTagId == 24 ?
+                                        FtcAuto.Alliance.RED_ALLIANCE : FtcAuto.Alliance.BLUE_ALLIANCE;
+                                relocalizeCount++;
                             }
                         }
                     }
@@ -781,29 +789,19 @@ public class FtcTeleOp extends FtcOpMode
 
             if (hasAprilTagVision)
             {
+                relocalizing = pressed;
                 // On press of the button, we will start looking for AprilTag for re-localization.
                 // On release of the button, we will set the robot's field location if we found the AprilTag.
-                relocalizing = pressed;
-                if (!pressed)
+                if (pressed)
                 {
-                    if (robotFieldPose != null)
-                    {
-                        // Vision found an AprilTag, set the new robot field location.
-                        robot.globalTracer.traceInfo(
-                            moduleName, ">>>>> Finish re-localizing: pose=" + robotFieldPose);
-                        robot.robotBase.driveBase.setFieldPosition(robotFieldPose, false);
-                        robotFieldPose = null;
-                        if (savedLimelightPipeline != null)
-                        {
-                            // Done with AprilTag re-localization, restore previous Limelight pipeline.
-                            robot.vision.limelightVision.setPipeline(savedLimelightPipeline);
-                            savedLimelightPipeline = null;
-                        }
-                    }
-                }
-                else
-                {
+                    relocalizeCount = 0;
                     robot.globalTracer.traceInfo(moduleName, ">>>>> Start re-localizing ...");
+                }
+                else if (savedLimelightPipeline != null)
+                {
+                    // Done with AprilTag re-localization, restore previous Limelight pipeline.
+                    robot.vision.limelightVision.setPipeline(savedLimelightPipeline);
+                    savedLimelightPipeline = null;
                 }
             }
         }

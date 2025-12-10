@@ -794,7 +794,7 @@ public class Shooter extends TrcSubsystem
             TrcPose2D invertedCamPoseOnRobot = getInvertedCamPoseOnRobot(turretAngleDeg);
             robotFieldPose = camFieldPose.addRelativePose(invertedCamPoseOnRobot);
             robotFieldPose.angle = camFieldPose.angle - turretAngleDeg;
-            shooter.tracer.traceInfo(
+            shooter.tracer.traceDebug(
                 Params.SUBSYSTEM_NAME, "turretAngle=%f, camFieldPose=%s, invCamPoseOnRobot=%s, robotFieldPose=%s",
                 turretAngleDeg, camFieldPose, invertedCamPoseOnRobot, robotFieldPose);
         }

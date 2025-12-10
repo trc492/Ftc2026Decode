@@ -53,7 +53,7 @@ import trclib.timer.TrcTimer;
  * testing purposes. It provides numerous tests for diagnosing problems with the robot. It also provides tools
  * for tuning and calibration.
  */
-@TeleOp(name="FtcTest", group="FtcTeam")
+@TeleOp(name="FtcTest", group="Ftc3543")
 public class FtcTest extends FtcTeleOp
 {
     private final String moduleName = getClass().getSimpleName();

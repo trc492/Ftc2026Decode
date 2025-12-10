@@ -83,6 +83,7 @@ public class Robot
 
     public int obeliskAprilTagId = 0;
     public Vision.ArtifactType[] obeliskMotif = null;
+    public TrcPose2D relocalizedRobotPose = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -316,7 +317,7 @@ public class Robot
      */
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
-        if (robotBase != null && vision != null && vision.limelightVision != null)
+        if (relocalizedRobotPose != null && vision != null && vision.limelightVision != null)
         {
             vision.limelightVision.updateRobotHeading(robotBase.driveBase.getHeading());
         }
