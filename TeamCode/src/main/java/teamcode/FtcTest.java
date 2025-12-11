@@ -53,7 +53,7 @@ import trclib.timer.TrcTimer;
  * testing purposes. It provides numerous tests for diagnosing problems with the robot. It also provides tools
  * for tuning and calibration.
  */
-@TeleOp(name="FtcTest", group="FtcTeam")
+@TeleOp(name="FtcTest", group="Ftc3543")
 public class FtcTest extends FtcTeleOp
 {
     private final String moduleName = getClass().getSimpleName();
@@ -235,6 +235,11 @@ public class FtcTest extends FtcTeleOp
                     {
                         robot.globalTracer.traceInfo(moduleName, "Enabling ArtifactVision.");
                         robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, true);
+                    }
+                    else if (robot.vision.classifierVision != null)
+                    {
+                        robot.globalTracer.traceInfo(moduleName, "Enabling ClassifierVision.");
+                        robot.vision.setClassifierVisionEnabled(true, true);
                     }
                 }
                 break;
@@ -643,34 +648,48 @@ public class FtcTest extends FtcTeleOp
                 {
                     if (pressed)
                     {
-                        if (testVisionArtifactType == Vision.ArtifactType.Any)
+                        if (robot.vision.artifactVision != null)
                         {
-                            testVisionArtifactType = Vision.ArtifactType.Purple;
-                        }
-                        else if (testVisionArtifactType == Vision.ArtifactType.Purple)
-                        {
-                            testVisionArtifactType = Vision.ArtifactType.Green;
-                        }
-                        else if (testVisionArtifactType == Vision.ArtifactType.Green)
-                        {
-                            testVisionArtifactType = Vision.ArtifactType.None;
+                            // ArtifactVision is enabled, cycle through different color pipelines and
+                            // also allow switching to ClassifierVision in the cycle (using None type).
+                            if (testVisionArtifactType == Vision.ArtifactType.Any)
+                            {
+                                // Switch to artifact purple pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Purple;
+                            }
+                            else if (testVisionArtifactType == Vision.ArtifactType.Purple)
+                            {
+                                // Switch to artifact green pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Green;
+                            }
+                            else if (testVisionArtifactType == Vision.ArtifactType.Green)
+                            {
+                                // Switch to classifier pipeline
+                                testVisionArtifactType = Vision.ArtifactType.None;
+                            }
+                            else
+                            {
+                                // Switch to artifact purple and green pipeline
+                                testVisionArtifactType = Vision.ArtifactType.Any;
+                            }
                         }
                         else
                         {
-                            testVisionArtifactType = Vision.ArtifactType.Any;
+                            // Only ClassifierVision is enabled.
+                            testVisionArtifactType = Vision.ArtifactType.None;
                         }
 
                         if (testVisionArtifactType == Vision.ArtifactType.None)
                         {
                             robot.globalTracer.traceInfo(moduleName, ">>>>> Switch to Classifier Vision");
                             robot.vision.setArtifactVisionEnabled(Vision.ArtifactType.Any, false);
-                            robot.vision.setClassifierVisionEnabled(true);
+                            robot.vision.setClassifierVisionEnabled(true, true);
                         }
                         else
                         {
                             robot.globalTracer.traceInfo(
                                 moduleName, ">>>>> Switch to Artifact Vision %s", testVisionArtifactType);
-                            robot.vision.setClassifierVisionEnabled(false);
+                            robot.vision.setClassifierVisionEnabled(false, false);
                             robot.vision.setArtifactVisionEnabled(testVisionArtifactType, true);
                         }
                     }
@@ -829,11 +848,13 @@ public class FtcTest extends FtcTeleOp
                                 robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                                 robot.autoShootTask.autoShoot(
                                     moduleName + ".autoShoot", null,
-                                    Dashboard.Subsystem_Shooter.autoShootParams.alliance,
+                                    Dashboard.DashboardParams.alliance,
                                     false,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.useRegression,
+                                    Dashboard.Subsystem_Shooter.autoShootParams.flywheelTracking,
                                     Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
                                     Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
                                         Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
@@ -1029,7 +1050,7 @@ public class FtcTest extends FtcTeleOp
                 robot.vision.getLimelightDetectedObject(
                     robot.vision.limelightVision.getPipeline() == Vision.LimelightPipelineType.APRIL_TAG.value?
                         FtcLimelightVision.ResultType.Fiducial: FtcLimelightVision.ResultType.Python,
-                    null, null, null, -1);
+                    null, null, -1);
             }
 
             if (robot.vision.webcamAprilTagVision != null)
@@ -1043,10 +1064,13 @@ public class FtcTest extends FtcTeleOp
             }
             else if (robot.vision.isClassifierVisionEnabled())
             {
-                Vision.ArtifactType[] blobs = robot.vision.getClassifierArtifacts(FtcAuto.Alliance.BLUE_ALLIANCE);
-                if (blobs != null)
+                robot.vision.detectClassifierArtifacts(Dashboard.DashboardParams.alliance);
+                Vision.ArtifactType[] classifierArtifacts = robot.vision.getBestClassifierArtifacts(
+                    Dashboard.DashboardParams.alliance,
+                    Dashboard.Subsystem_Vision.minClassifierSampleCount);
+                if (classifierArtifacts != null)
                 {
-                    robot.dashboard.displayPrintf(15, "Blobs=%s", Arrays.toString(blobs));
+                    robot.dashboard.displayPrintf(15, "classifier=%s", Arrays.toString(classifierArtifacts));
                 }
             }
         }

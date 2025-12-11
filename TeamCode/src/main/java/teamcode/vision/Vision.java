@@ -40,6 +40,7 @@ import ftclib.vision.FtcLimelightVision;
 import ftclib.vision.FtcVision;
 import ftclib.vision.FtcVisionAprilTag;
 import ftclib.vision.FtcVisionEocvColorBlob;
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -169,7 +170,7 @@ public class Vision
             .setAspectRatioRange(0.5, 2.0);
     public static final TrcOpenCvColorBlobPipeline.FilterContourParams classifierBlobFilterParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
-            .setMinArea(200.0)
+            .setMinArea(50.0)
             .setMinPerimeter(50.0)
             .setWidthRange(20.0, 250.0)
             .setHeightRange(10.0, 60.0)
@@ -180,9 +181,9 @@ public class Vision
     private static final double artifactHeight = 5.0; // inches
 
     private static final int CLASSIFIER_ROI_LEFT = 0;
-    private static final int CLASSIFIER_ROI_TOP = 0;
-    private static final int CLASSIFIER_ROI_RIGHT = frontCamParams.camImageWidth - 1;
-    private static final int CLASSIFIER_ROI_BOTTOM = 90;
+    private static final int CLASSIFIER_ROI_TOP = 50;
+    private static final int CLASSIFIER_ROI_WIDTH = frontCamParams.camImageWidth;
+    private static final int CLASSIFIER_ROI_HEIGHT = 100;
     private static final double RECT_ANGLE_THRESHOLD = 3.0;
     private static final double ONE_BALL_THRESHOLD = 3.0;
     private static final double TWO_BALL_THRESHOLD = 2 * ONE_BALL_THRESHOLD;
@@ -206,7 +207,7 @@ public class Vision
     public static final TrcOpenCvColorBlobPipeline.PipelineParams classifierPipelineParams =
         new TrcOpenCvColorBlobPipeline.PipelineParams()
             .setAnnotation(true, false)
-            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_RIGHT, CLASSIFIER_ROI_BOTTOM)
+            .setRoi(CLASSIFIER_ROI_LEFT, CLASSIFIER_ROI_TOP, CLASSIFIER_ROI_WIDTH, CLASSIFIER_ROI_HEIGHT)
             .setColorConversion(colorConversion)
             .addColorThresholds(LEDIndicator.PURPLE_BLOB, true, purpleThresholdsLow, purpleThresholdsHigh)
             .addColorThresholds(LEDIndicator.GREEN_BLOB, true, greenThresholdsLow, greenThresholdsHigh)
@@ -225,6 +226,7 @@ public class Vision
     private FtcEocvColorBlobProcessor classifierProcessor;
     public FtcVision ftcVision;
     private FtcAuto.Alliance alliance = null;
+    public Integer lastFieldAprilTagId = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -308,7 +310,6 @@ public class Vision
                         robot.robotInfo.webCam1.worldRect);
                     classifierProcessor = classifierVision.getVisionProcessor();
                     visionProcessorsList.add(classifierProcessor);
-                    //                classifierProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
                 }
             }
 
@@ -471,13 +472,12 @@ public class Vision
      *
      * @param resultType specifies the result type to look for.
      * @param matchIds specifies the object ID(s) to match for, null if no matching required.
-     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @param comparator specifies the comparator to sort the array if provided, can be null if not provided.
      * @param lineNum specifies the dashboard line number to display the detected object info, -1 to disable printing.
      * @return detected Limelight object info.
      */
     public TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> getLimelightDetectedObject(
-        FtcLimelightVision.ResultType resultType, Object matchIds, Double robotHeading,
+        FtcLimelightVision.ResultType resultType, Object matchIds,
         Comparator<? super TrcVisionTargetInfo<FtcLimelightVision.DetectedObject>> comparator, int lineNum)
     {
         TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> limelightInfo = null;
@@ -487,7 +487,7 @@ public class Vision
             String objectName = null;
             int pipelineIndex = -1;
 
-            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, robotHeading, comparator);
+            limelightInfo = limelightVision.getBestDetectedTargetInfo(resultType, matchIds, comparator);
             if (limelightInfo != null)
             {
                 pipelineIndex = limelightVision.getPipeline();
@@ -637,13 +637,58 @@ public class Vision
     }   //getRobotFieldPose
 
     /**
+     * This method determines the target depth and bearing by using AprilTag Vision.
+     *
+     * @param aprilTagInfo specifies the detected AprilTag info.
+     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     */
+    public double[] getAimInfoByVision(TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo)
+    {
+        int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
+        TrcPose2D targetPose = aprilTagInfo.objPose.addRelativePose(
+            aprilTagId == 20?
+                RobotParams.Game.BLUE_APRILTAG_TO_CORNER: RobotParams.Game.RED_APRILTAG_TO_CORNER);
+        double targetDepth = aprilTagInfo.objDepth;
+        // targetPose is in camera space and the camera is mounted on a turret. Adjust angle to robot space by adding
+        // turret angle.
+        double targetBearing = targetPose.angle + robot.shooter.getPanAngle();
+        tracer.traceDebug(
+            moduleName, "aprilTagPose{%d}=%s, targetPose=%s, depth=%f, bearing=%f",
+            aprilTagId, aprilTagInfo.objPose, targetPose, targetDepth, targetBearing, targetBearing);
+
+        return new double[] {targetDepth, targetBearing};
+    }   //getAimInfoByVision
+
+    /**
+     * This method determines the target depth and bearing by using Odometry.
+     *
+     * @param alliance specifies the alliance goal to shoot at.
+     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     */
+    public double[] getAimInfoByOdometry(FtcAuto.Alliance alliance)
+    {
+        TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
+        TrcPose2D goalFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+            RobotParams.Game.BLUE_CORNER_POSE: RobotParams.Game.RED_CORNER_POSE;
+        TrcPose2D aprilTagFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
+            RobotParams.Game.APRILTAG_POSES[0]: RobotParams.Game.APRILTAG_POSES[4];
+        TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
+        TrcPose2D aprilTagPose = aprilTagFieldPose.relativeTo(robotPose);
+        double targetDepth = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
+        double targetBearing = targetPose.angle;
+        tracer.traceDebug(
+            moduleName, "robotPose=%s, targetPose=%s, aprilTagPose=%s, depth=%f, bearing=%f",
+            robotPose, targetPose, aprilTagPose, targetDepth, targetBearing);
+
+        return new double[] {targetDepth, targetBearing};
+    }   //getAimInfoByOdometry
+
+    /**
      * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
      * position from the camera to calculate the robot's absolute field location.
-     *
-     * @param robotHeading specifies robot heading in degrees for multi-tag localization, can be null if not provided.
      * @return robot field location.
      */
-    public TrcPose2D getRobotFieldPose(Double robotHeading)
+    public TrcPose2D getRobotFieldPose()
     {
         TrcPose2D robotPose = null;
 
@@ -651,12 +696,17 @@ public class Vision
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                 getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, robotHeading, null, -1);
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.anyGoalAprilTags, null, -1);
 
             if (aprilTagInfo != null)
             {
+                lastFieldAprilTagId = (int) aprilTagInfo.detectedObj.objId;
                 robotPose = aprilTagInfo.detectedObj.robotPose;
-                tracer.traceInfo(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
+                tracer.traceDebug(moduleName, "getRobotFieldPose=%s (obj=%s)", robotPose, aprilTagInfo.detectedObj);
+            }
+            else
+            {
+                lastFieldAprilTagId = null;
             }
         }
         else if (isWebcamAprilTagVisionEnabled())
@@ -667,22 +717,16 @@ public class Vision
 
             if (aprilTagInfo != null)
             {
+                lastFieldAprilTagId = aprilTagInfo.detectedObj.aprilTagDetection.id;
                 robotPose = getRobotFieldPose(aprilTagInfo);
+            }
+            else
+            {
+                lastFieldAprilTagId = null;
             }
         }
 
         return robotPose;
-    }   //getRobotFieldPose
-
-    /**
-     * This method uses vision to find an AprilTag and uses the AprilTag's absolute field location and its relative
-     * position from the camera to calculate the robot's absolute field location.
-     *
-     * @return robot field location.
-     */
-    public TrcPose2D getRobotFieldPose()
-    {
-        return getRobotFieldPose((Double) null);
     }   //getRobotFieldPose
 
     /**
@@ -844,8 +888,9 @@ public class Vision
      * This method enables/disables Classifier vision.
      *
      * @param enabled specifies true to enable, false to disable.
+     * @param useSamplingFilter specifies true to enable Sampling filter, false to disable.
      */
-    public void setClassifierVisionEnabled(boolean enabled)
+    public void setClassifierVisionEnabled(boolean enabled, boolean useSamplingFilter)
     {
         TrcOpenCvColorBlobPipeline classifierPipeline =
             classifierProcessor != null? classifierProcessor.getPipeline(): null;
@@ -860,6 +905,7 @@ public class Vision
                 // Start Dashboard Stream before turning on Classifier Processor.
                 setDashboardStreamEnabled(classifierProcessor, true);
                 setVisionProcessorEnabled(classifierProcessor, true);
+                setClassifierArtifactsFilterEnabled(useSamplingFilter);
             }
             else
             {
@@ -867,6 +913,7 @@ public class Vision
                 // the color threshold set.
                 setVisionProcessorEnabled(classifierProcessor, false);
                 setDashboardStreamEnabled(classifierProcessor, false);
+                setClassifierArtifactsFilterEnabled(false);
             }
         }
     }   //setClassifierVisionEnabled
@@ -883,18 +930,16 @@ public class Vision
 
     /**
      * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
-     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts.
-     *
-     * @param alliance specifies the alliance color for sorting the array.
+     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts. It also
+     * assume appropriate alliance has been set by either getBestClassifierArtifacts or detectClassifierArtifacts.
      */
-    public ArtifactType[] getClassifierArtifacts(FtcAuto.Alliance alliance)
+    private ArtifactType[] getClassifierArtifacts()
     {
         ArtifactType[] artifacts = null;
 
         if (isClassifierVisionEnabled())
         {
             // compareDistanceX is using alliance to determine the sort order of color blobs in the classifier.
-            this.alliance = alliance;
             ArrayList<TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject>> blobs =
                 classifierVision.getDetectedTargetsInfo(null, null, this::compareDistanceX, 0.0, 0.0);
 
@@ -944,12 +989,171 @@ public class Vision
                     artifacts[k] = ArtifactType.None;
                 }
 
-                robot.dashboard.putString("Classifier", Arrays.toString(artifacts));
+                robot.dashboard.putString("Unfiltered", Arrays.toString(artifacts));
             }
         }
 
         return artifacts;
     }   //getClassifierArtifacts
+
+    private static final int CLASSIFIER_ARTIFACTS_LIST_SIZE = 10;
+    private ArrayList<ClassifierArtifactsEntry> classifierArtifactsList = null;
+    private int totalSampleCount = 0;
+
+    private static class ClassifierArtifactsEntry
+    {
+        ArtifactType[] classifierArtifacts = null;
+        int sampleCount = 0;
+
+        ClassifierArtifactsEntry(ArtifactType[] classifierArtifacts)
+        {
+            this.classifierArtifacts = classifierArtifacts;
+            this.sampleCount = 1;
+        }
+    }   //class ClassifierArtifactsEntry
+
+    private void setClassifierArtifactsFilterEnabled(boolean enabled)
+    {
+        if (isClassifierVisionEnabled())
+        {
+            if (classifierArtifactsList == null && enabled)
+            {
+                // Enabling ClassifierArtifactsFilter.
+                classifierArtifactsList = new ArrayList<>();
+                totalSampleCount = 0;
+            }
+            else if (classifierArtifactsList != null && !enabled)
+            {
+                // Disabling ClassifierArtifactsFilter.
+                classifierArtifactsList.clear();
+                classifierArtifactsList = null;
+                totalSampleCount = 0;
+            }
+        }
+    }   //setClassifierArtifactsFilterEnabled
+
+    public void resetClassifierArtifactsFilter()
+    {
+        if (classifierArtifactsList != null)
+        {
+            classifierArtifactsList.clear();
+        }
+    }   //resetClassifierArtifactsFilter
+
+    /**
+     * The method uses vision to detect all Artifacts in the classifier and returns an array of 9 slots specifying the
+     * type of artifacts in each slot. It assumes Classifier pipeline is enabled to detect Any artifacts.
+     *
+     * @param alliance specifies the alliance color for sorting the array.
+     */
+    public void detectClassifierArtifacts(FtcAuto.Alliance alliance)
+    {
+        if (classifierArtifactsList != null)
+        {
+            if (alliance != this.alliance)
+            {
+                // We have changed alliance, flush the buffer clean and start again.
+                tracer.traceInfo(
+                    moduleName, "Reset ClassifierFilter because alliance changed: " + this.alliance + "->" + alliance);
+                classifierArtifactsList.clear();
+                this.alliance = alliance;
+            }
+            ArtifactType[] classifierArtifacts = getClassifierArtifacts();
+
+            if (classifierArtifacts != null)
+            {
+                addClassifierArtifactsEntry(classifierArtifacts);
+            }
+        }
+    }   //detectClassifierArtifacts
+
+    public ArtifactType[] getBestClassifierArtifacts(FtcAuto.Alliance alliance, int minSampleCount)
+    {
+        ArtifactType[] bestClassifierArtifacts = null;
+
+        if (classifierArtifactsList == null)
+        {
+            this.alliance = alliance;
+            bestClassifierArtifacts = getClassifierArtifacts();
+            tracer.traceInfo(
+                moduleName, "getBestClassifierArtifacts(alliance=%s)=%s",
+                alliance, Arrays.toString(bestClassifierArtifacts));
+        }
+        else if (!classifierArtifactsList.isEmpty())
+        {
+            int maxCount = Integer.MIN_VALUE;
+            ClassifierArtifactsEntry maxEntry = null;
+
+            for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+            {
+                if (entry.sampleCount > maxCount)
+                {
+                    maxCount = entry.sampleCount;
+                    maxEntry = entry;
+                }
+            }
+            // maxEntry will not be null, checking it anyway to make compiler happy.
+            bestClassifierArtifacts = maxEntry != null ? maxEntry.classifierArtifacts : null;
+            robot.dashboard.putString(
+                "Filtered",
+                "[" + classifierArtifactsList.size() + "]: " + Arrays.toString(bestClassifierArtifacts));
+            tracer.traceInfo(
+                moduleName, "getBestClassifierArtifacts(alliance=%s, minSampleCount=%d, listSize=%d)=%s",
+                alliance, minSampleCount, classifierArtifactsList != null? classifierArtifactsList.size(): 0,
+                Arrays.toString(bestClassifierArtifacts));
+            if (tracer.isMsgLevelEnabled(TrcDbgTrace.MsgLevel.INFO))
+            {
+                for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+                {
+                    tracer.traceInfo(
+                        moduleName, "[" + entry.sampleCount + "] = " + Arrays.toString(entry.classifierArtifacts));
+                }
+            }
+
+            if (totalSampleCount < minSampleCount)
+            {
+                // We did not satisfy the minSampleCount required, so pretend we did not see anything until we have
+                // at least minSampleCount.
+                bestClassifierArtifacts = null;
+            }
+        }
+
+        return bestClassifierArtifacts;
+    }   //getBestClassifierArtifacts
+
+    private void addClassifierArtifactsEntry(ArtifactType[] classifierArtifacts)
+    {
+        if (classifierArtifactsList != null)
+        {
+            ClassifierArtifactsEntry newEntry = null;
+
+            for (ClassifierArtifactsEntry entry : classifierArtifactsList)
+            {
+                if (Arrays.equals(classifierArtifacts, entry.classifierArtifacts))
+                {
+                    entry.sampleCount++;
+                    // move the entry to the end of list to make it most current.
+                    classifierArtifactsList.remove(entry);
+                    newEntry = entry;
+                    break;
+                }
+            }
+
+            if (newEntry == null)
+            {
+                newEntry = new ClassifierArtifactsEntry(classifierArtifacts);
+            }
+
+            if (classifierArtifactsList.size() >= CLASSIFIER_ARTIFACTS_LIST_SIZE)
+            {
+                // Remove the oldest entry in the list.
+                classifierArtifactsList.remove(0);
+            }
+
+            classifierArtifactsList.add(newEntry);
+            totalSampleCount++;
+        }
+    }   //addClassifierArtifactsEntry
 
     /**
      * This method calls Classifier Vision to determine motif sequence to shoot next. It assumes Classifier Vision
@@ -966,17 +1170,19 @@ public class Vision
 
         if (useVision)
         {
-            ArtifactType[] classifierArtifacts = getClassifierArtifacts(alliance);
+            ArtifactType[] classifierArtifacts = getBestClassifierArtifacts(
+                alliance, Dashboard.Subsystem_Vision.minClassifierSampleCount);
 
             if (classifierArtifacts != null)
             {
+                tracer.traceInfo(moduleName, "***** ClassifierArtifacts=" + Arrays.toString(classifierArtifacts));
                 int noneIndex = -1;
                 for (int i = 0; i < classifierArtifacts.length; i++)
                 {
                     if (classifierArtifacts[i] == Vision.ArtifactType.None)
                     {
-                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
                         noneIndex = i%obeliskMotif.length;
+                        tracer.traceInfo(moduleName, "***** First classifier empty slot=" + noneIndex);
                         break;
                     }
                 }
@@ -989,8 +1195,6 @@ public class Vision
                         motifSequence[i] = obeliskMotif[noneIndex];
                         noneIndex = (noneIndex + 1)%obeliskMotif.length;
                     }
-                    tracer.traceInfo(
-                        moduleName, "***** MotifSequence=" + Arrays.toString(motifSequence));
                 }
             }
         }
@@ -1096,23 +1300,6 @@ public class Vision
 
         return match;
     }   //artifactFilter
-
-//    /**
-//     * This method is called by Vision to validate if the detected color blob is in the classifier by checking its
-//     * vertical position is in the ROI of the classifier.
-//     *
-//     * @param blobInfo specifies the detected blob info.
-//     * @param context not used.
-//     * @return true if it matches expectation, false otherwise.
-//     */
-//    public boolean classifierBlobFilter(
-//        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> blobInfo, Object context)
-//    {
-//        return (blobInfo.detectedObj.label.equals(LEDIndicator.PURPLE_BLOB) ||
-//                blobInfo.detectedObj.label.equals(LEDIndicator.GREEN_BLOB)) &&
-//               blobInfo.objRect.y >= CLASSIFIER_HEIGHT_THRESHOLD_LOW &&
-//               blobInfo.objRect.y <= CLASSIFIER_HEIGHT_THRESHOLD_HIGH;
-//    }   //classifierBlobFilter
 
     /**
      * This method is called by the Arrays.sort to sort the target object by increasing distance X. The sort direction

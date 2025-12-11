@@ -47,6 +47,7 @@ public class Dashboard
     {
         public static boolean updateDashboardEnabled = RobotParams.Preferences.updateDashboard;
         public static String tuneSubsystemName = "";
+        public static FtcAuto.Alliance alliance = FtcAuto.Alliance.BLUE_ALLIANCE;
         public static FtcAuto.AutoChoices autoChoices = FtcAuto.autoChoices;
     }   //class DashboardParams
 
@@ -55,7 +56,7 @@ public class Dashboard
     {
         public static TrcDriveBase.BaseParams driveBaseParams = DriveBase.DecodeRobotInfo.baseParams;
         public static TrcGameController.DriveMode driveMode = TrcGameController.DriveMode.ArcadeMode;
-        public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.ROBOT;
+        public static TrcDriveBase.DriveOrientation driveOrientation  = TrcDriveBase.DriveOrientation.FIELD;
         public static double driveSlowScale = 0.3;
         public static double driveNormalScale = 1.0;
         public static double turnSlowScale = 0.3;
@@ -70,6 +71,7 @@ public class Dashboard
             new int[] {RobotParams.Game.blueGoalAprilTag[0], RobotParams.Game.redGoalAprilTag[0]};
         public static TrcOpenCvColorBlobPipeline.PipelineParams artifactVision = Vision.artifactPipelineParams;
         public static TrcOpenCvColorBlobPipeline.PipelineParams classifierVision = Vision.classifierPipelineParams;
+        public static int minClassifierSampleCount = 3;
     }   //class Subsystem_Vision
 
     @Config

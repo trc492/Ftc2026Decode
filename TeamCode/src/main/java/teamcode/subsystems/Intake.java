@@ -59,8 +59,8 @@ public class Intake extends TrcSubsystem
         public static final boolean MOTOR_INVERTED              =
             RobotParams.Preferences.robotType == DriveBase.RobotType.SwerveRobot;
 
-        public static final String FRONT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".FrontTrigger";
-        public static final String BACK_TRIGGER_NAME             = SUBSYSTEM_NAME + ".BackTrigger";
+        public static final String FRONT_TRIGGER_NAME           = SUBSYSTEM_NAME + ".FrontTrigger";
+        public static final String BACK_TRIGGER_NAME            = SUBSYSTEM_NAME + ".BackTrigger";
 
         public static final double INTAKE_POWER                 = 1.0;  // Intake forward
         public static final double EJECT_POWER                  = -1.0;

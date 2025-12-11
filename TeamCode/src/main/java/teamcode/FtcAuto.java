@@ -36,7 +36,6 @@ import ftclib.driverio.FtcValueMenu;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.vision.FtcLimelightVision;
 import teamcode.autocommands.CmdDecodeAuto;
-import teamcode.autotasks.TaskAutoShoot;
 import teamcode.vision.Vision;
 import trclib.command.CmdPidDrive;
 import trclib.command.CmdTimedDrive;
@@ -49,7 +48,7 @@ import trclib.vision.TrcVisionTargetInfo;
 /**
  * This class contains the Autonomous Mode program.
  */
-@Autonomous(name="FtcAutonomous", group="FtcTeam")
+@Autonomous(name="FtcAutonomous", group="Ftc3543", preselectTeleOp="FtcTeleOp")
 public class FtcAuto extends FtcOpMode
 {
     private final String moduleName = getClass().getSimpleName();
@@ -74,6 +73,12 @@ public class FtcAuto extends FtcOpMode
         TIMED_DRIVE,
         DO_NOTHING
     }   //enum AutoStrategy
+
+    public enum ClassifierVision
+    {
+        YES,
+        NO
+    }   //enum ClassifierVision
 
     public enum PickupOption
     {
@@ -104,6 +109,7 @@ public class FtcAuto extends FtcOpMode
         public Alliance alliance = null;
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
+        public ClassifierVision classifierVision = ClassifierVision.NO;
         public PickupOption pickupOption = PickupOption.SPIKEMARKS;
         public OpenGate openGate = OpenGate.NO;
         public double spikeMarkCount = 0.0;
@@ -127,6 +133,7 @@ public class FtcAuto extends FtcOpMode
                 "alliance=\"%s\" " +
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
+                "classifierVision=\"%s\" " +
                 "pickupOption=\"%s\" " +
                 "openGate=\"%s\" " +
                 "spikeMarkCount=%.0f " +
@@ -139,7 +146,7 @@ public class FtcAuto extends FtcOpMode
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                startDelay, alliance, startPos, strategy, pickupOption, openGate, spikeMarkCount,
+                startDelay, alliance, startPos, strategy, classifierVision, pickupOption, openGate, spikeMarkCount,
                 shootDelay1, shootDelay2, shootDelay3, parkOption,
                 xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
@@ -241,7 +248,7 @@ public class FtcAuto extends FtcOpMode
         {
             TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> detectedAprilTag =
                 robot.vision.getLimelightDetectedObject(
-                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags, null,
+                    FtcLimelightVision.ResultType.Fiducial, RobotParams.Game.obeliskAprilTags,
                     this::compareObeliskAprilTags, -1);
             if (detectedAprilTag != null)
             {
@@ -347,6 +354,7 @@ public class FtcAuto extends FtcOpMode
     @Override
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
+        robot.periodic(elapsedTime, slowPeriodicLoop);
         if (autoCommand != null)
         {
             //
@@ -385,7 +393,9 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<Alliance> allianceMenu = new FtcChoiceMenu<>("Alliance:", startDelayMenu);
         FtcChoiceMenu<StartPos> startPosMenu = new FtcChoiceMenu<>("Start Position:", allianceMenu);
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
-        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", strategyMenu);
+        FtcChoiceMenu<ClassifierVision> classifierVisionMenu =
+            new FtcChoiceMenu<>("Use Classifier Vision:", strategyMenu);
+        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", classifierVisionMenu);
         FtcChoiceMenu<OpenGate> openGateMenu = new FtcChoiceMenu<>("Open Gate:", pickupOptionMenu);
         FtcValueMenu spikeMarkCountMenu =
             new FtcValueMenu("SpikeMark Count:", openGateMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
@@ -428,10 +438,13 @@ public class FtcAuto extends FtcOpMode
         startPosMenu.addChoice("Start Position Far Zone Center", StartPos.FAR_CENTER, false, strategyMenu);
         startPosMenu.addChoice("Start Position Far Zone Corner", StartPos.FAR_CORNER, false, strategyMenu);
 
-        strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, pickupOptionMenu);
+        strategyMenu.addChoice("Decode Auto", AutoStrategy.DECODE_AUTO, true, classifierVisionMenu);
         strategyMenu.addChoice("PID Drive", AutoStrategy.PID_DRIVE, false, xTargetMenu);
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
+
+        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, false, pickupOptionMenu);
+        classifierVisionMenu.addChoice("No", ClassifierVision.NO, true, pickupOptionMenu);
 
         pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
         pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
@@ -454,6 +467,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.alliance = allianceMenu.getCurrentChoiceObject();
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
+        autoChoices.classifierVision = classifierVisionMenu.getCurrentChoiceObject();
         autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
         autoChoices.spikeMarkCount = spikeMarkCountMenu.getCurrentValue();
         autoChoices.openGate = openGateMenu.getCurrentChoiceObject();
@@ -466,7 +480,7 @@ public class FtcAuto extends FtcOpMode
         autoChoices.turnTarget = turnTargetMenu.getCurrentValue();
         autoChoices.driveTime = driveTimeMenu.getCurrentValue();
         autoChoices.drivePower = drivePowerMenu.getCurrentValue();
-        TaskAutoShoot.autoShootParams.alliance = autoChoices.alliance;
+        Dashboard.DashboardParams.alliance = autoChoices.alliance;
         Dashboard.Subsystem_Vision.trackedAprilTagIds = autoChoices.alliance == Alliance.BLUE_ALLIANCE?
             RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag;
         //

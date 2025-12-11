@@ -83,6 +83,7 @@ public class Robot
 
     public int obeliskAprilTagId = 0;
     public Vision.ArtifactType[] obeliskMotif = null;
+    public TrcPose2D relocalizedRobotPose = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -272,7 +273,7 @@ public class Robot
             if (vision.classifierVision != null)
             {
                 globalTracer.traceInfo(moduleName, "Disabling ClassifierVision.");
-                vision.setClassifierVisionEnabled(false);
+                vision.setClassifierVisionEnabled(false, false);
             }
 
             vision.close();
@@ -305,6 +306,30 @@ public class Robot
             ledIndicator.reset();
         }
     }   //stopMode
+
+    /**
+     * This method is called periodically on the main robot thread. Typically, you put code here that requires to be
+     * run regardless of RobotMode (autonomous or teleop).
+     *
+     * @param elapsedTime specifies the elapsed time since the mode started.
+     * @param slowPeriodicLoop specifies true if it is running the slow periodic loop on the main robot thread,
+     *        false otherwise.
+     */
+    public void periodic(double elapsedTime, boolean slowPeriodicLoop)
+    {
+        if (relocalizedRobotPose != null && vision != null && vision.limelightVision != null)
+        {
+            vision.limelightVision.updateRobotHeading(robotBase.driveBase.getHeading());
+        }
+
+        if (slowPeriodicLoop)
+        {
+            if (RobotParams.Preferences.shooterFailSafe && shooterSubsystem != null)
+            {
+                shooterSubsystem.checkFailSafe();
+            }
+        }
+    }   //periodic
 
     /**
      * This method is called to cancel all pending operations and release the ownership of all subsystems.

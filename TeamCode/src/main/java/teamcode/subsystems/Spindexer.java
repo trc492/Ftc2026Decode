@@ -27,6 +27,8 @@ import android.graphics.Color;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 import java.util.Arrays;
 
 import ftclib.driverio.FtcDashboard;
@@ -75,16 +77,17 @@ public class Spindexer extends TrcSubsystem
         public static final boolean LOWER_LIMIT_SWITCH_INVERTED = false;
 
         public static final double DEG_PER_COUNT                = 360.0/RobotParams.MotorSpec.GOBILDA_223_ENC_PPR;
-        public static final double POS_OFFSET                   = -63.0;
+        public static final double POS_OFFSET                   = -68.0;
         public static final double ZERO_OFFSET                  = 0.0;
         public static final double ZERO_CAL_POWER               = -0.2;
 
-        public static final double MOTOR_PID_KP                 = 0.016;
-        public static final double MOTOR_PID_KI                 = 0.01;
-        public static final double MOTOR_PID_KD                 = 0.0;
+        public static final double MOTOR_PID_KP                 = 0.018;
+        public static final double MOTOR_PID_KI                 = 0.03;
+        public static final double MOTOR_PID_KD                 = 0.0003;
         public static final double MOTOR_PID_KF                 = 0.0;
         public static final double MOTOR_PID_IZONE              = 5.0;
         public static final double POS_PID_TOLERANCE            = 2.0;
+        public static final double RELAXED_POS_PID_TOLERANCE    = 10.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
@@ -95,14 +98,20 @@ public class Spindexer extends TrcSubsystem
         public static final double MOVE_POWER                   = 1.0;
         public static final int MAX_CAPACITY                    = 3;
 
+        public static final boolean ENTRY_TRIGGER_COLOR_MODE    = true;
+        public static final double ENTRY_REFRESH_TIMEOUT        = 1.0;
+
         public static final double GREEN_LOW_THRESHOLD          = 100.0;
         public static final double PURPLE_LOW_THRESHOLD         = 200.0;
         public static final double PURPLE_HIGH_THRESHOLD        = 300.0;
 
-        public static final double ENTRY_TRIGGER_LOW_THRESHOLD  = GREEN_LOW_THRESHOLD;
-        public static final double ENTRY_TRIGGER_HIGH_THRESHOLD = PURPLE_HIGH_THRESHOLD;
-        public static final double ENTRY_TRIGGER_SETTLING       = 0.02;     // in seconds
-        public static final double ENTRY_REFRESH_TIMEOUT        = 1.0;
+        public static final double ENTRY_TRIGGER_LOW_COLOR_THRESHOLD    = GREEN_LOW_THRESHOLD;
+        public static final double ENTRY_TRIGGER_HIGH_COLOR_THRESHOLD   = PURPLE_HIGH_THRESHOLD;
+        public static final double ENTRY_TRIGGER_COLOR_SETTLING = 0.02;     // in seconds
+
+        public static final double ENTRY_TRIGGER_LOW_DIST_THRESHOLD     = 1.0;
+        public static final double ENTRY_TRIGGER_HIGH_DIST_THRESHOLD    = 65.0;
+        public static final double ENTRY_TRIGGER_DIST_SETTLING  = 0.0;      // in seconds
 
         public static final String EXIT_TRIGGER_NAME            = SUBSYSTEM_NAME + ".ShootVelTrigger";
         public static final double EXIT_TRIGGER_LOW_THRESHOLD   = 3000.0;   // in RPM
@@ -118,8 +127,13 @@ public class Spindexer extends TrcSubsystem
             Params.MOTOR_PID_KP, Params.MOTOR_PID_KI, Params.MOTOR_PID_KD, Params.MOTOR_PID_KF, Params.MOTOR_PID_IZONE)
         .setPidControlParams(Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
     public static final TrcTriggerThresholdRange.TriggerParams entryTriggerParams =
-        new TrcTriggerThresholdRange.TriggerParams(
-            Params.ENTRY_TRIGGER_LOW_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_THRESHOLD, Params.ENTRY_TRIGGER_SETTLING);
+        Params.ENTRY_TRIGGER_COLOR_MODE?
+            new TrcTriggerThresholdRange.TriggerParams(
+                Params.ENTRY_TRIGGER_LOW_COLOR_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_COLOR_THRESHOLD,
+                Params.ENTRY_TRIGGER_COLOR_SETTLING):
+            new TrcTriggerThresholdRange.TriggerParams(
+                Params.ENTRY_TRIGGER_LOW_DIST_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_DIST_THRESHOLD,
+                Params.ENTRY_TRIGGER_DIST_SETTLING);
     public static final TrcTriggerThresholdRange.TriggerParams exitTriggerParams =
         new TrcTriggerThresholdRange.TriggerParams(
             Params.EXIT_TRIGGER_LOW_THRESHOLD, Params.EXIT_TRIGGER_HIGH_THRESHOLD, Params.EXIT_TRIGGER_SETTLING);
@@ -189,7 +203,7 @@ public class Spindexer extends TrcSubsystem
                 entryAnalogSensor2 = null;
             }
             spindexerParams.setEntryAnalogSourceTrigger(
-                Params.ENTRY_TRIGGER_NAME, this::getEntrySensorHue, entryTriggerParams, false,
+                Params.ENTRY_TRIGGER_NAME, this::getEntrySensorValue, entryTriggerParams, false,
                 this::entryTriggerCallback, entryTriggerEvent);
         }
         else
@@ -221,6 +235,10 @@ public class Spindexer extends TrcSubsystem
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
         entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
+        // Initialize Spindexer to entry slot 0.
+        spindexer.motor.setPosition(Params.entryPresetPositions[0], true, Params.MOVE_POWER);
+        entrySlot = 0;
+        exitSlot = null;
     }   //Spindexer
 
     /**
@@ -232,6 +250,30 @@ public class Spindexer extends TrcSubsystem
     {
         return spindexer;
     }   //getPidStorage
+
+    /**
+     * This method sets the entry trigger to color mode or distance mode.
+     *
+     * @param colorMode specifies true to set to color mode, false to distance mode.
+     */
+    private void setEntryTriggerColorMode(boolean colorMode)
+    {
+        if (entryTrigger != null)
+        {
+            if (colorMode)
+            {
+                entryTrigger.setTrigger(
+                    Params.ENTRY_TRIGGER_LOW_COLOR_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_COLOR_THRESHOLD,
+                    Params.ENTRY_TRIGGER_COLOR_SETTLING);
+            }
+            else
+            {
+                entryTrigger.setTrigger(
+                    Params.ENTRY_TRIGGER_LOW_DIST_THRESHOLD, Params.ENTRY_TRIGGER_HIGH_DIST_THRESHOLD,
+                    Params.ENTRY_TRIGGER_DIST_SETTLING);
+            }
+        }
+    }   //setEntryTriggerColorMode
 
     /**
      * This method is called when the entry sensor is triggered, it will update the entry slot state according to the
@@ -249,12 +291,11 @@ public class Spindexer extends TrcSubsystem
             // just entered the entry slot of the Spindexer.
             TrcEvent triggerEvent = (TrcEvent) context;
             TrcDataBuffer.DataSummary triggeredData = entryTrigger.getLastTriggeredData();
-            double hue = triggeredData.averageValue;
-            Vision.ArtifactType artifactType = getEntryArtifactType(hue);
+            double value = triggeredData.averageValue;
             String artifactName = null;
-            spindexer.tracer.traceInfo(
-                instanceName, "hue=%f (%f/%f), count=%d",
-                hue, triggeredData.minimumValue, triggeredData.maximumValue, triggeredData.dataCount);
+            Vision.ArtifactType artifactType = getColorArtifactType(
+                Params.ENTRY_TRIGGER_COLOR_MODE? value: getEntrySensorHue());
+
             if (artifactType == Vision.ArtifactType.Purple)
             {
                 numPurpleArtifacts++;
@@ -278,9 +319,13 @@ public class Spindexer extends TrcSubsystem
             spindexer.setEntryTriggerEnabled(false);
             spindexer.tracer.traceInfo(
                 instanceName,
-                "Entry[%d]: value=%f, artifact=%s, slotStates=%s (P=%d, G=%d, U=%d), expectedNext=%s",
-                entrySlot, hue, artifactType, Arrays.toString(slotStates), numPurpleArtifacts, numGreenArtifacts,
-                numUnknownArtifacts, expectedArtifactType);
+                "Entry[%d]: colorMode=%s, value=%f/%.0f, artifact=%s, slotStates=%s (PGU=%d/%d/%d), expectedNext=%s",
+                entrySlot, Params.ENTRY_TRIGGER_COLOR_MODE, value, getEntrySensorHue(), artifactType,
+                Arrays.toString(slotStates), numPurpleArtifacts, numGreenArtifacts, numUnknownArtifacts,
+                expectedArtifactType);
+            spindexer.tracer.traceDebug(
+                instanceName, "value=%f (%f/%f), count=%d",
+                value, triggeredData.minimumValue, triggeredData.maximumValue, triggeredData.dataCount);
 
             if (robot.ledIndicator != null && artifactName != null)
             {
@@ -536,12 +581,32 @@ public class Spindexer extends TrcSubsystem
     }   //getEntrySensorHue
 
     /**
+     * This method reads the entry REV Color Sensor and returns the Distance value in millimeter.
+     *
+     * @return distance value.
+     */
+    private double getEntrySensorDistance()
+    {
+        return entryAnalogSensor1 != null? entryAnalogSensor1.getDistance(DistanceUnit.MM): 0.0;
+    }   //getEntrySensorDistance
+
+    /**
+     * This method reads the entry REV Color Sensor and returns the sensor value.
+     *
+     * @return hue value if in color mode, distance value otherwise.
+     */
+    private double getEntrySensorValue()
+    {
+        return Params.ENTRY_TRIGGER_COLOR_MODE? getEntrySensorHue(): getEntrySensorDistance();
+    }   //getEntrySensorValue
+
+    /**
      * This method checks the color sensor for the color the artifact at the entry.
      *
      * @param hue specifies the detected hue value.
      * @return detected artifact type at the entry.
      */
-    public Vision.ArtifactType getEntryArtifactType(double hue)
+    public Vision.ArtifactType getColorArtifactType(double hue)
     {
         Vision.ArtifactType artifactType = null;
 
@@ -563,7 +628,41 @@ public class Spindexer extends TrcSubsystem
         }
 
         return artifactType;
-    }   //getEntryArtifactType
+    }   //getColorArtifactType
+
+    /**
+     * This method returns the artifact type in the current entry slot.
+     *
+     * @return artifact type in current entry slot, null if Spindexer slot is not aligned with entry.
+     */
+    public Vision.ArtifactType getEntrySlotArtifactType()
+    {
+        Vision.ArtifactType artifactType = null;
+
+        if (entrySlot != null)
+        {
+            artifactType = slotStates[entrySlot];
+        }
+
+        return artifactType;
+    }   //getEntrySlotArtifactType
+
+    /**
+     * This method returns the artifact type in the current exit slot.
+     *
+     * @return artifact type in current exit slot, null if Spindexer slot is not aligned with exit.
+     */
+    public Vision.ArtifactType getExitSlotArtifactType()
+    {
+        Vision.ArtifactType artifactType = null;
+
+        if (exitSlot != null)
+        {
+            artifactType = slotStates[exitSlot];
+        }
+
+        return artifactType;
+    }   //getExitSlotArtifactType
 
     /**
      * This method looks for the specified artifact type in the spindexer starting from the specified startSlot. It
@@ -615,12 +714,14 @@ public class Spindexer extends TrcSubsystem
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
         }
         double pos = warpSpace.getOptimizedTarget(Params.entryPresetPositions[slot], spindexer.motor.getPosition());
+        spindexer.motor.getPositionPidParameters().setPidControlParams(
+            Params.RELAXED_POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
         if (Params.SPIN_INTAKE_ON_MOVE)
         {
-            TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-            moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
+            TrcEvent callbackEvent = new TrcEvent(instanceName + ".stopIntakeCallback");
+            callbackEvent.setCallback(this::stopIntakeCallback, event);
             robot.intake.intake(Intake.Params.INTAKE_POWER);
-            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, callbackEvent, 0.0);
         }
         else
         {
@@ -653,14 +754,15 @@ public class Spindexer extends TrcSubsystem
         {
             robot.ledIndicator.setSpindexerPatternOff(exitSlot, true);
         }
-        double pos = warpSpace.getOptimizedTarget(
-            Params.exitPresetPositions[slot], spindexer.motor.getPosition());
+        double pos = warpSpace.getOptimizedTarget(Params.exitPresetPositions[slot], spindexer.motor.getPosition());
+        spindexer.motor.getPositionPidParameters().setPidControlParams(
+            Params.POS_PID_TOLERANCE, Params.SOFTWARE_PID_ENABLED);
         if (Params.SPIN_INTAKE_ON_MOVE)
         {
-            TrcEvent moveCallbackEvent = new TrcEvent(instanceName + ".moveCallback");
-            moveCallbackEvent.setCallback(this::moveCompletionCallback, event);
-            robot.intake.intake(0.25);
-            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, moveCallbackEvent, 0.0);
+            TrcEvent callbackEvent = new TrcEvent(instanceName + ".stopIntakeCallback");
+            callbackEvent.setCallback(this::stopIntakeCallback, event);
+            robot.intake.intake(Intake.Params.INTAKE_POWER);
+            spindexer.motor.setPosition(owner, 0.0, pos, true, Params.MOVE_POWER, callbackEvent, 0.0);
         }
         else
         {
@@ -675,46 +777,17 @@ public class Spindexer extends TrcSubsystem
     }   //moveToExitSlot
 
     /**
-     * This method returns the artifact type in the current entry slot.
+     * This method is called when the Spindexer finished spinning to the specified position to check if it needs to
+     * turn off intake.
      *
-     * @return artifact type in current entry slot, null if Spindexer slot is not aligned with entry.
+     * @param context specifies the event to notify for the completion.
+     * @param canceled specifies true if the event was canceled.
      */
-    public Vision.ArtifactType getEntrySlotArtifactType()
-    {
-        Vision.ArtifactType artifactType = null;
-
-        if (entrySlot != null)
-        {
-            artifactType = slotStates[entrySlot];
-        }
-
-        return artifactType;
-    }   //getExitSlotArtifactType
-
-    /**
-     * This method returns the artifact type in the current exit slot.
-     *
-     * @return artifact type in current exit slot, null if Spindexer slot is not aligned with exit.
-     */
-    public Vision.ArtifactType getExitSlotArtifactType()
-    {
-        Vision.ArtifactType artifactType = null;
-
-        if (exitSlot != null)
-        {
-            artifactType = slotStates[exitSlot];
-        }
-
-        return artifactType;
-    }   //getExitSlotArtifactType
-
-    private void moveCompletionCallback(Object context, boolean canceled)
+    private void stopIntakeCallback(Object context, boolean canceled)
     {
         TrcEvent event = (TrcEvent) context;
 
-        spindexer.tracer.traceInfo(
-            instanceName,
-            "intakeCompletionCallback(canceled=" + canceled + ")");
+        spindexer.tracer.traceInfo(instanceName, "stopIntakeCallback(canceled=" + canceled + ")");
 
         if (!canceled)
         {
@@ -732,7 +805,7 @@ public class Spindexer extends TrcSubsystem
         {
             event.cancel();
         }
-    }   //moveCompletionCallback
+    }   //stopIntakeCallback
 
     /**
      * This method finds the vacant slot near the current entry slot and move the spindexer to that slot position at
@@ -756,7 +829,7 @@ public class Spindexer extends TrcSubsystem
         if (slot != null)
         {
             TrcEvent callbackEvent = new TrcEvent(instanceName + ".callbackEvent");
-            callbackEvent.setCallback(this::spinCompletionCallback, event);
+            callbackEvent.setCallback(this::moveEntrySlotCompletionCallback, event);
             moveToEntrySlot(owner, slot, callbackEvent);
             success = true;
         }
@@ -770,18 +843,18 @@ public class Spindexer extends TrcSubsystem
     }   //moveToNextVacantEntrySlot
 
     /**
-     * This method is called when the Spinidexer completed spinning to the next position.
+     * This method is called when the Spinidexer completed spinning to the next entry position.
      *
      * @param context not used.
      * @param canceled specifies true if canceled.
      */
-    private void spinCompletionCallback(Object context, boolean canceled)
+    private void moveEntrySlotCompletionCallback(Object context, boolean canceled)
     {
         TrcEvent event = (TrcEvent) context;
 
         spindexer.tracer.traceInfo(
             instanceName,
-            "spinCompletionCallback(autoReceive=" + autoReceivedEnabled + ", canceled=" + canceled + ")");
+            "moveEntrySlotCompletionCallback(autoReceive=" + autoReceivedEnabled + ", canceled=" + canceled + ")");
         if (!canceled)
         {
             if (autoReceivedEnabled)
@@ -800,7 +873,7 @@ public class Spindexer extends TrcSubsystem
         {
             event.cancel();
         }
-    }   //spinCompletionCallback
+    }   //moveEntrySlotCompletionCallback
 
     /**
      * This method finds the slot that contains the specified artifact type near the current exit slot and move the
@@ -846,7 +919,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void entrySlotUp(String owner, TrcEvent event)
     {
-        int slot = (entrySlot != null? entrySlot + 1: exitSlot + 2)%slotStates.length;
+        int slot = (entrySlot != null? entrySlot + 1: exitSlot != null? exitSlot + 2: 0)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotUp: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToEntrySlot(owner, slot, event);
     }   //entrySlotUp
@@ -860,7 +933,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void entrySlotDown(String owner, TrcEvent event)
     {
-        int slot = (entrySlot != null? entrySlot - 1: exitSlot + 1)%slotStates.length;
+        int slot = (entrySlot != null? entrySlot - 1: exitSlot != null? exitSlot + 1: 0)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "EntrySlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToEntrySlot(owner, slot, event);
@@ -875,7 +948,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void exitSlotUp(String owner, TrcEvent event)
     {
-        int slot = (exitSlot != null? exitSlot + 1: entrySlot + 2)%slotStates.length;
+        int slot = (exitSlot != null? exitSlot + 1: entrySlot != null? entrySlot + 2: 0)%slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotUp: FromSlot=" + exitSlot + ", ToSlot=" + slot);
         moveToExitSlot(owner, slot, event);
     }   //exitSlotUp
@@ -889,7 +962,7 @@ public class Spindexer extends TrcSubsystem
      */
     public void exitSlotDown(String owner, TrcEvent event)
     {
-        int slot = (exitSlot != null? exitSlot - 1: entrySlot + 1)%slotStates.length;
+        int slot = (exitSlot != null? exitSlot - 1: entrySlot != null? entrySlot + 1: 0)%slotStates.length;
         if (slot < 0) slot += slotStates.length;
         spindexer.tracer.traceInfo(instanceName, "ExitSlotDown: FromSlot=" + entrySlot + ", ToSlot=" + slot);
         moveToExitSlot(owner, slot, event);
@@ -958,13 +1031,16 @@ public class Spindexer extends TrcSubsystem
      */
     public void refreshSlotStates()
     {
-        spindexer.tracer.traceInfo(instanceName, "refreshSlotStates(enabled=%s)...", sm.isEnabled());
         if (!sm.isEnabled())
         {
             clearSlotStates();
             if (Params.SPIN_INTAKE_ON_MOVE)
             {
                 robot.intake.intake(0.25);
+            }
+            if (!Params.ENTRY_TRIGGER_COLOR_MODE)
+            {
+                setEntryTriggerColorMode(true);
             }
             examinedSlotIndex = 0;
             sm.start(RefreshSlotState.MOVE_TO_NEXT_SLOT);
@@ -985,6 +1061,10 @@ public class Spindexer extends TrcSubsystem
             }
             sm.stop();
             refreshSlotStatesTaskObj.unregisterTask();
+            if (!Params.ENTRY_TRIGGER_COLOR_MODE)
+            {
+                setEntryTriggerColorMode(false);
+            }
         }
     }   //cancelSlotStatesTask
 
@@ -1153,8 +1233,8 @@ public class Spindexer extends TrcSubsystem
                     spindexer.motor.getPower(), spindexer.motor.getCurrent(),
                     spindexer.motor.isLowerLimitSwitchActive());
                 dashboard.displayPrintf(
-                    lineNum++, "%s: Entry(Hue/Trig)=%.3f/%s",
-                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), isEntrySensorActive());
+                    lineNum++, "%s: Entry(Hue/Dist/Trig)=%.3f/%.3f/%s",
+                    Params.SUBSYSTEM_NAME, getEntrySensorHue(), getEntrySensorDistance(), isEntrySensorActive());
                 dashboard.displayPrintf(
                     lineNum++, "%s: purple=%d, green=%d, [%s, %s, %s]",
                     Params.SUBSYSTEM_NAME, numPurpleArtifacts, numGreenArtifacts,

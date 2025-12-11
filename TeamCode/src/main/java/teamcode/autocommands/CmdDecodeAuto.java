@@ -22,6 +22,7 @@
 
 package teamcode.autocommands;
 
+import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -31,7 +32,7 @@ import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
-import trclib.subsystem.TrcShootParamTable;
+import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 
 /**
@@ -40,6 +41,7 @@ import trclib.timer.TrcTimer;
 public class CmdDecodeAuto implements TrcRobot.RobotCommand
 {
     private static final String moduleName = CmdDecodeAuto.class.getSimpleName();
+    private static final boolean useAutoGoalTracking = true;
 
     private enum State
     {
@@ -154,6 +156,49 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         autoChoices.openGate == FtcAuto.OpenGate.YES? new int[] {1, 0, 2}: new int[] {2, 1, 0};
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     currentSpikeMarkCount = 0;
+
+                    if (robot.shooterSubsystem != null)
+                    {
+                        TrcShootParams.Entry shootParams;
+                        double panAngle;
+                        // Turret was turned towards Obelisk before Auton is started, turn it back to the goal AprilTag.
+                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shootParams = Shooter.shootParamsTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
+                        }
+                        else
+                        {
+                            shootParams = Shooter.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
+                        }
+
+                        if (useAutoGoalTracking)
+                        {
+                            TrcEvent callbackEvent = new TrcEvent(moduleName + ".goalTrackingCallbackEvent");
+                            // Turn on AutoGoalTracking once the turret is facing the goal AprilTag.
+                            callbackEvent.setCallback(
+                                (ctxt, canceled) ->
+                                {
+                                    robot.globalTracer.traceInfo(
+                                        moduleName, "GoalTrackingCallback(canceled=%s)", canceled);
+                                    if (!canceled)
+                                    {
+                                        robot.globalTracer.traceInfo(moduleName, "enabling tracking");
+                                        robot.shooterSubsystem.enableGoalTracking(
+                                            null, true, autoChoices.alliance, true);
+                                    }
+                                }, null);
+                            robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
+                            robot.globalTracer.traceInfo(
+                                moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
+                        }
+                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                        robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
+                        robot.globalTracer.traceInfo(
+                            moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");
+                    }
                     // Do delay if necessary.
                     if (autoChoices.startDelay > 0.0)
                     {
@@ -169,33 +214,32 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_SHOOT_POS:
-                    if (robot.shooterSubsystem != null)
-                    {
-                        // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                        TrcShootParamTable.Params shootParams;
-                        double panAngle;
-                        if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
-                        {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.GOAL_ZONE_SHOOT_POINT);
-                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -45.0 : 45.0;
-                        }
-                        else
-                        {
-                            shootParams = Shooter.Params.shootParamTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
-                            panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
-                        }
-                        robot.shooter.aimShooter(
-                            shootParams.shooter1Velocity/60.0, 0.0, shootParams.tiltAngle, panAngle);
-                    }
-
                     if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE && currentSpikeMarkCount == 0)
                     {
                         sm.setState(State.SHOOT_ARTIFACTS);
                     }
                     else
                     {
-                        TrcPose2D shootPose = autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE?
-                            RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE: RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        TrcPose2D shootPose;
+
+                        if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE)
+                        {
+                            shootPose = RobotParams.Game.RED_FAR_ZONE_SHOOT_POSE;
+                        }
+                        else if (currentSpikeMarkCount == 0 ||
+                                 autoChoices.classifierVision == FtcAuto.ClassifierVision.NO)
+                        {
+                            // Shoot in the GOAL_ZONE but not using ClassifierVision.
+                            shootPose = RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE;
+                        }
+                        else
+                        {
+                            // Shoot in the GOAL_ZONE but with ClassifierVision.
+                            // Need to back up a bit to see the entire classifier ramp.
+                            shootPose = RobotParams.Game.RED_GOAL_ZONE_SHOOT_POSE.clone();
+                            shootPose.x += RobotParams.Robot.ROBOT_WIDTH/2.0;
+                            shootPose.y -= RobotParams.Robot.ROBOT_LENGTH/2.0;
+                        }
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
                         if (currentSpikeMarkCount == 2 && autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
@@ -227,7 +271,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true, false, false, 3, false);
+                            null, event, autoChoices.alliance, true, true, true,
+                            currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
+                            Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
                         sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
                     }
                     else
@@ -291,7 +337,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.15);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.25);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
