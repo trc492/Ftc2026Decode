@@ -69,7 +69,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public boolean useAprilTagVision = true;
         public boolean doMotif = false;
         public boolean useClassifierVision = false;
-        public boolean useRegression = false;
+        public boolean useRegression = true;
         public boolean flywheelTracking = true;
         public boolean relocalize = false;
         public int numArtifactsToShoot = 3;

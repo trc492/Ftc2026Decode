@@ -54,10 +54,10 @@ SOFTWARE.
             <goBILDA5202SeriesMotor name="Shooter.PanMotor" port="2"/>
             <goBILDA5202SeriesMotor name="blDriveMotor" port="3"/>
             <!-- Servos -->
-            <RevBlinkinLedDriver name="StatusLED" port="0" />
-            <Servo name="Spindexer1LED" port="1" />
-            <Servo name="Spindexer2LED" port="2" />
-            <Servo name="Spindexer3LED" port="3" />
+            <RevBlinkinLedDriver name="StatusLED" port="2" />
+            <Servo name="Spindexer1LED" port="3" />
+            <Servo name="Spindexer2LED" port="4" />
+            <Servo name="Spindexer3LED" port="5" />
             <!-- Analog -->
             <!-- Digital -->
             <DigitalDevice name="Spindexer.LowerLimit" port="0" />
