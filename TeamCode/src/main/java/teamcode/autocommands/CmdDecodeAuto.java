@@ -178,9 +178,10 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
+                        TrcEvent callbackEvent = null;
                         if (useAutoGoalTracking)
                         {
-                            TrcEvent callbackEvent = new TrcEvent(moduleName + ".goalTrackingCallbackEvent");
+                            callbackEvent = new TrcEvent(moduleName + ".goalTrackingCallbackEvent");
                             // Turn on AutoGoalTracking once the turret is facing the goal AprilTag.
                             callbackEvent.setCallback(
                                 (ctxt, canceled) ->
@@ -194,11 +195,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                             null, true, autoChoices.alliance, true);
                                     }
                                 }, null);
-                            robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
                             robot.globalTracer.traceInfo(
                                 moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        robot.shooter.setPanAngle(panAngle, callbackEvent, 1.0);
                         robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
                         robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
