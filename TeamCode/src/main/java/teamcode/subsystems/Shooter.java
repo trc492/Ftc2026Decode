@@ -633,6 +633,7 @@ public class Shooter extends TrcSubsystem
         // Only do this if Goal Tracking was enabled.
         if (isGoalTrackingEnabled())
         {
+            shooter.tracer.traceInfo(instanceName, "Pause GoalTracking.");
             if (shooter.validateOwnership(owner))
             {
                 this.savedTrackedAlliance = trackedAlliance;
@@ -652,6 +653,7 @@ public class Shooter extends TrcSubsystem
     {
         if (savedTrackedAlliance != null)
         {
+            shooter.tracer.traceInfo(instanceName, "Resume GoalTracking.");
             if (shooter.validateOwnership(owner))
             {
                 if (savedTrackedAlliance != null)
