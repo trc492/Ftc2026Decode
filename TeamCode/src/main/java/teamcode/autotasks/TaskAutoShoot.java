@@ -479,6 +479,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 // If GoalTracking is ON, ask it for the AimInfo so we can aim and wait for increased accuracy.
                 if (aimInfo == null && robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
+                    robot.shooterSubsystem.pauseGoalTracking(owner);
+                    pausedPrevGoalTracking = true;
                     aimInfo = robot.shooterSubsystem.getLastVisionAimInfo();
                 }
 
