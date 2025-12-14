@@ -80,12 +80,18 @@ public class FtcAuto extends FtcOpMode
         NO
     }   //enum ClassifierVision
 
-    public enum PickupOption
+//    public enum PickupOption
+//    {
+//        SPIKEMARKS,
+//        LOADING_ZONE,
+//        BOTH
+//    }   //enum PickupOption
+
+    public enum LoadingPickup
     {
-        SPIKEMARKS,
-        LOADING_ZONE,
-        BOTH
-    }   //enum PickupOption
+        YES,
+        NO
+    }   //enum LoadingPickup
 
     public enum OpenGate
     {
@@ -110,7 +116,8 @@ public class FtcAuto extends FtcOpMode
         public StartPos startPos = StartPos.GOAL_ZONE;
         public AutoStrategy strategy = AutoStrategy.DECODE_AUTO;
         public ClassifierVision classifierVision = ClassifierVision.NO;
-        public PickupOption pickupOption = PickupOption.SPIKEMARKS;
+//        public PickupOption pickupOption = PickupOption.SPIKEMARKS;
+        public LoadingPickup loadingPickup = LoadingPickup.NO;
         public OpenGate openGate = OpenGate.NO;
         public double spikeMarkCount = 0.0;
         public double shootDelay1 = 0.0;
@@ -134,7 +141,8 @@ public class FtcAuto extends FtcOpMode
                 "startPos=\"%s\" " +
                 "strategy=\"%s\" " +
                 "classifierVision=\"%s\" " +
-                "pickupOption=\"%s\" " +
+//                "pickupOption=\"%s\" " +
+                "loadingPickup=\"%s\" " +
                 "openGate=\"%s\" " +
                 "spikeMarkCount=%.0f " +
                 "shootDelay1=%.0f " +
@@ -146,7 +154,7 @@ public class FtcAuto extends FtcOpMode
                 "turnTarget=%.0f " +
                 "driveTime=%.0f " +
                 "drivePower=%.1f",
-                startDelay, alliance, startPos, strategy, classifierVision, pickupOption, openGate, spikeMarkCount,
+                startDelay, alliance, startPos, strategy, classifierVision, /* pickupOption, */ loadingPickup, openGate, spikeMarkCount,
                 shootDelay1, shootDelay2, shootDelay3, parkOption,
                 xTarget, yTarget, turnTarget, driveTime, drivePower);
         }   //toString
@@ -395,17 +403,18 @@ public class FtcAuto extends FtcOpMode
         FtcChoiceMenu<AutoStrategy> strategyMenu = new FtcChoiceMenu<>("Auto Strategies:", startPosMenu);
         FtcChoiceMenu<ClassifierVision> classifierVisionMenu =
             new FtcChoiceMenu<>("Use Classifier Vision:", strategyMenu);
-        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", classifierVisionMenu);
-        FtcChoiceMenu<OpenGate> openGateMenu = new FtcChoiceMenu<>("Open Gate:", pickupOptionMenu);
+//        FtcChoiceMenu<PickupOption> pickupOptionMenu = new FtcChoiceMenu<>("Pickup Option:", classifierVisionMenu);
+        FtcChoiceMenu<OpenGate> openGateMenu = new FtcChoiceMenu<>("Open Gate:", classifierVisionMenu);
+        FtcChoiceMenu<LoadingPickup> loadingPickupMenu = new FtcChoiceMenu<>("Loading Pickup:", openGateMenu);
         FtcValueMenu spikeMarkCountMenu =
-            new FtcValueMenu("SpikeMark Count:", openGateMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
+            new FtcValueMenu("SpikeMark Count:", loadingPickupMenu, 0.0, 3.0, 1.0, 3.0, " %.0f");
         FtcValueMenu shootDelay1Menu =
             new FtcValueMenu("First Shoot delay:", spikeMarkCountMenu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay2Menu =
             new FtcValueMenu("Second Shoot delay:", shootDelay1Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
         FtcValueMenu shootDelay3Menu =
             new FtcValueMenu("Third Shoot delay time:", shootDelay2Menu, 0.0, 30.0, 1.0, 0.0, " %.0f sec");
-        FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", openGateMenu);
+        FtcChoiceMenu<ParkOption> parkOptionMenu = new FtcChoiceMenu<>("Park Option:", shootDelay3Menu);
 
         FtcValueMenu xTargetMenu =
             new FtcValueMenu("xTarget:", strategyMenu, -12.0, 12.0, 0.5, 4.0, " %.1f ft");
@@ -423,7 +432,7 @@ public class FtcAuto extends FtcOpMode
         spikeMarkCountMenu.setChildMenu(shootDelay1Menu);
         shootDelay1Menu.setChildMenu(shootDelay2Menu);
         shootDelay2Menu.setChildMenu(shootDelay3Menu);
-        shootDelay3Menu.setChildMenu(openGateMenu);
+        shootDelay3Menu.setChildMenu(parkOptionMenu);
         xTargetMenu.setChildMenu(yTargetMenu);
         yTargetMenu.setChildMenu(turnTargetMenu);
         turnTargetMenu.setChildMenu(drivePowerMenu);
@@ -443,15 +452,18 @@ public class FtcAuto extends FtcOpMode
         strategyMenu.addChoice("Timed Drive", AutoStrategy.TIMED_DRIVE, false, driveTimeMenu);
         strategyMenu.addChoice("Do nothing", AutoStrategy.DO_NOTHING, false);
 
-        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, false, pickupOptionMenu);
-        classifierVisionMenu.addChoice("No", ClassifierVision.NO, true, pickupOptionMenu);
+        classifierVisionMenu.addChoice("Yes", ClassifierVision.YES, false, openGateMenu);
+        classifierVisionMenu.addChoice("No", ClassifierVision.NO, true, openGateMenu);
 
-        pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
-        pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
-        pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikeMarkCountMenu);
+//        pickupOptionMenu.addChoice("Spike Marks", PickupOption.SPIKEMARKS, true, spikeMarkCountMenu);
+//        pickupOptionMenu.addChoice("Loading Zone", PickupOption.LOADING_ZONE, false, parkOptionMenu);
+//        pickupOptionMenu.addChoice("Both", PickupOption.BOTH, false, spikeMarkCountMenu);
 
-        openGateMenu.addChoice("Yes", OpenGate.YES, false, parkOptionMenu);
-        openGateMenu.addChoice("No", OpenGate.NO, true, parkOptionMenu);
+        openGateMenu.addChoice("Yes", OpenGate.YES, false, loadingPickupMenu);
+        openGateMenu.addChoice("No", OpenGate.NO, true, loadingPickupMenu);
+
+        loadingPickupMenu.addChoice("Yes", LoadingPickup.YES, false, spikeMarkCountMenu);
+        loadingPickupMenu.addChoice("No", LoadingPickup.NO, true, spikeMarkCountMenu);
 
         parkOptionMenu.addChoice("Classifier Park", ParkOption.CLASSIFIER_PARK, true);
         parkOptionMenu.addChoice("Square Park", ParkOption.SQUARE_PARK, false);
@@ -468,7 +480,8 @@ public class FtcAuto extends FtcOpMode
         autoChoices.startPos = startPosMenu.getCurrentChoiceObject();
         autoChoices.strategy = strategyMenu.getCurrentChoiceObject();
         autoChoices.classifierVision = classifierVisionMenu.getCurrentChoiceObject();
-        autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
+//        autoChoices.pickupOption = pickupOptionMenu.getCurrentChoiceObject();
+        autoChoices.loadingPickup = loadingPickupMenu.getCurrentChoiceObject();
         autoChoices.spikeMarkCount = spikeMarkCountMenu.getCurrentValue();
         autoChoices.openGate = openGateMenu.getCurrentChoiceObject();
         autoChoices.shootDelay1 = shootDelay1Menu.getCurrentValue();

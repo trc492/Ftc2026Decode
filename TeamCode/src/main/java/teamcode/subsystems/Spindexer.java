@@ -87,7 +87,7 @@ public class Spindexer extends TrcSubsystem
         public static final double MOTOR_PID_KF                 = 0.0;
         public static final double MOTOR_PID_IZONE              = 5.0;
         public static final double POS_PID_TOLERANCE            = 2.0;
-        public static final double RELAXED_POS_PID_TOLERANCE    = 10.0;
+        public static final double RELAXED_POS_PID_TOLERANCE    = 20.0;
         public static final boolean SOFTWARE_PID_ENABLED        = true;
 
         public static final String ENTRY_SENSOR1_NAME           = SUBSYSTEM_NAME + ".EntrySensor1";
@@ -158,7 +158,7 @@ public class Spindexer extends TrcSubsystem
     private final TrcEvent event;
     private final TrcTriggerThresholdRange entryTrigger;
 
-    private static final Vision.ArtifactType[] slotStates =
+    private final Vision.ArtifactType[] slotStates =
         {Vision.ArtifactType.None, Vision.ArtifactType.None, Vision.ArtifactType.None};
     private boolean autoReceivedEnabled = false;
     private Integer entrySlot = null;
