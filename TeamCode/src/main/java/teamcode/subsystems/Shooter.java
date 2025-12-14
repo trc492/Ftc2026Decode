@@ -296,6 +296,7 @@ public class Shooter extends TrcSubsystem
     private boolean savedFlywheelTracking = false;
     private Double prevShooterPidTarget = null;
     private Double nextFailSafeCheckTime = null;
+    private double[] lastVisionAimInfo = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -730,6 +731,7 @@ public class Shooter extends TrcSubsystem
                 else
                 {
                     aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
+                    lastVisionAimInfo = aimInfo;
                 }
             }
             else
@@ -767,6 +769,16 @@ public class Shooter extends TrcSubsystem
 
         return panPosition;
     }   //getPanPosition
+
+    /**
+     * This method returns the last Vision detected Aim info.
+     *
+     * @return last Vision detected info.
+     */
+    public double[] getLastVisionAimInfo()
+    {
+        return lastVisionAimInfo;
+    }   //geteLastVisionAimInfo
 
     /**
      * This method computes the camera pose on the robot given the turret heading.

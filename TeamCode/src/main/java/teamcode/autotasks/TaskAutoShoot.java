@@ -476,6 +476,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     spindexerEvent.clear();
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
                 }
+                // If GoalTracking is ON, ask it for the AimInfo so we can aim and wait for increased accuracy.
+                if (aimInfo == null && robot.shooterSubsystem.isGoalTrackingEnabled())
+                {
+                    aimInfo = robot.shooterSubsystem.getLastVisionAimInfo();
+                }
 
                 if (numBallsShot == 0 && aimInfo != null)
                 {
