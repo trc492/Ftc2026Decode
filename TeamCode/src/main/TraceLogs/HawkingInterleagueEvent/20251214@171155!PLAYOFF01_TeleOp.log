@@ -1,0 +1,1050 @@
+FtcTeleOp.startMode_INFO [0.007278543] ***** Starting TeleOp: 20251214@171155 *****
+Robot.startMode_INFO [0.106990636] Restore saved RobotPose=(x=-10.199617,y=20.553039,angle=-0.562439)
+FtcTeleOp.startMode_INFO [0.108838053] Enabling Limelight AprilTagVision.
+Vision.setLimelightVisionEnabled_INFO [0.110621886] Pipeline APRIL_TAG is enabled: running=true
+FtcTeleOp.zeroCalibrate_INFO [1.063395191] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [1.064162274] Cancel all operations.
+TaskAutoShoot.cancel_INFO [1.064957357] Canceling auto task operation.
+Spindexer.cancel_INFO [1.104104278] cancel(owner=null)
+Shooter.cancel_INFO [1.108677612] owner=null
+Robot.zeroCalibrate_INFO [1.140562323] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [1.141614365] ZeroCalibrate(Subsystem=Spindexer, owner=null, event=null)
+Spindexer.zeroCalibrate_INFO [1.142305907] zeroCalibrate(owner=null, calPower=-0.2, event=(Spindexer.zeroCalCallback=CLEARED))
+TrcSubsystem.zeroCalibrateAll_INFO [1.144059699] ZeroCalibrate(Subsystem=Shooter, owner=null, event=null)
+FtcTeleOp.setIntakeMode_INFO [1.183916828] >>>>> Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [1.195190037] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [1.196357579] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [1.387166223] onEntryTrigger(active=true, numObj=1, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [1.437345728] EntryArtifact: hue=160.000, type=Green
+Intake.setPickupArtifactType_INFO [1.438450853] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [1.439614603] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [1.47757969] Entry[0]: colorMode=true, value=160.000000/165, artifact=Green, slotStates=[Green, None, None] (PGU=0/1/0), expectedNext=Purple
+Spindexer.findSlot_INFO [1.478898607] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [1.480388441] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [1.482423983] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [1.557021823] ZeroCalibrateCompletion: event=null, canceled=true
+Spindexer.Motor.pidCtrlTask_INFO [1.963713989] controlMode: Position,onTarget=true(119.70083102493078/120.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [1.995528701] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [2.029583704] moveEntrySlotCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [2.030668121] setEntryTriggerEnabled(enabled=true)
+Shooter.PanMotor.isMotorStalled_INFO [2.677225228] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [2.690148104] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [2.703666855] Zero calibration done, event=(Shooter.PanMotor.callbackEvent=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [2.704272064] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.callbackEvent=SIGNALED)
+Spindexer.onEntryTrigger_INFO [2.949619463] onEntryTrigger(active=true, numObj=2, advOnTrigger=false)
+Spindexer.onEntryTrigger_INFO [3.042743389] onEntryTrigger(active=false, numObj=2, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [3.043686639] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [3.044223306] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [3.044687348] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [3.076600643] Entry[1]: colorMode=true, value=240.000000/0, artifact=Purple, slotStates=[Green, Purple, None] (PGU=1/1/0), expectedNext=Purple
+Spindexer.findSlot_INFO [3.077349935] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [3.077843143] moveToNextVacantSlot: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [3.078561226] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.getColorArtifactType_INFO [3.168687402] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [3.170412319] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [3.171529111] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [3.207122948] Entry[2]: colorMode=true, value=240.000000/0, artifact=Purple, slotStates=[Green, Purple, Purple] (PGU=2/1/0), expectedNext=None
+Spindexer.entryTriggerCallback_INFO [3.207850656] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [3.21075449] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [3.21136699] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [3.211934281] cancel(owner=null)
+Spindexer.stopIntakeCallback_INFO [3.260013786] stopIntakeCallback(canceled=true)
+Spindexer.moveEntrySlotCompletionCallback_INFO [3.300825249] moveEntrySlotCompletionCallback(autoReceive=false, canceled=true)
+FtcTeleOp.setIntakeMode_INFO [4.259641887] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [4.276030638] Entry is not at a vacant slot, find one.
+Spindexer.moveToNextVacantEntrySlot_INFO [4.276669388] moveToNextVacantSlot: FromSlot=2, ToSlot=null
+Spindexer.performAutoReceiveEnabled_INFO [4.285908806] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [4.286401139] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [4.414339861] onEntryTrigger(active=true, numObj=3, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [4.475586658] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [4.476542742] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [4.478682117] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [4.50666637] Entry[2]: colorMode=true, value=240.000000/225, artifact=Purple, slotStates=[Green, Purple, Purple] (PGU=3/1/0), expectedNext=Purple
+Spindexer.entryTriggerCallback_INFO [4.507589787] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [4.510959995] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [4.511639579] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [4.512271912] cancel(owner=null)
+FtcTeleOp.shootArtifacts_INFO [6.045372983] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [6.046174483] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=1,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [6.046820525] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [6.095959946] <Event name="StateInfo" time="6.095629488" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [6.096995655] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [6.098035155] <Event name="StateInfo" time="6.097728613" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [6.159758828] <Event name="StateInfo" time="6.159430994" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [6.167808537] ***** Vision found AprilTag 24: aprilTagPose=(x=-9.650449,y=45.486644,angle=-11.978262)
+TaskAutoShoot.autoTask_INFO [6.182698705] <Event name="StateInfo" time="6.182331497" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [6.250383462] <Event name="StateInfo" time="6.249647003" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [6.253254337] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=null).
+Spindexer.findSlot_INFO [6.254158795] find slot for Any (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [6.254828754] MoveToExitSlot: FromSlot=null, ToSlot=0, artifactType=Any
+Spindexer.moveToExitSlot_INFO [6.255652129] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [6.260998088] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [6.262312046] ***** ShootParams: dist=46.499097, bearing=-204.116087, shootParams={name=RegressionEntry, distance=46.499096628193726, region={tiltAngle=33.0, coeffs=[[2858.83725, 19.71941]]}, outputs=[3775.77200104097]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [6.264797046] <Event name="StateInfo" time="6.264448505" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [6.593477996] controlMode: Position,onTarget=true(181.46972694895135/180.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [6.595820955] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [6.597102247] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [6.59881958] stopIntakeCallback(canceled=false)
+FtcTeleOp.shootArtifacts_INFO [7.062198627] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [7.063354502] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [7.064753918] Stopping subsystems.
+Shooter.cancel_INFO [7.06606846] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [7.080927128] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [7.086107421] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+FtcTeleOp.shootArtifacts_INFO [7.362622323] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [7.363296949] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=1,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [7.363898074] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [7.370786366] <Event name="StateInfo" time="7.370470199" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [7.371423074] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [7.373197283] <Event name="StateInfo" time="7.372838241" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [7.374615366] <Event name="StateInfo" time="7.3742957" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [7.376677158] ***** Vision found AprilTag 24: aprilTagPose=(x=-2.292240,y=39.342912,angle=-3.334461)
+TaskAutoShoot.autoTask_INFO [7.384729784] <Event name="StateInfo" time="7.384396701" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [7.385958576] <Event name="StateInfo" time="7.385559284" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [7.386659451] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=Green).
+Spindexer.findSlot_INFO [7.387987409] find slot for Any (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [7.388539826] MoveToExitSlot: FromSlot=0, ToSlot=0, artifactType=Any
+Spindexer.moveToExitSlot_INFO [7.390009243] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [7.39376416] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [7.395644827] ***** ShootParams: dist=39.409632, bearing=-218.379448, shootParams={name=RegressionEntry, distance=39.409632449362306, region={tiltAngle=30.0, coeffs=[[3398.57143, 5.71429]]}, outputs=[3623.7694986090664]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [7.403725161] <Event name="StateInfo" time="7.403335203" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.releaseOwnership_INFO [7.61110339] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.pidCtrlTask_INFO [7.611055265] controlMode: Position,onTarget=true(180.99089829837754/180.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [7.613179765] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [7.621790058] stopIntakeCallback(canceled=false)
+Shooter.ShootMotor1.pidCtrlTask_INFO [7.927962797] controlMode: Velocity,onTarget=true(59.0/60.39615831015111), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [8.162070237] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [8.362236424] >>>>> Setting numArtifactsToShoot to 3
+Shooter.PanMotor.pidCtrlTask_INFO [8.496104437] controlMode: Position,onTarget=true(-217.41268961878387/-218.37944804195294), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [8.496272437] <Event name="StateInfo" time="8.496007312" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [8.496688062] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [8.497420729] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [8.500701688] Enabling exit trigger: lowThreshold=3310.000000, highThreshold=4010.000000
+Shooter.Launcher.acquireOwnership_INFO [8.501907438] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [8.507386105] <Event name="StateInfo" time="8.507074897" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [8.512428731] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [8.662531787] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [8.817373845] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [9.016545448] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [9.162312588] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [9.258263347] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [9.362487816] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [9.514496623] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [9.66507218] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [9.864854825] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [10.012777673] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [10.163268938] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [10.362912458] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [10.514857974] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [10.662586572] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.shootArtifacts_INFO [10.868703342] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [10.869803509] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [10.870938384] Stopping subsystems.
+Shooter.cancel_INFO [10.871975259] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [10.887031386] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [10.89425072] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+Intake.setPickupArtifactType_INFO [11.032492567] Expect to pick up artifact None
+Spindexer.setExitTriggerEnabled_INFO [11.034106067] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [11.035764193] Exit[0]: vel=3660.000000, artifact=Green, numPurple=3, numGreen=0, numUnknown=0, expectedNext=None
+Spindexer.disableExitTrigger_INFO [11.043709193] Disabling exit trigger.
+Shooter.Launcher.acquireOwnership_INFO [11.045210694] Acquired ownership on behalf of FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [11.15530933] Released ownership on behalf of FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [11.155831996] Signal completion event (Launcher.retractCallback=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [11.162626955] >>>>> OperatorAltFunc=true
+FtcTeleOp.spindexerForward_INFO [11.548107077] >>>>> Advance Spindexer exit position.
+Spindexer.exitSlotUp_INFO [11.548767702] ExitSlotUp: FromSlot=0, ToSlot=1
+Spindexer.moveToExitSlot_INFO [11.549733994] MoveToExitSlot: Slot=1, event=null
+FtcTeleOp.operatorButtonEvent_INFO [11.942525034] >>>>> OperatorAltFunc=false
+Spindexer.Motor.pidCtrlTask_INFO [12.034260334] controlMode: Position,onTarget=true(301.1768895924021/300.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [12.036623418] stopIntakeCallback(canceled=false)
+FtcTeleOp.shootArtifacts_INFO [13.920186232] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [13.921696482] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [13.922712358] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [13.962584945] <Event name="StateInfo" time="13.96217107" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [13.964351862] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [13.969469737] <Event name="StateInfo" time="13.968058945" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [13.997608865] <Event name="StateInfo" time="13.997237282" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [14.002022074] ***** Vision found AprilTag 24: aprilTagPose=(x=-1.257257,y=76.559692,angle=-0.940822)
+TaskAutoShoot.autoTask_INFO [14.008925241] <Event name="StateInfo" time="14.008547533" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.011446991] <Event name="StateInfo" time="14.0099137" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [14.012334825] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=Purple).
+Spindexer.findSlot_INFO [14.013095783] find slot for Any (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [14.013672992] MoveToExitSlot: FromSlot=1, ToSlot=1, artifactType=Any
+Spindexer.moveToExitSlot_INFO [14.01436045] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [14.015499409] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [14.02790866] ***** ShootParams: dist=76.570014, bearing=-181.127084, shootParams={name=RegressionEntry, distance=76.57001416128551, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4195.818942668719]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [14.038371911] <Event name="StateInfo" time="14.037928869" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [14.227778805] controlMode: Position,onTarget=true(299.7404036406807/300.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [14.227864263] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [14.229915847] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [14.23197968] stopIntakeCallback(canceled=false)
+Shooter.PanMotor.pidCtrlTask_INFO [14.260663642] controlMode: Position,onTarget=true(-181.55800026381752/-181.12708400465988), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [14.916563999] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [15.112230352] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [15.312253039] >>>>> Setting numArtifactsToShoot to 3
+Shooter.ShootMotor1.pidCtrlTask_INFO [15.440135177] controlMode: Velocity,onTarget=true(71.0/69.93031571114531), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [15.441298052] <Event name="StateInfo" time="15.440635385" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [15.44245101] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [15.443500719] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [15.444417719] Enabling exit trigger: lowThreshold=3910.000000, highThreshold=4610.000000
+Shooter.Launcher.acquireOwnership_INFO [15.446933344] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [15.45551797] <Event name="StateInfo" time="15.455196262" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [15.512310726] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [15.714411829] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [15.865418469] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [16.062334614] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [16.204581629] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [16.214061379] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [16.366105478] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [16.562538331] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [16.712544846] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [16.863555861] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [17.066190132] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [17.262265693] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [17.46271713] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [17.66251115] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [18.215979331] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.shootArtifacts_INFO [18.469227398] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [18.470699148] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [18.472407148] Stopping subsystems.
+Shooter.cancel_INFO [18.474172607] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [18.487175108] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [18.491120483] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+Intake.setPickupArtifactType_INFO [18.660381959] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [18.660970834] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [18.662724334] Exit[1]: vel=4140.000000, artifact=Purple, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Spindexer.disableExitTrigger_INFO [18.671596835] Disabling exit trigger.
+Shooter.Launcher.acquireOwnership_INFO [18.674263252] Acquired ownership on behalf of FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [18.818284183] Released ownership on behalf of FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [18.819309975] Signal completion event (Launcher.retractCallback=SIGNALED)
+FtcTeleOp.zeroCalibrate_INFO [19.362287488] >>>>> ZeroCalibrating.
+Robot.cancelAll_INFO [19.362866446] Cancel all operations.
+TaskAutoShoot.cancel_INFO [19.363341279] Canceling auto task operation.
+Spindexer.cancel_INFO [19.397922158] cancel(owner=null)
+Shooter.cancel_INFO [19.399343741] owner=null
+Robot.zeroCalibrate_INFO [19.401017908] Zero calibrate all subsystems.
+TrcSubsystem.zeroCalibrateAll_INFO [19.401823491] ZeroCalibrate(Subsystem=Spindexer, owner=null, event=null)
+Spindexer.zeroCalibrate_INFO [19.403257033] zeroCalibrate(owner=null, calPower=-0.2, event=(Spindexer.zeroCalCallback=CLEARED))
+TrcSubsystem.zeroCalibrateAll_INFO [19.404774283] ZeroCalibrate(Subsystem=Shooter, owner=null, event=null)
+Spindexer.Motor.zeroCalibratingMotor_INFO [19.810193324] Limit switch triggered, zero calibration done.
+Spindexer.Motor.pidCtrlTask_INFO [19.822420575] Zero calibration done, event=(Spindexer.zeroCalCallback=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [19.822998367] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Spindexer.zeroCalCallback=SIGNALED)
+Spindexer.lambda$zeroCalibrate$1$teamcode-subsystems-Spindexer_INFO [19.855832162] ZeroCalibrateCompletion: event=null, canceled=false
+Spindexer.moveToEntrySlot_INFO [19.856857079] MoveToEntrySlot: Slot=0, event=null
+Spindexer.Motor.pidCtrlTask_INFO [20.210635073] controlMode: Position,onTarget=true(1.4301543332014717/0.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [20.222596032] stopIntakeCallback(canceled=false)
+Shooter.PanMotor.isMotorStalled_INFO [22.309848659] Stall detection triggered.
+Shooter.PanMotor.zeroCalibratingMotor_WARN [22.32294041] Stalled, lower limit switch might have failed!
+Shooter.PanMotor.pidCtrlTask_INFO [22.335834995] Zero calibration done, event=(Shooter.PanMotor.callbackEvent=CLEARED)
+Shooter.PanMotor.pidCtrlTask_INFO [22.336425328] controlMode: Power,onTarget=false(0.0/null), stalled=false, expired=false, event=(Shooter.PanMotor.callbackEvent=SIGNALED)
+FtcTeleOp.shootArtifacts_INFO [24.012442205] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [24.01350008] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [24.014782538] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [24.018375872] <Event name="StateInfo" time="24.018016539" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [24.019158997] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [24.022096956] <Event name="StateInfo" time="24.021684831" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [24.024119664] <Event name="StateInfo" time="24.023171456" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [24.026841206] ***** Vision found AprilTag 24: aprilTagPose=(x=31.551846,y=68.344463,angle=24.780840)
+TaskAutoShoot.autoTask_INFO [24.03184329] <Event name="StateInfo" time="24.031483957" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [24.032923332] <Event name="StateInfo" time="24.032580332" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [24.033640248] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=null).
+Spindexer.findSlot_INFO [24.034394499] find slot for Any (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [24.034946332] MoveToExitSlot: FromSlot=null, ToSlot=2, artifactType=Any
+Spindexer.moveToExitSlot_INFO [24.036760791] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [24.038876832] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [24.044131791] ***** ShootParams: dist=75.276056, bearing=-174.162736, shootParams={name=RegressionEntry, distance=75.27605565499384, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4174.65068727674]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [24.051359584] <Event name="StateInfo" time="24.050992959" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [24.507017046] controlMode: Position,onTarget=true(61.28373565492683/60.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [24.508825671] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [24.510734921] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [24.513770588] stopIntakeCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [24.612059348] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [24.812181493] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [24.962640967] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [25.112077857] >>>>> Setting numArtifactsToShoot to 3
+Shooter.PanMotor.pidCtrlTask_INFO [25.272875165] controlMode: Position,onTarget=true(-173.75628545046834/-174.1627357233481), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [25.362428799] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [25.562602277] >>>>> Setting numArtifactsToShoot to 3
+Shooter.ShootMotor1.pidCtrlTask_INFO [25.656538203] controlMode: Velocity,onTarget=true(69.0/69.57751145461233), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [25.658055162] <Event name="StateInfo" time="25.657749495" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [25.658564703] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [25.659941954] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [25.660747829] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [25.661976329] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [25.669286663] <Event name="StateInfo" time="25.668949204" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [25.712558917] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [25.879390517] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [25.882201893] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [25.883746851] Exit[2]: vel=4140.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [25.88967906] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [25.898748144] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [25.913424812] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [25.996388821] <Event name="StateInfo" time="25.996094529" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [25.996992862] <Event name="StateInfo" time="25.996658904" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [25.998271238] <Event name="StateInfo" time="25.997964113" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [25.999532696] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [26.000769946] MoveToExitSlot: FromSlot=2, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [26.002444405] <Event name="StateInfo" time="26.001825196" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [26.00406928] <Event name="StateInfo" time="26.003683696" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [26.005129197] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [26.006798113] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [26.008168072] Enabling exit trigger: lowThreshold=3010.000000, highThreshold=3710.000000
+Shooter.Launcher.acquireOwnership_INFO [26.010487697] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [26.016217781] <Event name="StateInfo" time="26.015913573" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [26.063994536] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [26.142284294] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [26.143964877] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [26.145410669] Exit[2]: vel=3420.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [26.146608544] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [26.153691961] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [26.254963305] <Event name="StateInfo" time="26.254552055" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [26.258619347] <Event name="StateInfo" time="26.258294139" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [26.260378972] <Event name="StateInfo" time="26.260015847" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [26.263179264] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [26.265014723] MoveToExitSlot: FromSlot=2, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [26.265839264] <Event name="StateInfo" time="26.265401181" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [26.268536306] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [26.290591267] <Event name="StateInfo" time="26.290203059" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [26.292123392] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [26.293664851] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [26.301900935] Enabling exit trigger: lowThreshold=3550.000000, highThreshold=4250.000000
+Shooter.Launcher.acquireOwnership_INFO [26.303768477] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [26.315537519] <Event name="StateInfo" time="26.315196269" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [26.463059034] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [26.559020877] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [26.560637294] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [26.562334794] Exit[2]: vel=3900.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [26.563714669] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [26.569636378] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [26.612688133] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [26.66930968] <Event name="StateInfo" time="26.66895968" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [26.671336764] <Event name="StateInfo" time="26.670658055" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [26.672890472] <Event name="StateInfo" time="26.672557097" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [26.674105556] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [26.675153514] MoveToExitSlot: FromSlot=2, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [26.675891139] <Event name="StateInfo" time="26.675420097" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [26.677303972] <Event name="StateInfo" time="26.676995972" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [26.677942431] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [26.678770181] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [26.683008973] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [26.684158723] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [26.687857349] <Event name="StateInfo" time="26.687523973" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [26.812961069] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [27.113090475] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [27.312627828] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [27.436755632] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [27.464925968] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.shootArtifacts_INFO [27.614600567] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [27.617361192] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [27.620228859] Stopping subsystems.
+Shooter.cancel_INFO [27.622501526] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [27.636349569] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [27.647475487] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [27.862295592] >>>>> OperatorAltFunc=true
+Intake.setPickupArtifactType_INFO [27.91519343] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [27.916223597] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [27.917536972] Exit[2]: vel=4140.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [27.91842568] Disabling exit trigger.
+Shooter.Launcher.acquireOwnership_INFO [27.920725764] Acquired ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.spindexerBackward_INFO [28.012181648] >>>>> Backup Spindexer exit position.
+Spindexer.exitSlotDown_INFO [28.012837023] ExitSlotDown: FromSlot=null, ToSlot=1
+Spindexer.moveToExitSlot_INFO [28.013515732] MoveToExitSlot: Slot=1, event=null
+Shooter.Launcher.releaseOwnership_INFO [28.038052484] Released ownership on behalf of FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [28.038573693] Signal completion event (Launcher.retractCallback=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [28.31265697] >>>>> OperatorAltFunc=false
+Spindexer.Motor.pidCtrlTask_INFO [28.554056953] controlMode: Position,onTarget=true(-58.902255639097746/-60.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [28.554398203] stopIntakeCallback(canceled=false)
+FtcTeleOp.shootArtifacts_INFO [28.662822964] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [28.663510714] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [28.664084714] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [28.668491214] <Event name="StateInfo" time="28.668160173" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [28.669107798] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [28.670254631] <Event name="StateInfo" time="28.669944298" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [28.671366173] <Event name="StateInfo" time="28.671040381" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.672000256] <Event name="StateInfo" time="28.671677381" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.67339209] <Event name="StateInfo" time="28.673077965" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.674073423] <Event name="StateInfo" time="28.673695423" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.674965923] <Event name="StateInfo" time="28.674664923" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.675564132] <Event name="StateInfo" time="28.675244465" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.67649309] <Event name="StateInfo" time="28.67618684" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.677095965] <Event name="StateInfo" time="28.676789132" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.678353048] <Event name="StateInfo" time="28.677648965" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.678994424] <Event name="StateInfo" time="28.678676215" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.67993709] <Event name="StateInfo" time="28.67961159" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.680880049] <Event name="StateInfo" time="28.680282715" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.681703424] <Event name="StateInfo" time="28.681377924" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.682449507] <Event name="StateInfo" time="28.682066257" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.683973466] <Event name="StateInfo" time="28.683663424" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.684654799] <Event name="StateInfo" time="28.684323758" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.685629549] <Event name="StateInfo" time="28.685333508" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.686249633] <Event name="StateInfo" time="28.685927924" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.687125508] <Event name="StateInfo" time="28.686817216" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.687779133] <Event name="StateInfo" time="28.687452758" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.6893308] <Event name="StateInfo" time="28.688514716" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.690213383] <Event name="StateInfo" time="28.689859591" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.691191633] <Event name="StateInfo" time="28.69083055" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.691844967] <Event name="StateInfo" time="28.691524716" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.693010175] <Event name="StateInfo" time="28.692688758" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.693693842] <Event name="StateInfo" time="28.6933453" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.6951583] <Event name="StateInfo" time="28.694848842" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.6958723] <Event name="StateInfo" time="28.695479717" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.696831009] <Event name="StateInfo" time="28.696514259" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.697466842] <Event name="StateInfo" time="28.697161467" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.698316759] <Event name="StateInfo" time="28.697982217" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.699008884] <Event name="StateInfo" time="28.698652759" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.700566967] <Event name="StateInfo" time="28.700211134" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.701221759] <Event name="StateInfo" time="28.700887217" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.702179884] <Event name="StateInfo" time="28.701858176" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.703181176] <Event name="StateInfo" time="28.702821843" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.704461593] <Event name="StateInfo" time="28.704123551" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.705596468] <Event name="StateInfo" time="28.704822093" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.706782093] <Event name="StateInfo" time="28.706462718" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.707419093] <Event name="StateInfo" time="28.70708601" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.708454802] <Event name="StateInfo" time="28.708095177" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.709169968] <Event name="StateInfo" time="28.708796052" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.710276843] <Event name="StateInfo" time="28.709945802" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.711505052] <Event name="StateInfo" time="28.71113901" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.715012052] <Event name="StateInfo" time="28.714662344" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.715811511] <Event name="StateInfo" time="28.715432052" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.717218802] <Event name="StateInfo" time="28.716885719" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.717865719] <Event name="StateInfo" time="28.717521844" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.718716219] <Event name="StateInfo" time="28.718406761" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.719394344] <Event name="StateInfo" time="28.719026844" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.720283636] <Event name="StateInfo" time="28.719973886" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.720909261] <Event name="StateInfo" time="28.720582303" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.721741678] <Event name="StateInfo" time="28.721429595" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.722467636] <Event name="StateInfo" time="28.722080011" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.723592595] <Event name="StateInfo" time="28.723259511" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.724250303] <Event name="StateInfo" time="28.723895345" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.72525072] <Event name="StateInfo" time="28.724950303" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.725922428] <Event name="StateInfo" time="28.725546762" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.726751345] <Event name="StateInfo" time="28.726422345" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.727480803] <Event name="StateInfo" time="28.72714597" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.72832022] <Event name="StateInfo" time="28.727999678" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.728935345] <Event name="StateInfo" time="28.728604887" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.730195637] <Event name="StateInfo" time="28.72985147" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.730883971] <Event name="StateInfo" time="28.730524054" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.731785804] <Event name="StateInfo" time="28.731456512" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.732477637] <Event name="StateInfo" time="28.732089137" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.736498554] <Event name="StateInfo" time="28.736157013" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.737215471] <Event name="StateInfo" time="28.736861679" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.73809368] <Event name="StateInfo" time="28.737744846" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.738717555] <Event name="StateInfo" time="28.738369013" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.739541221] <Event name="StateInfo" time="28.739222721" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [28.741143347] ***** Vision found AprilTag 24: aprilTagPose=(x=-1.153271,y=75.485383,angle=-0.875301)
+TaskAutoShoot.autoTask_INFO [28.747853139] <Event name="StateInfo" time="28.747523847" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [28.748680014] <Event name="StateInfo" time="28.748367639" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [28.749364264] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [28.751249014] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.runTaskState_INFO [28.752272764] ***** ShootParams: dist=75.494192, bearing=-173.757829, shootParams={name=RegressionEntry, distance=75.49419212848049, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4178.21924728745]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [28.761029182] <Event name="StateInfo" time="28.760664598" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.PanMotor.pidCtrlTask_INFO [28.978660662] controlMode: Position,onTarget=true(-174.08827331486617/-173.75782924420446), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [29.468011753] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [29.662736022] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [29.847800291] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [29.977170804] >>>>> Setting numArtifactsToShoot to 3
+Shooter.ShootMotor1.pidCtrlTask_INFO [30.059086854] controlMode: Velocity,onTarget=true(68.0/69.63698745479084), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [30.117996818] <Event name="StateInfo" time="30.117523151" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [30.119246318] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [30.120279693] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [30.12144286] Enabling exit trigger: lowThreshold=3730.000000, highThreshold=4430.000000
+Shooter.Launcher.acquireOwnership_INFO [30.12314386] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [30.130523611] <Event name="StateInfo" time="30.130143569" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [30.176318491] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [30.314605546] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [30.361315676] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [30.361840968] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [30.362637218] Exit[1]: vel=4110.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [30.36357376] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [30.376897094] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [30.509860649] <Event name="StateInfo" time="30.509523483" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [30.510599441] <Event name="StateInfo" time="30.510178566" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [30.511839024] <Event name="StateInfo" time="30.511287483" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [30.512763608] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [30.517030692] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [30.519837692] <Event name="StateInfo" time="30.519015192" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [30.523335359] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [30.560187154] <Event name="StateInfo" time="30.559841821" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [30.560815113] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [30.561882613] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [30.563477738] Enabling exit trigger: lowThreshold=3070.000000, highThreshold=3770.000000
+Shooter.Launcher.acquireOwnership_INFO [30.565670196] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [30.576022614] <Event name="StateInfo" time="30.575655114" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [30.760920049] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [30.762726925] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [30.764078508] Exit[1]: vel=3480.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [30.7659618] Disabling exit trigger.
+FtcTeleOp.shootArtifacts_INFO [30.784355177] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [30.785975385] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [30.78711551] Stopping subsystems.
+Shooter.cancel_INFO [30.788248636] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [30.803839679] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [30.806815262] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+Shooter.Launcher.releaseOwnership_INFO [30.807606262] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.setIntakeMode_INFO [32.262674242] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [32.287804245] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [32.288669328] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [32.289939245] moveToNextVacantSlot: FromSlot=null, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [32.291379203] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [32.593585567] controlMode: Position,onTarget=true(-117.7981796596755/-120.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [32.596157484] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [32.597018192] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [32.597896692] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [32.598435401] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [32.786308711] onEntryTrigger(active=true, numObj=4, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [32.856093177] EntryArtifact: hue=222.857, type=Purple
+Intake.setPickupArtifactType_INFO [32.857453218] Expect to pick up artifact Green
+Spindexer.setEntryTriggerEnabled_INFO [32.858682594] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [32.895663597] Entry[2]: colorMode=true, value=222.857132/225, artifact=Purple, slotStates=[None, None, Purple] (PGU=2/0/0), expectedNext=Green
+Spindexer.findSlot_INFO [32.897344764] find slot for None (0=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [32.898297056] moveToNextVacantSlot: FromSlot=2, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [32.900182973] MoveToEntrySlot: Slot=0, event=(Spindexer.callbackEvent=CLEARED)
+FtcTeleOp.shootArtifacts_INFO [32.977844481] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [32.984261148] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [32.985876398] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [33.020684485] <Event name="StateInfo" time="33.020252235" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [33.021949735] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [33.024405569] <Event name="StateInfo" time="33.02401561" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [33.084852616] <Event name="StateInfo" time="33.084475491" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.085589366] <Event name="StateInfo" time="33.085209908" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.13769708] <Event name="StateInfo" time="33.137296038" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.139351997] <Event name="StateInfo" time="33.138089955" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.179100917] <Event name="StateInfo" time="33.178625209" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.180349834] <Event name="StateInfo" time="33.179866251" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.23395759] <Event name="StateInfo" time="33.233536423" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.235579548] <Event name="StateInfo" time="33.235135631" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.28842897] <Event name="StateInfo" time="33.286995137" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.293619471] <Event name="StateInfo" time="33.290244012" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+Spindexer.Motor.pidCtrlTask_INFO [33.311157972] controlMode: Position,onTarget=true(0.47249703205386595/0.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+TaskAutoShoot.autoTask_INFO [33.350964935] <Event name="StateInfo" time="33.350378685" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.352049351] <Event name="StateInfo" time="33.351404476" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+Spindexer.stopIntakeCallback_INFO [33.353591977] stopIntakeCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [33.388635439] <Event name="StateInfo" time="33.388043647" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.390259147] <Event name="StateInfo" time="33.389504022" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+Spindexer.moveEntrySlotCompletionCallback_INFO [33.392544939] moveEntrySlotCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [33.393445314] setEntryTriggerEnabled(enabled=true)
+TaskAutoShoot.autoTask_INFO [33.47346553] <Event name="StateInfo" time="33.47309278" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.474296197] <Event name="StateInfo" time="33.473907989" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+Spindexer.onEntryTrigger_INFO [33.515476035] onEntryTrigger(active=true, numObj=5, advOnTrigger=false)
+TaskAutoShoot.autoTask_INFO [33.566839123] <Event name="StateInfo" time="33.566543665" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.56770829] <Event name="StateInfo" time="33.567182998" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+Spindexer.getColorArtifactType_INFO [33.594258709] EntryArtifact: hue=162.000, type=Green
+Intake.setPickupArtifactType_INFO [33.595438793] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [33.596046918] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [33.626333879] Entry[0]: colorMode=true, value=162.000000/162, artifact=Green, slotStates=[Green, None, Purple] (PGU=2/1/0), expectedNext=None
+Spindexer.entryTriggerCallback_INFO [33.628248379] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [33.630569171] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [33.631972963] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [33.63347038] cancel(owner=null)
+TaskAutoShoot.autoTask_INFO [33.680576301] <Event name="StateInfo" time="33.680246426" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.681321801] <Event name="StateInfo" time="33.680980551" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.728473806] <Event name="StateInfo" time="33.728086181" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.729295431] <Event name="StateInfo" time="33.728876598" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.765793726] <Event name="StateInfo" time="33.765142726" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.768012435] <Event name="StateInfo" time="33.767675852" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.79798148] <Event name="StateInfo" time="33.797415355" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.799998063] <Event name="StateInfo" time="33.799436021" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.853483902] <Event name="StateInfo" time="33.853152568" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.854358027] <Event name="StateInfo" time="33.853870944" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.92115845] <Event name="StateInfo" time="33.920823325" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.921892575] <Event name="StateInfo" time="33.921554242" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.974098581] <Event name="StateInfo" time="33.973781831" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [33.974941789] <Event name="StateInfo" time="33.974499039" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.006593459] <Event name="StateInfo" time="34.006261542" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.007851417] <Event name="StateInfo" time="34.007522417" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.048228005] <Event name="StateInfo" time="34.04782988" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.049300171] <Event name="StateInfo" time="34.048768755" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.113381386] <Event name="StateInfo" time="34.112853178" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [34.114252595] ***** Vision timed out.
+TaskAutoShoot.autoTask_INFO [34.11861272] <Event name="StateInfo" time="34.118144595" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [34.18747931] <Event name="StateInfo" time="34.18717831" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [34.188092977] Stopping subsystems.
+Shooter.cancel_INFO [34.189448644] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [34.198633228] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [34.201811812] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [34.20252027] <Event name="StateInfo" time="34.202115728" tag="^^^^^" TaskAutoShoot.state="DONE" />
+FtcTeleOp.setIntakeMode_INFO [35.964792614] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [35.978952157] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [35.979853407] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [35.980434407] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [35.982457116] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [36.365682071] controlMode: Position,onTarget=true(121.61614562722599/120.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [36.382035531] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [36.428703077] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [36.462645497] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [36.463913372] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [36.545925381] onEntryTrigger(active=true, numObj=6, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [36.581327301] EntryArtifact: hue=226.667, type=Purple
+Intake.setPickupArtifactType_INFO [36.581913259] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [36.582964426] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [36.600201053] Entry[1]: colorMode=true, value=226.666656/227, artifact=Purple, slotStates=[Green, Purple, Purple] (PGU=3/1/0), expectedNext=Purple
+Spindexer.entryTriggerCallback_INFO [36.602405178] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [36.608597554] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [36.610757637] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [36.611282637] cancel(owner=null)
+FtcTeleOp.shootArtifacts_INFO [40.116031031] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [40.118373406] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [40.119708365] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [40.13380695] <Event name="StateInfo" time="40.133468324" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [40.134437241] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [40.135474116] <Event name="StateInfo" time="40.135123241" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [40.1367557] <Event name="StateInfo" time="40.13634445" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [40.138773742] ***** Vision found AprilTag 24: aprilTagPose=(x=3.891266,y=72.759656,angle=3.061324)
+TaskAutoShoot.autoTask_INFO [40.144487492] <Event name="StateInfo" time="40.144034534" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [40.145754201] <Event name="StateInfo" time="40.145272951" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [40.146850576] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=null).
+Spindexer.findSlot_INFO [40.147821243] find slot for Any (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [40.148785493] MoveToExitSlot: FromSlot=null, ToSlot=2, artifactType=Any
+Spindexer.moveToExitSlot_INFO [40.149881284] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [40.153303993] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [40.155349743] ***** ShootParams: dist=72.863636, bearing=-70.556833, shootParams={name=RegressionEntry, distance=72.86363607253678, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4135.185191601451]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [40.17483337] <Event name="StateInfo" time="40.174435829" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [40.687324714] controlMode: Position,onTarget=true(58.889592402057815/60.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [40.688236172] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [40.690581172] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [40.692199339] stopIntakeCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [40.712316174] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [40.912179903] >>>>> Setting numArtifactsToShoot to 3
+Shooter.PanMotor.pidCtrlTask_INFO [41.049972583] controlMode: Position,onTarget=true(-71.17203535153678/-70.55683282458817), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [41.062285584] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [41.412228453] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [41.562562218] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [41.712438066] >>>>> Setting numArtifactsToShoot to 3
+Shooter.ShootMotor1.pidCtrlTask_INFO [41.846686997] controlMode: Velocity,onTarget=true(69.0/68.91975319335752), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [41.84755383] <Event name="StateInfo" time="41.846667455" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [41.848828997] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [41.850825747] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [41.852352914] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [41.854699081] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [41.864152873] <Event name="StateInfo" time="41.863833498" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [41.915142045] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [42.062189602] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [42.071758603] Expect to pick up artifact None
+Spindexer.setExitTriggerEnabled_INFO [42.073193019] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [42.074583395] Exit[2]: vel=4140.000000, artifact=Purple, numPurple=2, numGreen=1, numUnknown=0, expectedNext=None
+Spindexer.disableExitTrigger_INFO [42.079025187] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [42.087272937] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [42.187133781] <Event name="StateInfo" time="42.186747614" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [42.187762906] <Event name="StateInfo" time="42.187432156" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [42.192557031] <Event name="StateInfo" time="42.188453281" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [42.195557698] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.findSlot_INFO [42.197851949] find slot for Any (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [42.20015874] MoveToExitSlot: FromSlot=2, ToSlot=0, artifactType=Any
+Spindexer.moveToExitSlot_INFO [42.201758241] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [42.206639574] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [42.207929033] <Event name="StateInfo" time="42.207391783" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [42.262269455] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [42.412325262] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [42.612496115] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [42.762545797] >>>>> Setting numArtifactsToShoot to 3
+Spindexer.Motor.pidCtrlTask_INFO [42.771910631] controlMode: Position,onTarget=true(180.9908982983776/180.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [42.771959048] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [42.773918757] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [42.77566759] stopIntakeCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [42.77752259] <Event name="StateInfo" time="42.777178423" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [42.778817882] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [42.780220215] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [42.781280132] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [42.782709299] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [42.796673134] <Event name="StateInfo" time="42.796267134" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [42.912636604] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [43.040799617] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [43.041576908] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [43.042761075] Exit[0]: vel=4140.000000, artifact=Green, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Spindexer.disableExitTrigger_INFO [43.047185659] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [43.055104701] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [43.063017327] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [43.155110211] <Event name="StateInfo" time="43.154381045" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [43.157742503] <Event name="StateInfo" time="43.156714087" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [43.160226337] <Event name="StateInfo" time="43.159685295" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [43.16118592] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.findSlot_INFO [43.161904879] find slot for Any (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [43.162444754] MoveToExitSlot: FromSlot=0, ToSlot=1, artifactType=Any
+Spindexer.moveToExitSlot_INFO [43.163044712] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [43.167837671] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [43.17109063] <Event name="StateInfo" time="43.170769213" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [43.262748347] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [43.412227821] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [43.612536632] >>>>> Setting numArtifactsToShoot to 3
+Spindexer.Motor.pidCtrlTask_INFO [43.73772902] controlMode: Position,onTarget=true(299.26157499010685/300.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [43.73787427] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [43.73838352] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [43.739467354] stopIntakeCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [43.740441229] <Event name="StateInfo" time="43.740056229" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [43.741033895] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [43.741983562] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [43.744343146] Enabling exit trigger: lowThreshold=3730.000000, highThreshold=4430.000000
+Shooter.Launcher.acquireOwnership_INFO [43.746453646] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [43.755275105] <Event name="StateInfo" time="43.754823897" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [43.762824314] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [43.913900079] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [43.994808129] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [43.996419588] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [43.997980296] Exit[1]: vel=4080.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [44.002115547] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [44.009442506] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [44.062233886] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [44.111133849] <Event name="StateInfo" time="44.109553599" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [44.113965349] <Event name="StateInfo" time="44.113410308" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [44.123832142] <Event name="StateInfo" time="44.123527934" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [44.124503559] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [44.125098559] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [44.126789351] <Event name="StateInfo" time="44.126479309" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [44.128460018] <Event name="StateInfo" time="44.127908476" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [44.13341456] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [44.134193893] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [44.138757894] Enabling exit trigger: lowThreshold=3130.000000, highThreshold=3830.000000
+Shooter.Launcher.acquireOwnership_INFO [44.140031602] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [44.143822102] <Event name="StateInfo" time="44.143514686" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [44.265301281] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [44.266411656] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [44.267374157] Exit[1]: vel=3480.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [44.26825849] Disabling exit trigger.
+FtcTeleOp.operatorButtonEvent_INFO [44.284416533] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [44.28591045] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [44.381684168] <Event name="StateInfo" time="44.381328626" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [44.383532168] <Event name="StateInfo" time="44.383105168" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [44.385498293] <Event name="StateInfo" time="44.385059335" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [44.38714096] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [44.388393377] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [44.389938336] <Event name="StateInfo" time="44.389549544" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [44.391719836] <Event name="StateInfo" time="44.391302752" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [44.393202377] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [44.394743544] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [44.395647419] Enabling exit trigger: lowThreshold=3670.000000, highThreshold=4370.000000
+Shooter.Launcher.acquireOwnership_INFO [44.39704392] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [44.402113087] <Event name="StateInfo" time="44.40180742" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [44.413657546] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.shootArtifacts_INFO [44.662710863] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [44.663335613] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [44.664300446] Stopping subsystems.
+Shooter.cancel_INFO [44.66518828] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [44.680677823] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [44.683475198] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+Intake.setPickupArtifactType_INFO [45.012990023] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [45.013543023] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [45.014409565] Exit[1]: vel=4044.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [45.014943023] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [45.024029899] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.relocalize_INFO [56.713044074] >>>>> Start re-localizing ...
+FtcTeleOp.relocalize_INFO [59.86489239] >>>>> Start re-localizing ...
+FtcTeleOp.periodic_INFO [59.870242724] >>>>> Relocalizing: pose=(x=29.665122,y=12.643949,angle=-62.923851), adjPose=(x=23.800255,y=11.171098,angle=-35.076232)
+FtcTeleOp.periodic_INFO [59.938734814] >>>>> Relocalizing: pose=(x=31.900072,y=14.933480,angle=-64.659569), adjPose=(x=26.082507,y=13.283662,angle=-36.811950)
+FtcTeleOp.setDriveMode_INFO [61.367054916] >>>>> Enabling ROBOT mode.
+FtcTeleOp.setDriveOrientation_INFO [61.367766875] driveOrientation=ROBOT
+FtcTeleOp.setDriveMode_INFO [61.514548139] >>>>> Enabling FIELD mode.
+FtcTeleOp.setDriveOrientation_INFO [61.516294931] driveOrientation=FIELD
+FtcTeleOp.setIntakeMode_INFO [64.585389531] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [64.609885159] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [64.611292742] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [64.612640242] moveToNextVacantSlot: FromSlot=null, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [64.613590784] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [64.945813151] controlMode: Position,onTarget=true(240.8444796201029/240.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [64.96880932] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [65.005544157] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [65.049476745] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [65.050349703] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [65.842003991] onEntryTrigger(active=true, numObj=7, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [65.959093586] EntryArtifact: hue=225.000, type=Purple
+Intake.setPickupArtifactType_INFO [65.960455961] Expect to pick up artifact Green
+Spindexer.setEntryTriggerEnabled_INFO [65.961634586] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [65.98033888] Entry[2]: colorMode=true, value=225.000000/222, artifact=Purple, slotStates=[None, None, Purple] (PGU=2/0/0), expectedNext=Green
+Spindexer.findSlot_INFO [65.981704755] find slot for None (0=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [65.982859463] moveToNextVacantSlot: FromSlot=2, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [65.983914714] MoveToEntrySlot: Slot=0, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [66.397114255] controlMode: Position,onTarget=true(357.19984170953705/360.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [66.401360047] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [66.438908634] moveEntrySlotCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [66.439602801] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [68.654620607] onEntryTrigger(active=true, numObj=8, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [68.759620909] EntryArtifact: hue=240.000, type=Purple
+Intake.setPickupArtifactType_INFO [68.760744409] Expect to pick up artifact None
+Spindexer.setEntryTriggerEnabled_INFO [68.761501284] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [68.794835579] Entry[0]: colorMode=true, value=240.000000/233, artifact=Purple, slotStates=[Purple, None, Purple] (PGU=3/0/0), expectedNext=None
+Spindexer.entryTriggerCallback_INFO [68.796668121] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [68.80096583] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [68.80176383] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [68.803070788] cancel(owner=null)
+FtcTeleOp.setIntakeMode_INFO [75.418163036] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [75.433846246] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [75.434836163] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [75.435505247] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [75.436474747] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [75.941243631] controlMode: Position,onTarget=true(479.30114760585684/480.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [75.990271636] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [76.044144516] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [76.101220772] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [76.10263798] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [76.172287112] onEntryTrigger(active=true, numObj=9, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [76.253820787] EntryArtifact: hue=225.000, type=Purple
+Intake.setPickupArtifactType_INFO [76.255851371] Expect to pick up artifact Any
+Spindexer.setEntryTriggerEnabled_INFO [76.259388996] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [76.284705082] Entry[1]: colorMode=true, value=225.000000/225, artifact=Purple, slotStates=[Purple, Purple, Purple] (PGU=4/0/0), expectedNext=Any
+Spindexer.entryTriggerCallback_INFO [76.285486165] Slots are full! (event=null)
+Spindexer.performAutoReceiveEnabled_INFO [76.286611999] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [76.287329207] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [76.288909166] cancel(owner=null)
+FtcTeleOp.shootArtifacts_INFO [78.544288392] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [78.545426184] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [78.547382976] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [78.55508881] <Event name="StateInfo" time="78.554763602" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [78.555953602] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [78.556950227] <Event name="StateInfo" time="78.55660606" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [78.57387827] <Event name="StateInfo" time="78.57124452" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [78.577683646] ***** Vision found AprilTag 24: aprilTagPose=(x=-23.497596,y=84.111528,angle=-15.608364)
+TaskAutoShoot.autoTask_INFO [78.581951313] <Event name="StateInfo" time="78.581587021" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [78.604742148] <Event name="StateInfo" time="78.60439069" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [78.605798857] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=null).
+Spindexer.findSlot_INFO [78.607903524] find slot for Any (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [78.608603815] MoveToExitSlot: FromSlot=null, ToSlot=2, artifactType=Any
+Spindexer.moveToExitSlot_INFO [78.609423982] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [78.614483816] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [78.616061149] ***** ShootParams: dist=87.332045, bearing=26.969232, shootParams={name=RegressionEntry, distance=87.33204546119727, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4371.878241313365]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [78.629889942] <Event name="StateInfo" time="78.629290567" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Shooter.PanMotor.pidCtrlTask_INFO [79.058040027] controlMode: Position,onTarget=true(26.764384645825075/26.969231649811906), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+Spindexer.Motor.pidCtrlTask_INFO [79.085881072] controlMode: Position,onTarget=true(418.9687376335577/420.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [79.097748406] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [79.098313365] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [79.156553079] stopIntakeCallback(canceled=false)
+FtcTeleOp.shootArtifacts_INFO [80.546353343] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [80.546850635] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [80.547470427] Stopping subsystems.
+Shooter.cancel_INFO [80.547989885] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [80.560870761] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [80.565642137] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+FtcTeleOp.shootArtifacts_INFO [83.472401179] >>>>> Auto Shoot
+TaskAutoShoot.autoShoot_INFO [83.474109471] autoShoot(owner=FtcTeleOp.autoShoot, event=null, taskParams=(alliance=RED_ALLIANCE,inAuto=false,useAprilTagVision=true,doMotif=true,useClassifierVision=false,useRegression=true,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+TaskAutoShoot.startAutoTask_INFO [83.475264763] Successfully acquired subsystem ownerships on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [83.505132016] <Event name="StateInfo" time="83.504822266" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [83.506695057] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [83.508465183] <Event name="StateInfo" time="83.508001724" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [83.519314892] <Event name="StateInfo" time="83.518762184" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [83.521893517] ***** Vision found AprilTag 24: aprilTagPose=(x=5.939223,y=72.881854,angle=4.658802)
+TaskAutoShoot.autoTask_INFO [83.530363518] <Event name="StateInfo" time="83.529937685" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [83.545269728] <Event name="StateInfo" time="83.544961728" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [83.546679353] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=Purple).
+Spindexer.findSlot_INFO [83.547449062] find slot for Any (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [83.548025687] MoveToExitSlot: FromSlot=2, ToSlot=2, artifactType=Any
+Spindexer.moveToExitSlot_INFO [83.553148521] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [83.557352896] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.runTaskState_INFO [83.558924979] ***** ShootParams: dist=73.123450, bearing=33.292907, shootParams={name=RegressionEntry, distance=73.12345045129273, region={tiltAngle=38.0, coeffs=[[2943.18711, 16.3593]]}, outputs=[4139.435572967833]}, event=(TaskAutoShoot.event=CLEARED)
+TaskAutoShoot.autoTask_INFO [83.56596698] <Event name="StateInfo" time="83.56558723" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [83.773960918] controlMode: Position,onTarget=true(419.4475662841314/420.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [83.779576377] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [83.78117121] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [83.794382836] stopIntakeCallback(canceled=false)
+FtcTeleOp.operatorButtonEvent_INFO [84.222265171] >>>>> Setting numArtifactsToShoot to 3
+Shooter.PanMotor.pidCtrlTask_INFO [84.294156053] controlMode: Position,onTarget=true(32.906160137185054/33.292906976008), stalled=false, expired=false, event=(Shooter.panOnTarget=SIGNALED)
+FtcTeleOp.operatorButtonEvent_INFO [84.417614482] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [84.563692539] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [84.773807185] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [84.964346037] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [85.112911427] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [85.314182739] >>>>> Setting numArtifactsToShoot to 3
+Shooter.ShootMotor1.pidCtrlTask_INFO [85.644093647] controlMode: Velocity,onTarget=true(68.0/68.99059288279722), stalled=false, expired=false, event=(Shooter.shooter1OnTarget=SIGNALED)
+TaskAutoShoot.autoTask_INFO [85.655867065] <Event name="StateInfo" time="85.655491398" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [85.656924649] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [85.658462024] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [85.664599566] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [85.665898358] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [85.671797608] <Event name="StateInfo" time="85.671455775" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [85.67401165] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [85.822574707] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [85.886592047] Expect to pick up artifact None
+Spindexer.setExitTriggerEnabled_INFO [85.888038713] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [85.88971813] Exit[2]: vel=4110.000000, artifact=Purple, numPurple=3, numGreen=0, numUnknown=0, expectedNext=None
+Spindexer.disableExitTrigger_INFO [85.894987089] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [85.906309882] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.operatorButtonEvent_INFO [85.98292664] >>>>> Setting numArtifactsToShoot to 3
+TaskAutoShoot.autoTask_INFO [86.017538726] <Event name="StateInfo" time="86.017173268" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [86.018589602] <Event name="StateInfo" time="86.01790856" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [86.037472978] <Event name="StateInfo" time="86.037138145" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [86.038397562] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.findSlot_INFO [86.039309604] find slot for Any (0=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [86.039959729] MoveToExitSlot: FromSlot=2, ToSlot=0, artifactType=Any
+Spindexer.moveToExitSlot_INFO [86.041300812] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [86.046459813] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [86.047984938] <Event name="StateInfo" time="86.047643688" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [86.176330534] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [86.321208965] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [86.520037277] >>>>> Setting numArtifactsToShoot to 3
+Spindexer.Motor.pidCtrlTask_INFO [86.56317449] controlMode: Position,onTarget=true(540.5912148793036/540.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [86.567542198] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [86.57017449] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [86.610460953] stopIntakeCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [86.617952412] <Event name="StateInfo" time="86.617600078" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [86.619733037] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [86.621243287] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [86.629834913] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [86.63158083] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [86.638528622] <Event name="StateInfo" time="86.63819233" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [86.722008006] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [86.86466452] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [86.865787728] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [86.867199978] Exit[0]: vel=4110.000000, artifact=Purple, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Spindexer.disableExitTrigger_INFO [86.871693979] Disabling exit trigger.
+FtcTeleOp.operatorButtonEvent_INFO [86.88351173] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [86.884953439] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [87.0021912] <Event name="StateInfo" time="87.001826325" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [87.003549492] <Event name="StateInfo" time="87.003146409" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [87.010819868] <Event name="StateInfo" time="87.010508076" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [87.011553993] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.findSlot_INFO [87.012260993] find slot for Any (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [87.01312141] MoveToExitSlot: FromSlot=0, ToSlot=1, artifactType=Any
+Spindexer.moveToExitSlot_INFO [87.01407166] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+Spindexer.Motor.acquireOwnership_INFO [87.017333077] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [87.019252535] <Event name="StateInfo" time="87.018848285" tag="^^^^^" TaskAutoShoot.state="AIM" />
+FtcTeleOp.operatorButtonEvent_INFO [87.020475202] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [87.263677977] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [87.419556326] >>>>> Setting numArtifactsToShoot to 3
+FtcTeleOp.operatorButtonEvent_INFO [87.613638637] >>>>> Setting numArtifactsToShoot to 3
+Spindexer.Motor.pidCtrlTask_INFO [87.614950845] controlMode: Position,onTarget=true(659.3407202216067/660.0), stalled=false, expired=false, event=(Spindexer.Motor.releaseOwnership=SIGNALED)
+Spindexer.Motor.releaseOwnership_INFO [87.617321221] Released ownership on behalf of FtcTeleOp.autoShoot
+Spindexer.Motor.releaseOwnership_INFO [87.619427054] Signal completion event (Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [87.634242556] stopIntakeCallback(canceled=false)
+TaskAutoShoot.autoTask_INFO [87.648649724] <Event name="StateInfo" time="87.648293015" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [87.649271557] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [87.650920641] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [87.655199099] Enabling exit trigger: lowThreshold=3850.000000, highThreshold=4550.000000
+Shooter.Launcher.acquireOwnership_INFO [87.657046808] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [87.668371059] <Event name="StateInfo" time="87.668049059" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [87.769897028] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [87.900781291] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [87.901898957] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [87.903673166] Exit[1]: vel=4080.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [87.904428583] Disabling exit trigger.
+FtcTeleOp.operatorButtonEvent_INFO [87.92421146] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [87.92482396] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [88.033072554] <Event name="StateInfo" time="88.032738887" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [88.034203054] <Event name="StateInfo" time="88.033353429" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [88.046818805] <Event name="StateInfo" time="88.046523639" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [88.047644514] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [88.048437264] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [88.049227681] <Event name="StateInfo" time="88.04869918" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [88.055780848] <Event name="StateInfo" time="88.055433473" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [88.05641814] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [88.057297223] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [88.058333807] Enabling exit trigger: lowThreshold=3130.000000, highThreshold=3830.000000
+Shooter.Launcher.acquireOwnership_INFO [88.060276015] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [88.068515016] <Event name="StateInfo" time="88.068099974" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.operatorButtonEvent_INFO [88.072558683] >>>>> Setting numArtifactsToShoot to 3
+Intake.setPickupArtifactType_INFO [88.200462404] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [88.201885738] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [88.203463363] Exit[1]: vel=3540.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [88.204579863] Disabling exit trigger.
+FtcTeleOp.operatorButtonEvent_INFO [88.234229241] >>>>> Setting numArtifactsToShoot to 3
+Shooter.Launcher.releaseOwnership_INFO [88.235815908] Released ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [88.336868501] <Event name="StateInfo" time="88.336554084" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [88.33808796] <Event name="StateInfo" time="88.337157543" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [88.346148169] <Event name="StateInfo" time="88.345847169" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [88.347364711] ***** Shooting Any artifact (MotifArtifact=null, exitArtifact=None).
+Spindexer.moveToExitSlotWithArtifact_INFO [88.348980252] MoveToExitSlot: FromSlot=1, ToSlot=null, artifactType=Any
+TaskAutoShoot.autoTask_INFO [88.350755336] <Event name="StateInfo" time="88.350355169" tag="^^^^^" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.autoTask_INFO [88.359550253] <Event name="StateInfo" time="88.35897567" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [88.36088142] ***** Feed artifact to shooter.
+Shooter.shoot_INFO [88.362800295] shoot(owner=FtcTeleOp.autoShoot, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [88.364501296] Enabling exit trigger: lowThreshold=3790.000000, highThreshold=4490.000000
+Shooter.Launcher.acquireOwnership_INFO [88.367336004] Acquired ownership on behalf of FtcTeleOp.autoShoot
+TaskAutoShoot.autoTask_INFO [88.370759296] <Event name="StateInfo" time="88.37040638" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+FtcTeleOp.shootArtifacts_INFO [88.502165351] >>>>> Cancel Auto Shoot
+TaskAutoShoot.cancel_INFO [88.502807601] Canceling auto task operation.
+TaskAutoShoot.stopSubsystems_INFO [88.503522476] Stopping subsystems.
+Shooter.cancel_INFO [88.504136726] owner=FtcTeleOp.autoShoot
+Spindexer.cancel_INFO [88.519484228] cancel(owner=FtcTeleOp.autoShoot)
+TaskAutoShoot.releaseSubsystemsOwnership_INFO [88.526172437] Releasing subsystem ownership on behalf of FtcTeleOp.autoShoot
+	shooter=FtcTeleOp.autoShoot
+	spindexer=FtcTeleOp.autoShoot
+	intake=FtcTeleOp.autoShoot
+Intake.setPickupArtifactType_INFO [88.696255537] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [88.696974496] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [88.698386454] Exit[1]: vel=4200.000000, artifact=None, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Spindexer.disableExitTrigger_INFO [88.699730163] Disabling exit trigger.
+Shooter.Launcher.releaseOwnership_INFO [88.749550043] Released ownership on behalf of FtcTeleOp.autoShoot
+FtcTeleOp.setIntakeMode_INFO [98.992089613] >>>>> Bulldoze Intake
+Spindexer.setAutoReceiveEnabled_INFO [99.010851657] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [99.012219282] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [99.013285907] moveToNextVacantSlot: FromSlot=null, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [99.014597532] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [99.437151116] controlMode: Position,onTarget=true(598.05065294816/600.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [99.471222745] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [99.526971334] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [99.571240505] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [99.571846297] setEntryTriggerEnabled(enabled=true)
+FtcTeleOp.setIntakeMode_INFO [100.299520578] >>>>> Cancel Bulldoze Intake
+Spindexer.performAutoReceiveEnabled_INFO [100.301022953] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [100.302791037] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [100.304806162] cancel(owner=null)
+FtcTeleOp.setDriveSpeedMode_INFO [104.06602554] >>>>> DrivePower slow.
+FtcTeleOp.setDriveSpeedMode_INFO [108.669765003] >>>>> DrivePower normal.
+Robot.cancelAll_INFO [122.415443842] Cancel all operations.
+TaskAutoShoot.cancel_INFO [122.417414342] Canceling auto task operation.
+Spindexer.cancel_INFO [122.447644137] cancel(owner=null)
+Shooter.cancel_INFO [122.448359595] owner=null
+TrcDigitalInput.getInput.printElapsedTime_INFO [122.460225763] TrcDigitalInput.getInput: avgElapsed=0.006899391899305556, minElapsed=3.4417E-5, maxElapsed=0.020052085
+TrcMotor.getPos.printElapsedTime_INFO [122.460860721] TrcMotor.getPos: avgElapsed=0.0011189527294117648, minElapsed=4.666E-6, maxElapsed=0.018221585
+TrcMotor.setPower.printElapsedTime_INFO [122.46136793] TrcMotor.setPower: avgElapsed=0.003036496787234043, minElapsed=1.3708E-5, maxElapsed=0.026221128
+TrcMotor.setVel.printElapsedTime_INFO [122.46181593] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [122.46226568] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [122.462807305] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [122.463341638] TrcServo.setPos: avgElapsed=0.00537877125, minElapsed=0.001242208, maxElapsed=0.011540377
+Robot.stopMode_INFO [122.46376543] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [122.464412639] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [122.464837014] Disabling ClassifierVision.
+Robot.stopMode_INFO [122.465966055] Turning all LED indicators OFF.
+FtcTeleOp.stopMode_INFO [122.471486431] ***** Stopping TeleOp: 20251214@171358 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.472118764] FtcDashboard.task: STANDALONE_TASK=0.003527001741743725/0.01348004599339498
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.473101389] flDriveMotor.pidCtrlTask: OUTPUT_TASK=1.0613904988252305E-4/0.022125999760708476
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.474318806] frDriveMotor.pidCtrlTask: OUTPUT_TASK=9.464581384420748E-5/0.0221260036088921
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.474995181] blDriveMotor.pidCtrlTask: OUTPUT_TASK=1.8670421200072293E-4/0.022126004557563708
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.475591348] brDriveMotor.pidCtrlTask: OUTPUT_TASK=8.183040719320441E-5/0.02212600439942165
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.476871473] TrcMecanumDrive.odometryTask: INPUT_TASK=0.009636911331644654/0.02213450365623304
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.47778789] TrcMecanumDrive.absOdoHeadingWrap.converterTask: INPUT_TASK=7.409363028550777E-6/0.022129731947235273
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.478716265] StatusLED: OUTPUT_TASK=4.745724953017709E-4/0.022129739589447056
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.479459723] Spindexer1LED: OUTPUT_TASK=2.885262974340441E-4/0.022128618037766536
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.480069015] Spindexer2LED: OUTPUT_TASK=3.098739962052765E-4/0.02212860038182147
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.480661682] Spindexer3LED: OUTPUT_TASK=2.698037576797976E-4/0.022128592054571735
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.48138239] Intake.Motor.pidCtrlTask: OUTPUT_TASK=1.461116136610047E-5/0.022128585150162628
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.48337739] Spindexer.EntryTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=0.030019756792207794/1.2856696935714285
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.485183391] Spindexer.ShootVelTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=2.022872562015011E-4/0.005100088984543952
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.487189182] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.001692190891237579/0.022126357710930446
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.488367224] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=2.3018329954832884E-4/0.02212502758446251
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.489151808] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=4.541645130984643E-4/0.022125027057452576
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.489780058] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=0.007794592129562703/0.022129026023310447
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.490696183] TaskAutoShoot: POST_PERIODIC_TASK=2.6222214035943724E-5/0.0016753180134788973
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.492143433] DriverGamepad.buttonEventTask: PRE_PERIODIC_TASK=1.0982446580419662E-5/0.0014342218474882418
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [122.493481891] OperatorGamepad.buttonEventTask: PRE_PERIODIC_TASK=1.1710825555073365E-5/0.0014342206330475375
+FtcOpMode.printPerformanceMetrics_INFO [122.49543285] [FtcTeleOp] Main robot thread average elapsed times:
+       robotInit=2.585853s
+    initPeriodic=NaNs
+       startMode=0.000064s
+    loopInterval=0.001434s (697.240Hz)
+             sdk=0.000031s
+ prePeriodicTask=0.000157s
+        periodic=0.001096s
+postPeriodicTask=0.000077s
+         loopSum=0.001403s
+        stopMode=0.000000s
