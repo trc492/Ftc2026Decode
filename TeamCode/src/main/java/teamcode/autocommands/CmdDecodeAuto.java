@@ -157,8 +157,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     }
                     spikeMarkOrder =
-                        autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE? new int[] {0, 1, 2}:
-                        autoChoices.openGate == FtcAuto.OpenGate.YES? new int[] {1, 0, 2}: new int[] {2, 1, 0};
+                        autoChoices.openGate == FtcAuto.OpenGate.YES ? new int[] {1, 0, 2}:
+                        autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ? new int[] {0, 1, 2}: new int[] {2, 1, 0};
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     currentSpikeMarkCount = 0;
 
