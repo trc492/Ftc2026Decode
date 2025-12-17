@@ -48,6 +48,10 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         START,
         GOTO_SHOOT_POS,
         SHOOT_ARTIFACTS,
+        PICKUP_LOADING,
+        MOVE_BACK,
+        ATTEMPT_PICKUP,
+        FINISH_LOADING,
         PICKUP_SPIKEMARK,
         FINISH_PICKUP,
         OPEN_GATE,
@@ -65,6 +69,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
     private int[] spikeMarkOrder = null;
     private int currentSpikeMarkCount = 0;
     private int targetSpikeMarkCount = 0;
+    private boolean loadingPickedUp = false;
 
     /**
      * Constructor: Create an instance of the object.
@@ -173,9 +178,10 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             panAngle = autoChoices.alliance == FtcAuto.Alliance.RED_ALLIANCE ? -70.0 : 70.0;
                         }
 
+                        TrcEvent callbackEvent = null;
                         if (useAutoGoalTracking)
                         {
-                            TrcEvent callbackEvent = new TrcEvent(moduleName + ".goalTrackingCallbackEvent");
+                            callbackEvent = new TrcEvent(moduleName + ".goalTrackingCallbackEvent");
                             // Turn on AutoGoalTracking once the turret is facing the goal AprilTag.
                             callbackEvent.setCallback(
                                 (ctxt, canceled) ->
@@ -189,11 +195,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                             null, true, autoChoices.alliance, true);
                                     }
                                 }, null);
-                            robot.shooter.setPanAngle(panAngle, callbackEvent, 0.0);
                             robot.globalTracer.traceInfo(
                                 moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
+                        robot.shooter.setPanAngle(panAngle, callbackEvent, 1.0);
                         robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
                         robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
@@ -214,7 +220,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case GOTO_SHOOT_POS:
-                    if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE && currentSpikeMarkCount == 0)
+                    if (autoChoices.startPos != FtcAuto.StartPos.GOAL_ZONE && currentSpikeMarkCount == 0 && !loadingPickedUp)
                     {
                         sm.setState(State.SHOOT_ARTIFACTS);
                     }
@@ -268,18 +274,49 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     break;
 
                 case SHOOT_ARTIFACTS:
+                    boolean pickUpLoading = autoChoices.loadingPickup == FtcAuto.LoadingPickup.YES && !(autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE) && !loadingPickedUp;
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
                             null, event, autoChoices.alliance, true, true, true,
                             currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
                             Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
-                        sm.waitForSingleEvent(event, State.PICKUP_SPIKEMARK);
+                        sm.waitForSingleEvent(event, pickUpLoading ?
+                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
                     else
                     {
-                        sm.setState(State.PICKUP_SPIKEMARK);
+                        sm.setState(pickUpLoading ?
+                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
+                    break;
+
+                case PICKUP_LOADING:
+                    if (robot.intakeSubsystem != null)
+                    {
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 1.0, null);
+                    }
+                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
+                    sm.waitForSingleEvent(event, State.MOVE_BACK);
+                    break;
+
+                case MOVE_BACK:
+                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
+                    sm.waitForSingleEvent(event, State.ATTEMPT_PICKUP);
+                    break;
+
+                case ATTEMPT_PICKUP:
+                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
+                    sm.waitForSingleEvent(event, State.FINISH_LOADING);
+                    break;
+
+                case FINISH_LOADING:
+                    if (robot.intakeSubsystem != null)
+                    {
+                        robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
+                    }
+                    loadingPickedUp = true;
+                    sm.setState(State.GOTO_SHOOT_POS);
                     break;
 
                 case PICKUP_SPIKEMARK:
@@ -337,7 +374,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.25);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.2);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
@@ -354,7 +391,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                             robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
                             spikeMarkPose, endPose);
-                        sm.waitForEvents(State.FINISH_PICKUP, false, false, 7.0);
+                        sm.waitForEvents(State.FINISH_PICKUP, false, false, 5.5);
                     }
                     else
                     {

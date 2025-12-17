@@ -69,7 +69,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         public boolean useAprilTagVision = true;
         public boolean doMotif = false;
         public boolean useClassifierVision = false;
-        public boolean useRegression = false;
+        public boolean useRegression = true;
         public boolean flywheelTracking = true;
         public boolean relocalize = false;
         public int numArtifactsToShoot = 3;
@@ -475,6 +475,13 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // Clear spindexer event again since moveToExitSlotWithArtifact would have signaled it.
                     spindexerEvent.clear();
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
+                }
+                // If GoalTracking is ON, ask it for the AimInfo so we can aim and wait for increased accuracy.
+                if (aimInfo == null && robot.shooterSubsystem.isGoalTrackingEnabled())
+                {
+                    robot.shooterSubsystem.pauseGoalTracking(owner);
+                    pausedPrevGoalTracking = true;
+                    aimInfo = robot.shooterSubsystem.getLastVisionAimInfo();
                 }
 
                 if (numBallsShot == 0 && aimInfo != null)

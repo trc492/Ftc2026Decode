@@ -202,6 +202,7 @@ public class FtcTeleOp extends FtcOpMode
                     // We are trying to re-localize the robot and vision hasn't seen AprilTag yet.
                     if (relocalizing)
                     {
+                        // Relocalize twice, using MT1 for the first time and MT2 for the second time.
                         if (relocalizeCount < 2)
                         {
                             TrcPose2D robotFieldPose = robot.vision.getRobotFieldPose();
