@@ -495,7 +495,7 @@ public class Shooter extends TrcSubsystem
     {
         if (launcher != null)
         {
-            TrcDbgTrace.globalTraceInfo(
+            shooter.tracer.traceInfo(
                 instanceName, "shoot(owner=%s, event=%s, pos=%f, duration=%f)",
                 owner, completionEvent, launcherTuneParams.activatePos, launcherTuneParams.activateDuration);
             if (robot.spindexerSubsystem != null)
@@ -513,7 +513,7 @@ public class Shooter extends TrcSubsystem
         }
         else if (completionEvent != null)
         {
-            TrcDbgTrace.globalTraceInfo(instanceName, "There is no launcher, signal completion anyway.");
+            shooter.tracer.traceInfo(instanceName, "There is no launcher, signal completion anyway.");
             completionEvent.signal();
         }
     }   //shoot
@@ -526,6 +526,7 @@ public class Shooter extends TrcSubsystem
      */
     private void velTriggerCallback(Object context, boolean canceled)
     {
+        shooter.tracer.traceInfo(instanceName, "Retract launcher.");
         if (robot.spindexerSubsystem != null)
         {
             robot.spindexerSubsystem.disableExitTrigger();
@@ -615,7 +616,7 @@ public class Shooter extends TrcSubsystem
                     this.flywheelTracking = flywheelTrackingEnabled;
                     // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                     // by mistake.
-                    shooter.setShooterPowerMode(null, null);
+                    shooter.disableShooterPowerMode(null, null);
                 }
             }
         }
@@ -633,7 +634,7 @@ public class Shooter extends TrcSubsystem
                 this.flywheelTracking = flywheelTrackingEnabled;
                 // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                 // by mistake.
-                shooter.setShooterPowerMode(null, null);
+                shooter.disableShooterPowerMode(null, null);
             }
         }
     }   //enableGoalTracking
@@ -731,7 +732,7 @@ public class Shooter extends TrcSubsystem
                 else if (pidTarget > 0.0 && shooter.shooterMotor1.getVelocity() == 0.0)
                 {
                     shooter.tracer.traceWarn(instanceName, "Shooter motor encoder failure detected!");
-                    shooter.setShooterPowerMode(Params.SHOOT_MOTOR_MAX_VEL, null);
+                    shooter.enableShooterPowerMode(Params.SHOOT_MOTOR_MAX_VEL, null);
                 }
             }
         }
