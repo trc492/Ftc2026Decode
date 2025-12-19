@@ -895,7 +895,8 @@ public class Spindexer extends TrcSubsystem
 
         spindexer.tracer.traceInfo(
             instanceName,
-            "MoveToExitSlot: FromSlot=" + exitSlot + ", ToSlot=" + slot + ", artifactType=" + artifactType);
+            "MoveToExitSlot: FromSlot=" + exitSlot + ", ToSlot=" + slot + ", artifactType=" + artifactType +
+            ", slots=" + Arrays.toString(slotStates));
         if (slot != null)
         {
             moveToExitSlot(owner, slot, event);

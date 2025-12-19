@@ -105,7 +105,11 @@ public class RobotParams
      */
     public static class Game
     {
-        public static final boolean fieldIsMirrored             = true;
+        // Game elapsed times.
+        public static final double AUTO_PERIOD                  = 30.0;     // 30 seconds auto period
+        public static final double TELEOP_PERIOD                = 120.0;    // 2 minutes teleop period
+        public static final double PARKING_TIME                 = 10.0;
+        public static final double ENDGAME_DEADLINE             = TELEOP_PERIOD - PARKING_TIME;
         // AprilTag locations.
         public static final TrcPose2D[] APRILTAG_POSES          = new TrcPose2D[] {
             new TrcPose2D(-58.3727, -55.6425, -133.62826142189439980808796560491),  // TagId 20: z = 29.5 in
@@ -217,11 +221,6 @@ public class RobotParams
             new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
         public static final TrcPose2D RED_SQUARE_PARK_POSE      =
             new TrcPose2D(2.25*Field.FULL_TILE_INCHES, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
-        // Game elapsed times.
-        public static final double AUTO_PERIOD                  = 30.0;     // 30 seconds auto period
-        public static final double TELEOP_PERIOD                = 120.0;    // 2 minutes teleop period
-        public static final double PARKING_TIME                 = 10.0;
-        public static final double ENDGAME_DEADLINE             = TELEOP_PERIOD - PARKING_TIME;
     }   //class Game
 
     /**
@@ -232,6 +231,7 @@ public class RobotParams
         public static final double FULL_FIELD_INCHES            = 141.24;
         public static final double HALF_FIELD_INCHES            = FULL_FIELD_INCHES/2.0;
         public static final double FULL_TILE_INCHES             = FULL_FIELD_INCHES/6.0;
+        public static final boolean mirroredField               = true;
     }   //class Field
 
     /**

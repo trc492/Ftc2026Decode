@@ -205,6 +205,7 @@ public class Intake extends TrcSubsystem
         if (!intakeOn && enabled)
         {
             // Enabling Bulldoze Intake, turn on manual intake and Spindexer AutoReceive.
+            intake.tracer.traceInfo(instanceName, "Turning on Intake.");
             intake.intake(power);
             robot.spindexerSubsystem.setAutoReceiveEnabled(true, event);
             bulldozeEnabled = true;
@@ -212,6 +213,7 @@ public class Intake extends TrcSubsystem
         else if (intakeOn && !enabled)
         {
             // Disabling Bulldoze Intake, turn off manual intake and Spindexer AutoReceive.
+            intake.tracer.traceInfo(instanceName, "Turning off Intake.");
             timer.set(Params.INTAKE_FINISH_DELAY, (ctxt, canceled) -> {intake.cancel();});
             robot.spindexerSubsystem.setAutoReceiveEnabled(false, null);
             bulldozeEnabled = false;
