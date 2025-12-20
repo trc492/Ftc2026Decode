@@ -165,11 +165,16 @@ public class Shooter extends TrcSubsystem
         // Region 4: tilt 38°
         .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
         .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
-        .addEntry("Target_7.59ft_1",        91.1,       shootRegions[3],    4,433.51934)
+        .addEntry("Target_7.59ft_1",        91.1,       shootRegions[3],    4433.51934)
         // Region 5: tilt 45°
-        .addEntry("Target_7.59ft_2",        91.1000001, shootRegions[4],    4636.763624)
-        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.914968)
-        .addEntry("Target_14.36ft",         172.4,      shootRegions[4],    5840.299556);
+        .addEntry("Target_7.59ft_2",        91.1000001, shootRegions[4],    4636.76363)
+        .addEntry("Target_8.40ft",          100.8,      shootRegions[4],    4780.35893)
+        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.91497)
+        .addEntry("Target_10.31ft",         123.8,      shootRegions[4],    5120.84265)
+        .addEntry("Target_11.12ft",         133.5,      shootRegions[4],    5264.43796)
+        .addEntry("Target_12.02ft",         144.3,      shootRegions[4],    5424.31727)
+        .addEntry("Target_12.76ft",         153.2,      shootRegions[4],    5556.06967)
+        .addEntry("Target_14.36ft",         172.4,      shootRegions[4],    5840.29956);
 
     public static final class Params
     {
