@@ -138,7 +138,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     private final TrcEvent spindexerEvent;
 
     private int motifIndex = 0;
-    private int numBallsShot = 0;
     private double[] aimInfo = null;
     private Vision.ArtifactType[] motifSequence = null;
     private Double visionExpiredTime = null;
@@ -289,30 +288,34 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         {
             case START:
                 motifIndex = 0;
-                numBallsShot = 0;
                 //
                 // Intentionally falling through.
                 //
             case SETUP_VISION:
                 aimInfo = null;
                 motifSequence = null;
-                if (!taskParams.useAprilTagVision)
+                if (robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
-                    Boolean visionTrackingOn = robot.shooterSubsystem.getGoalVisionTrackingModeOn();
-                    if (visionTrackingOn == null || visionTrackingOn)
+                    if (taskParams.doMotif)
                     {
-                        // GoalTracking is not ON or GoalTracking is ON and in vision mode.
-                        // Since we don't want to use Vision, let's turn ON GoalTracking by Odometry.
-                        // Pause previous GoalTracking mode if any and set GoalTracking to odometry mode.
-                        robot.shooterSubsystem.pauseGoalTracking(owner);
-                        pausedPrevGoalTracking = true;
-                        robot.shooterSubsystem.enableGoalTracking(
-                            null, false, taskParams.alliance, taskParams.flywheelTracking);
+                        // Determining motif sequence is in DO_VISION which could optionally use ClassifierVision.
+                        tracer.traceInfo(
+                            moduleName,
+                            "***** Goal Tracking is enabled but we are doing Motif, go determine Motif sequence.");
+                        sm.setState(State.DO_VISION);
                     }
-                    aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
-                    tracer.traceInfo(
-                        moduleName, "***** Shoot using odometry: depth=%f, bearing=%f", aimInfo[0], aimInfo[1]);
-                    sm.setState(State.AIM);
+                    else
+                    {
+                        tracer.traceInfo(
+                            moduleName,
+                            "***** Goal Tracking is enabled and not doing Motif, go aim according to goal tracking.");
+                        sm.setState(State.AIM);
+                    }
+                }
+                else if (!taskParams.useAprilTagVision)
+                {
+                    tracer.traceWarn(moduleName, "***** Goal Tracking is not enabled and not using vision, quit.");
+                    sm.setState(State.DONE);
                 }
                 else if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
                 {
@@ -348,8 +351,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
             case DO_VISION:
                 // If GoalTracking is not ON, use vision to determine the appropriate AprilTag location.
-                if (aimInfo == null && !robot.shooterSubsystem.isGoalTrackingEnabled())
+                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
+                    // Use vision to determine the appropriate AprilTag location.
                     int[] goalAprilTags =
                         taskParams.alliance == null? RobotParams.Game.anyGoalAprilTags:
                         taskParams.alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
@@ -479,15 +483,15 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 // If GoalTracking is ON, ask it for the AimInfo so we can aim and wait for increased accuracy.
                 if (aimInfo == null && robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
+                    // Must pause Goal Tracking so we can call aimShooter ourselves with aimInfo.
                     robot.shooterSubsystem.pauseGoalTracking(owner);
                     pausedPrevGoalTracking = true;
                     aimInfo = robot.shooterSubsystem.getLastVisionAimInfo();
                 }
 
-                if (numBallsShot == 0 && aimInfo != null)
+                if (aimInfo != null)
                 {
-                    // Spin the shooter flywheel up to speed and the turret pointing to the target for the first
-                    // artifact to be shot. Subsequent artifacts will be shot at the same setting unchanged.
+                    // Spin the shooter flywheel up to speed and the turret pointing to the target.
                     event.clear();
                     sm.addEvent(event);
                     TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(
@@ -504,14 +508,20 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 break;
 
             case SHOOT:
-                tracer.traceInfo(moduleName, "***** Feed artifact to shooter.");
+                tracer.traceInfo(
+                    moduleName, "***** Shooting artifact (numArtifactsLeft=" + taskParams.numArtifactsToShoot + ")");
                 robot.shooterSubsystem.shoot(owner, event);
                 sm.waitForSingleEvent(event, State.SHOOT_NEXT);
                 break;
 
             case SHOOT_NEXT:
                 taskParams.numArtifactsToShoot--;
-                numBallsShot++;
+                if (pausedPrevGoalTracking)
+                {
+                    robot.shooterSubsystem.resumeGoalTracking(owner);
+                    pausedPrevGoalTracking = false;
+                    aimInfo = null;
+                }
                 sm.setState(
                     taskParams.numArtifactsToShoot > 0 &&
                     robot.spindexerSubsystem.getNumArtifacts(Vision.ArtifactType.Any) > 0?
