@@ -26,23 +26,19 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
-import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
-import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.subsystem.TrcShootParams;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
-import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class implements a Shooter Subsystem. This implementation consists of one or two shooter motors. For
@@ -244,6 +240,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -345.0;
         public static final double PAN_MAX_POS                  = PAN_POS_OFFSET;
+        public static final double PAN_HARD_STOP_ZONE           = 15.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
             {
@@ -329,16 +326,16 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-    private Double trackingStartTimestamp = null;
     private FtcAuto.Alliance trackedAlliance = null;
     private boolean visionTracking = false;
     private boolean flywheelTracking = false;
+    private String savedOwner = null;
     private FtcAuto.Alliance savedTrackedAlliance = null;
     private boolean savedVisionTracking = false;
     private boolean savedFlywheelTracking = false;
     private Double prevShooterPidTarget = null;
     private Double nextFailSafeCheckTime = null;
-    private double[] lastVisionAimInfo = null;
+    private TrcEvent shooterReadyEvent = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -567,19 +564,8 @@ public class Shooter extends TrcSubsystem
      */
     public boolean isGoalTrackingEnabled()
     {
-        return trackingStartTimestamp != null;
+        return trackedAlliance != null;
     }   //isGoalTrackingEnabled
-
-    /**
-     * This method checks if Goal Tracking is ON and in vision tracking mode.
-     *
-     * @return true if GoalTracking is ON and in vision tracking mode, null if GoalTracking is OFF, false if
-     *         GoalTrackiing is ON but not in vision tracking mode.
-     */
-    public Boolean getGoalVisionTrackingModeOn()
-    {
-        return isGoalTrackingEnabled()? visionTracking: null;
-    }   //getGoalTrackingModeOn
 
     /**
      * This method enables Goal Tracking with the Turret (Pan motor) using AprilTag Vision.
@@ -606,22 +592,21 @@ public class Shooter extends TrcSubsystem
             ", flywheelTracking=" + flywheelTrackingEnabled + ")");
         if (useVision)
         {
-            if (robot.vision != null)
+            if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
             {
                 if (shooter.acquireExclusiveAccess(owner))
                 {
                     if (!isGoalTrackingEnabled())
                     {
-                        robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
-                    this.trackingStartTimestamp = TrcTimer.getCurrentTime();
-                    this.trackedAlliance = alliance;
-                    this.visionTracking = true;
-                    this.flywheelTracking = flywheelTrackingEnabled;
                     // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                     // by mistake.
                     shooter.disableShooterPowerMode(null, null);
+                    robot.enableTrackingInfo(true, alliance);
+                    this.trackedAlliance = alliance;
+                    this.visionTracking = true;
+                    this.flywheelTracking = flywheelTrackingEnabled;
                 }
             }
         }
@@ -633,16 +618,30 @@ public class Shooter extends TrcSubsystem
                 {
                     shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                 }
-                this.trackingStartTimestamp = TrcTimer.getCurrentTime();
-                this.trackedAlliance = alliance;
-                this.visionTracking = false;
-                this.flywheelTracking = flywheelTrackingEnabled;
                 // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                 // by mistake.
                 shooter.disableShooterPowerMode(null, null);
+                robot.enableTrackingInfo(false, alliance);
+                this.trackedAlliance = alliance;
+                this.visionTracking = false;
+                this.flywheelTracking = flywheelTrackingEnabled;
             }
         }
     }   //enableGoalTracking
+
+    /**
+     * This method stops Goal Tracking.
+     */
+    private void stopGoalTracking()
+    {
+        shooter.tracer.traceInfo(instanceName, "Stop GoalTracking.");
+        shooter.panMotor.cancel();
+        shooter.stopShooter();
+        this.trackedAlliance = null;
+        this.visionTracking = false;
+        this.flywheelTracking = false;
+        // Don't reset failsafe. Disabling GoalTracking doesn't mean the problem fixed itself.
+    }   //stopGoalTracking
 
     /**
      * This method disables Goal Tracking.
@@ -654,59 +653,44 @@ public class Shooter extends TrcSubsystem
         if (shooter.validateOwnership(owner))
         {
             shooter.tracer.traceInfo(
-                instanceName, "disableGoalTracking(turretPos=" + shooter.panMotor.getPosition() + ")");
+                instanceName,
+                "disableGoalTracking(owner=" + owner + ", turretPos=" + shooter.panMotor.getPosition() + ")");
             shooter.releaseExclusiveAccess(owner);
-            shooter.panMotor.cancel();
-            shooter.stopShooter();
-            this.trackingStartTimestamp = null;
-            this.trackedAlliance = null;
-            this.visionTracking = false;
-            this.flywheelTracking = false;
-            // Don't reset failsafe. Disabling GoalTracking doesn't mean the problem fixed itself.
+            stopGoalTracking();
+            robot.disableTrackingInfo();
         }
     }   //disableGoalTracking
 
     /**
      * This method pauses the current Goal Tracking session and save the tracking parameters for the session.
-     *
-     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void pauseGoalTracking(String owner)
+    public void pauseGoalTracking()
     {
         // Only do this if Goal Tracking was enabled.
         if (isGoalTrackingEnabled())
         {
             shooter.tracer.traceInfo(instanceName, "Pause GoalTracking.");
-            if (shooter.validateOwnership(owner))
-            {
-                this.savedTrackedAlliance = trackedAlliance;
-                this.savedVisionTracking = visionTracking;
-                this.savedFlywheelTracking = flywheelTracking;
-                disableGoalTracking(owner);
-            }
+            savedOwner = shooter.getCurrentOwner();
+            savedTrackedAlliance = this.trackedAlliance;
+            savedVisionTracking = this.visionTracking;
+            savedFlywheelTracking = this.flywheelTracking;
+            stopGoalTracking();
         }
     }   //pauseGoalTracking
 
     /**
      * This method restores the saved Goal Tracking parameters and resumes the saved Goal Tracking session.
-     *
-     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void resumeGoalTracking(String owner)
+    public void resumeGoalTracking()
     {
         if (savedTrackedAlliance != null)
         {
             shooter.tracer.traceInfo(instanceName, "Resume GoalTracking.");
-            if (shooter.validateOwnership(owner))
-            {
-                if (savedTrackedAlliance != null)
-                {
-                    enableGoalTracking(owner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
-                    this.savedTrackedAlliance = null;
-                    this.savedVisionTracking = false;
-                    this.savedFlywheelTracking = false;
-                }
-            }
+            enableGoalTracking(savedOwner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
+            this.savedOwner = null;
+            this.savedTrackedAlliance = null;
+            this.savedVisionTracking = false;
+            this.savedFlywheelTracking = false;
         }
     }   //resumeGoalTracking
 
@@ -756,35 +740,20 @@ public class Shooter extends TrcSubsystem
 
         if (isGoalTrackingEnabled())
         {
-            // Goal Tracking is ON.
-            double[] aimInfo = null;
+            double[] aimInfo;
 
-            if (visionTracking)
+            synchronized (robot.trackingInfo)
             {
-                TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
-                    robot.vision.getLimelightDetectedObject(
-                        FtcLimelightVision.ResultType.Fiducial,
-                        trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                            RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                        null, -1);
-                if (aprilTagInfo == null)
-                {
-                    // Not detecting AprilTag or vision is still processing the frame, don't move.
-                    panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
-                }
-                else
-                {
-                    aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
-                    lastVisionAimInfo = aimInfo;
-                }
+                aimInfo = robot.trackingInfo.aimInfo;
+            }
+
+            if (aimInfo == null)
+            {
+                // Not detecting AprilTag or vision is still processing the frame, don't move.
+                panPosition = 0.0;
+                shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
             }
             else
-            {
-                aimInfo = robot.vision.getAimInfoByOdometry(trackedAlliance);
-            }
-
-            if (aimInfo != null)
             {
                 TrcShootParams.Entry shootParams = shootParamsTable.get(
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
@@ -792,22 +761,50 @@ public class Shooter extends TrcSubsystem
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
                     aimInfo[0], panPosition, aimInfo[1], shootParams);
 
+                // Set tilt angle (fire and forget).
                 shooter.setTiltAngle(shootParams.region.tiltAngle);
+
                 if (flywheelTracking)
                 {
                     shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                 }
+
                 // Check if we are crossing over the hard stop.
-                if (aimInfo[1] >= Params.PAN_MIN_POS && aimInfo[1] <= Params.PAN_MAX_POS)
+                panPosition -= aimInfo[1];
+                if (aimInfo[1] < Params.PAN_MIN_POS - Params.PAN_HARD_STOP_ZONE)
                 {
-                    // We are moving within valid range.
-                    panPosition -= aimInfo[1];
+                    // Crossing over (hard stop + threshold) counter-clockwise, spin it the other way clockwise.
+                    panPosition += 360.0;
+                    shooter.tracer.traceInfo(
+                        Params.SUBSYSTEM_NAME, "Crossing counter-clockwise, spin it the other way.");
                 }
-                else
+                else if (aimInfo[1] > Params.PAN_MAX_POS + Params.PAN_HARD_STOP_ZONE)
                 {
-                    // We are crossing over the hard stop, stop it.
+                    // Crossing over (hard stop + threshold) clockwise, spin it the other way counter-clockwise.
+                    panPosition -= 360.0;
+                    shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "Crossing clockwise, spin it the other way.");
+                }
+                else if (aimInfo[1] < Params.PAN_MIN_POS || aimInfo[1] > Params.PAN_MAX_POS)
+                {
+                    // We are in hard stop zone, stop it.
                     panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
+                    shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "At hard stop zone. Stop!");
+                }
+
+                if (shooterReadyEvent != null)
+                {
+                    boolean flyWheelOnTarget = !flywheelTracking || shooter.shooterMotor1.isVelocityOnTarget();
+                    boolean turretOnTarget = shooter.panMotor.isPositionOnTarget();
+
+                    shooter.tracer.traceDebug(
+                        Params.SUBSYSTEM_NAME,
+                        "flywheelOnTarget=" + flyWheelOnTarget + ", turretOnTarget=" + turretOnTarget);
+                    if (flyWheelOnTarget && turretOnTarget)
+                    {
+                        shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "Shooter is ready to fire.");
+                        shooterReadyEvent.signal();
+                        shooterReadyEvent = null;
+                    }
                 }
             }
         }
@@ -816,14 +813,14 @@ public class Shooter extends TrcSubsystem
     }   //getPanPosition
 
     /**
-     * This method returns the last Vision detected Aim info.
+     * This method sets the shooterReady event to be signaled when goal tracking has reached target.
      *
-     * @return last Vision detected info.
+     * @param event specifies the event to signal when the shooter has reached aiming target.
      */
-    public double[] getLastVisionAimInfo()
+    public void waitForShooterReady(TrcEvent event)
     {
-        return lastVisionAimInfo;
-    }   //geteLastVisionAimInfo
+        shooterReadyEvent = event;
+    }   //waitForShooterReady
 
     /**
      * This method computes the camera pose on the robot given the turret heading.
@@ -915,7 +912,8 @@ public class Shooter extends TrcSubsystem
                     {
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
-                    else {
+                    else
+                    {
                         if (FtcAuto.autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
                             // In autonomous mode starting at GOAL_ZONE, initialize the Turret to turn to the obelisk.

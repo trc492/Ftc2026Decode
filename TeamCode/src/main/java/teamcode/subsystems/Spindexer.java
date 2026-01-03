@@ -252,6 +252,16 @@ public class Spindexer extends TrcSubsystem
     }   //getPidStorage
 
     /**
+     * This method returns a copy of the Spindexer slot states array.
+     *
+     * @return copy of the slot states.
+     */
+    public Vision.ArtifactType[] getSlotStates()
+    {
+        return Arrays.copyOf(slotStates, slotStates.length);
+    }   //getSlotStates
+
+    /**
      * This method sets the entry trigger to color mode or distance mode.
      *
      * @param colorMode specifies true to set to color mode, false to distance mode.

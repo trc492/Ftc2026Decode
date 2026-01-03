@@ -564,14 +564,12 @@ public class FtcTeleOp extends FtcOpMode
                         moduleName + ".autoShoot", null,
                         Dashboard.DashboardParams.alliance,
                         false,
-                        Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                         Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                         Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                         Dashboard.Subsystem_Shooter.autoShootParams.useRegression,
                         Dashboard.Subsystem_Shooter.autoShootParams.flywheelTracking,
                         Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
-                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0 ?
-                            Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot : 1,
+                        Math.max(Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot, 1),
                         Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                 }
             }
@@ -690,10 +688,10 @@ public class FtcTeleOp extends FtcOpMode
             }
             else if (!altFunc && robot.vision != null)
             {
-                robot.shooterSubsystem.enableGoalTracking(null, true, Dashboard.DashboardParams.alliance, true);
                 robot.globalTracer.traceInfo(
                     moduleName, ">>>>> Enable GoalTracking by AprilTag (alliance=%s).",
                     FtcAuto.autoChoices.alliance);
+                robot.shooterSubsystem.enableGoalTracking(null, true, Dashboard.DashboardParams.alliance, true);
                 if (robot.ledIndicator != null)
                 {
                     robot.ledIndicator.setStatusPatternOn(

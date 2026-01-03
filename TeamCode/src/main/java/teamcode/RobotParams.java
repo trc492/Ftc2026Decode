@@ -26,7 +26,6 @@ import android.annotation.SuppressLint;
 
 import teamcode.subsystems.DriveBase;
 import teamcode.vision.Vision;
-import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 
 /**

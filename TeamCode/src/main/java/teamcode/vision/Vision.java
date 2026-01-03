@@ -180,6 +180,7 @@ public class Vision
     private static final double artifactWidth = 5.0;  // inches
     private static final double artifactHeight = 5.0; // inches
 
+    public static final double STALE_TIMEOUT = 0.1;
     private static final int CLASSIFIER_ROI_LEFT = 0;
     private static final int CLASSIFIER_ROI_TOP = 50;
     private static final int CLASSIFIER_ROI_WIDTH = frontCamParams.camImageWidth;
@@ -1364,6 +1365,7 @@ public class Vision
                 if (classifierVision != null)
                 {
                     lineNum = classifierVision.updateStatus(lineNum);
+                    getBestClassifierArtifacts(Dashboard.DashboardParams.alliance, 3);
                 }
             }
         }

@@ -199,7 +199,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                        robot.shooter.setPanAngle(panAngle, callbackEvent, 1.0);
+                        robot.shooter.setPanAngle(panAngle, callbackEvent, 2.0);
                         robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
                         robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
@@ -278,7 +278,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true,
+                            null, event, autoChoices.alliance, true, true,
                             currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
                             Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
                         sm.waitForSingleEvent(event, pickUpLoading ?
