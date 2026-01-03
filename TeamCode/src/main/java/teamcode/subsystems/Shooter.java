@@ -594,7 +594,7 @@ public class Shooter extends TrcSubsystem
         {
             if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
             {
-                if (shooter.acquireExclusiveAccess(owner))
+                if (owner == null || shooter.acquireExclusiveAccess(owner))
                 {
                     if (!isGoalTrackingEnabled())
                     {
@@ -612,7 +612,7 @@ public class Shooter extends TrcSubsystem
         }
         else
         {
-            if (shooter.acquireExclusiveAccess(owner))
+            if (owner == null || shooter.acquireExclusiveAccess(owner))
             {
                 if (!isGoalTrackingEnabled())
                 {

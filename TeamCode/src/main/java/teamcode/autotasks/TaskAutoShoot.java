@@ -250,7 +250,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         if (useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled())
         {
-            robot.shooterSubsystem.disableGoalTracking(owner);
+            robot.shooterSubsystem.disableGoalTracking(null);
         }
 
         if (pausedPrevGoalTracking)
@@ -310,7 +310,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     numArtifactsShot = 0;
                     motifSequence = null;
                     visionExpiredTime = null;
-                    robot.shooterSubsystem.enableGoalTracking(owner, true, taskParams.alliance, true);
+                    robot.shooterSubsystem.enableGoalTracking(null, true, taskParams.alliance, true);
 
                     if (taskParams.useClassifierVision && !classifierVisionEnabled)
                     {
