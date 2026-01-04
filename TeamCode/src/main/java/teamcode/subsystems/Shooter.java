@@ -420,7 +420,6 @@ public class Shooter extends TrcSubsystem
                 shooter.tracer.traceInfo(
                     instanceName, "Detected Axon zero encoder reading, reset and retry (reading=%f)",
                     motor.getEncoderRawPosition());
-
             }
         }
 
@@ -594,7 +593,7 @@ public class Shooter extends TrcSubsystem
         {
             if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
             {
-                if (owner == null || shooter.acquireExclusiveAccess(owner))
+                if (shooter.acquireExclusiveAccess(owner))
                 {
                     if (!isGoalTrackingEnabled())
                     {
@@ -612,7 +611,7 @@ public class Shooter extends TrcSubsystem
         }
         else
         {
-            if (owner == null || shooter.acquireExclusiveAccess(owner))
+            if (shooter.acquireExclusiveAccess(owner))
             {
                 if (!isGoalTrackingEnabled())
                 {
@@ -751,7 +750,7 @@ public class Shooter extends TrcSubsystem
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.
                 panPosition = 0.0;
-                shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
+                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
             }
             else
             {

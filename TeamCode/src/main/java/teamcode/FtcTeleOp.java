@@ -561,7 +561,7 @@ public class FtcTeleOp extends FtcOpMode
                 {
                     robot.globalTracer.traceInfo(moduleName, ">>>>> Auto Shoot");
                     robot.autoShootTask.autoShoot(
-                        null, null,
+                        moduleName + ".autoShoot", null,
                         Dashboard.DashboardParams.alliance,
                         false,
                         Dashboard.Subsystem_Shooter.autoShootParams.doMotif,

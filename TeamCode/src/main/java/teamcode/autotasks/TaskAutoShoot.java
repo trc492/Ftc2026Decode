@@ -250,7 +250,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         tracer.traceInfo(moduleName, "Stopping subsystems.");
         if (useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled())
         {
-            robot.shooterSubsystem.disableGoalTracking(null);
+            robot.shooterSubsystem.disableGoalTracking(owner);
         }
 
         if (pausedPrevGoalTracking)
@@ -301,16 +301,61 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 }
                 else
                 {
+                    TrcEvent turretCallbackEvent = null;
                     boolean classifierVisionEnabled = robot.vision.isClassifierVisionEnabled();
+
                     tracer.traceInfo(
                         moduleName,
                         "***** Setting up Vision (useClassifierVision=" + taskParams.useClassifierVision +
                         ", classifierVisionEnabled=" + classifierVisionEnabled + ")");
-
                     numArtifactsShot = 0;
                     motifSequence = null;
                     visionExpiredTime = null;
-                    robot.shooterSubsystem.enableGoalTracking(null, true, taskParams.alliance, true);
+                    if (useGoalTracking)
+                    {
+                        // Check if Limelight is facing the AprilTag.
+                        synchronized (robot.trackingInfo)
+                        {
+                            if (robot.trackingInfo.robotLocalized)
+                            {
+                                double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
+                                double turretAngle = robot.shooter.getPanAngle();
+                                tracer.traceInfo(
+                                    moduleName,
+                                    "***** AimInfo=" + Arrays.toString(aimInfo) + ", turretAngle=" + turretAngle);
+                                // Check turret target angle is greater than at least half of Limelight FOV.
+                                if (Math.abs(aimInfo[1] - robot.shooter.getPanAngle()) > 25.0)
+                                {
+                                    tracer.traceInfo(
+                                        moduleName,
+                                        "***** Camera is not pointing at AprilTag, turn to AprilTag.");
+                                    turretCallbackEvent = new TrcEvent(moduleName + ".turretCallback");
+                                    turretCallbackEvent.setCallback(
+                                        (ctxt, canceled) ->
+                                        {
+                                            if (!canceled)
+                                            {
+                                                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
+                                                {
+                                                    tracer.traceInfo(
+                                                        moduleName,
+                                                        "***** Camera is pointing at AprilTag, turn on Goal Tracking.");
+                                                    robot.shooterSubsystem.enableGoalTracking(
+                                                        owner, true, taskParams.alliance, true);
+                                                }
+                                            }
+                                        }, null);
+                                    robot.shooter.setPanAngle(owner, aimInfo[1], turretCallbackEvent, 0.0);
+                                }
+                            }
+                            else
+                            {
+                                tracer.traceInfo(
+                                    moduleName,
+                                    "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
+                            }
+                        }
+                    }
 
                     if (taskParams.useClassifierVision && !classifierVisionEnabled)
                     {
@@ -329,12 +374,19 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             true);
                     }
 
-                    sm.setState(State.DO_VISION);
+                    if (turretCallbackEvent != null)
+                    {
+                        sm.waitForSingleEvent(turretCallbackEvent, State.DO_VISION);
+                    }
+                    else
+                    {
+                        sm.setState(State.DO_VISION);
+                    }
                 }
                 break;
 
             case DO_VISION:
-                if (!useGoalTracking && aimInfo == null)
+                if ((!useGoalTracking || !robot.shooterSubsystem.isGoalTrackingEnabled()) && aimInfo == null)
                 {
                     // Use vision to determine the appropriate AprilTag location.
                     int[] goalAprilTags =
@@ -352,16 +404,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         tracer.traceInfo(
                             moduleName, "***** Vision found AprilTag " + aprilTagId + ": aprilTagPose=" + aprilTagPose);
 
-//                        if (taskParams.relocalize && aprilTagInfo.detectedObj.robotPose != null)
-//                        {
-//                            TrcPose2D originalRobotPose = robot.robotBase.driveBase.getFieldPosition();
-//                            TrcPose2D robotFieldPose =
-//                                robot.shooterSubsystem.adjustRobotFieldPosition(aprilTagInfo.detectedObj.robotPose);
-//                            robot.robotBase.driveBase.setFieldPosition(robotFieldPose, false);
-//                            tracer.traceInfo(
-//                                moduleName, "***** Relocalize: " + originalRobotPose + " -> " + robotFieldPose);
-//                        }
-
                         if (robot.ledIndicator != null)
                         {
                             // This is assuming vision is set to look for 20 or 24 only.
@@ -370,6 +412,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                                     LEDIndicator.BLUE_APRILTAG: LEDIndicator.RED_APRILTAG, true);
                         }
 
+                        if (useGoalTracking && !robot.shooterSubsystem.isGoalTrackingEnabled())
+                        {
+                            tracer.traceInfo(moduleName, "***** Camera found AprilTag, turn on Goal Tracking.");
+                            robot.shooterSubsystem.enableGoalTracking(owner, true, taskParams.alliance, true);
+                        }
                         aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
                     }
                 }
@@ -387,7 +434,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         moduleName, "***** MotifSequence=%s", Arrays.toString(motifSequence));
                 }
 
-                if ((aimInfo != null || useGoalTracking) &&
+                if ((aimInfo != null || useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled()) &&
                     (!taskParams.doMotif || robot.obeliskMotif == null || motifSequence != null))
                 {
                     // Vision found the target AprilTag and either we don't see obelisk or we have determined
@@ -465,7 +512,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
                 }
 
-                if (useGoalTracking)
+                if (useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
                     event.clear();
                     sm.addEvent(event);

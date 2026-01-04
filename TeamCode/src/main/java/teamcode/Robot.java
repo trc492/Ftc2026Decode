@@ -69,6 +69,7 @@ public class Robot
         public FtcAuto.Alliance trackedAlliance = null;
         public double staleTimeout = 0.0;
         public double[] aimInfo = null;
+        public boolean robotLocalized = false;
     }   //class TrackingInfo
 
     // Global objects.
@@ -227,9 +228,13 @@ public class Robot
             {
                 if (endOfAutoRobotPose != null)
                 {
-                    // We had a previous autonomous run that saved the robot position at the end, use it.
-                    robotBase.driveBase.setFieldPosition(endOfAutoRobotPose);
-                    globalTracer.traceInfo(moduleName, "Restore saved RobotPose=" + endOfAutoRobotPose);
+                    synchronized (trackingInfo)
+                    {
+                        // We had a previous autonomous run that saved the robot position at the end, use it.
+                        robotBase.driveBase.setFieldPosition(endOfAutoRobotPose);
+                        trackingInfo.robotLocalized = true;
+                        globalTracer.traceInfo(moduleName, "Restore saved RobotPose=" + endOfAutoRobotPose);
+                    }
                 }
 
                 if (endOfAutoSpindexerSlotStates != null && spindexerSubsystem != null)
@@ -367,6 +372,17 @@ public class Robot
                 {
                     trackingInfo.aimInfo = vision.getAimInfoByVision(aprilTagInfo);
                     trackingInfo.staleTimeout = currTime + Vision.STALE_TIMEOUT;
+                    // If we don't know where the robot is, relocalize it here.
+                    if (!trackingInfo.robotLocalized && aprilTagInfo.detectedObj.robotPose != null)
+                    {
+                        TrcPose2D adjRobotPose =
+                            shooterSubsystem.adjustRobotFieldPosition(aprilTagInfo.detectedObj.robotPose);
+                        globalTracer.traceInfo(
+                            moduleName,
+                            "Relocalizing: pose=" + aprilTagInfo.detectedObj.robotPose + ", adjPose=" + adjRobotPose);
+                        robotBase.driveBase.setFieldPosition(adjRobotPose);
+                        trackingInfo.robotLocalized = true;
+                    }
                 }
                 else if (currTime > trackingInfo.staleTimeout)
                 {
@@ -477,7 +493,11 @@ public class Robot
             autoChoices.startPos == FtcAuto.StartPos.FAR_CENTER? RobotParams.Game.STARTPOSE_RED_FAR_CENTER:
                 RobotParams.Game.STARTPOSE_RED_FAR_CORNER,
             autoChoices.alliance, false);
-        robotBase.driveBase.setFieldPosition(startPose);
+        synchronized (trackingInfo)
+        {
+            robotBase.driveBase.setFieldPosition(startPose);
+            trackingInfo.robotLocalized = true;
+        }
     }   //setRobotStartPosition
 
     /**
