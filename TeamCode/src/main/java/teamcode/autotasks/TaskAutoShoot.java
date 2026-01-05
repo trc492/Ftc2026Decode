@@ -33,6 +33,7 @@ import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcWarpSpace;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
@@ -139,6 +140,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     private Vision.ArtifactType[] motifSequence = null;
     private Double visionExpiredTime = null;
     private boolean pausedPrevGoalTracking = false;
+    private TrcWarpSpace turretWarpSpace = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -151,6 +153,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         this.robot = robot;
         this.event = new TrcEvent(moduleName + ".event");
         this.spindexerEvent = new TrcEvent(moduleName + ".spindexerEvent");
+        turretWarpSpace = new TrcWarpSpace(moduleName + ".turret", -270.0, 90.0);
     }   //TaskAutoShoot
 
     /**
@@ -308,6 +311,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         moduleName,
                         "***** Setting up Vision (useClassifierVision=" + taskParams.useClassifierVision +
                         ", classifierVisionEnabled=" + classifierVisionEnabled + ")");
+                    aimInfo = null;
                     numArtifactsShot = 0;
                     motifSequence = null;
                     visionExpiredTime = null;
@@ -320,6 +324,15 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             {
                                 double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
                                 double turretAngle = robot.shooter.getPanAngle();
+                                aimInfo[1] = turretWarpSpace.getOptimizedTarget(aimInfo[1], turretAngle);
+                                if (aimInfo[1] < Shooter.Params.PAN_MIN_POS)
+                                {
+                                    aimInfo[1] += 360.0;
+                                }
+                                else if (aimInfo[1] > Shooter.Params.PAN_MAX_POS)
+                                {
+                                    aimInfo[1] -= 360.0;
+                                }
                                 tracer.traceInfo(
                                     moduleName,
                                     "***** AimInfo=" + Arrays.toString(aimInfo) + ", turretAngle=" + turretAngle);
