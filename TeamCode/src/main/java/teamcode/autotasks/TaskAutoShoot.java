@@ -33,7 +33,6 @@ import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
-import trclib.dataprocessor.TrcWarpSpace;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
@@ -140,7 +139,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     private Vision.ArtifactType[] motifSequence = null;
     private Double visionExpiredTime = null;
     private boolean pausedPrevGoalTracking = false;
-    private TrcWarpSpace turretWarpSpace = null;
 
     /**
      * Constructor: Create an instance of the object.
@@ -153,7 +151,6 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
         this.robot = robot;
         this.event = new TrcEvent(moduleName + ".event");
         this.spindexerEvent = new TrcEvent(moduleName + ".spindexerEvent");
-        turretWarpSpace = new TrcWarpSpace(moduleName + ".turret", -270.0, 90.0);
     }   //TaskAutoShoot
 
     /**
@@ -251,18 +248,21 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
     protected void stopSubsystems(String owner)
     {
         tracer.traceInfo(moduleName, "Stopping subsystems.");
-        if (useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled())
+        if (robot.shooterSubsystem.isGoalTrackingEnabled())
         {
+            // GoalTracking was enabled by this AutoTask, disable it.
             robot.shooterSubsystem.disableGoalTracking(owner);
         }
 
         if (pausedPrevGoalTracking)
         {
+            // GoalTracking was enabled outside of this AutoTask, resume it.
             robot.shooterSubsystem.resumeGoalTracking();
             pausedPrevGoalTracking = false;
         }
         else
         {
+            // GoalTracking was not ON at all, stop the shooter subsystem (stopping flywheel).
             robot.shooter.cancel(robot.shooter.getCurrentOwner());
         }
 
@@ -324,20 +324,25 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             {
                                 double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
                                 double turretAngle = robot.shooter.getPanAngle();
-                                aimInfo[1] = turretWarpSpace.getOptimizedTarget(aimInfo[1], turretAngle);
-                                if (aimInfo[1] < Shooter.Params.PAN_MIN_POS)
+                                double turretTarget = aimInfo[1];
+
+                                if (turretTarget < Shooter.Params.PAN_MIN_POS)
                                 {
-                                    aimInfo[1] += 360.0;
+                                    turretTarget += 360.0;
                                 }
-                                else if (aimInfo[1] > Shooter.Params.PAN_MAX_POS)
+                                else if (turretTarget > Shooter.Params.PAN_MAX_POS)
                                 {
-                                    aimInfo[1] -= 360.0;
+                                    turretTarget -= 360.0;
                                 }
                                 tracer.traceInfo(
                                     moduleName,
-                                    "***** AimInfo=" + Arrays.toString(aimInfo) + ", turretAngle=" + turretAngle);
+                                    "***** AimInfo=" + Arrays.toString(aimInfo) +
+                                    ", turretAngle=" + turretAngle +
+                                    ", turretTarget=" + turretTarget);
                                 // Check turret target angle is greater than at least half of Limelight FOV.
-                                if (Math.abs(aimInfo[1] - robot.shooter.getPanAngle()) > 25.0)
+                                // If so, it means AprilTag is out-of-view and we need to turn the turret towards
+                                // the AprilTag to bring it back in view.
+                                if (Math.abs(turretTarget - turretAngle) > 25.0)
                                 {
                                     tracer.traceInfo(
                                         moduleName,
@@ -358,11 +363,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                                                 }
                                             }
                                         }, null);
-                                    robot.shooter.setPanAngle(owner, aimInfo[1], turretCallbackEvent, 0.0);
+                                    robot.shooter.setPanAngle(owner, turretTarget, turretCallbackEvent, 0.0);
                                 }
                             }
                             else
                             {
+                                // Since robot is not localized, we can't determine if we are seeing AprilTag,
+                                // don't turn on GoalTracking. This will force DO_VISION to use vision to find
+                                // the AprilTag in case Limelight does see the AprilTag.
                                 tracer.traceInfo(
                                     moduleName,
                                     "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
@@ -399,7 +407,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 break;
 
             case DO_VISION:
-                if ((!useGoalTracking || !robot.shooterSubsystem.isGoalTrackingEnabled()) && aimInfo == null)
+                if (!robot.shooterSubsystem.isGoalTrackingEnabled() && aimInfo == null)
                 {
                     // Use vision to determine the appropriate AprilTag location.
                     int[] goalAprilTags =
@@ -447,7 +455,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         moduleName, "***** MotifSequence=%s", Arrays.toString(motifSequence));
                 }
 
-                if ((aimInfo != null || useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled()) &&
+                if ((aimInfo != null || robot.shooterSubsystem.isGoalTrackingEnabled()) &&
                     (!taskParams.doMotif || robot.obeliskMotif == null || motifSequence != null))
                 {
                     // Vision found the target AprilTag and either we don't see obelisk or we have determined
@@ -525,16 +533,16 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     robot.spindexerSubsystem.exitSlotUp(owner, spindexerEvent);
                 }
 
-                if (useGoalTracking && robot.shooterSubsystem.isGoalTrackingEnabled())
+                if (robot.shooterSubsystem.isGoalTrackingEnabled())
                 {
                     event.clear();
                     sm.addEvent(event);
                     tracer.traceInfo(moduleName, "***** Waiting for shooter ready (event=" + event + ")");
                     robot.shooterSubsystem.waitForShooterReady(event);
                 }
-                // If GoalTracking is ON, ask it for the AimInfo so we can aim and wait for increased accuracy.
                 else if (aimInfo != null)
                 {
+                    // GoalTracking is not ON but vision detected AprilTag, we can aim according to vision info.
                     // Spin the shooter flywheel up to speed and the turret pointing to the target.
                     event.clear();
                     sm.addEvent(event);
@@ -547,7 +555,8 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     robot.shooter.aimShooter(
                         owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
                 }
-                // Wait for Spindexer and Shooter to be ready before shooting.
+                // GoalTracking is not ON and vision has detected AprilTag but aimInfo was cleared for faster
+                // shooting. It doesn't need to wait for flywheel speed recovery.
                 sm.waitForEvents(State.SHOOT, false, true);
                 break;
 
@@ -563,6 +572,9 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
             case SHOOT_NEXT:
                 numArtifactsShot++;
                 taskParams.numArtifactsToShoot--;
+                // Clearing aimInfo to null forcing the AIM code to not wait for flywheel speed recovery.
+                // This will shoot faster assuming flywheel speed has recovered enough.
+                // This is only relevant if GoalTracking is not ON.
 //                aimInfo = null;
                 sm.setState(
                     taskParams.numArtifactsToShoot > 0 &&
