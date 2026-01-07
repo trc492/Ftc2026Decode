@@ -95,6 +95,7 @@ public class Vision
                 6.25, 9.0));                    // World Bottom Right
     // Limelight camera properties
     public static final int NUM_LIMELIGHT_PIPELINES = 2;
+    public static final double LIMELIGHT_HFOV_THRESHOLD = 25.0;
     public static final TrcVision.CameraInfo limelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.505, 42.239)

@@ -339,10 +339,10 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                                     "***** AimInfo=" + Arrays.toString(aimInfo) +
                                     ", turretAngle=" + turretAngle +
                                     ", turretTarget=" + turretTarget);
-                                // Check turret target angle is greater than at least half of Limelight FOV.
+                                // Check turret target angle is greater than at least half of Limelight HFOV.
                                 // If so, it means AprilTag is out-of-view and we need to turn the turret towards
                                 // the AprilTag to bring it back in view.
-                                if (Math.abs(turretTarget - turretAngle) > 25.0)
+                                if (Math.abs(turretTarget - turretAngle) > Vision.LIMELIGHT_HFOV_THRESHOLD)
                                 {
                                     tracer.traceInfo(
                                         moduleName,

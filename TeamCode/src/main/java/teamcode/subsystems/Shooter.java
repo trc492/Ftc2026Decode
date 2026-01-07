@@ -30,6 +30,7 @@ import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
+import teamcode.vision.Vision;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
@@ -238,8 +239,8 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POS_OFFSET               = 92.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
-        public static final double PAN_MIN_POS                  = -345.0;
-        public static final double PAN_MAX_POS                  = PAN_POS_OFFSET;
+        public static final double PAN_MIN_POS                  = -260.0;
+        public static final double PAN_MAX_POS                  = 85.0;
         public static final double PAN_HARD_STOP_ZONE           = 15.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
@@ -726,6 +727,8 @@ public class Shooter extends TrcSubsystem
         }
     }   //checkFailSafe
 
+    private Double crossOverTarget = null;
+
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
      * position, we can use the PID controller to track the AprilTag target.
@@ -746,7 +749,22 @@ public class Shooter extends TrcSubsystem
                 aimInfo = robot.trackingInfo.aimInfo;
             }
 
-            if (aimInfo == null)
+            if (crossOverTarget != null)
+            {
+                double panMotorPower = shooter.getPanPower();
+                if (panMotorPower < 0.0 && panPosition > crossOverTarget + Vision.LIMELIGHT_HFOV_THRESHOLD ||
+                    panMotorPower > 0.0 && panPosition < crossOverTarget - Vision.LIMELIGHT_HFOV_THRESHOLD)
+                {
+                    // We are still turning the other way to avoid crossing the hard stop.
+                    panPosition -= crossOverTarget;
+                }
+                else
+                {
+                    // We are done crossing over the other way and AprilTag should be back in-view.
+                    crossOverTarget = null;
+                }
+            }
+            else if (aimInfo == null)
             {
                 // Not detecting AprilTag or vision is still processing the frame, don't move.
                 panPosition = 0.0;
@@ -773,15 +791,20 @@ public class Shooter extends TrcSubsystem
                 if (aimInfo[1] < Params.PAN_MIN_POS - Params.PAN_HARD_STOP_ZONE)
                 {
                     // Crossing over (hard stop + threshold) counter-clockwise, spin it the other way clockwise.
-                    panPosition += 360.0;
+                    crossOverTarget = aimInfo[1] + 360.0;
+                    panPosition -= 360.0;
                     shooter.tracer.traceInfo(
-                        Params.SUBSYSTEM_NAME, "Crossing counter-clockwise, spin it the other way.");
+                        Params.SUBSYSTEM_NAME,
+                        "Crossing counter-clockwise, spin it the other way (newDelta=" + panPosition + ")");
                 }
                 else if (aimInfo[1] > Params.PAN_MAX_POS + Params.PAN_HARD_STOP_ZONE)
                 {
                     // Crossing over (hard stop + threshold) clockwise, spin it the other way counter-clockwise.
-                    panPosition -= 360.0;
-                    shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "Crossing clockwise, spin it the other way.");
+                    crossOverTarget = aimInfo[1] - 360.0;
+                    panPosition += 360.0;
+                    shooter.tracer.traceInfo(
+                        Params.SUBSYSTEM_NAME,
+                        "Crossing clockwise, spin it the other way (newDelta=" + panPosition + ")");
                 }
                 else if (aimInfo[1] < Params.PAN_MIN_POS || aimInfo[1] > Params.PAN_MAX_POS)
                 {
