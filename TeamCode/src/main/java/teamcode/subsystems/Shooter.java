@@ -749,7 +749,6 @@ public class Shooter extends TrcSubsystem
                 aimInfo = robot.trackingInfo.aimInfo;
             }
 
-            double panTarget = aimInfo[1] % 360.0;
             if (crossOverTarget != null)
             {
                 double panMotorPower = shooter.getPanPower();
@@ -777,6 +776,7 @@ public class Shooter extends TrcSubsystem
             }
             else
             {
+                double panTarget = aimInfo[1] % 360.0;
                 TrcShootParams.Entry shootParams = shootParamsTable.get(
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(

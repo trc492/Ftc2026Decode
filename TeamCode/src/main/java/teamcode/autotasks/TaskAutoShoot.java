@@ -324,7 +324,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                             {
                                 double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
                                 double turretAngle = robot.shooter.getPanAngle();
-                                double turretTarget = aimInfo[1];
+                                double turretTarget = aimInfo[1] % 360.0;
 
                                 if (turretTarget < Shooter.Params.PAN_MIN_POS)
                                 {
