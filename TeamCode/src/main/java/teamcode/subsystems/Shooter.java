@@ -241,7 +241,7 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -260.0;
         public static final double PAN_MAX_POS                  = 85.0;
-        public static final double PAN_HARD_STOP_ZONE           = 15.0;
+        public static final double PAN_HARD_STOP_ZONE           = 25.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
             {
@@ -749,9 +749,14 @@ public class Shooter extends TrcSubsystem
                 aimInfo = robot.trackingInfo.aimInfo;
             }
 
+            double panTarget = aimInfo[1] % 360.0;
             if (crossOverTarget != null)
             {
                 double panMotorPower = shooter.getPanPower();
+
+                shooter.tracer.traceDebug(
+                    Params.SUBSYSTEM_NAME, "panPower=%f, panPos=%f, crossOverTarget=%f",
+                    panMotorPower, panPosition, crossOverTarget);
                 if (panMotorPower < 0.0 && panPosition > crossOverTarget + Vision.LIMELIGHT_HFOV_THRESHOLD ||
                     panMotorPower > 0.0 && panPosition < crossOverTarget - Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
@@ -776,7 +781,7 @@ public class Shooter extends TrcSubsystem
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
-                    aimInfo[0], panPosition, aimInfo[1], shootParams);
+                    aimInfo[0], panPosition, panTarget, shootParams);
 
                 // Set tilt angle (fire and forget).
                 shooter.setTiltAngle(shootParams.region.tiltAngle);
@@ -787,26 +792,28 @@ public class Shooter extends TrcSubsystem
                 }
 
                 // Check if we are crossing over the hard stop.
-                panPosition -= aimInfo[1];
-                if (aimInfo[1] < Params.PAN_MIN_POS - Params.PAN_HARD_STOP_ZONE)
+                panPosition -= panTarget;
+                if (panTarget < Params.PAN_MIN_POS - Params.PAN_HARD_STOP_ZONE)
                 {
                     // Crossing over (hard stop + threshold) counter-clockwise, spin it the other way clockwise.
-                    crossOverTarget = aimInfo[1] + 360.0;
+                    crossOverTarget = panTarget + 360.0;
                     panPosition -= 360.0;
                     shooter.tracer.traceInfo(
                         Params.SUBSYSTEM_NAME,
-                        "Crossing counter-clockwise, spin it the other way (newDelta=" + panPosition + ")");
+                        "Crossing counter-clockwise, spin it the other way (crossOverTarget=" + crossOverTarget +
+                        ", newDelta=" + panPosition + ")");
                 }
-                else if (aimInfo[1] > Params.PAN_MAX_POS + Params.PAN_HARD_STOP_ZONE)
+                else if (panTarget > Params.PAN_MAX_POS + Params.PAN_HARD_STOP_ZONE)
                 {
                     // Crossing over (hard stop + threshold) clockwise, spin it the other way counter-clockwise.
-                    crossOverTarget = aimInfo[1] - 360.0;
+                    crossOverTarget = panTarget - 360.0;
                     panPosition += 360.0;
                     shooter.tracer.traceInfo(
                         Params.SUBSYSTEM_NAME,
-                        "Crossing clockwise, spin it the other way (newDelta=" + panPosition + ")");
+                        "Crossing clockwise, spin it the other way (crossOverTarget=" + crossOverTarget +
+                        ", newDelta=" + panPosition + ")");
                 }
-                else if (aimInfo[1] < Params.PAN_MIN_POS || aimInfo[1] > Params.PAN_MAX_POS)
+                else if (panTarget < Params.PAN_MIN_POS || panTarget > Params.PAN_MAX_POS)
                 {
                     // We are in hard stop zone, stop it.
                     panPosition = 0.0;
@@ -819,8 +826,8 @@ public class Shooter extends TrcSubsystem
                     boolean turretOnTarget = shooter.panMotor.isPositionOnTarget();
 
                     shooter.tracer.traceDebug(
-                        Params.SUBSYSTEM_NAME,
-                        "flywheelOnTarget=" + flyWheelOnTarget + ", turretOnTarget=" + turretOnTarget);
+                        Params.SUBSYSTEM_NAME, "flywheelOnTarget=%s, turretOnTarget=%s",
+                        flyWheelOnTarget, turretOnTarget);
                     if (flyWheelOnTarget && turretOnTarget)
                     {
                         shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "Shooter is ready to fire.");
