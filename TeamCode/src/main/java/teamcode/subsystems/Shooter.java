@@ -241,7 +241,6 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POWER_LIMIT              = 1.0;
         public static final double PAN_MIN_POS                  = -260.0;
         public static final double PAN_MAX_POS                  = 85.0;
-        public static final double PAN_HARD_STOP_ZONE           = 25.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
             {
@@ -776,7 +775,7 @@ public class Shooter extends TrcSubsystem
             }
             else
             {
-                double panTarget = aimInfo[1] % 360.0;
+                double panTarget = aimInfo[1];
                 TrcShootParams.Entry shootParams = shootParamsTable.get(
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
@@ -793,7 +792,7 @@ public class Shooter extends TrcSubsystem
 
                 // Check if we are crossing over the hard stop.
                 panPosition -= panTarget;
-                if (panTarget < Params.PAN_MIN_POS - Params.PAN_HARD_STOP_ZONE)
+                if (panTarget < Params.PAN_MIN_POS - Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
                     // Crossing over (hard stop + threshold) counter-clockwise, spin it the other way clockwise.
                     crossOverTarget = panTarget + 360.0;
@@ -803,7 +802,7 @@ public class Shooter extends TrcSubsystem
                         "Crossing counter-clockwise, spin it the other way (crossOverTarget=" + crossOverTarget +
                         ", newDelta=" + panPosition + ")");
                 }
-                else if (panTarget > Params.PAN_MAX_POS + Params.PAN_HARD_STOP_ZONE)
+                else if (panTarget > Params.PAN_MAX_POS + Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
                     // Crossing over (hard stop + threshold) clockwise, spin it the other way counter-clockwise.
                     crossOverTarget = panTarget - 360.0;

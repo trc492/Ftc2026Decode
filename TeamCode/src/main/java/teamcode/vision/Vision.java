@@ -677,7 +677,7 @@ public class Vision
         TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
         TrcPose2D aprilTagPose = aprilTagFieldPose.relativeTo(robotPose);
         double targetDepth = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
-        double targetBearing = targetPose.angle;
+        double targetBearing = targetPose.angle % 360.0;
         tracer.traceDebug(
             moduleName, "robotPose=%s, targetPose=%s, aprilTagPose=%s, depth=%f, bearing=%f",
             robotPose, targetPose, aprilTagPose, targetDepth, targetBearing);
