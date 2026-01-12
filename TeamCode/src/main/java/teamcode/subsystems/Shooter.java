@@ -507,9 +507,26 @@ public class Shooter extends TrcSubsystem
                     currFlywheelRPM - Params.SHOOT_VEL_TRIGGER_THRESHOLD,
                     currFlywheelRPM + Params.SHOOT_VEL_TRIGGER_THRESHOLD,
                     this::velTriggerCallback);
+                shooter.tracer.traceInfo(
+                    instanceName, "Arm exit velocity trigger (currRPM=" + currFlywheelRPM + ")");
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
+            TrcEvent launcherRetractCallback = new TrcEvent(Params.SUBSYSTEM_NAME + ".launcherRetract");
+            launcherRetractCallback.setCallback(
+                (ctxt, canceled) ->
+                {
+                    if (!canceled)
+                    {
+                        if (robot.spindexer.getExitTrigger().isEnabled())
+                        {
+                            shooter.tracer.traceWarn(
+                                instanceName,
+                                "Exit velocity trigger timed out (currRPM=" + getFlywheelRPM() + ")");
+                            velTriggerCallback(null, false);
+                        }
+                    }
+                }, null);
             launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, Params.LAUNCHER_LAUNCH_DURATION);
         }
         else if (completionEvent != null)
