@@ -1031,6 +1031,13 @@ public class Spindexer extends TrcSubsystem
                     }
                     break;
 
+                case None:
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setSpindexerPatternOff(i, false);
+                    }
+                    break;
+
                 default:
                     throw new IllegalArgumentException("You cannot preload " + preloadedArtifacts[i] + " artifact.");
             }

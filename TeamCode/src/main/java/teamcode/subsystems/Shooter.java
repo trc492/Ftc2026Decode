@@ -200,11 +200,11 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR_REV_PER_COUNT    = 1.0/(GOBILDA5000_CPR * SHOOT_MOTOR_GEAR_RATIO);
         public static final double SHOOT_MOTOR_MAX_VEL          = 6000.0;
 
-        public static final double SHOOT_MOTOR1_PID_KP          = 1.0;
-        public static final double SHOOT_MOTOR1_PID_KI          = 0.01;
-        public static final double SHOOT_MOTOR1_PID_IZONE       = 160/60.0; // in RPS
+        public static final double SHOOT_MOTOR1_PID_KP          = 0.75;
+        public static final double SHOOT_MOTOR1_PID_KI          = 0.025;
+        public static final double SHOOT_MOTOR1_PID_IZONE       = 15.0; // in RPS
         public static final double SHOOT_MOTOR1_PID_KD          = 0.0;
-        public static final double SHOOT_MOTOR1_PID_KF          = 0.0125;
+        public static final double SHOOT_MOTOR1_PID_KF          = 0.0225;
 
         public static final double SHOOT_MOTOR2_PID_KP          = 1.0;
         public static final double SHOOT_MOTOR2_PID_KI          = 0.0;
@@ -267,11 +267,11 @@ public class Shooter extends TrcSubsystem
         public static final boolean TILT_ENCODER_INVERTED       = false;
         public static final boolean TILT_ENCODER_WRAPPED        = false;
 
-        public static final double TILT_MOTOR_PID_KP            = 0.06;
-        public static final double TILT_MOTOR_PID_KI            = 0.005;
-        public static final double TILT_MOTOR_PID_KD            = 0.0025;
+        public static final double TILT_MOTOR_PID_KP            = 0.048;
+        public static final double TILT_MOTOR_PID_KI            = 0.025;
+        public static final double TILT_MOTOR_PID_KD            = 0.0035;
         public static final double TILT_MOTOR_PID_KF            = 0.0;
-        public static final double TILT_MOTOR_PID_IZONE         = 3.0;
+        public static final double TILT_MOTOR_PID_IZONE         = 5.0;
         public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
