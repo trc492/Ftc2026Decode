@@ -33,12 +33,12 @@ import teamcode.indicators.LEDIndicator;
 import teamcode.indicators.RumbleIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.drivebase.TrcDriveBase;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
-import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 
 /**
@@ -613,7 +613,7 @@ public class FtcTeleOp extends FtcOpMode
                     // at the fixed point, set flywheel speed and tilt accordingly and just shoot.
                     // Drive is responsible for driving to the FAR_ZONE_SHOOT_POINT and control the
                     // turret to aim at the goal, the code will do the rest.
-                    TrcShootParams.Entry manualShootParams = Shooter.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
+                    TrcLookupTable.Entry manualShootParams = Shooter.shootParamsTable.get(Shooter.FAR_ZONE_SHOOT_POINT);
                     // Fire and forget assuming Spindexer moves faster than aimShooter.
                     if (!robot.spindexerSubsystem.moveToExitSlotWithArtifact(
                         null, Vision.ArtifactType.Any, null))
@@ -623,7 +623,7 @@ public class FtcTeleOp extends FtcOpMode
                     }
                     // Note: since we are doing fire and forget on the tilt angle, we assume tilt will
                     // get on target before the flywheel.
-                    robot.shooter.setTiltAngle(moduleName, manualShootParams.region.tiltAngle, null, 0.0);
+                    robot.shooter.setTiltAngle(moduleName, manualShootParams.region.value, null, 0.0);
                     robot.shooter.aimShooter(
                         moduleName, manualShootParams.outputs[0]/60.0, 0.0, null, null, null, 0.0,
                         robot.shooterSubsystem::shoot, Shooter.Params.SHOOT_MOTOR_OFF_DELAY);

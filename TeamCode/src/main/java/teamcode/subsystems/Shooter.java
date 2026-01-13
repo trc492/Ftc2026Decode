@@ -31,12 +31,12 @@ import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
-import trclib.subsystem.TrcShootParams;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
@@ -55,98 +55,21 @@ public class Shooter extends TrcSubsystem
     public static final String GOAL_ZONE_SHOOT_POINT            = "GoalZoneShootPoint";
     public static final String FAR_ZONE_SHOOT_POINT             = "FarZoneShootPoint";
 
-//    public static final TrcShootParams.Region[] shootRegions    =
-//    {
-//        // Region 1: tilt 26°, y = 15.42211x + 3116.30051
-//        new TrcShootParams.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
-//        // Region 2: tilt 30°, y = 5.71429x + 3398.57143
-//        new TrcShootParams.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
-//        // Region 3: tilt 33°, y = 19.71941x + 2858.83725
-//        new TrcShootParams.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
-//        // Region 4: tilt 38°, y = 16.3593x + 2943.18711
-//        new TrcShootParams.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
-//        // Region 5: tilt 42°, y = 15.15152x + 3063.63635
-//        new TrcShootParams.Region(42.0, new double[][] {{3063.63635, 15.15152}})
-//    };
-//
-//    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
-//        //        name,                     distance,   region,             shooterVel, %Power
-//        // Region 1: tilt 26°
-//        .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
-//        .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
-//        .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
-//        // Region 2: tilt 30°
-//        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
-//        .addEntry("Target_3.67ft_1",        44.0,       shootRegions[1],    3650.0)
-//        // Region 3: tilt 33°
-//        .addEntry("Target_3.67ft_2",        44.0000001, shootRegions[2],    3700.0)
-//        .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
-//        .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
-//        // Region 4: tilt 38°
-//        .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
-//        .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
-//        .addEntry("Target_8.29ft",          99.5,       shootRegions[3],    4600.0)
-//        .addEntry("Target_9.44ft_1",        111.3,      shootRegions[3],    4760.0)
-//        // Region 5: tilt 42°
-//        .addEntry(FAR_ZONE_SHOOT_POINT,     111.300001, shootRegions[4],    4750.0)
-//        .addEntry("Target_10.65ft",         127.8,      shootRegions[4],    5000.0);
-//
-//    public static final TrcShootParams.Region[] shootRegions    =
-//    {
-//        // Region 1: tilt 25°, y = 4.16667x + 3320.83333
-//        new TrcShootParams.Region(25.0, new double[][] {{3320.83333, 4.16667}}),
-//        // Region 2: tilt 30°, y = 8.84957x + 3272.56599
-//        new TrcShootParams.Region(30.0, new double[][] {{3272.56599, 8.84957}}),
-//        new TrcShootParams.Region(35.0, new double[][] {{x,x}})
-//        // Region 3: tilt 38°, y = 16.55582x + 2999.25491
-//        new TrcShootParams.Region(38.0, new double[][] {{2999.25491, 16.55582}}),
-//        // Region 4: tilt 42°, y = 11.249x + 3484.62195
-//        new TrcShootParams.Region(42.0, new double[][] {{3484.62195, 11.249}}),
-//        // Region 5: tilt 45°, y = 14.80364x + 3288.15202
-//        new TrcShootParams.Region(45.0, new double[][] {{3288.15202, 14.80364}})
-//    };
-//
-//    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
-//        //        name,                     distance,   region,             shooterVel
-//        // Region 1: tilt 25°
-//        .addEntry("Target_2.58ft",          31.0,       shootRegions[0],    3450.0)
-//        .addEntry("Target_3.08ft_1",        37.0,       shootRegions[0],    3475.0)
-//        // Region 2: tilt 30°
-//        .addEntry(GOAL_ZONE_SHOOT_POINT,    37.0000001, shootRegions[1],    3600.0)
-//        .addEntry("Target_4.02ft_1",        48.3,       shootRegions[1],    3700.0)
-//        // Region 3: tilt 38°
-//        .addEntry("Target_4.02ft_2",        48.3000001, shootRegions[2],    3775.0)
-//        .addEntry("Target_4.81ft",          57.8,       shootRegions[2],    4000.0)
-//        .addEntry("Target_5.76ft_1",        69.2,       shootRegions[2],    4125.0)
-//        // Region 4: tilt 42°
-//        .addEntry("Target_3.76ft_2",        69.2000001, shootRegions[3],    4275.0)
-//        .addEntry("Target_6.80ft",          81.6,       shootRegions[3],    4375.0)
-//        .addEntry("Target_7.59ft_1",        91.1,       shootRegions[3],    4525.0)
-//        // Region 5: tilt 45°
-//        .addEntry("Target_7.59ft_2",        91.1000001, shootRegions[4],    4600.0)
-//        .addEntry("Target_8.40ft",          100.8,      shootRegions[4],    4800.0)
-//        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4925.0)
-//        .addEntry("Target_10.31ft",         123.8,      shootRegions[4],    5100.0)
-//        .addEntry("Target_11.12ft",         133.5,      shootRegions[4],    5275.0)
-//        .addEntry("Target_12.02ft",         144.3,      shootRegions[4],    5425.0)
-//        .addEntry("Target_12.76ft",         153.2,      shootRegions[4],    5675.0)
-//        .addEntry("Target_14.36ft",         172.4,      shootRegions[4],    5750.0);
-
-    public static final TrcShootParams.Region[] shootRegions    =
+    public static final TrcLookupTable.Region[] shootRegions    =
     {
         // Region 1: tilt 26°, y = 15.42211x + 3116.30051
-        new TrcShootParams.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
+        new TrcLookupTable.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
         // Region 2: tilt 30°, y = 5.71429x + 3398.57143
-        new TrcShootParams.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
+        new TrcLookupTable.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
         // Region 3: tilt 33°, y = 19.71941x + 2858.83725
-        new TrcShootParams.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
+        new TrcLookupTable.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
         // Region 4: tilt 38°, y = 16.3593x + 2943.18711
-        new TrcShootParams.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
+        new TrcLookupTable.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
         // Region 5: tilt 45°, y = 14.80364x + 3288.15202
-        new TrcShootParams.Region(45.0, new double[][] {{3288.15202, 14.80364}})
+        new TrcLookupTable.Region(45.0, new double[][] {{3288.15202, 14.80364}})
     };
 
-    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
+    public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
         //        name,                     distance,   region,             shooterVel
         // Region 1: tilt 26°
         .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
@@ -793,14 +716,14 @@ public class Shooter extends TrcSubsystem
             else
             {
                 double panTarget = aimInfo[1];
-                TrcShootParams.Entry shootParams = shootParamsTable.get(
+                TrcLookupTable.Entry shootParams = shootParamsTable.get(
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
                     aimInfo[0], panPosition, panTarget, shootParams);
 
                 // Set tilt angle (fire and forget).
-                shooter.setTiltAngle(shootParams.region.tiltAngle);
+                shooter.setTiltAngle(shootParams.region.value);
 
                 if (flywheelTracking)
                 {

@@ -28,11 +28,11 @@ import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
-import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 
 /**
@@ -164,7 +164,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
 
                     if (robot.shooterSubsystem != null)
                     {
-                        TrcShootParams.Entry shootParams;
+                        TrcLookupTable.Entry shootParams;
                         double panAngle;
                         // Turret was turned towards Obelisk before Auton is started, turn it back to the goal AprilTag.
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
@@ -200,7 +200,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
                         robot.shooter.setPanAngle(panAngle, callbackEvent, 2.0);
-                        robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                        robot.shooter.setTiltAngle(shootParams.region.value);
                         robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
                             moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");

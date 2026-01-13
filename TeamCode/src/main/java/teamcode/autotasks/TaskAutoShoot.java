@@ -33,13 +33,13 @@ import teamcode.RobotParams;
 import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcOwnershipMgr;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcTaskMgr;
-import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 import trclib.vision.TrcVisionTargetInfo;
 
@@ -546,12 +546,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // Spin the shooter flywheel up to speed and the turret pointing to the target.
                     event.clear();
                     sm.addEvent(event);
-                    TrcShootParams.Entry shootParams = Shooter.shootParamsTable.get(
+                    TrcLookupTable.Entry shootParams = Shooter.shootParamsTable.get(
                         aimInfo[0], taskParams.useRegression);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
                         aimInfo[0], aimInfo[1], shootParams, event);
-                    robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                    robot.shooter.setTiltAngle(shootParams.region.value);
                     robot.shooter.aimShooter(
                         owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
                 }
