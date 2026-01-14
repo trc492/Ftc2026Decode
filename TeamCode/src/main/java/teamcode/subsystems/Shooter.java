@@ -69,32 +69,59 @@ public class Shooter extends TrcSubsystem
         new TrcLookupTable.Region(45.0, new double[][] {{3288.15202, 14.80364}})
     };
 
+//    public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
+//        //        name,                     distance,   region,             shooterVel
+//        // Region 1: tilt 26°
+//        .addEntry(null,                     25.7,       shootRegions[0],    3500.0)
+//        .addEntry(null,                     29.9,       shootRegions[0],    3600.0)
+//        .addEntry(null,                     35.25,      shootRegions[0],    3650.0)
+//        // Region 2: tilt 30°
+//        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
+//        .addEntry(null,                     44.0,       shootRegions[1],    3650.0)
+//        // Region 3: tilt 33°
+//        .addEntry(null,                     44.0000001, shootRegions[2],    3700.0)
+//        .addEntry(null,                     53.0,       shootRegions[2],    3950.0)
+//        .addEntry(null,                     65.2,       shootRegions[2],    4125.0)
+//        // Region 4: tilt 38°
+//        .addEntry(null,                     65.2000001, shootRegions[3],    4025.0)
+//        .addEntry(null,                     85.4,       shootRegions[3],    4300.0)
+//        .addEntry(null,                     91.1,       shootRegions[3],    4433.51934)
+//        // Region 5: tilt 45°
+//        .addEntry(null,                     91.1000001, shootRegions[4],    4636.76363)
+//        .addEntry(null,                     100.8,      shootRegions[4],    4780.35893)
+//        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.91497)
+//        .addEntry(null,                     123.8,      shootRegions[4],    5120.84265)
+//        .addEntry(null,                     133.5,      shootRegions[4],    5264.43796)
+//        .addEntry(null,                     144.3,      shootRegions[4],    5424.31727)
+//        .addEntry(null,                     153.2,      shootRegions[4],    5556.06967)
+//        .addEntry(null,                     172.4,      shootRegions[4],    5840.29956);
+
     public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
-        //        name,                     distance,   region,             shooterVel
-        // Region 1: tilt 26°
-        .addEntry(null,                     25.7,       shootRegions[0],    3500.0)
-        .addEntry(null,                     29.9,       shootRegions[0],    3600.0)
-        .addEntry(null,                     35.25,      shootRegions[0],    3650.0)
-        // Region 2: tilt 30°
-        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
-        .addEntry(null,                     44.0,       shootRegions[1],    3650.0)
-        // Region 3: tilt 33°
-        .addEntry(null,                     44.0000001, shootRegions[2],    3700.0)
-        .addEntry(null,                     53.0,       shootRegions[2],    3950.0)
-        .addEntry(null,                     65.2,       shootRegions[2],    4125.0)
-        // Region 4: tilt 38°
-        .addEntry(null,                     65.2000001, shootRegions[3],    4025.0)
-        .addEntry(null,                     85.4,       shootRegions[3],    4300.0)
-        .addEntry(null,                     91.1,       shootRegions[3],    4433.51934)
-        // Region 5: tilt 45°
-        .addEntry(null,                     91.1000001, shootRegions[4],    4636.76363)
-        .addEntry(null,                     100.8,      shootRegions[4],    4780.35893)
-        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.91497)
-        .addEntry(null,                     123.8,      shootRegions[4],    5120.84265)
-        .addEntry(null,                     133.5,      shootRegions[4],    5264.43796)
-        .addEntry(null,                     144.3,      shootRegions[4],    5424.31727)
-        .addEntry(null,                     153.2,      shootRegions[4],    5556.06967)
-        .addEntry(null,                     172.4,      shootRegions[4],    5840.29956);
+            //        name,                     distance,   region,             shooterVel
+            // Region 1: tilt 26°
+            .addEntry(null,                     25.7,       shootRegions[0],    3435.0)
+            .addEntry(null,                     29.9,       shootRegions[0],    3535.0)
+            .addEntry(null,                     35.25,      shootRegions[0],    3585.0)
+            // Region 2: tilt 30°
+            .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3535.0)
+            .addEntry(null,                     44.0,       shootRegions[1],    3585.0)
+            // Region 3: tilt 33°
+            .addEntry(null,                     44.0000001, shootRegions[2],    3635.0)
+            .addEntry(null,                     53.0,       shootRegions[2],    3885.0)
+            .addEntry(null,                     65.2,       shootRegions[2],    4060.0)
+            // Region 4: tilt 38°
+            .addEntry(null,                     65.2000001, shootRegions[3],    3960.0)
+            .addEntry(null,                     85.4,       shootRegions[3],    4235.0)
+            .addEntry(null,                     91.1,       shootRegions[3],    4368.51934)
+            // Region 5: tilt 45°
+            .addEntry(null,                     91.1000001, shootRegions[4],    4501.76363)
+            .addEntry(null,                     100.8,      shootRegions[4],    4645.35893)
+            .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4791.91497)
+            .addEntry(null,                     123.8,      shootRegions[4],    4985.84265)
+            .addEntry(null,                     133.5,      shootRegions[4],    5129.43796)
+            .addEntry(null,                     144.3,      shootRegions[4],    5289.31727)
+            .addEntry(null,                     153.2,      shootRegions[4],    5421.06967)
+            .addEntry(null,                     172.4,      shootRegions[4],    5705.29956);
 
     public static final class Params
     {

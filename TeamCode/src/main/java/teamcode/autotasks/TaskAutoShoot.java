@@ -315,68 +315,68 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     numArtifactsShot = 0;
                     motifSequence = null;
                     visionExpiredTime = null;
-                    if (useGoalTracking)
-                    {
-                        // Check if Limelight is facing the AprilTag.
-                        synchronized (robot.trackingInfo)
-                        {
-                            if (robot.trackingInfo.robotLocalized)
-                            {
-                                double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
-                                double turretAngle = robot.shooter.getPanAngle();
-                                double turretTarget = aimInfo[1];
-
-                                if (turretTarget < Shooter.Params.PAN_MIN_POS)
-                                {
-                                    turretTarget += 360.0;
-                                }
-                                else if (turretTarget > Shooter.Params.PAN_MAX_POS)
-                                {
-                                    turretTarget -= 360.0;
-                                }
-                                tracer.traceInfo(
-                                    moduleName,
-                                    "***** AimInfo=" + Arrays.toString(aimInfo) +
-                                    ", turretAngle=" + turretAngle +
-                                    ", turretTarget=" + turretTarget);
-                                // Check turret target angle is greater than at least half of Limelight HFOV.
-                                // If so, it means AprilTag is out-of-view and we need to turn the turret towards
-                                // the AprilTag to bring it back in view.
-                                if (Math.abs(turretTarget - turretAngle) > Vision.LIMELIGHT_HFOV_THRESHOLD)
-                                {
-                                    tracer.traceInfo(
-                                        moduleName,
-                                        "***** Camera is not pointing at AprilTag, turn to AprilTag.");
-                                    turretCallbackEvent = new TrcEvent(moduleName + ".turretCallback");
-                                    turretCallbackEvent.setCallback(
-                                        (ctxt, canceled) ->
-                                        {
-                                            if (!canceled)
-                                            {
-                                                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
-                                                {
-                                                    tracer.traceInfo(
-                                                        moduleName,
-                                                        "***** Camera is pointing at AprilTag, turn on Goal Tracking.");
-                                                    robot.shooterSubsystem.enableGoalTracking(
-                                                        owner, true, taskParams.alliance, true);
-                                                }
-                                            }
-                                        }, null);
-                                    robot.shooter.setPanAngle(owner, turretTarget, turretCallbackEvent, 0.0);
-                                }
-                            }
-                            else
-                            {
-                                // Since robot is not localized, we can't determine if we are seeing AprilTag,
-                                // don't turn on GoalTracking. This will force DO_VISION to use vision to find
-                                // the AprilTag in case Limelight does see the AprilTag.
-                                tracer.traceInfo(
-                                    moduleName,
-                                    "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
-                            }
-                        }
-                    }
+//                    if (useGoalTracking)
+//                    {
+//                        // Check if Limelight is facing the AprilTag.
+//                        synchronized (robot.trackingInfo)
+//                        {
+//                            if (robot.trackingInfo.robotLocalized)
+//                            {
+//                                double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
+//                                double turretAngle = robot.shooter.getPanAngle();
+//                                double turretTarget = aimInfo[1];
+//
+//                                if (turretTarget < Shooter.Params.PAN_MIN_POS)
+//                                {
+//                                    turretTarget += 360.0;
+//                                }
+//                                else if (turretTarget > Shooter.Params.PAN_MAX_POS)
+//                                {
+//                                    turretTarget -= 360.0;
+//                                }
+//                                tracer.traceInfo(
+//                                    moduleName,
+//                                    "***** AimInfo=" + Arrays.toString(aimInfo) +
+//                                    ", turretAngle=" + turretAngle +
+//                                    ", turretTarget=" + turretTarget);
+//                                // Check turret target angle is greater than at least half of Limelight HFOV.
+//                                // If so, it means AprilTag is out-of-view and we need to turn the turret towards
+//                                // the AprilTag to bring it back in view.
+//                                if (Math.abs(turretTarget - turretAngle) > Vision.LIMELIGHT_HFOV_THRESHOLD)
+//                                {
+//                                    tracer.traceInfo(
+//                                        moduleName,
+//                                        "***** Camera is not pointing at AprilTag, turn to AprilTag.");
+//                                    turretCallbackEvent = new TrcEvent(moduleName + ".turretCallback");
+//                                    turretCallbackEvent.setCallback(
+//                                        (ctxt, canceled) ->
+//                                        {
+//                                            if (!canceled)
+//                                            {
+//                                                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
+//                                                {
+//                                                    tracer.traceInfo(
+//                                                        moduleName,
+//                                                        "***** Camera is pointing at AprilTag, turn on Goal Tracking.");
+//                                                    robot.shooterSubsystem.enableGoalTracking(
+//                                                        owner, true, taskParams.alliance, true);
+//                                                }
+//                                            }
+//                                        }, null);
+//                                    robot.shooter.setPanAngle(owner, turretTarget, turretCallbackEvent, 0.0);
+//                                }
+//                            }
+//                            else
+//                            {
+//                                // Since robot is not localized, we can't determine if we are seeing AprilTag,
+//                                // don't turn on GoalTracking. This will force DO_VISION to use vision to find
+//                                // the AprilTag in case Limelight does see the AprilTag.
+//                                tracer.traceInfo(
+//                                    moduleName,
+//                                    "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
+//                            }
+//                        }
+//                    }
 
                     if (taskParams.useClassifierVision && !classifierVisionEnabled)
                     {
