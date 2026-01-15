@@ -304,7 +304,7 @@ public class Shooter extends TrcSubsystem
         if (Params.HAS_TWO_SHOOTER_MOTORS)
         {
             shooterParams.setShooterMotor2(
-                Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE, Params.SHOOTER_MOTOR2_INVERTED);
+                Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE, Params.SHOOTER_MOTOR2_INVERTED, true);
         }
 
         if (Params.HAS_PAN_MOTOR)
