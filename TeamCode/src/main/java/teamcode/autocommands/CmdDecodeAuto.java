@@ -281,13 +281,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             null, event, autoChoices.alliance, true, true,
                             currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
                             Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
-                        sm.waitForSingleEvent(event, pickUpLoading ?
-                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
+                        sm.waitForSingleEvent(event, pickUpLoading ? State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
                     else
                     {
-                        sm.setState(pickUpLoading ?
-                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
+                        sm.setState(pickUpLoading ? State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
                     break;
 
@@ -299,11 +297,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     robot.robotBase.purePursuitDrive.setStallDetectionEnabled(false);
                     robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.45);
                     robot.robotBase.purePursuitDrive.start(
-                            event, 3.0, true,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(new TrcPose2D(0.0, 2.5*RobotParams.Field.FULL_FIELD_INCHES, 0.0), autoChoices.alliance, false, true));
+                        event, 3.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, 2.5*RobotParams.Field.FULL_FIELD_INCHES, 0.0), autoChoices.alliance, false, true));
 //                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.MOVE_BACK);
                     break;
@@ -311,11 +309,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case MOVE_BACK:
                     robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.5);
                     robot.robotBase.purePursuitDrive.start(
-                            event, 1.0, true,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
+                        event, 1.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
 //                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
                     sm.waitForSingleEvent(event, State.ATTEMPT_PICKUP);
                     break;
@@ -323,11 +321,11 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                 case ATTEMPT_PICKUP:
                     robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.35);
                     robot.robotBase.purePursuitDrive.start(
-                            event, 3.0, true,
-                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
-                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
-                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                            robot.adjustPoseByAlliance(new TrcPose2D(-7.0, 20.0, 0.0), autoChoices.alliance, false, true));
+                        event, 3.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(-7.0, 20.0, 0.0), autoChoices.alliance, false, true));
 //                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.FINISH_LOADING);
                     break;
