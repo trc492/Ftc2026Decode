@@ -296,21 +296,45 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 1.0, null);
                     }
-                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
+                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(false);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.45);
+                    robot.robotBase.purePursuitDrive.start(
+                            event, 3.0, true,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(new TrcPose2D(0.0, 2.5*RobotParams.Field.FULL_FIELD_INCHES, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.MOVE_BACK);
                     break;
 
                 case MOVE_BACK:
-                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.5);
+                    robot.robotBase.purePursuitDrive.start(
+                            event, 1.0, true,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
                     sm.waitForSingleEvent(event, State.ATTEMPT_PICKUP);
                     break;
 
                 case ATTEMPT_PICKUP:
-                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.35);
+                    robot.robotBase.purePursuitDrive.start(
+                            event, 3.0, true,
+                            robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                            robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                            robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                            robot.adjustPoseByAlliance(new TrcPose2D(-7.0, 20.0, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.FINISH_LOADING);
                     break;
 
                 case FINISH_LOADING:
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(true);
                     if (robot.intakeSubsystem != null)
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
