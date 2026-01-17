@@ -467,7 +467,7 @@ public class Shooter extends TrcSubsystem
             // and velocity trigger did not occur, we will call velTriggerCallback as if velocity has triggered.
             // This is to make sure it won't hang the caller that expects a completion callback and will also clear
             // the Spindexer slot state. Velocity trigger may have failed because of various reasons. One of them
-            // could be the velocity trigger threshold is set too low so even the artifact has exited, the velocity
+            // could be the velocity trigger threshold is set too big so even the artifact has exited, the velocity
             // did not drop enough to trigger. Another reason could be that we are shooting an empty slot, so there
             // will never be a trigger. This timeout code will make sure we will consider the artifact exited even
             // though velocity did not trigger. The downside is that if there is really an artifact in the slot and
