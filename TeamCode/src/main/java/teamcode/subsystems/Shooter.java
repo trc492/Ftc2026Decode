@@ -99,20 +99,20 @@ public class Shooter extends TrcSubsystem
     public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
         //        name,                     distance,   region,             shooterVel
         // Region 1: tilt 26°
-        .addEntry(null,                     25.7,       shootRegions[0],    3435.0)
-        .addEntry(null,                     29.9,       shootRegions[0],    3535.0)
-        .addEntry(null,                     35.25,      shootRegions[0],    3585.0)
+        .addEntry(null,                     25.7,       shootRegions[0],    3450.0)
+        .addEntry(null,                     29.9,       shootRegions[0],    3550.0)
+        .addEntry(null,                     35.25,      shootRegions[0],    3600.0)
         // Region 2: tilt 30°
-        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3535.0)
-        .addEntry(null,                     44.0,       shootRegions[1],    3585.0)
+        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3550.0)
+        .addEntry(null,                     44.0,       shootRegions[1],    3600.0)
         // Region 3: tilt 33°
-        .addEntry(null,                     44.0000001, shootRegions[2],    3635.0)
-        .addEntry(null,                     53.0,       shootRegions[2],    3885.0)
-        .addEntry(null,                     65.2,       shootRegions[2],    4060.0)
+        .addEntry(null,                     44.0000001, shootRegions[2],    3650.0)
+        .addEntry(null,                     53.0,       shootRegions[2],    3900.0)
+        .addEntry(null,                     65.2,       shootRegions[2],    4075.0)
         // Region 4: tilt 38°
-        .addEntry(null,                     65.2000001, shootRegions[3],    3960.0)
-        .addEntry(null,                     85.4,       shootRegions[3],    4235.0)
-        .addEntry(null,                     91.1,       shootRegions[3],    4368.51934)
+        .addEntry(null,                     65.2000001, shootRegions[3],    3975.0)
+        .addEntry(null,                     85.4,       shootRegions[3],    4250.0)
+        .addEntry(null,                     91.1,       shootRegions[3],    4383.51934)
         // Region 5: tilt 45°
         .addEntry(null,                     91.1000001, shootRegions[4],    4481.76363)
         .addEntry(null,                     100.8,      shootRegions[4],    4625.35893)

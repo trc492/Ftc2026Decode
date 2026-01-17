@@ -326,7 +326,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                         robot.robotInfo.baseParams.profiledMaxDriveVelocity,
                         robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
                         robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
-                        robot.adjustPoseByAlliance(new TrcPose2D(-7.0, 20.0, 0.0), autoChoices.alliance, false, true));
+                        robot.adjustPoseByAlliance(new TrcPose2D(7.0, 20.0, 0.0), autoChoices.alliance, false, true));
 //                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.FINISH_LOADING);
                     break;
