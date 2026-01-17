@@ -561,9 +561,12 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                 break;
 
             case SHOOT:
+                // It is a possibility that Spindexer thinks there is no artifact at the exit slot. We allow it to
+                // shoot an empty slot anyway in case the Spindexer is wrong.
                 tracer.traceInfo(
                     moduleName,
                     "***** Shooting artifact " + (numArtifactsShot + 1) +
+                    "=" + robot.spindexerSubsystem.getExitSlotArtifactType() +
                     " (numArtifactsLeft=" + taskParams.numArtifactsToShoot + ")");
                 robot.shooterSubsystem.shoot(owner, event);
                 sm.waitForSingleEvent(event, State.SHOOT_NEXT);
