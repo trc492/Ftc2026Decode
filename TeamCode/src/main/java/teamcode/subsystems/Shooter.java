@@ -463,6 +463,19 @@ public class Shooter extends TrcSubsystem
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
             TrcEvent launcherRetractCallback = new TrcEvent(Params.SUBSYSTEM_NAME + ".launcherRetract");
+            // This acts as a timeout in case the velocity did not trigger. When LAUNCHER_LAUNCH_DURATION has passed
+            // and velocity trigger did not occur, we will call velTriggerCallback as if velocity has triggered.
+            // This is to make sure it won't hang the caller that expects a completion callback and will also clear
+            // the Spindexer slot state. Velocity trigger may have failed because of various reasons. One of them
+            // could be the velocity trigger threshold is set too low so even the artifact has exited, the velocity
+            // did not drop enough to trigger. Another reason could be that we are shooting an empty slot, so there
+            // will never be a trigger. This timeout code will make sure we will consider the artifact exited even
+            // though velocity did not trigger. The downside is that if there is really an artifact in the slot and
+            // somehow failed to shoot, we will erroneously think the artifact is shot clearing the slot where the
+            // artifact is still there. This is acceptable comparing to hanging the caller. In this case, we just
+            // don't know the artifact is in but no harm done. If we turn Bulldoze intake on and we are trying to
+            // pick up an artifact to the supposedly empty slot but really still has one, the color sensor will detect
+            // it and correct the slot state. Therefore, this is really harmless.
             launcherRetractCallback.setCallback(
                 (ctxt, canceled) ->
                 {
@@ -477,7 +490,8 @@ public class Shooter extends TrcSubsystem
                         }
                     }
                 }, null);
-            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, Params.LAUNCHER_LAUNCH_DURATION);
+            launcher.setPosition(
+                owner, 0.0, launcherTuneParams.activatePos, launcherRetractCallback, Params.LAUNCHER_LAUNCH_DURATION);
         }
         else if (completionEvent != null)
         {
