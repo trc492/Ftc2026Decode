@@ -54,6 +54,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         FINISH_LOADING,
         PICKUP_SPIKEMARK,
         FINISH_PICKUP,
+        OPEN_GATE_INTERMEDIATE,
         OPEN_GATE,
         PARK,
         DONE
@@ -157,7 +158,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     }
                     spikeMarkOrder =
-                        autoChoices.openGate == FtcAuto.OpenGate.YES ? new int[] {1, 0, 2}:
+//                        autoChoices.openGate == FtcAuto.OpenGate.YES ? new int[] {1, 0, 2}:
                         autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ? new int[] {0, 1, 2}: new int[] {2, 1, 0};
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     currentSpikeMarkCount = 0;
@@ -432,7 +433,18 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     currentSpikeMarkCount++;
                     sm.setState(
                         autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1?
-                            State.OPEN_GATE: State.GOTO_SHOOT_POS);
+                            State.OPEN_GATE_INTERMEDIATE: State.GOTO_SHOOT_POS);
+                    break;
+
+                case OPEN_GATE_INTERMEDIATE:
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                    robot.robotBase.purePursuitDrive.start(
+                        event, 1.5, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
+                    sm.waitForSingleEvent(event, State.OPEN_GATE);
                     break;
 
                 case OPEN_GATE:

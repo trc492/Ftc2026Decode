@@ -215,7 +215,7 @@ public class RobotParams
 //                {BLUE_SPIKEMARK_PICKUP_POSE_1, BLUE_SPIKEMARK_PICKUP_POSE_2, BLUE_SPIKEMARK_PICKUP_POSE_3};
 
         public static final TrcPose2D RED_OPEN_GATE_POSE        =
-            new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.25*Field.FULL_TILE_INCHES, 0.0);
+            new TrcPose2D(0.0*Field.FULL_TILE_INCHES, 2.5*Field.FULL_TILE_INCHES, 0.0);
         public static final TrcPose2D RED_ClASSIFIER_PARK_POSE  =
             new TrcPose2D(0.0, 1.5*Field.FULL_TILE_INCHES, 0.0); //TODO: Not sure about this
         public static final TrcPose2D RED_SQUARE_PARK_POSE      =
