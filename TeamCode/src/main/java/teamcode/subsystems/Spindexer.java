@@ -230,7 +230,7 @@ public class Spindexer extends TrcSubsystem
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
         entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
-        shootVelTrigger = spindexer.getEntryTrigger();
+        shootVelTrigger = spindexer.getExitTrigger();
         // Initialize Spindexer to entry slot 0.
         spindexer.motor.setPosition(Params.entryPresetPositions[0], true, Params.MOVE_POWER);
         entrySlot = 0;
