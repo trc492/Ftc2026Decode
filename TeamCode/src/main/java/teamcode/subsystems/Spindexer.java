@@ -215,15 +215,10 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_TRIGGER)
         {
-            shootVelTrigger = new FtcSensorTrigger()
-                .setAnalogSourceTrigger(
-                    Params.EXIT_TRIGGER_NAME,
-                    () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelRPM(): 0.0,
-                    exitTriggerParams).getTrigger();
-        }
-        else
-        {
-            shootVelTrigger = null;
+            spindexerParams.setExitAnalogSourceTrigger(
+                Params.EXIT_TRIGGER_NAME,
+                () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelRPM(): 0.0,
+                exitTriggerParams, false, null, null);
         }
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
@@ -235,6 +230,7 @@ public class Spindexer extends TrcSubsystem
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
         entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
+        shootVelTrigger = spindexer.getEntryTrigger();
         // Initialize Spindexer to entry slot 0.
         spindexer.motor.setPosition(Params.entryPresetPositions[0], true, Params.MOVE_POWER);
         entrySlot = 0;
