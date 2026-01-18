@@ -24,6 +24,7 @@ package teamcode;
 
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import ftclib.drivebase.FtcRobotBase;
@@ -31,6 +32,7 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.driverio.FtcMatchInfo;
 import ftclib.robotcore.FtcOpMode;
 import ftclib.sensor.FtcRobotBattery;
+import ftclib.vision.FtcLimelightVision;
 import teamcode.autotasks.TaskAutoPickup;
 import teamcode.autotasks.TaskAutoShoot;
 import teamcode.subsystems.Intake;
@@ -50,6 +52,8 @@ import trclib.subsystem.TrcPidStorage;
 import trclib.subsystem.TrcRollerIntake;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
+import trclib.timer.TrcTimer;
+import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class creates the robot object that consists of sensors, indicators, drive base and all the subsystems.
@@ -57,12 +61,25 @@ import trclib.subsystem.TrcSubsystem;
 public class Robot
 {
     private final String moduleName = getClass().getSimpleName();
+
+    public static class TrackingInfo
+    {
+        public boolean visionTrackingEnabled = false;
+        public boolean odometryTrackingEnabled = false;
+        public FtcAuto.Alliance trackedAlliance = null;
+        public double staleTimeout = 0.0;
+        public double[] aimInfo = null;
+        public boolean robotLocalized = false;
+    }   //class TrackingInfo
+
     // Global objects.
     public final FtcOpMode opMode;
     public final TrcDbgTrace globalTracer;
     public final FtcDashboard dashboard;
+    public final TrackingInfo trackingInfo = new TrackingInfo();
     public static FtcMatchInfo matchInfo = null;
     private static TrcPose2D endOfAutoRobotPose = null;
+    private static Vision.ArtifactType[] endOfAutoSpindexerSlotStates = null;
     // Robot Drive.
     public DriveBase robotDriveBase;
     public FtcRobotBase.RobotInfo robotInfo;
@@ -211,13 +228,28 @@ public class Robot
             {
                 if (endOfAutoRobotPose != null)
                 {
-                    // We had a previous autonomous run that saved the robot position at the end, use it.
-                    robotBase.driveBase.setFieldPosition(endOfAutoRobotPose);
-                    globalTracer.traceInfo(moduleName, "Restore saved RobotPose=" + endOfAutoRobotPose);
+                    synchronized (trackingInfo)
+                    {
+                        // We had a previous autonomous run that saved the robot position at the end, use it.
+                        robotBase.driveBase.setFieldPosition(endOfAutoRobotPose);
+                        trackingInfo.robotLocalized = true;
+                        globalTracer.traceInfo(moduleName, "Restore saved RobotPose=" + endOfAutoRobotPose);
+                    }
+                }
+
+                if (endOfAutoSpindexerSlotStates != null && spindexerSubsystem != null)
+                {
+                    spindexerSubsystem.setPreloadedArtifacts(
+                        endOfAutoSpindexerSlotStates[0],
+                        endOfAutoSpindexerSlotStates[1],
+                        endOfAutoSpindexerSlotStates[2]);
+                    globalTracer.traceInfo(
+                        moduleName, "Restore saved SpindexerStates=" + Arrays.toString(endOfAutoSpindexerSlotStates));
                 }
             }
             // Consume it so it's no longer valid for next run.
             endOfAutoRobotPose = null;
+            endOfAutoSpindexerSlotStates = null;
         }
 
         TrcDigitalInput.setElapsedTimerEnabled(true);
@@ -288,6 +320,12 @@ public class Robot
                 // Save current robot location at the end of autonomous so subsequent teleop run can restore it.
                 endOfAutoRobotPose = robotBase.driveBase.getFieldPosition();
                 globalTracer.traceInfo(moduleName, "Saved robot pose=" + endOfAutoRobotPose);
+                if (spindexerSubsystem != null)
+                {
+                    endOfAutoSpindexerSlotStates = spindexerSubsystem.getSlotStates();
+                    globalTracer.traceInfo(
+                        moduleName, "Saved SpindexerStates=" + Arrays.toString(endOfAutoSpindexerSlotStates));
+                }
             }
             //
             // Disable odometry.
@@ -319,6 +357,45 @@ public class Robot
      */
     public void periodic(double elapsedTime, boolean slowPeriodicLoop)
     {
+        synchronized (trackingInfo)
+        {
+            if (trackingInfo.visionTrackingEnabled)
+            {
+                TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
+                    vision.getLimelightDetectedObject(
+                        FtcLimelightVision.ResultType.Fiducial,
+                        trackingInfo.trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE ?
+                            RobotParams.Game.blueGoalAprilTag : RobotParams.Game.redGoalAprilTag,
+                        null, -1);
+                double currTime = TrcTimer.getCurrentTime();
+                if (aprilTagInfo != null)
+                {
+                    trackingInfo.aimInfo = vision.getAimInfoByVision(aprilTagInfo);
+                    trackingInfo.staleTimeout = currTime + Vision.STALE_TIMEOUT;
+                    // If we don't know where the robot is, relocalize it here.
+                    if (!trackingInfo.robotLocalized && aprilTagInfo.detectedObj.robotPose != null)
+                    {
+                        TrcPose2D adjRobotPose =
+                            shooterSubsystem.adjustRobotFieldPosition(aprilTagInfo.detectedObj.robotPose);
+                        globalTracer.traceInfo(
+                            moduleName,
+                            "Relocalizing: pose=" + aprilTagInfo.detectedObj.robotPose + ", adjPose=" + adjRobotPose);
+                        robotBase.driveBase.setFieldPosition(adjRobotPose);
+                        trackingInfo.robotLocalized = true;
+                    }
+                }
+                else if (currTime > trackingInfo.staleTimeout)
+                {
+                    trackingInfo.aimInfo = null;
+                    trackingInfo.staleTimeout = 0.0;
+                }
+            }
+            else if (trackingInfo.odometryTrackingEnabled)
+            {
+                trackingInfo.aimInfo = vision.getAimInfoByOdometry(trackingInfo.trackedAlliance);
+            }
+        }
+
         if (relocalizedRobotPose != null && vision != null && vision.limelightVision != null)
         {
             vision.limelightVision.updateRobotHeading(robotBase.driveBase.getHeading());
@@ -332,6 +409,36 @@ public class Robot
             }
         }
     }   //periodic
+
+    /**
+     * This method enables tracking target info.
+     *
+     * @param useVision specifies true to enable vision tracking, false to enable odometry tracking.
+     * @param alliance specifies the alliance color goal to track.
+     */
+    public void enableTrackingInfo(boolean useVision, FtcAuto.Alliance alliance)
+    {
+        synchronized (trackingInfo)
+        {
+            trackingInfo.visionTrackingEnabled = useVision;
+            trackingInfo.odometryTrackingEnabled = !useVision;
+            trackingInfo.trackedAlliance = alliance;
+            trackingInfo.aimInfo = null;
+        }
+    }   //enableTrackingInfo
+
+    /**
+     * This method disables tracking target info.
+     */
+    public void disableTrackingInfo()
+    {
+        synchronized (trackingInfo)
+        {
+            trackingInfo.visionTrackingEnabled = trackingInfo.odometryTrackingEnabled = false;
+            trackingInfo.trackedAlliance = null;
+            trackingInfo.aimInfo = null;
+        }
+    }   //disableTrackingInfo
 
     /**
      * This method is called to cancel all pending operations and release the ownership of all subsystems.
@@ -386,7 +493,11 @@ public class Robot
             autoChoices.startPos == FtcAuto.StartPos.FAR_CENTER? RobotParams.Game.STARTPOSE_RED_FAR_CENTER:
                 RobotParams.Game.STARTPOSE_RED_FAR_CORNER,
             autoChoices.alliance, false);
-        robotBase.driveBase.setFieldPosition(startPose);
+        synchronized (trackingInfo)
+        {
+            robotBase.driveBase.setFieldPosition(startPose);
+            trackingInfo.robotLocalized = true;
+        }
     }   //setRobotStartPosition
 
     /**

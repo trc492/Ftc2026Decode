@@ -95,6 +95,7 @@ public class Vision
                 6.25, 9.0));                    // World Bottom Right
     // Limelight camera properties
     public static final int NUM_LIMELIGHT_PIPELINES = 2;
+    public static final double LIMELIGHT_HFOV_THRESHOLD = 25.0;
     public static final TrcVision.CameraInfo limelightParams = new TrcVision.CameraInfo()
         .setCameraInfo("Limelight3a", 640, 480)
         .setCameraFOV(54.505, 42.239)
@@ -180,6 +181,7 @@ public class Vision
     private static final double artifactWidth = 5.0;  // inches
     private static final double artifactHeight = 5.0; // inches
 
+    public static final double STALE_TIMEOUT = 0.1;
     private static final int CLASSIFIER_ROI_LEFT = 0;
     private static final int CLASSIFIER_ROI_TOP = 50;
     private static final int CLASSIFIER_ROI_WIDTH = frontCamParams.camImageWidth;
@@ -675,7 +677,7 @@ public class Vision
         TrcPose2D targetPose = goalFieldPose.relativeTo(robotPose);
         TrcPose2D aprilTagPose = aprilTagFieldPose.relativeTo(robotPose);
         double targetDepth = TrcUtil.magnitude(aprilTagPose.x, aprilTagPose.y);
-        double targetBearing = targetPose.angle;
+        double targetBearing = targetPose.angle % 360.0;
         tracer.traceDebug(
             moduleName, "robotPose=%s, targetPose=%s, aprilTagPose=%s, depth=%f, bearing=%f",
             robotPose, targetPose, aprilTagPose, targetDepth, targetBearing);
@@ -1364,6 +1366,7 @@ public class Vision
                 if (classifierVision != null)
                 {
                     lineNum = classifierVision.updateStatus(lineNum);
+                    getBestClassifierArtifacts(Dashboard.DashboardParams.alliance, 3);
                 }
             }
         }

@@ -847,14 +847,12 @@ public class FtcTest extends FtcTeleOp
                                     moduleName + ".autoShoot", null,
                                     Dashboard.DashboardParams.alliance,
                                     false,
-                                    Dashboard.Subsystem_Shooter.autoShootParams.useAprilTagVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.doMotif,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useClassifierVision,
                                     Dashboard.Subsystem_Shooter.autoShootParams.useRegression,
                                     Dashboard.Subsystem_Shooter.autoShootParams.flywheelTracking,
                                     Dashboard.Subsystem_Shooter.autoShootParams.relocalize,
-                                    Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot > 0?
-                                        Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot: 1,
+                                    Math.max(Dashboard.Subsystem_Shooter.autoShootParams.numArtifactsToShoot, 1),
                                     Dashboard.Subsystem_Shooter.autoShootParams.moveToNextExitSlot);
                             }
                         }

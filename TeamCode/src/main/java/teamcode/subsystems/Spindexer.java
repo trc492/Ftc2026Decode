@@ -215,15 +215,10 @@ public class Spindexer extends TrcSubsystem
 
         if (Params.HAS_EXIT_TRIGGER)
         {
-            shootVelTrigger = new FtcSensorTrigger()
-                .setAnalogSourceTrigger(
-                    Params.EXIT_TRIGGER_NAME,
-                    () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelRPM(): 0.0,
-                    exitTriggerParams).getTrigger();
-        }
-        else
-        {
-            shootVelTrigger = null;
+            spindexerParams.setExitAnalogSourceTrigger(
+                Params.EXIT_TRIGGER_NAME,
+                () -> robot.shooterSubsystem != null? robot.shooterSubsystem.getFlywheelRPM(): 0.0,
+                exitTriggerParams, false, null, null);
         }
 
         spindexer = new FtcPidStorage(Params.SUBSYSTEM_NAME, spindexerParams).getPidStorage();
@@ -235,6 +230,7 @@ public class Spindexer extends TrcSubsystem
         sm = new TrcStateMachine<>(Params.SUBSYSTEM_NAME + ".refreshSlotStates");
         event = new TrcEvent(Params.SUBSYSTEM_NAME + ".event");
         entryTrigger = (TrcTriggerThresholdRange) spindexer.getEntryTrigger();
+        shootVelTrigger = spindexer.getExitTrigger();
         // Initialize Spindexer to entry slot 0.
         spindexer.motor.setPosition(Params.entryPresetPositions[0], true, Params.MOVE_POWER);
         entrySlot = 0;
@@ -250,6 +246,16 @@ public class Spindexer extends TrcSubsystem
     {
         return spindexer;
     }   //getPidStorage
+
+    /**
+     * This method returns a copy of the Spindexer slot states array.
+     *
+     * @return copy of the slot states.
+     */
+    public Vision.ArtifactType[] getSlotStates()
+    {
+        return Arrays.copyOf(slotStates, slotStates.length);
+    }   //getSlotStates
 
     /**
      * This method sets the entry trigger to color mode or distance mode.
@@ -1018,6 +1024,13 @@ public class Spindexer extends TrcSubsystem
                     {
                         robot.ledIndicator.setSpindexerPatternOff(i, false);
                         robot.ledIndicator.setSpindexerPatternOn(i, LEDIndicator.GREEN_BLOB);
+                    }
+                    break;
+
+                case None:
+                    if (robot.ledIndicator != null)
+                    {
+                        robot.ledIndicator.setSpindexerPatternOff(i, false);
                     }
                     break;
 

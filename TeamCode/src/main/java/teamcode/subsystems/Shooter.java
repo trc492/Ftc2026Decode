@@ -26,23 +26,20 @@ import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.motor.FtcServoActuator;
 import ftclib.subsystem.FtcShooter;
-import ftclib.vision.FtcLimelightVision;
 import teamcode.Dashboard;
 import teamcode.FtcAuto;
 import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
-import trclib.subsystem.TrcShootParams;
 import trclib.subsystem.TrcShooter;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
-import trclib.vision.TrcVisionTargetInfo;
 
 /**
  * This class implements a Shooter Subsystem. This implementation consists of one or two shooter motors. For
@@ -58,118 +55,73 @@ public class Shooter extends TrcSubsystem
     public static final String GOAL_ZONE_SHOOT_POINT            = "GoalZoneShootPoint";
     public static final String FAR_ZONE_SHOOT_POINT             = "FarZoneShootPoint";
 
-//    public static final TrcShootParams.Region[] shootRegions    =
-//    {
-//        // Region 1: tilt 26°, y = 15.42211x + 3116.30051
-//        new TrcShootParams.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
-//        // Region 2: tilt 30°, y = 5.71429x + 3398.57143
-//        new TrcShootParams.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
-//        // Region 3: tilt 33°, y = 19.71941x + 2858.83725
-//        new TrcShootParams.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
-//        // Region 4: tilt 38°, y = 16.3593x + 2943.18711
-//        new TrcShootParams.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
-//        // Region 5: tilt 42°, y = 15.15152x + 3063.63635
-//        new TrcShootParams.Region(42.0, new double[][] {{3063.63635, 15.15152}})
-//    };
-//
-//    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
-//        //        name,                     distance,   region,             shooterVel, %Power
-//        // Region 1: tilt 26°
-//        .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
-//        .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
-//        .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
-//        // Region 2: tilt 30°
-//        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
-//        .addEntry("Target_3.67ft_1",        44.0,       shootRegions[1],    3650.0)
-//        // Region 3: tilt 33°
-//        .addEntry("Target_3.67ft_2",        44.0000001, shootRegions[2],    3700.0)
-//        .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
-//        .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
-//        // Region 4: tilt 38°
-//        .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
-//        .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
-//        .addEntry("Target_8.29ft",          99.5,       shootRegions[3],    4600.0)
-//        .addEntry("Target_9.44ft_1",        111.3,      shootRegions[3],    4760.0)
-//        // Region 5: tilt 42°
-//        .addEntry(FAR_ZONE_SHOOT_POINT,     111.300001, shootRegions[4],    4750.0)
-//        .addEntry("Target_10.65ft",         127.8,      shootRegions[4],    5000.0);
-//
-//    public static final TrcShootParams.Region[] shootRegions    =
-//    {
-//        // Region 1: tilt 25°, y = 4.16667x + 3320.83333
-//        new TrcShootParams.Region(25.0, new double[][] {{3320.83333, 4.16667}}),
-//        // Region 2: tilt 30°, y = 8.84957x + 3272.56599
-//        new TrcShootParams.Region(30.0, new double[][] {{3272.56599, 8.84957}}),
-//        new TrcShootParams.Region(35.0, new double[][] {{x,x}})
-//        // Region 3: tilt 38°, y = 16.55582x + 2999.25491
-//        new TrcShootParams.Region(38.0, new double[][] {{2999.25491, 16.55582}}),
-//        // Region 4: tilt 42°, y = 11.249x + 3484.62195
-//        new TrcShootParams.Region(42.0, new double[][] {{3484.62195, 11.249}}),
-//        // Region 5: tilt 45°, y = 14.80364x + 3288.15202
-//        new TrcShootParams.Region(45.0, new double[][] {{3288.15202, 14.80364}})
-//    };
-//
-//    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
-//        //        name,                     distance,   region,             shooterVel
-//        // Region 1: tilt 25°
-//        .addEntry("Target_2.58ft",          31.0,       shootRegions[0],    3450.0)
-//        .addEntry("Target_3.08ft_1",        37.0,       shootRegions[0],    3475.0)
-//        // Region 2: tilt 30°
-//        .addEntry(GOAL_ZONE_SHOOT_POINT,    37.0000001, shootRegions[1],    3600.0)
-//        .addEntry("Target_4.02ft_1",        48.3,       shootRegions[1],    3700.0)
-//        // Region 3: tilt 38°
-//        .addEntry("Target_4.02ft_2",        48.3000001, shootRegions[2],    3775.0)
-//        .addEntry("Target_4.81ft",          57.8,       shootRegions[2],    4000.0)
-//        .addEntry("Target_5.76ft_1",        69.2,       shootRegions[2],    4125.0)
-//        // Region 4: tilt 42°
-//        .addEntry("Target_3.76ft_2",        69.2000001, shootRegions[3],    4275.0)
-//        .addEntry("Target_6.80ft",          81.6,       shootRegions[3],    4375.0)
-//        .addEntry("Target_7.59ft_1",        91.1,       shootRegions[3],    4525.0)
-//        // Region 5: tilt 45°
-//        .addEntry("Target_7.59ft_2",        91.1000001, shootRegions[4],    4600.0)
-//        .addEntry("Target_8.40ft",          100.8,      shootRegions[4],    4800.0)
-//        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4925.0)
-//        .addEntry("Target_10.31ft",         123.8,      shootRegions[4],    5100.0)
-//        .addEntry("Target_11.12ft",         133.5,      shootRegions[4],    5275.0)
-//        .addEntry("Target_12.02ft",         144.3,      shootRegions[4],    5425.0)
-//        .addEntry("Target_12.76ft",         153.2,      shootRegions[4],    5675.0)
-//        .addEntry("Target_14.36ft",         172.4,      shootRegions[4],    5750.0);
-
-    public static final TrcShootParams.Region[] shootRegions    =
+    public static final TrcLookupTable.Region[] shootRegions    =
     {
         // Region 1: tilt 26°, y = 15.42211x + 3116.30051
-        new TrcShootParams.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
+        new TrcLookupTable.Region(26.0, new double[][] {{3116.30051, 15.42211}}),
         // Region 2: tilt 30°, y = 5.71429x + 3398.57143
-        new TrcShootParams.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
+        new TrcLookupTable.Region(30.0, new double[][] {{3398.57143, 5.71429}}),
         // Region 3: tilt 33°, y = 19.71941x + 2858.83725
-        new TrcShootParams.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
+        new TrcLookupTable.Region(33.0, new double[][] {{2858.83725, 19.71941}}),
         // Region 4: tilt 38°, y = 16.3593x + 2943.18711
-        new TrcShootParams.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
+        new TrcLookupTable.Region(38.0, new double[][] {{2943.18711, 16.3593}}),
         // Region 5: tilt 45°, y = 14.80364x + 3288.15202
-        new TrcShootParams.Region(45.0, new double[][] {{3288.15202, 14.80364}})
+        new TrcLookupTable.Region(45.0, new double[][] {{3288.15202, 14.80364}})
     };
 
-    public static final TrcShootParams shootParamsTable         = new TrcShootParams()
+//    public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
+//        //        name,                     distance,   region,             shooterVel
+//        // Region 1: tilt 26°
+//        .addEntry(null,                     25.7,       shootRegions[0],    3500.0)
+//        .addEntry(null,                     29.9,       shootRegions[0],    3600.0)
+//        .addEntry(null,                     35.25,      shootRegions[0],    3650.0)
+//        // Region 2: tilt 30°
+//        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
+//        .addEntry(null,                     44.0,       shootRegions[1],    3650.0)
+//        // Region 3: tilt 33°
+//        .addEntry(null,                     44.0000001, shootRegions[2],    3700.0)
+//        .addEntry(null,                     53.0,       shootRegions[2],    3950.0)
+//        .addEntry(null,                     65.2,       shootRegions[2],    4125.0)
+//        // Region 4: tilt 38°
+//        .addEntry(null,                     65.2000001, shootRegions[3],    4025.0)
+//        .addEntry(null,                     85.4,       shootRegions[3],    4300.0)
+//        .addEntry(null,                     91.1,       shootRegions[3],    4433.51934)
+//        // Region 5: tilt 45°
+//        .addEntry(null,                     91.1000001, shootRegions[4],    4636.76363)
+//        .addEntry(null,                     100.8,      shootRegions[4],    4780.35893)
+//        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.91497)
+//        .addEntry(null,                     123.8,      shootRegions[4],    5120.84265)
+//        .addEntry(null,                     133.5,      shootRegions[4],    5264.43796)
+//        .addEntry(null,                     144.3,      shootRegions[4],    5424.31727)
+//        .addEntry(null,                     153.2,      shootRegions[4],    5556.06967)
+//        .addEntry(null,                     172.4,      shootRegions[4],    5840.29956);
+
+    public static final TrcLookupTable shootParamsTable         = new TrcLookupTable()
         //        name,                     distance,   region,             shooterVel
         // Region 1: tilt 26°
-        .addEntry("Target_2.14ft",          25.7,       shootRegions[0],    3500.0)
-        .addEntry("Target_2.49ft",          29.9,       shootRegions[0],    3600.0)
-        .addEntry("Target_2.93ft_1",        35.25,      shootRegions[0],    3650.0)
+        .addEntry(null,                     25.7,       shootRegions[0],    3450.0)
+        .addEntry(null,                     29.9,       shootRegions[0],    3550.0)
+        .addEntry(null,                     35.25,      shootRegions[0],    3600.0)
         // Region 2: tilt 30°
-        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3600.0)
-        .addEntry("Target_3.67ft_1",        44.0,       shootRegions[1],    3650.0)
+        .addEntry(GOAL_ZONE_SHOOT_POINT,    35.2500001, shootRegions[1],    3550.0)
+        .addEntry(null,                     44.0,       shootRegions[1],    3600.0)
         // Region 3: tilt 33°
-        .addEntry("Target_3.67ft_2",        44.0000001, shootRegions[2],    3700.0)
-        .addEntry("Target_4.42ft",          53.0,       shootRegions[2],    3950.0)
-        .addEntry("Target_5.43ft_1",        65.2,       shootRegions[2],    4125.0)
+        .addEntry(null,                     44.0000001, shootRegions[2],    3650.0)
+        .addEntry(null,                     53.0,       shootRegions[2],    3900.0)
+        .addEntry(null,                     65.2,       shootRegions[2],    4075.0)
         // Region 4: tilt 38°
-        .addEntry("Target_5.43ft_2",        65.2000001, shootRegions[3],    4025.0)
-        .addEntry("Target_7.12ft",          85.4,       shootRegions[3],    4300.0)
-        .addEntry("Target_7.59ft_1",        91.1,       shootRegions[3],    4,433.51934)
+        .addEntry(null,                     65.2000001, shootRegions[3],    3975.0)
+        .addEntry(null,                     85.4,       shootRegions[3],    4250.0)
+        .addEntry(null,                     91.1,       shootRegions[3],    4383.51934)
         // Region 5: tilt 45°
-        .addEntry("Target_7.59ft_2",        91.1000001, shootRegions[4],    4636.763624)
-        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4926.914968)
-        .addEntry("Target_14.36ft",         172.4,      shootRegions[4],    5840.299556);
+        .addEntry(null,                     91.1000001, shootRegions[4],    4481.76363)
+        .addEntry(null,                     100.8,      shootRegions[4],    4625.35893)
+        .addEntry(FAR_ZONE_SHOOT_POINT,     110.7,      shootRegions[4],    4771.91497)
+        .addEntry(null,                     123.8,      shootRegions[4],    4965.84265)
+        .addEntry(null,                     133.5,      shootRegions[4],    5109.43796)
+        .addEntry(null,                     144.3,      shootRegions[4],    5269.31727)
+        .addEntry(null,                     153.2,      shootRegions[4],    5401.06967)
+        .addEntry(null,                     172.4,      shootRegions[4],    5685.29956);
 
     public static final class Params
     {
@@ -198,11 +150,11 @@ public class Shooter extends TrcSubsystem
         public static final double SHOOT_MOTOR_REV_PER_COUNT    = 1.0/(GOBILDA5000_CPR * SHOOT_MOTOR_GEAR_RATIO);
         public static final double SHOOT_MOTOR_MAX_VEL          = 6000.0;
 
-        public static final double SHOOT_MOTOR1_PID_KP          = 1.0;
-        public static final double SHOOT_MOTOR1_PID_KI          = 0.01;
-        public static final double SHOOT_MOTOR1_PID_IZONE       = 160/60.0; // in RPS
+        public static final double SHOOT_MOTOR1_PID_KP          = 0.75;
+        public static final double SHOOT_MOTOR1_PID_KI          = 0.025;
+        public static final double SHOOT_MOTOR1_PID_IZONE       = 15.0; // in RPS
         public static final double SHOOT_MOTOR1_PID_KD          = 0.0;
-        public static final double SHOOT_MOTOR1_PID_KF          = 0.0125;
+        public static final double SHOOT_MOTOR1_PID_KF          = 0.0225;
 
         public static final double SHOOT_MOTOR2_PID_KP          = 1.0;
         public static final double SHOOT_MOTOR2_PID_KI          = 0.0;
@@ -237,8 +189,8 @@ public class Shooter extends TrcSubsystem
         public static final double PAN_POS_OFFSET               = 92.0;
         public static final double PAN_ENCODER_ZERO_OFFSET      = 0.0;
         public static final double PAN_POWER_LIMIT              = 1.0;
-        public static final double PAN_MIN_POS                  = -345.0;
-        public static final double PAN_MAX_POS                  = PAN_POS_OFFSET;
+        public static final double PAN_MIN_POS                  = -260.0;
+        public static final double PAN_MAX_POS                  = 85.0;
         public static final double PAN_POS_PRESET_TOLERANCE     = 5.0;
         public static final double[] PAN_POS_PRESETS            =
             {
@@ -265,11 +217,11 @@ public class Shooter extends TrcSubsystem
         public static final boolean TILT_ENCODER_INVERTED       = false;
         public static final boolean TILT_ENCODER_WRAPPED        = false;
 
-        public static final double TILT_MOTOR_PID_KP            = 0.06;
-        public static final double TILT_MOTOR_PID_KI            = 0.005;
-        public static final double TILT_MOTOR_PID_KD            = 0.0025;
+        public static final double TILT_MOTOR_PID_KP            = 0.048;
+        public static final double TILT_MOTOR_PID_KI            = 0.025;
+        public static final double TILT_MOTOR_PID_KD            = 0.0035;
         public static final double TILT_MOTOR_PID_KF            = 0.0;
-        public static final double TILT_MOTOR_PID_IZONE         = 3.0;
+        public static final double TILT_MOTOR_PID_IZONE         = 5.0;
         public static final double TILT_PID_TOLERANCE           = 1.0;
         public static final boolean TILT_SOFTWARE_PID_ENABLED   = true;
 
@@ -324,16 +276,16 @@ public class Shooter extends TrcSubsystem
     public final TrcServo launcher;
     private String launchOwner;
     private TrcEvent launchCompletionEvent;
-    private Double trackingStartTimestamp = null;
     private FtcAuto.Alliance trackedAlliance = null;
     private boolean visionTracking = false;
     private boolean flywheelTracking = false;
+    private String savedOwner = null;
     private FtcAuto.Alliance savedTrackedAlliance = null;
     private boolean savedVisionTracking = false;
     private boolean savedFlywheelTracking = false;
     private Double prevShooterPidTarget = null;
     private Double nextFailSafeCheckTime = null;
-    private double[] lastVisionAimInfo = null;
+    private TrcEvent shooterReadyEvent = null;
 
     /**
      * Constructor: Creates an instance of the object.
@@ -352,7 +304,7 @@ public class Shooter extends TrcSubsystem
         if (Params.HAS_TWO_SHOOTER_MOTORS)
         {
             shooterParams.setShooterMotor2(
-                Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE, Params.SHOOTER_MOTOR2_INVERTED);
+                Params.SHOOTER_MOTOR2_NAME, Params.SHOOTER_MOTOR2_TYPE, Params.SHOOTER_MOTOR2_INVERTED, true);
         }
 
         if (Params.HAS_PAN_MOTOR)
@@ -418,7 +370,6 @@ public class Shooter extends TrcSubsystem
                 shooter.tracer.traceInfo(
                     instanceName, "Detected Axon zero encoder reading, reset and retry (reading=%f)",
                     motor.getEncoderRawPosition());
-
             }
         }
 
@@ -506,10 +457,41 @@ public class Shooter extends TrcSubsystem
                     currFlywheelRPM - Params.SHOOT_VEL_TRIGGER_THRESHOLD,
                     currFlywheelRPM + Params.SHOOT_VEL_TRIGGER_THRESHOLD,
                     this::velTriggerCallback);
+                shooter.tracer.traceInfo(
+                    instanceName, "Arm exit velocity trigger (currRPM=" + currFlywheelRPM + ")");
             }
             launchOwner = owner;
             launchCompletionEvent = completionEvent;
-            launcher.setPosition(owner, 0.0, launcherTuneParams.activatePos, null, Params.LAUNCHER_LAUNCH_DURATION);
+            TrcEvent launcherRetractCallback = new TrcEvent(Params.SUBSYSTEM_NAME + ".launcherRetract");
+            // This acts as a timeout in case the velocity did not trigger. When LAUNCHER_LAUNCH_DURATION has passed
+            // and velocity trigger did not occur, we will call velTriggerCallback as if velocity has triggered.
+            // This is to make sure it won't hang the caller that expects a completion callback and will also clear
+            // the Spindexer slot state. Velocity trigger may have failed because of various reasons. One of them
+            // could be the velocity trigger threshold is set too big so even the artifact has exited, the velocity
+            // did not drop enough to trigger. Another reason could be that we are shooting an empty slot, so there
+            // will never be a trigger. This timeout code will make sure we will consider the artifact exited even
+            // though velocity did not trigger. The downside is that if there is really an artifact in the slot and
+            // somehow failed to shoot, we will erroneously think the artifact is shot clearing the slot where the
+            // artifact is still there. This is acceptable comparing to hanging the caller. In this case, we just
+            // don't know the artifact is in but no harm done. If we turn Bulldoze intake on and we are trying to
+            // pick up an artifact to the supposedly empty slot but really still has one, the color sensor will detect
+            // it and correct the slot state. Therefore, this is really harmless.
+            launcherRetractCallback.setCallback(
+                (ctxt, canceled) ->
+                {
+                    if (!canceled)
+                    {
+                        if (robot.spindexer.getExitTrigger().isEnabled())
+                        {
+                            shooter.tracer.traceWarn(
+                                instanceName,
+                                "Exit velocity trigger timed out (currRPM=" + getFlywheelRPM() + ")");
+                            velTriggerCallback(null, false);
+                        }
+                    }
+                }, null);
+            launcher.setPosition(
+                owner, 0.0, launcherTuneParams.activatePos, launcherRetractCallback, Params.LAUNCHER_LAUNCH_DURATION);
         }
         else if (completionEvent != null)
         {
@@ -562,19 +544,8 @@ public class Shooter extends TrcSubsystem
      */
     public boolean isGoalTrackingEnabled()
     {
-        return trackingStartTimestamp != null;
+        return trackedAlliance != null;
     }   //isGoalTrackingEnabled
-
-    /**
-     * This method checks if Goal Tracking is ON and in vision tracking mode.
-     *
-     * @return true if GoalTracking is ON and in vision tracking mode, null if GoalTracking is OFF, false if
-     *         GoalTrackiing is ON but not in vision tracking mode.
-     */
-    public Boolean getGoalVisionTrackingModeOn()
-    {
-        return isGoalTrackingEnabled()? visionTracking: null;
-    }   //getGoalTrackingModeOn
 
     /**
      * This method enables Goal Tracking with the Turret (Pan motor) using AprilTag Vision.
@@ -601,22 +572,21 @@ public class Shooter extends TrcSubsystem
             ", flywheelTracking=" + flywheelTrackingEnabled + ")");
         if (useVision)
         {
-            if (robot.vision != null)
+            if (robot.vision != null && robot.vision.isLimelightVisionEnabled())
             {
                 if (shooter.acquireExclusiveAccess(owner))
                 {
                     if (!isGoalTrackingEnabled())
                     {
-                        robot.vision.setLimelightVisionEnabled(Vision.LimelightPipelineType.APRIL_TAG, true);
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
-                    this.trackingStartTimestamp = TrcTimer.getCurrentTime();
-                    this.trackedAlliance = alliance;
-                    this.visionTracking = true;
-                    this.flywheelTracking = flywheelTrackingEnabled;
                     // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                     // by mistake.
                     shooter.disableShooterPowerMode(null, null);
+                    robot.enableTrackingInfo(true, alliance);
+                    this.trackedAlliance = alliance;
+                    this.visionTracking = true;
+                    this.flywheelTracking = flywheelTrackingEnabled;
                 }
             }
         }
@@ -628,16 +598,30 @@ public class Shooter extends TrcSubsystem
                 {
                     shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                 }
-                this.trackingStartTimestamp = TrcTimer.getCurrentTime();
-                this.trackedAlliance = alliance;
-                this.visionTracking = false;
-                this.flywheelTracking = flywheelTrackingEnabled;
                 // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                 // by mistake.
                 shooter.disableShooterPowerMode(null, null);
+                robot.enableTrackingInfo(false, alliance);
+                this.trackedAlliance = alliance;
+                this.visionTracking = false;
+                this.flywheelTracking = flywheelTrackingEnabled;
             }
         }
     }   //enableGoalTracking
+
+    /**
+     * This method stops Goal Tracking.
+     */
+    private void stopGoalTracking()
+    {
+        shooter.tracer.traceInfo(instanceName, "Stop GoalTracking.");
+        shooter.panMotor.cancel();
+        shooter.stopShooter();
+        this.trackedAlliance = null;
+        this.visionTracking = false;
+        this.flywheelTracking = false;
+        // Don't reset failsafe. Disabling GoalTracking doesn't mean the problem fixed itself.
+    }   //stopGoalTracking
 
     /**
      * This method disables Goal Tracking.
@@ -649,59 +633,44 @@ public class Shooter extends TrcSubsystem
         if (shooter.validateOwnership(owner))
         {
             shooter.tracer.traceInfo(
-                instanceName, "disableGoalTracking(turretPos=" + shooter.panMotor.getPosition() + ")");
+                instanceName,
+                "disableGoalTracking(owner=" + owner + ", turretPos=" + shooter.panMotor.getPosition() + ")");
             shooter.releaseExclusiveAccess(owner);
-            shooter.panMotor.cancel();
-            shooter.stopShooter();
-            this.trackingStartTimestamp = null;
-            this.trackedAlliance = null;
-            this.visionTracking = false;
-            this.flywheelTracking = false;
-            // Don't reset failsafe. Disabling GoalTracking doesn't mean the problem fixed itself.
+            stopGoalTracking();
+            robot.disableTrackingInfo();
         }
     }   //disableGoalTracking
 
     /**
      * This method pauses the current Goal Tracking session and save the tracking parameters for the session.
-     *
-     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void pauseGoalTracking(String owner)
+    public void pauseGoalTracking()
     {
         // Only do this if Goal Tracking was enabled.
         if (isGoalTrackingEnabled())
         {
             shooter.tracer.traceInfo(instanceName, "Pause GoalTracking.");
-            if (shooter.validateOwnership(owner))
-            {
-                this.savedTrackedAlliance = trackedAlliance;
-                this.savedVisionTracking = visionTracking;
-                this.savedFlywheelTracking = flywheelTracking;
-                disableGoalTracking(owner);
-            }
+            savedOwner = shooter.getCurrentOwner();
+            savedTrackedAlliance = this.trackedAlliance;
+            savedVisionTracking = this.visionTracking;
+            savedFlywheelTracking = this.flywheelTracking;
+            stopGoalTracking();
         }
     }   //pauseGoalTracking
 
     /**
      * This method restores the saved Goal Tracking parameters and resumes the saved Goal Tracking session.
-     *
-     * @param owner specifies the owner that acquired the subsystem ownerships, null if no ownership required.
      */
-    public void resumeGoalTracking(String owner)
+    public void resumeGoalTracking()
     {
         if (savedTrackedAlliance != null)
         {
             shooter.tracer.traceInfo(instanceName, "Resume GoalTracking.");
-            if (shooter.validateOwnership(owner))
-            {
-                if (savedTrackedAlliance != null)
-                {
-                    enableGoalTracking(owner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
-                    this.savedTrackedAlliance = null;
-                    this.savedVisionTracking = false;
-                    this.savedFlywheelTracking = false;
-                }
-            }
+            enableGoalTracking(savedOwner, savedVisionTracking, savedTrackedAlliance, savedFlywheelTracking);
+            this.savedOwner = null;
+            this.savedTrackedAlliance = null;
+            this.savedVisionTracking = false;
+            this.savedFlywheelTracking = false;
         }
     }   //resumeGoalTracking
 
@@ -738,6 +707,8 @@ public class Shooter extends TrcSubsystem
         }
     }   //checkFailSafe
 
+    private Double crossOverTarget = null;
+
     /**
      * This method is called by Pan Motor PID Control Task to get the current Pan position. By manipulating this
      * position, we can use the PID controller to track the AprilTag target.
@@ -751,58 +722,98 @@ public class Shooter extends TrcSubsystem
 
         if (isGoalTrackingEnabled())
         {
-            // Goal Tracking is ON.
-            double[] aimInfo = null;
+            double[] aimInfo;
 
-            if (visionTracking)
+            synchronized (robot.trackingInfo)
             {
-                TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
-                    robot.vision.getLimelightDetectedObject(
-                        FtcLimelightVision.ResultType.Fiducial,
-                        trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE?
-                            RobotParams.Game.blueGoalAprilTag: RobotParams.Game.redGoalAprilTag,
-                        null, -1);
-                if (aprilTagInfo == null)
+                aimInfo = robot.trackingInfo.aimInfo;
+            }
+
+            if (crossOverTarget != null)
+            {
+                double panMotorPower = shooter.getPanPower();
+
+                shooter.tracer.traceDebug(
+                    Params.SUBSYSTEM_NAME, "panPower=%f, panPos=%f, crossOverTarget=%f",
+                    panMotorPower, panPosition, crossOverTarget);
+                if (panMotorPower < 0.0 && panPosition > crossOverTarget + Vision.LIMELIGHT_HFOV_THRESHOLD ||
+                    panMotorPower > 0.0 && panPosition < crossOverTarget - Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
-                    // Not detecting AprilTag or vision is still processing the frame, don't move.
-                    panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
+                    // We are still turning the other way to avoid crossing the hard stop.
+                    panPosition -= crossOverTarget;
                 }
                 else
                 {
-                    aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
-                    lastVisionAimInfo = aimInfo;
+                    // We are done crossing over the other way and AprilTag should be back in-view.
+                    crossOverTarget = null;
                 }
+            }
+            else if (aimInfo == null)
+            {
+                // Not detecting AprilTag or vision is still processing the frame, don't move.
+                panPosition = 0.0;
+                shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "AprilTag not found, don't move.");
             }
             else
             {
-                aimInfo = robot.vision.getAimInfoByOdometry(trackedAlliance);
-            }
-
-            if (aimInfo != null)
-            {
-                TrcShootParams.Entry shootParams = shootParamsTable.get(
+                double panTarget = aimInfo[1];
+                TrcLookupTable.Entry shootParams = shootParamsTable.get(
                     aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
-                    aimInfo[0], panPosition, aimInfo[1], shootParams);
+                    aimInfo[0], panPosition, panTarget, shootParams);
 
-                shooter.setTiltAngle(shootParams.region.tiltAngle);
+                // Set tilt angle (fire and forget).
+                shooter.setTiltAngle(shootParams.region.value);
+
                 if (flywheelTracking)
                 {
                     shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                 }
+
                 // Check if we are crossing over the hard stop.
-                if (aimInfo[1] >= Params.PAN_MIN_POS && aimInfo[1] <= Params.PAN_MAX_POS)
+                panPosition -= panTarget;
+                if (panTarget < Params.PAN_MIN_POS - Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
-                    // We are moving within valid range.
-                    panPosition -= aimInfo[1];
+                    // Crossing over (hard stop + threshold) counter-clockwise, spin it the other way clockwise.
+                    crossOverTarget = panTarget + 360.0;
+                    panPosition -= 360.0;
+                    shooter.tracer.traceInfo(
+                        Params.SUBSYSTEM_NAME,
+                        "Crossing counter-clockwise, spin it the other way (crossOverTarget=" + crossOverTarget +
+                        ", newDelta=" + panPosition + ")");
                 }
-                else
+                else if (panTarget > Params.PAN_MAX_POS + Vision.LIMELIGHT_HFOV_THRESHOLD)
                 {
-                    // We are crossing over the hard stop, stop it.
+                    // Crossing over (hard stop + threshold) clockwise, spin it the other way counter-clockwise.
+                    crossOverTarget = panTarget - 360.0;
+                    panPosition += 360.0;
+                    shooter.tracer.traceInfo(
+                        Params.SUBSYSTEM_NAME,
+                        "Crossing clockwise, spin it the other way (crossOverTarget=" + crossOverTarget +
+                        ", newDelta=" + panPosition + ")");
+                }
+                else if (panTarget < Params.PAN_MIN_POS || panTarget > Params.PAN_MAX_POS)
+                {
+                    // We are in hard stop zone, stop it.
                     panPosition = 0.0;
-                    shooter.tracer.traceDebug(Params.SUBSYSTEM_NAME, "Crossing over hard stop. Stop!");
+                    shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "At hard stop zone. Stop!");
+                }
+
+                if (shooterReadyEvent != null)
+                {
+                    boolean flyWheelOnTarget = !flywheelTracking || shooter.shooterMotor1.isVelocityOnTarget();
+                    boolean turretOnTarget = shooter.panMotor.isPositionOnTarget();
+
+                    shooter.tracer.traceDebug(
+                        Params.SUBSYSTEM_NAME, "flywheelOnTarget=%s, turretOnTarget=%s",
+                        flyWheelOnTarget, turretOnTarget);
+                    if (flyWheelOnTarget && turretOnTarget)
+                    {
+                        shooter.tracer.traceInfo(Params.SUBSYSTEM_NAME, "Shooter is ready to fire.");
+                        shooterReadyEvent.signal();
+                        shooterReadyEvent = null;
+                    }
                 }
             }
         }
@@ -811,14 +822,14 @@ public class Shooter extends TrcSubsystem
     }   //getPanPosition
 
     /**
-     * This method returns the last Vision detected Aim info.
+     * This method sets the shooterReady event to be signaled when goal tracking has reached target.
      *
-     * @return last Vision detected info.
+     * @param event specifies the event to signal when the shooter has reached aiming target.
      */
-    public double[] getLastVisionAimInfo()
+    public void waitForShooterReady(TrcEvent event)
     {
-        return lastVisionAimInfo;
-    }   //geteLastVisionAimInfo
+        shooterReadyEvent = event;
+    }   //waitForShooterReady
 
     /**
      * This method computes the camera pose on the robot given the turret heading.
@@ -910,7 +921,8 @@ public class Shooter extends TrcSubsystem
                     {
                         shooter.panMotor.setPosition(owner, 0.0, 0.0, true, Params.PAN_POWER_LIMIT, null, 0.0);
                     }
-                    else {
+                    else
+                    {
                         if (FtcAuto.autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
                         {
                             // In autonomous mode starting at GOAL_ZONE, initialize the Turret to turn to the obelisk.

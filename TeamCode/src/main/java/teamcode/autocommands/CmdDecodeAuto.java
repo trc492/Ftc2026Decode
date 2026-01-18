@@ -28,11 +28,11 @@ import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
+import trclib.dataprocessor.TrcLookupTable;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
-import trclib.subsystem.TrcShootParams;
 import trclib.timer.TrcTimer;
 
 /**
@@ -54,6 +54,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
         FINISH_LOADING,
         PICKUP_SPIKEMARK,
         FINISH_PICKUP,
+        OPEN_GATE_INTERMEDIATE,
         OPEN_GATE,
         PARK,
         DONE
@@ -157,14 +158,14 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                             Vision.ArtifactType.Green, Vision.ArtifactType.Purple, Vision.ArtifactType.Purple);
                     }
                     spikeMarkOrder =
-                        autoChoices.openGate == FtcAuto.OpenGate.YES ? new int[] {1, 0, 2}:
+//                        autoChoices.openGate == FtcAuto.OpenGate.YES ? new int[] {1, 0, 2}:
                         autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE ? new int[] {0, 1, 2}: new int[] {2, 1, 0};
                     targetSpikeMarkCount = (int) autoChoices.spikeMarkCount;
                     currentSpikeMarkCount = 0;
 
                     if (robot.shooterSubsystem != null)
                     {
-                        TrcShootParams.Entry shootParams;
+                        TrcLookupTable.Entry shootParams;
                         double panAngle;
                         // Turret was turned towards Obelisk before Auton is started, turn it back to the goal AprilTag.
                         if (autoChoices.startPos == FtcAuto.StartPos.GOAL_ZONE)
@@ -199,8 +200,8 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 moduleName, "Set callback event to turn on auto tracking (event=%s)", callbackEvent);
                         }
                         // Pre-spin flywheel and set up pan/tilt angles for scoring artifacts (fire and forget).
-                        robot.shooter.setPanAngle(panAngle, callbackEvent, 1.0);
-                        robot.shooter.setTiltAngle(shootParams.region.tiltAngle);
+                        robot.shooter.setPanAngle(panAngle, callbackEvent, 2.0);
+                        robot.shooter.setTiltAngle(shootParams.region.value);
                         robot.shooter.setShooterMotorRPM(shootParams.outputs[0], 0.0);
                         robot.globalTracer.traceInfo(
                             moduleName, "Pre-spin shooter(shootParams=" + shootParams + ")");
@@ -278,16 +279,14 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     if (robot.autoShootTask != null)
                     {
                         robot.autoShootTask.autoShoot(
-                            null, event, autoChoices.alliance, true, true, true,
+                            null, event, autoChoices.alliance, true, true,
                             currentSpikeMarkCount > 0 && autoChoices.classifierVision == FtcAuto.ClassifierVision.YES,
                             Dashboard.Subsystem_Shooter.autoShootParams.useRegression, true, false, 3, false);
-                        sm.waitForSingleEvent(event, pickUpLoading ?
-                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
+                        sm.waitForSingleEvent(event, pickUpLoading ? State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
                     else
                     {
-                        sm.setState(pickUpLoading ?
-                                State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
+                        sm.setState(pickUpLoading ? State.PICKUP_LOADING : State.PICKUP_SPIKEMARK);
                     }
                     break;
 
@@ -296,21 +295,45 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(true, 1.0, null);
                     }
-                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
+                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(false);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.45);
+                    robot.robotBase.purePursuitDrive.start(
+                        event, 3.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, 2.5*RobotParams.Field.FULL_FIELD_INCHES, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.45, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.MOVE_BACK);
                     break;
 
                 case MOVE_BACK:
-                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.5);
+                    robot.robotBase.purePursuitDrive.start(
+                        event, 1.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, -0.5, 0.0, 1.0, event);
                     sm.waitForSingleEvent(event, State.ATTEMPT_PICKUP);
                     break;
 
                 case ATTEMPT_PICKUP:
-                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.35);
+                    robot.robotBase.purePursuitDrive.start(
+                        event, 3.0, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(7.0, 20.0, 0.0), autoChoices.alliance, false, true));
+//                    robot.robotBase.driveBase.holonomicDrive(0.0, 0.35, 0.0, 3.0, event);
                     sm.waitForSingleEvent(event, State.FINISH_LOADING);
                     break;
 
                 case FINISH_LOADING:
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                    robot.robotBase.purePursuitDrive.setStallDetectionEnabled(true);
                     if (robot.intakeSubsystem != null)
                     {
                         robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
@@ -374,7 +397,7 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                 robot.globalTracer.traceInfo(moduleName, "WaypointHandler: index=" + i);
                                 if (i == 1)
                                 {
-                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.2);
+                                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(0.25);
                                 }
                             });
                         robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
@@ -410,7 +433,18 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                     currentSpikeMarkCount++;
                     sm.setState(
                         autoChoices.openGate == FtcAuto.OpenGate.YES && currentSpikeMarkCount == 1?
-                            State.OPEN_GATE: State.GOTO_SHOOT_POS);
+                            State.OPEN_GATE_INTERMEDIATE: State.GOTO_SHOOT_POS);
+                    break;
+
+                case OPEN_GATE_INTERMEDIATE:
+                    robot.robotBase.purePursuitDrive.setMoveOutputLimit(1.0);
+                    robot.robotBase.purePursuitDrive.start(
+                        event, 1.5, true,
+                        robot.robotInfo.baseParams.profiledMaxDriveVelocity,
+                        robot.robotInfo.baseParams.profiledMaxDriveAcceleration,
+                        robot.robotInfo.baseParams.profiledMaxDriveDeceleration,
+                        robot.adjustPoseByAlliance(new TrcPose2D(0.0, -15.0, 0.0), autoChoices.alliance, false, true));
+                    sm.waitForSingleEvent(event, State.OPEN_GATE);
                     break;
 
                 case OPEN_GATE:
