@@ -34,7 +34,6 @@ import java.util.Arrays;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
-import ftclib.sensor.FtcSensorTrigger;
 import ftclib.subsystem.FtcPidStorage;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -43,7 +42,6 @@ import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcDataBuffer;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
-import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
@@ -356,13 +354,12 @@ public class Spindexer extends TrcSubsystem
                 }
                 TrcEvent ejectCallbackEvent = new TrcEvent("EjectCallback");
                 ejectCallbackEvent.setCallback(
-                        (ctx, canceledEject)->
-                        {
-                            spindexer.tracer.traceInfo(instanceName, "Eject Callback Signaled");
-                            if (!canceledEject) robot.intakeSubsystem.getIntake().eject(Intake.Params.EJECT_POWER,0.5, null);
-                        }, null);
+                    (ctx, canceledEject)->
+                    {
+                        spindexer.tracer.traceInfo(instanceName, "Eject Callback Signaled");
+                        if (!canceledEject) robot.intake.eject(Intake.Params.EJECT_POWER, 0.5, null);
+                    }, null);
                 robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, ejectCallbackEvent);
-
             }
 
             if (triggerEvent != null)
