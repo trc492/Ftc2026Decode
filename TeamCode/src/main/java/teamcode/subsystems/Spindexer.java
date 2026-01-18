@@ -43,6 +43,7 @@ import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcDataBuffer;
 import trclib.dataprocessor.TrcWarpSpace;
 import trclib.motor.TrcMotor;
+import trclib.robotcore.TrcDbgTrace;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcStateMachine;
@@ -353,7 +354,15 @@ public class Spindexer extends TrcSubsystem
                     slotsFullEvent.signal();
                     slotsFullEvent = null;
                 }
-                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
+                TrcEvent ejectCallbackEvent = new TrcEvent("EjectCallback");
+                ejectCallbackEvent.setCallback(
+                        (ctx, canceledEject)->
+                        {
+                            spindexer.tracer.traceInfo(instanceName, "Eject Callback Signaled");
+                            if (!canceledEject) robot.intakeSubsystem.getIntake().eject(Intake.Params.EJECT_POWER,0.5, null);
+                        }, null);
+                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, ejectCallbackEvent);
+
             }
 
             if (triggerEvent != null)
