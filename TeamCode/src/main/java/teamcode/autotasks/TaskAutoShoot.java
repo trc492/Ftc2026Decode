@@ -440,6 +440,11 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                         }
                         aimInfo = robot.vision.getAimInfoByVision(aprilTagInfo);
                     }
+                    else
+                    {
+                        tracer.traceInfo(
+                            moduleName, "***** Can't find AprilTag (turret=" + robot.shooter.getPanAngle() + ")");
+                    }
                 }
 
                 // If we are doing motif, determine the shooting sequence.
