@@ -43,7 +43,7 @@ public class RobotParams
     {
         // Global config
         public static final DriveBase.RobotType robotType       = DriveBase.RobotType.DecodeRobot;
-        public static final boolean inCompetition               = false;
+        public static final boolean inCompetition               = true;
         public static final boolean useTraceLog                 = true;
         public static final boolean useBatteryMonitor           = false;
         // Driver feedback

@@ -191,7 +191,9 @@ public class CmdDecodeAuto implements TrcRobot.RobotCommand
                                         moduleName, "GoalTrackingCallback(canceled=%s)", canceled);
                                     if (!canceled)
                                     {
-                                        robot.globalTracer.traceInfo(moduleName, "enabling tracking");
+                                        robot.globalTracer.traceInfo(
+                                            moduleName,
+                                            "enabling tracking (panAngle=" + robot.shooter.getPanAngle() + ")");
                                         robot.shooterSubsystem.enableGoalTracking(
                                             null, true, autoChoices.alliance, true);
                                     }

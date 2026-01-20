@@ -1,0 +1,293 @@
+FtcAuto.startMode_INFO [0.006829668] ***** Starting autonomous: 20260118@152307 *****
+FtcAuto.startMode_INFO [0.007627084] <Info name="MatchInfo" date="Sun Jan 18 15:17:52 PST 2026" type="QUALIFICATION" number=17 />
+FtcAuto.startMode_INFO [0.009492001] <Info name="AutoChoices" startDelay=0 alliance="BLUE_ALLIANCE" startPos="FAR_CENTER" strategy="DECODE_AUTO" classifierVision="NO" loadingPickup="YES" openGate="NO" spikeMarkCount=0 shootDelay1=0 shootDelay2=0 shootDelay3=0 parkOption="SQUARE_PARK" xTarget=4.0 yTarget=4.0 turnTarget=90 driveTime=5 drivePower=0.5 />
+FtcAuto.startMode_INFO [0.011452876] Obelisk AprilTag 21: [Green, Purple, Purple]
+CmdDecodeAuto.cmdPeriodic_INFO [0.026384753] <Event name="StateInfo" time="0.025964753" tag="vvvvv" CmdDecodeAuto.state="START" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.077141175] Set callback event to turn on auto tracking (event=(CmdDecodeAuto.goalTrackingCallbackEvent=CLEARED))
+CmdDecodeAuto.cmdPeriodic_INFO [0.090880134] Pre-spin shooter(shootParams={name=FarZoneShootPoint, input=110.7, region={value=45.0, coeffs=[[3288.15202, 14.80364]]}, outputs=[4771.91497]})
+CmdDecodeAuto.cmdPeriodic_INFO [0.09310001] <Event name="StateInfo" time="0.092284801" tag="^^^^^" CmdDecodeAuto.state="START" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.095090343] <Event name="StateInfo" time="0.094717593" tag="vvvvv" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.097277843] <Event name="StateInfo" time="0.096697427" tag="^^^^^" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+CmdDecodeAuto.cmdPeriodic_INFO [0.099006552] <Event name="StateInfo" time="0.098545718" tag="vvvvv" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoShoot_INFO [0.099817677] autoShoot(owner=null, event=(CmdDecodeAuto=CLEARED), taskParams=(alliance=BLUE_ALLIANCE,inAuto=true,doMotif=true,useClassifierVision=false,useRegression=false,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+CmdDecodeAuto.cmdPeriodic_INFO [0.10096976] <Event name="StateInfo" time="0.100589427" tag="^^^^^" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoTask_INFO [0.102571594] <Event name="StateInfo" time="0.102047469" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [0.103229886] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [0.108248594] <Event name="StateInfo" time="0.107489678" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [0.110847053] <Event name="StateInfo" time="0.110446886" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [0.11311272] ***** MotifSequence=[Green, Purple, Purple]
+TaskAutoShoot.autoTask_INFO [0.11376547] <Event name="StateInfo" time="0.113400303" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [0.114784262] <Event name="StateInfo" time="0.114415303" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [0.116524345] ***** Vision found AprilTag 20: aprilTagPose=(x=-29.419089,y=134.113174,angle=-12.372447)
+TaskAutoShoot.runTaskState_INFO [0.117566762] ***** Camera found AprilTag, turn on Goal Tracking.
+Shooter.enableGoalTracking_INFO [0.11816497] enableGoalTracking(owner=null, useVision=true, alliance=BLUE_ALLIANCE, flywheelTracking=true)
+TaskAutoShoot.autoTask_INFO [0.125509721] <Event name="StateInfo" time="0.125029929" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+CmdDecodeAuto.lambda$cmdPeriodic$0$teamcode-autocommands-CmdDecodeAuto_INFO [0.12794893] GoalTrackingCallback(canceled=true)
+TaskAutoShoot.autoTask_INFO [0.130739597] <Event name="StateInfo" time="0.130064097" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [0.132310513] ***** Shooting Green artifact (MotifArtifact=Green, exitArtifact=null).
+Spindexer.findSlot_INFO [0.133897764] find slot for Green (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [0.135355805] MoveToExitSlot: FromSlot=null, ToSlot=0, artifactType=Green, slots=[Green, Purple, Purple]
+Spindexer.moveToExitSlot_INFO [0.138520681] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [0.160992725] ***** Waiting for shooter ready (event=(TaskAutoShoot.event=CLEARED))
+TaskAutoShoot.autoTask_INFO [0.161646933] <Event name="StateInfo" time="0.161301016" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [0.824843916] controlMode: Position,onTarget=true(-181.00356153541753/-180.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [0.825575125] stopIntakeCallback(canceled=false)
+Shooter.getPanPosition_INFO [2.63950339] Shooter is ready to fire.
+TaskAutoShoot.autoTask_INFO [2.640222932] <Event name="StateInfo" time="2.639893349" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [2.640839516] ***** Shooting artifact 1=Green (numArtifactsLeft=3)
+Shooter.shoot_INFO [2.641645391] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [2.642770349] Enabling exit trigger: lowThreshold=4870.000000, highThreshold=5570.000000
+Shooter.shoot_INFO [2.644188141] Arm exit velocity trigger (currRPM=5220.0)
+TaskAutoShoot.autoTask_INFO [2.651686892] <Event name="StateInfo" time="2.651387058" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [2.88312179] Expect to pick up artifact Green
+Spindexer.setExitTriggerEnabled_INFO [2.884260457] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [2.887075915] Exit[0]: vel=5220.000000, artifact=Green, numPurple=2, numGreen=0, numUnknown=0, expectedNext=Green
+Shooter.velTriggerCallback_INFO [2.888633124] Retract launcher.
+Spindexer.disableExitTrigger_INFO [2.890146582] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [2.999028093] <Event name="StateInfo" time="2.998673718" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [3.000572468] <Event name="StateInfo" time="2.999404343" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [3.001836552] <Event name="StateInfo" time="3.001505218" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [3.002710385] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=None).
+Spindexer.findSlot_INFO [3.003602594] find slot for Purple (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [3.00431076] MoveToExitSlot: FromSlot=0, ToSlot=1, artifactType=Purple, slots=[None, Purple, Purple]
+Spindexer.moveToExitSlot_INFO [3.005522344] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [3.03054268] ***** Waiting for shooter ready (event=(TaskAutoShoot.event=CLEARED))
+TaskAutoShoot.autoTask_INFO [3.031163346] <Event name="StateInfo" time="3.030843971" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [3.575768068] controlMode: Position,onTarget=true(-59.38108428967155/-60.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [3.575882109] stopIntakeCallback(canceled=false)
+Shooter.getPanPosition_INFO [3.855133721] Shooter is ready to fire.
+TaskAutoShoot.autoTask_INFO [3.856587971] <Event name="StateInfo" time="3.856252846" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [3.857833096] ***** Shooting artifact 2=Purple (numArtifactsLeft=2)
+Shooter.shoot_INFO [3.858513263] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [3.860466555] Enabling exit trigger: lowThreshold=4930.000000, highThreshold=5630.000000
+Shooter.shoot_INFO [3.863304472] Arm exit velocity trigger (currRPM=5280.0)
+TaskAutoShoot.autoTask_INFO [3.871391223] <Event name="StateInfo" time="3.871088764" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [4.092022203] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [4.092641995] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [4.09400962] Exit[1]: vel=5280.000000, artifact=Purple, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Shooter.velTriggerCallback_INFO [4.09582612] Retract launcher.
+Spindexer.disableExitTrigger_INFO [4.09764087] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [4.202840672] <Event name="StateInfo" time="4.202528881" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [4.204484506] <Event name="StateInfo" time="4.204149381" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [4.206102964] <Event name="StateInfo" time="4.205753839" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [4.207552548] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=None).
+Spindexer.findSlot_INFO [4.20929409] find slot for Purple (2=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [4.210789173] MoveToExitSlot: FromSlot=1, ToSlot=2, artifactType=Purple, slots=[None, None, Purple]
+Spindexer.moveToExitSlot_INFO [4.212236423] MoveToExitSlot: Slot=2, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [4.237771259] ***** Waiting for shooter ready (event=(TaskAutoShoot.event=CLEARED))
+TaskAutoShoot.autoTask_INFO [4.238463093] <Event name="StateInfo" time="4.238119509" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.stopIntakeCallback_INFO [4.750880644] stopIntakeCallback(canceled=false)
+Spindexer.Motor.pidCtrlTask_INFO [4.750854978] controlMode: Position,onTarget=true(58.410763751483984/60.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Shooter.getPanPosition_INFO [5.483832343] Shooter is ready to fire.
+TaskAutoShoot.autoTask_INFO [5.485423968] <Event name="StateInfo" time="5.48490976" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [5.487166968] ***** Shooting artifact 3=Purple (numArtifactsLeft=1)
+Shooter.shoot_INFO [5.48921301] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [5.494892344] Enabling exit trigger: lowThreshold=4810.000000, highThreshold=5510.000000
+Shooter.shoot_INFO [5.497543303] Arm exit velocity trigger (currRPM=5160.0)
+TaskAutoShoot.autoTask_INFO [5.50840147] <Event name="StateInfo" time="5.508087054" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [5.737729952] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [5.73917866] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [5.741493035] Exit[2]: vel=5160.000000, artifact=Purple, numPurple=0, numGreen=0, numUnknown=0, expectedNext=Any
+Shooter.velTriggerCallback_INFO [5.743108869] Retract launcher.
+Spindexer.disableExitTrigger_INFO [5.744571869] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [5.848057838] <Event name="StateInfo" time="5.847692088" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [5.849665796] <Event name="StateInfo" time="5.849271463" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [5.851432421] <Event name="StateInfo" time="5.851104588" tag="vvvvv" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [5.85292138] <Event name="StateInfo" time="5.852561172" tag="^^^^^" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [5.85483413] <Event name="StateInfo" time="5.854467797" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [5.856765255] Stopping subsystems.
+Shooter.disableGoalTracking_INFO [5.858748881] disableGoalTracking(owner=null, turretPos=66.7689223057644)
+Shooter.stopGoalTracking_INFO [5.859400756] Stop GoalTracking.
+Shooter.cancel_INFO [5.873142924] owner=null
+Spindexer.cancel_INFO [5.876844466] cancel(owner=null)
+TaskAutoShoot.autoTask_INFO [5.879177508] <Event name="StateInfo" time="5.878822549" tag="^^^^^" TaskAutoShoot.state="DONE" />
+CmdDecodeAuto.cmdPeriodic_INFO [5.881241341] <Event name="StateInfo" time="5.880943549" tag="vvvvv" CmdDecodeAuto.state="PICKUP_LOADING" />
+Intake.setBulldozeIntakeEnabled_INFO [5.888344592] Turning on Intake.
+Spindexer.setAutoReceiveEnabled_INFO [5.901561468] Entry is not at a vacant slot, find one.
+Spindexer.findSlot_INFO [5.902522218] find slot for None (0=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [5.903018635] moveToNextVacantSlot: FromSlot=null, ToSlot=0
+Spindexer.moveToEntrySlot_INFO [5.903794468] MoveToEntrySlot: Slot=0, event=(Spindexer.callbackEvent=CLEARED)
+purePursuitDrive.start_INFO [5.932483971] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=61.859280,y=-11.760193,angle=-179.934616),vel=0.0), Waypoint(simple=true,index=1,pose=(x=61.456337,y=-364.859963,angle=-179.934616),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [5.937439388] <Event name="StateInfo" time="5.936197472" tag="^^^^^" CmdDecodeAuto.state="PICKUP_LOADING" RobotPose=(x=61.859280,y=-11.760193,angle=-179.934616) TargetPose=(x=61.456337,y=-364.859963,angle=-179.934616) vel=(x=1.023245,y=-0.001180,angle=-0.359511) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=0.000000,y=353.100000,angle=0.000000),vel=0.0)]) />
+Spindexer.Motor.pidCtrlTask_INFO [6.219827583] controlMode: Position,onTarget=true(0.9513256826276262/0.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [6.246902711] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [6.281384715] moveEntrySlotCompletionCallback(autoReceive=false, canceled=false)
+Spindexer.performAutoReceiveEnabled_INFO [6.329814803] performAutoReceiveEnabled(enable=true)
+Spindexer.setEntryTriggerEnabled_INFO [6.331894678] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [7.952340883] onEntryTrigger(active=true, numObj=1, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [8.035514599] EntryArtifact: hue=150.000, type=Green
+Intake.setPickupArtifactType_INFO [8.037027474] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [8.038226516] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [8.052980184] Entry[0]: colorMode=true, value=150.000000/158, artifact=Green, slotStates=[Green, None, None] (PGU=0/1/0), expectedNext=Purple
+Spindexer.findSlot_INFO [8.053830976] find slot for None (1=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [8.054381351] moveToNextVacantSlot: FromSlot=0, ToSlot=1
+Spindexer.moveToEntrySlot_INFO [8.055490851] MoveToEntrySlot: Slot=1, event=(Spindexer.callbackEvent=CLEARED)
+Spindexer.Motor.pidCtrlTask_INFO [8.449199182] controlMode: Position,onTarget=true(122.09497427779979/120.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [8.459109433] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [8.505654188] moveEntrySlotCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [8.507492563] setEntryTriggerEnabled(enabled=true)
+Spindexer.onEntryTrigger_INFO [8.582711363] onEntryTrigger(active=true, numObj=2, advOnTrigger=false)
+Spindexer.getColorArtifactType_INFO [8.675423747] EntryArtifact: hue=225.000, type=Purple
+Intake.setPickupArtifactType_INFO [8.677462789] Expect to pick up artifact Purple
+Spindexer.setEntryTriggerEnabled_INFO [8.679205497] setEntryTriggerEnabled(enabled=false)
+Spindexer.entryTriggerCallback_INFO [8.69441154] Entry[1]: colorMode=true, value=225.000000/225, artifact=Purple, slotStates=[Green, Purple, None] (PGU=1/1/0), expectedNext=Purple
+Spindexer.findSlot_INFO [8.696577749] find slot for None (2=None)
+Spindexer.moveToNextVacantEntrySlot_INFO [8.698213416] moveToNextVacantSlot: FromSlot=1, ToSlot=2
+Spindexer.moveToEntrySlot_INFO [8.700185958] MoveToEntrySlot: Slot=2, event=(Spindexer.callbackEvent=CLEARED)
+purePursuitDrive.driveTask_INFO [8.97100111] Done: index=1/2, stalled=false, timeout=true, posOnTarget=false, headingOnTarget=true, robotPose=(x=53.912032,y=-62.506810,angle=179.949858)
+purePursuitDrive.driveTask_INFO [8.99260282] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [8.995960779] <Event name="StateInfo" time="8.995584821" tag="vvvvv" CmdDecodeAuto.state="MOVE_BACK" />
+purePursuitDrive.start_INFO [8.999335363] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=53.931702,y=-62.498895,angle=-180.199396),vel=0.0), Waypoint(simple=true,index=1,pose=(x=53.879501,y=-47.498985,angle=-180.199396),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [9.007719614] <Event name="StateInfo" time="9.006540697" tag="^^^^^" CmdDecodeAuto.state="MOVE_BACK" RobotPose=(x=53.931447,y=-62.487019,angle=-180.212783) TargetPose=(x=53.879501,y=-47.498985,angle=-180.199396) vel=(x=0.917497,y=1.884036,angle=-7.004685) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=0.000000,y=-15.000000,angle=0.000000),vel=0.0)]) />
+Spindexer.Motor.pidCtrlTask_INFO [9.116880541] controlMode: Position,onTarget=true(240.3656509695291/240.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [9.126317709] stopIntakeCallback(canceled=false)
+Spindexer.moveEntrySlotCompletionCallback_INFO [9.178947214] moveEntrySlotCompletionCallback(autoReceive=true, canceled=false)
+Spindexer.setEntryTriggerEnabled_INFO [9.179620089] setEntryTriggerEnabled(enabled=true)
+purePursuitDrive.driveTask_INFO [10.038555759] Done: index=1/2, stalled=false, timeout=true, posOnTarget=false, headingOnTarget=true, robotPose=(x=54.333179,y=-51.159413,angle=-180.274063)
+purePursuitDrive.driveTask_INFO [10.061180636] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [10.10016189] <Event name="StateInfo" time="10.09964564" tag="vvvvv" CmdDecodeAuto.state="ATTEMPT_PICKUP" />
+purePursuitDrive.start_INFO [10.108026099] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=54.341282,y=-50.832899,angle=-180.272847),vel=0.0), Waypoint(simple=true,index=1,pose=(x=47.436602,y=-70.866007,angle=-180.272847),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [10.111549141] <Event name="StateInfo" time="10.110891433" tag="^^^^^" CmdDecodeAuto.state="ATTEMPT_PICKUP" RobotPose=(x=54.341282,y=-50.832899,angle=-180.272847) TargetPose=(x=47.436602,y=-70.866007,angle=-180.272847) vel=(x=-0.020648,y=4.468182,angle=-0.004775) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=7.000000,y=20.000000,angle=0.000000),vel=0.0)]) />
+purePursuitDrive.driveTask_INFO [13.137769029] Done: index=1/2, stalled=false, timeout=true, posOnTarget=false, headingOnTarget=true, robotPose=(x=47.842715,y=-62.382688,angle=-179.963918)
+purePursuitDrive.driveTask_INFO [13.156205864] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [13.16887674] <Event name="StateInfo" time="13.16851624" tag="vvvvv" CmdDecodeAuto.state="FINISH_LOADING" />
+Intake.setBulldozeIntakeEnabled_INFO [13.182912325] Turning off Intake.
+Spindexer.performAutoReceiveEnabled_INFO [13.184757408] performAutoReceiveEnabled(enable=false)
+Spindexer.setEntryTriggerEnabled_INFO [13.185453908] setEntryTriggerEnabled(enabled=false)
+Spindexer.cancel_INFO [13.186718867] cancel(owner=null)
+CmdDecodeAuto.cmdPeriodic_INFO [13.192725742] <Event name="StateInfo" time="13.192208326" tag="^^^^^" CmdDecodeAuto.state="FINISH_LOADING" />
+CmdDecodeAuto.cmdPeriodic_INFO [13.194398743] <Event name="StateInfo" time="13.194066826" tag="vvvvv" CmdDecodeAuto.state="GOTO_SHOOT_POS" />
+purePursuitDrive.start_INFO [13.199265493] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=47.854970,y=-62.345086,angle=179.943164),vel=0.0), Waypoint(simple=true,index=1,pose=(x=47.080000,y=-11.770000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [13.201647535] <Event name="StateInfo" time="13.201184077" tag="^^^^^" CmdDecodeAuto.state="GOTO_SHOOT_POS" RobotPose=(x=47.854970,y=-62.345086,angle=179.943164) TargetPose=(x=47.080000,y=-11.770000,angle=180.000000) vel=(x=0.556853,y=0.908352,angle=-4.226551) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=0.724800,y=-50.575830,angle=0.056836),vel=0.0)]) />
+purePursuitDrive.driveTask_INFO [14.866489786] Done: index=1/2, stalled=false, timeout=false, posOnTarget=true, headingOnTarget=true, robotPose=(x=46.792732,y=-10.312363,angle=179.985143)
+purePursuitDrive.driveTask_INFO [14.885409912] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [14.887522746] <Event name="StateInfo" time="14.886972079" tag="vvvvv" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoShoot_INFO [14.888957163] autoShoot(owner=null, event=(CmdDecodeAuto=SIGNALED), taskParams=(alliance=BLUE_ALLIANCE,inAuto=true,doMotif=true,useClassifierVision=false,useRegression=false,flywheelTracking=true,relocalize=false,numArtifactsToShoot=3,moveToNextExitSlot=false))
+CmdDecodeAuto.cmdPeriodic_INFO [14.89083958] <Event name="StateInfo" time="14.890319246" tag="^^^^^" CmdDecodeAuto.state="SHOOT_ARTIFACTS" />
+TaskAutoShoot.autoTask_INFO [14.891738205] <Event name="StateInfo" time="14.891368955" tag="vvvvv" TaskAutoShoot.state="START" />
+TaskAutoShoot.runTaskState_INFO [14.893114288] ***** Setting up Vision (useClassifierVision=false, classifierVisionEnabled=false)
+TaskAutoShoot.autoTask_INFO [14.894896372] <Event name="StateInfo" time="14.894519247" tag="^^^^^" TaskAutoShoot.state="START" />
+TaskAutoShoot.autoTask_INFO [14.898352914] <Event name="StateInfo" time="14.898045205" tag="vvvvv" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.runTaskState_INFO [14.900818081] ***** Vision found AprilTag 20: aprilTagPose=(x=-4.546002,y=123.868149,angle=-2.101831)
+TaskAutoShoot.runTaskState_INFO [14.904402373] ***** Camera found AprilTag, turn on Goal Tracking.
+Shooter.enableGoalTracking_INFO [14.906728998] enableGoalTracking(owner=null, useVision=true, alliance=BLUE_ALLIANCE, flywheelTracking=true)
+TaskAutoShoot.runTaskState_INFO [14.916223041] ***** MotifSequence=[Green, Purple, Purple]
+TaskAutoShoot.autoTask_INFO [14.916867041] <Event name="StateInfo" time="14.916544166" tag="^^^^^" TaskAutoShoot.state="DO_VISION" />
+TaskAutoShoot.autoTask_INFO [14.924698291] <Event name="StateInfo" time="14.924362291" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [14.925428042] ***** Shooting Green artifact (MotifArtifact=Green, exitArtifact=null).
+Spindexer.findSlot_INFO [14.926335708] find slot for Green (0=Green)
+Spindexer.moveToExitSlotWithArtifact_INFO [14.927805417] MoveToExitSlot: FromSlot=null, ToSlot=0, artifactType=Green, slots=[Green, Purple, None]
+Spindexer.moveToExitSlot_INFO [14.929226417] MoveToExitSlot: Slot=0, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [14.953357169] ***** Waiting for shooter ready (event=(TaskAutoShoot.event=CLEARED))
+TaskAutoShoot.autoTask_INFO [14.955062836] <Event name="StateInfo" time="14.954736461" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [15.392529047] controlMode: Position,onTarget=true(178.59675504550853/180.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [15.396773672] stopIntakeCallback(canceled=false)
+Shooter.getPanPosition_INFO [16.622169587] Shooter is ready to fire.
+TaskAutoShoot.autoTask_INFO [16.62362967] <Event name="StateInfo" time="16.623278795" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [16.625051837] ***** Shooting artifact 1=Green (numArtifactsLeft=3)
+Shooter.shoot_INFO [16.627087962] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [16.632906421] Enabling exit trigger: lowThreshold=4570.000000, highThreshold=5270.000000
+Shooter.shoot_INFO [16.634883047] Arm exit velocity trigger (currRPM=4920.0)
+TaskAutoShoot.autoTask_INFO [16.647399048] <Event name="StateInfo" time="16.647065965" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [16.893624364] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [16.894216448] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [16.895552281] Exit[0]: vel=4920.000000, artifact=Green, numPurple=1, numGreen=0, numUnknown=0, expectedNext=Any
+Shooter.velTriggerCallback_INFO [16.898563156] Retract launcher.
+Spindexer.disableExitTrigger_INFO [16.899198698] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [17.002258542] <Event name="StateInfo" time="17.001968333" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [17.003391084] <Event name="StateInfo" time="17.00266425" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [17.005082459] <Event name="StateInfo" time="17.004714667" tag="vvvvv" TaskAutoShoot.state="AIM" />
+TaskAutoShoot.runTaskState_INFO [17.006677292] ***** Shooting Purple artifact (MotifArtifact=Purple, exitArtifact=None).
+Spindexer.findSlot_INFO [17.007995334] find slot for Purple (1=Purple)
+Spindexer.moveToExitSlotWithArtifact_INFO [17.009405834] MoveToExitSlot: FromSlot=0, ToSlot=1, artifactType=Purple, slots=[None, Purple, None]
+Spindexer.moveToExitSlot_INFO [17.010739043] MoveToExitSlot: Slot=1, event=(TaskAutoShoot.spindexerEvent=CLEARED)
+TaskAutoShoot.runTaskState_INFO [17.036152837] ***** Waiting for shooter ready (event=(TaskAutoShoot.event=CLEARED))
+TaskAutoShoot.autoTask_INFO [17.037878629] <Event name="StateInfo" time="17.037561295" tag="^^^^^" TaskAutoShoot.state="AIM" />
+Spindexer.Motor.pidCtrlTask_INFO [17.524411928] controlMode: Position,onTarget=true(299.74040364068065/300.0), stalled=false, expired=false, event=(Spindexer.stopIntakeCallback=SIGNALED)
+Spindexer.stopIntakeCallback_INFO [17.524453928] stopIntakeCallback(canceled=false)
+Shooter.getPanPosition_INFO [17.575497349] Shooter is ready to fire.
+TaskAutoShoot.autoTask_INFO [17.576890058] <Event name="StateInfo" time="17.5765456" tag="vvvvv" TaskAutoShoot.state="SHOOT" />
+TaskAutoShoot.runTaskState_INFO [17.579408017] ***** Shooting artifact 2=Purple (numArtifactsLeft=2)
+Shooter.shoot_INFO [17.580470558] shoot(owner=null, event=(TaskAutoShoot.event=SIGNALED), pos=1.000000, duration=0.750000)
+Spindexer.enableExitTrigger_INFO [17.58448885] Enabling exit trigger: lowThreshold=4570.000000, highThreshold=5270.000000
+Shooter.shoot_INFO [17.586174392] Arm exit velocity trigger (currRPM=4920.0)
+TaskAutoShoot.autoTask_INFO [17.595265935] <Event name="StateInfo" time="17.594430893" tag="^^^^^" TaskAutoShoot.state="SHOOT" />
+Intake.setPickupArtifactType_INFO [17.830412292] Expect to pick up artifact Any
+Spindexer.setExitTriggerEnabled_INFO [17.831072917] setExitTriggerEnabled(enabled=false)
+Spindexer.velTriggerCallback_INFO [17.832904875] Exit[1]: vel=4920.000000, artifact=Purple, numPurple=0, numGreen=0, numUnknown=0, expectedNext=Any
+Shooter.velTriggerCallback_INFO [17.836035334] Retract launcher.
+Spindexer.disableExitTrigger_INFO [17.836579584] Disabling exit trigger.
+TaskAutoShoot.autoTask_INFO [17.959506596] <Event name="StateInfo" time="17.959136471" tag="vvvvv" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [17.966439222] <Event name="StateInfo" time="17.965012097" tag="^^^^^" TaskAutoShoot.state="SHOOT_NEXT" />
+TaskAutoShoot.autoTask_INFO [17.974882681] <Event name="StateInfo" time="17.97454814" tag="vvvvv" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [17.975655015] <Event name="StateInfo" time="17.975302098" tag="^^^^^" TaskAutoShoot.state="NEXT_EXIT_SLOT" />
+TaskAutoShoot.autoTask_INFO [17.977808098] <Event name="StateInfo" time="17.977439432" tag="vvvvv" TaskAutoShoot.state="DONE" />
+TaskAutoShoot.stopSubsystems_INFO [17.978577223] Stopping subsystems.
+Shooter.disableGoalTracking_INFO [17.979327973] disableGoalTracking(owner=null, turretPos=62.28708613639361)
+Shooter.stopGoalTracking_INFO [17.97988739] Stop GoalTracking.
+Shooter.cancel_INFO [17.996122433] owner=null
+Spindexer.cancel_INFO [17.999458809] cancel(owner=null)
+TaskAutoShoot.autoTask_INFO [18.004559768] <Event name="StateInfo" time="18.004212393" tag="^^^^^" TaskAutoShoot.state="DONE" />
+CmdDecodeAuto.cmdPeriodic_INFO [18.005451976] <Event name="StateInfo" time="18.005118601" tag="vvvvv" CmdDecodeAuto.state="PICKUP_SPIKEMARK" />
+CmdDecodeAuto.cmdPeriodic_INFO [18.006291101] <Event name="StateInfo" time="18.005881601" tag="^^^^^" CmdDecodeAuto.state="PICKUP_SPIKEMARK" />
+CmdDecodeAuto.cmdPeriodic_INFO [18.00777656] <Event name="StateInfo" time="18.007453393" tag="vvvvv" CmdDecodeAuto.state="PARK" />
+purePursuitDrive.start_INFO [18.014350727] Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=46.795265,y=-10.447044,angle=-179.913839),vel=0.0), Waypoint(simple=true,index=1,pose=(x=52.965000,y=-35.310000,angle=180.000000),vel=0.0)])
+CmdDecodeAuto.cmdPeriodic_INFO [18.016321227] <Event name="StateInfo" time="18.01588431" tag="^^^^^" CmdDecodeAuto.state="PARK" RobotPose=(x=46.795265,y=-10.447044,angle=-179.913839) TargetPose=(x=52.965000,y=-35.310000,angle=180.000000) vel=(x=-0.025397,y=0.000030,angle=0.192504) Path=TrcPath(degrees=true, [Waypoint(simple=true,index=0,pose=(x=0.000000,y=0.000000,angle=0.000000),vel=0.0), Waypoint(simple=true,index=1,pose=(x=-6.207117,y=24.853650,angle=359.913839),vel=0.0)]) />
+purePursuitDrive.driveTask_INFO [19.753230235] Done: index=1/2, stalled=false, timeout=false, posOnTarget=true, headingOnTarget=true, robotPose=(x=51.944945,y=-33.579767,angle=-179.828147)
+purePursuitDrive.driveTask_INFO [19.766986986] Signal completion event (CmdDecodeAuto=CLEARED).
+CmdDecodeAuto.cmdPeriodic_INFO [19.76823532] <Event name="StateInfo" time="19.76786782" tag="vvvvv" CmdDecodeAuto.state="DONE" />
+TaskAutoShoot.cancel_INFO [19.776605862] Canceling auto task operation.
+Shooter.cancel_INFO [19.777290987] owner=null
+CmdDecodeAuto.cmdPeriodic_INFO [19.778663862] <Event name="StateInfo" time="19.778281196" tag="^^^^^" CmdDecodeAuto.state="DONE" />
+TaskAutoShoot.cancel_INFO [30.083832148] Canceling auto task operation.
+Shooter.cancel_INFO [30.084915981] owner=null
+Robot.cancelAll_INFO [30.08657119] Cancel all operations.
+TaskAutoShoot.cancel_INFO [30.087221607] Canceling auto task operation.
+Spindexer.cancel_INFO [30.095143274] cancel(owner=null)
+Shooter.cancel_INFO [30.096238482] owner=null
+TrcDigitalInput.getInput.printElapsedTime_INFO [30.097817274] TrcDigitalInput.getInput: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.getPos.printElapsedTime_INFO [30.098767233] TrcMotor.getPos: avgElapsed=0.003760468585687382, minElapsed=8.75E-6, maxElapsed=0.01120321
+TrcMotor.setPower.printElapsedTime_INFO [30.099555608] TrcMotor.setPower: avgElapsed=0.0024923421585518104, minElapsed=1.6042E-5, maxElapsed=0.012152876
+TrcMotor.setVel.printElapsedTime_INFO [30.100196108] TrcMotor.setVel: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setPos.printElapsedTime_INFO [30.100824941] TrcMotor.setPos: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcMotor.setCurrent.printElapsedTime_INFO [30.101520566] TrcMotor.setCurrent: avgElapsed=0.0, minElapsed=0.0, maxElapsed=0.0
+TrcServo.setPos.printElapsedTime_INFO [30.102239816] TrcServo.setPos: avgElapsed=0.0048118295999999994, minElapsed=0.001320083, maxElapsed=0.009192168
+Robot.stopMode_INFO [30.103055317] Disabling LimelightVision.
+Vision.setLimelightVisionEnabled_INFO [30.103895608] Pipeline APRIL_TAG is disabled: running=false
+Robot.stopMode_INFO [30.104550108] Disabling ClassifierVision.
+Robot.stopMode_INFO [30.112085026] Saved robot pose=(x=51.937092,y=-33.478869,angle=-179.750748)
+Robot.stopMode_INFO [30.112844234] Saved SpindexerStates=[None, None, None]
+Robot.stopMode_INFO [30.113775526] Turning all LED indicators OFF.
+FtcAuto.stopMode_INFO [30.119976652] ***** Stopping autonomous: 20260118@152337 *****
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.120786318] FtcDashboard.task: STANDALONE_TASK=3.847932944531675E-5/0.010328476859166212
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.121480777] TrcWatchdogMgr: STANDALONE_TASK=1.108106894409938E-4/0.9973583955
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.122155402] flDriveMotor.pidCtrlTask: OUTPUT_TASK=1.0503298610846812E-5/0.012267276979486203
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.12296886] frDriveMotor.pidCtrlTask: OUTPUT_TASK=4.346103630689603E-6/0.012267196390051758
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.123636777] blDriveMotor.pidCtrlTask: OUTPUT_TASK=8.527809940630233E-6/0.012267188853059826
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.12428136] brDriveMotor.pidCtrlTask: OUTPUT_TASK=5.044637235500076E-6/0.01226718538986147
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.124873152] TrcMecanumDrive.odometryTask: INPUT_TASK=0.006237582485815603/0.01523193016514691
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.125658902] purePursuitDrive.driveTask: POST_PERIODIC_TASK=0.040656101802030456/0.07008632260913705
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.126457486] TrcMecanumDrive.absOdoHeadingWrap.converterTask: INPUT_TASK=2.072334609529609E-5/0.012267227414903334
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.127156902] StatusLED: OUTPUT_TASK=5.884229359872127E-4/0.012267179673314052
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.127792152] Spindexer1LED: OUTPUT_TASK=4.804805895113412E-5/0.012266883666425636
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.128403486] Spindexer2LED: OUTPUT_TASK=3.712293119196225E-5/0.01226666993370376
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.129002569] Spindexer3LED: OUTPUT_TASK=3.982625342517887E-5/0.012266453159461106
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.129981694] Intake.Motor.pidCtrlTask: OUTPUT_TASK=5.131006355609682E-6/0.012266223586847314
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.130663028] Spindexer.EntryTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=0.028176930731707316/0.08280387976829268
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.131290694] Spindexer.ShootVelTrigger.trigger.triggerTask: PRE_PERIODIC_TASK=2.852296688137413E-4/0.008145040002147075
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.131838444] Spindexer.Motor.pidCtrlTask: OUTPUT_TASK=0.003857611148995281/0.012266219979296698
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.132627986] Shooter.ShootMotor1.pidCtrlTask: OUTPUT_TASK=1.697177899984777E-5/0.012265757570596742
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.133238153] Shooter.TiltMotor.pidCtrlTask: OUTPUT_TASK=3.834323069604597E-5/0.01226568081592267
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.13380807] Shooter.PanMotor.pidCtrlTask: OUTPUT_TASK=0.0063528984912467655/0.012266146130194854
+TrcTaskMgr.printTaskPerformanceMetrics_INFO [30.134607528] TaskAutoShoot: POST_PERIODIC_TASK=1.6992866557074462E-5/5.155275640249178E-4
+FtcOpMode.printPerformanceMetrics_INFO [30.135849153] [FtcAutonomous] Main robot thread average elapsed times:
+       robotInit=25.424255s
+    initPeriodic=0.000011s
+       startMode=0.000041s
+    loopInterval=0.000319s (3132.845Hz)
+             sdk=0.000023s
+ prePeriodicTask=0.000069s
+        periodic=0.000045s
+postPeriodicTask=0.000132s
+         loopSum=0.000296s
+        stopMode=0.000000s

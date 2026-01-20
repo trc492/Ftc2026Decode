@@ -34,7 +34,6 @@ import java.util.Arrays;
 import ftclib.driverio.FtcDashboard;
 import ftclib.motor.FtcMotorActuator.MotorType;
 import ftclib.robotcore.FtcOpMode;
-import ftclib.sensor.FtcSensorTrigger;
 import ftclib.subsystem.FtcPidStorage;
 import teamcode.Robot;
 import teamcode.RobotParams;
@@ -353,7 +352,14 @@ public class Spindexer extends TrcSubsystem
                     slotsFullEvent.signal();
                     slotsFullEvent = null;
                 }
-                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, null);
+                TrcEvent ejectCallbackEvent = new TrcEvent("EjectCallback");
+                ejectCallbackEvent.setCallback(
+                    (ctx, canceledEject)->
+                    {
+                        spindexer.tracer.traceInfo(instanceName, "Eject Callback Signaled");
+                        if (!canceledEject) robot.intake.eject(Intake.Params.EJECT_POWER, 0.5, null);
+                    }, null);
+                robot.intakeSubsystem.setBulldozeIntakeEnabled(false, null, ejectCallbackEvent);
             }
 
             if (triggerEvent != null)
