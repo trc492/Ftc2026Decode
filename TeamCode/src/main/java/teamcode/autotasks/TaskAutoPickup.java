@@ -221,10 +221,10 @@ public class TaskAutoPickup extends TrcAutoTask<TaskAutoPickup.State>
                 break;
 
             case FIND_OBJ:
-                // Use vision to determine the appropriate AprilTag location.
+                // Use vision to determine the appropriate object location.
                 TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> object =
                     robot.vision.artifactVision.getBestDetectedTargetInfo(
-                        null, null, robot.vision::compareDistanceY, 0.0, robot.robotInfo.webCam1.camPose.z);
+                        null, null, robot.vision::compareDistanceY, 0.0, robot.robotInfo.camInfos[0].camPose.z);
                 if (object != null)
                 {
                     objPose = object.detectedObj.getObjectPose();

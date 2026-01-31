@@ -218,7 +218,7 @@ public class Vision
 
     private final TrcDbgTrace tracer;
     private final Robot robot;
-    private final WebcamName webcam1, webcam2;
+    private final WebcamName webcam;
     public FtcLimelightVision limelightVision;
     public FtcVisionAprilTag webcamAprilTagVision;
     private AprilTagProcessor webcamAprilTagProcessor;
@@ -239,7 +239,7 @@ public class Vision
     {
         FtcOpMode opMode = FtcOpMode.getInstance();
 
-        if (robot.robotInfo.webCam1 == null && RobotParams.Preferences.useWebCam)
+        if (robot.robotInfo.camInfos[0] == null && RobotParams.Preferences.useWebCam)
         {
             throw new IllegalArgumentException("Must provide valid WebCam 1 info.");
         }
@@ -247,19 +247,17 @@ public class Vision
         this.tracer = new TrcDbgTrace();
         this.robot = robot;
 
-        webcam1 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam1 != null?
-            opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam1.camName): null;
-        webcam2 = RobotParams.Preferences.useWebCam && robot.robotInfo.webCam2 != null?
-            opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.webCam2.camName): null;
+        webcam = RobotParams.Preferences.useWebCam && robot.robotInfo.camInfos[0] != null?
+            opMode.hardwareMap.get(WebcamName.class, robot.robotInfo.camInfos[0].camName): null;
         // LimelightVision (not a Vision Processor).
-        if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.limelight != null)
+        if (RobotParams.Preferences.useLimelightVision && robot.robotInfo.camInfos[1] != null)
         {
             tracer.traceInfo(moduleName, "Starting LimelightVision...");
-            limelightVision = new FtcLimelightVision(robot.robotInfo.limelight, this::getLimelightTargetGroundOffset);
+            limelightVision = new FtcLimelightVision(robot.robotInfo.camInfos[1], this::getLimelightTargetGroundOffset);
             setLimelightPipeline(LimelightPipelineType.APRIL_TAG);
         }
 
-        if (webcam1 != null || webcam2 != null)
+        if (webcam != null)
         {
             // Creating Vision Processors for VisionPortal.
             ArrayList<VisionProcessor> visionProcessorsList = new ArrayList<>();
@@ -278,7 +276,7 @@ public class Vision
                 visionProcessorsList.add(webcamAprilTagProcessor);
             }
 
-            if (robot.robotInfo.webCam1 != null)
+            if (robot.robotInfo.camInfos[0] != null)
             {
                 if (RobotParams.Preferences.useArtifactVision)
                 {
@@ -289,16 +287,16 @@ public class Vision
                         solvePnpParams =
                             new TrcOpenCvColorBlobPipeline.SolvePnpParams().setObjectSize(
                                 artifactWidth, artifactHeight);
-                        if (robot.robotInfo.webCam1.lensInfo != null)
+                        if (robot.robotInfo.camInfos[0].lensInfo != null)
                         {
                             solvePnpParams.setSolvePnpParams(
-                                robot.robotInfo.webCam1.lensInfo, robot.robotInfo.webCam1.camPose);
+                                robot.robotInfo.camInfos[0].lensInfo, robot.robotInfo.camInfos[0].camPose);
                         }
                     }
 
                     artifactVision = new FtcVisionEocvColorBlob(
                         "ArtifactVision", artifactPipelineParams, solvePnpParams,
-                        robot.robotInfo.webCam1.cameraRect, robot.robotInfo.webCam1.worldRect);
+                        robot.robotInfo.camInfos[0].cameraRect, robot.robotInfo.camInfos[0].worldRect);
                     artifactProcessor = artifactVision.getVisionProcessor();
                     visionProcessorsList.add(artifactProcessor);
                     //                artifactProcessor.getPipeline().tracer.setTraceLevel(TrcDbgTrace.MsgLevel.DEBUG);
@@ -308,8 +306,8 @@ public class Vision
                 {
                     tracer.traceInfo(moduleName, "Starting Webcam ClassifierVision...");
                     classifierVision = new FtcVisionEocvColorBlob(
-                        "ClassifierVision", classifierPipelineParams, null, robot.robotInfo.webCam1.cameraRect,
-                        robot.robotInfo.webCam1.worldRect);
+                        "ClassifierVision", classifierPipelineParams, null, robot.robotInfo.camInfos[0].cameraRect,
+                        robot.robotInfo.camInfos[0].worldRect);
                     classifierProcessor = classifierVision.getVisionProcessor();
                     visionProcessorsList.add(classifierProcessor);
                 }
@@ -323,7 +321,8 @@ public class Vision
                 {
                     // Use USB webcams.
                     ftcVision = new FtcVision(
-                        webcam1, webcam2, robot.robotInfo.webCam1.camImageWidth, robot.robotInfo.webCam1.camImageHeight,
+                        webcam, null, robot.robotInfo.camInfos[0].camImageWidth,
+                        robot.robotInfo.camInfos[0].camImageHeight,
                         RobotParams.Preferences.showVisionView, RobotParams.Preferences.showVisionStat,
                         visionProcessors);
                 }
@@ -363,24 +362,14 @@ public class Vision
     }   //setFpsMeterEnabled
 
     /**
-     * This method returns the front webcam.
+     * This method returns the webcam.
      *
-     * @return front webcam.
+     * @return webcam.
      */
-    public WebcamName getFrontWebcam()
+    public WebcamName getWebcam()
     {
-        return webcam1;
-    }   //getFrontWebcam
-
-    /**
-     * This method returns the rear webcam.
-     *
-     * @return rear webcam.
-     */
-    public WebcamName getRearWebcam()
-    {
-        return webcam2;
-    }   //getRearWebcam
+        return webcam;
+    }   //getWebcam
 
     /**
      * This method returns the active camera if we have two webcams.
@@ -622,8 +611,8 @@ public class Vision
             TrcPose2D aprilTagFieldPose =
                 RobotParams.Game.APRILTAG_POSES[aprilTagInfo.detectedObj.aprilTagDetection.id - 1];
             TrcPose2D camPoseOnBot = new TrcPose2D(
-                robot.robotInfo.webCam1.camPose.x, robot.robotInfo.webCam1.camPose.y,
-                robot.robotInfo.webCam1.camPose.yaw);
+                robot.robotInfo.camInfos[0].camPose.x, robot.robotInfo.camInfos[0].camPose.y,
+                robot.robotInfo.camInfos[0].camPose.yaw);
             robotPose = aprilTagFieldPose.addRelativePose(aprilTagInfo.objPose.invert())
                                          .addRelativePose(camPoseOnBot.invert());
             tracer.traceInfo(
@@ -862,7 +851,7 @@ public class Vision
             artifactInfo = artifactVision == null? null:
                 artifactVision.getBestDetectedTargetInfo(
                     this::artifactFilter, artifactType, this::compareDistanceY, groundOffset,
-                    robot.robotInfo.webCam1.camPose.z);
+                    robot.robotInfo.camInfos[0].camPose.z);
         }
 
         if (artifactInfo != null && robot.ledIndicator != null)
