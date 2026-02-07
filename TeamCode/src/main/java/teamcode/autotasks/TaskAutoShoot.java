@@ -34,12 +34,14 @@ import teamcode.indicators.LEDIndicator;
 import teamcode.subsystems.Shooter;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcLookupTable;
+import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcAutoTask;
 import trclib.robotcore.TrcEvent;
 import trclib.robotcore.TrcOwnershipMgr;
 import trclib.robotcore.TrcRobot;
 import trclib.robotcore.TrcTaskMgr;
+import trclib.subsystem.TrcShooter;
 import trclib.timer.TrcTimer;
 import trclib.vision.TrcVisionTargetInfo;
 
@@ -49,7 +51,7 @@ import trclib.vision.TrcVisionTargetInfo;
 public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 {
     private static final String moduleName = TaskAutoShoot.class.getSimpleName();
-    private static final boolean useGoalTracking = true;
+    private static final boolean useGoalTracking = false;
 
     public enum State
     {
@@ -135,7 +137,7 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
 
     private int numArtifactsShot = 0;
     private int motifIndex = 0;
-    private double[] aimInfo = null;
+    private TrcShooter.AimInfo aimInfo = null;
     private Vision.ArtifactType[] motifSequence = null;
     private Double visionExpiredTime = null;
     private boolean pausedPrevGoalTracking = false;
@@ -315,68 +317,68 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     numArtifactsShot = 0;
                     motifSequence = null;
                     visionExpiredTime = null;
-//                    if (useGoalTracking)
-//                    {
-//                        // Check if Limelight is facing the AprilTag.
-//                        synchronized (robot.trackingInfo)
-//                        {
-//                            if (robot.trackingInfo.robotLocalized)
-//                            {
-//                                double[] aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
-//                                double turretAngle = robot.shooter.getPanAngle();
-//                                double turretTarget = aimInfo[1];
-//
-//                                if (turretTarget < Shooter.Params.PAN_MIN_POS)
-//                                {
-//                                    turretTarget += 360.0;
-//                                }
-//                                else if (turretTarget > Shooter.Params.PAN_MAX_POS)
-//                                {
-//                                    turretTarget -= 360.0;
-//                                }
-//                                tracer.traceInfo(
-//                                    moduleName,
-//                                    "***** AimInfo=" + Arrays.toString(aimInfo) +
-//                                    ", turretAngle=" + turretAngle +
-//                                    ", turretTarget=" + turretTarget);
-//                                // Check turret target angle is greater than at least half of Limelight HFOV.
-//                                // If so, it means AprilTag is out-of-view and we need to turn the turret towards
-//                                // the AprilTag to bring it back in view.
-//                                if (Math.abs(turretTarget - turretAngle) > Vision.LIMELIGHT_HFOV_THRESHOLD)
-//                                {
-//                                    tracer.traceInfo(
-//                                        moduleName,
-//                                        "***** Camera is not pointing at AprilTag, turn to AprilTag.");
-//                                    turretCallbackEvent = new TrcEvent(moduleName + ".turretCallback");
-//                                    turretCallbackEvent.setCallback(
-//                                        (ctxt, canceled) ->
-//                                        {
-//                                            if (!canceled)
-//                                            {
-//                                                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
-//                                                {
-//                                                    tracer.traceInfo(
-//                                                        moduleName,
-//                                                        "***** Camera is pointing at AprilTag, turn on Goal Tracking.");
-//                                                    robot.shooterSubsystem.enableGoalTracking(
-//                                                        owner, true, taskParams.alliance, true);
-//                                                }
-//                                            }
-//                                        }, null);
-//                                    robot.shooter.setPanAngle(owner, turretTarget, turretCallbackEvent, 0.0);
-//                                }
-//                            }
-//                            else
-//                            {
-//                                // Since robot is not localized, we can't determine if we are seeing AprilTag,
-//                                // don't turn on GoalTracking. This will force DO_VISION to use vision to find
-//                                // the AprilTag in case Limelight does see the AprilTag.
-//                                tracer.traceInfo(
-//                                    moduleName,
-//                                    "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
-//                            }
-//                        }
-//                    }
+                    if (useGoalTracking)
+                    {
+                        // Check if Limelight is facing the AprilTag.
+                        synchronized (robot.trackingInfo)
+                        {
+                            if (robot.trackingInfo.robotLocalized)
+                            {
+                                TrcShooter.AimInfo aimInfo = robot.vision.getAimInfoByOdometry(taskParams.alliance);
+                                double turretAngle = robot.shooter.getPanAngle();
+                                double turretTarget = aimInfo.panAngle;
+
+                                if (turretTarget < Shooter.Params.PAN_MIN_POS)
+                                {
+                                    turretTarget += 360.0;
+                                }
+                                else if (turretTarget > Shooter.Params.PAN_MAX_POS)
+                                {
+                                    turretTarget -= 360.0;
+                                }
+                                tracer.traceInfo(
+                                    moduleName,
+                                    "***** AimInfo=" + aimInfo +
+                                    ", turretAngle=" + turretAngle +
+                                    ", turretTarget=" + turretTarget);
+                                // Check turret target angle is greater than at least half of Limelight HFOV.
+                                // If so, it means AprilTag is out-of-view and we need to turn the turret towards
+                                // the AprilTag to bring it back in view.
+                                if (Math.abs(turretTarget - turretAngle) > Vision.LIMELIGHT_HFOV_THRESHOLD)
+                                {
+                                    tracer.traceInfo(
+                                        moduleName,
+                                        "***** Camera is not pointing at AprilTag, turn to AprilTag.");
+                                    turretCallbackEvent = new TrcEvent(moduleName + ".turretCallback");
+                                    turretCallbackEvent.setCallback(
+                                        (ctxt, canceled) ->
+                                        {
+                                            if (!canceled)
+                                            {
+                                                if (!robot.shooterSubsystem.isGoalTrackingEnabled())
+                                                {
+                                                    tracer.traceInfo(
+                                                        moduleName,
+                                                        "***** Camera is pointing at AprilTag, turn on Goal Tracking.");
+                                                    robot.shooterSubsystem.enableGoalTracking(
+                                                        owner, true, taskParams.alliance, true);
+                                                }
+                                            }
+                                        }, null);
+                                    robot.shooter.setPanAngle(owner, turretTarget, turretCallbackEvent, 0.0);
+                                }
+                            }
+                            else
+                            {
+                                // Since robot is not localized, we can't determine if we are seeing AprilTag,
+                                // don't turn on GoalTracking. This will force DO_VISION to use vision to find
+                                // the AprilTag in case Limelight does see the AprilTag.
+                                tracer.traceInfo(
+                                    moduleName,
+                                    "***** Robot is not localized, cannot determine if turret is seeing AprilTag.");
+                            }
+                        }
+                    }
 
                     if (taskParams.useClassifierVision && !classifierVisionEnabled)
                     {
@@ -551,14 +553,14 @@ public class TaskAutoShoot extends TrcAutoTask<TaskAutoShoot.State>
                     // Spin the shooter flywheel up to speed and the turret pointing to the target.
                     event.clear();
                     sm.addEvent(event);
+                    double distance = TrcUtil.magnitude(aimInfo.targetPose.x, aimInfo.targetPose.y);
                     TrcLookupTable.Entry shootParams = Shooter.shootParamsTable.get(
-                        aimInfo[0], taskParams.useRegression);
+                        distance, taskParams.useRegression);
                     tracer.traceInfo(
                         moduleName, "***** ShootParams: dist=%f, bearing=%f, shootParams=%s, event=%s",
-                        aimInfo[0], aimInfo[1], shootParams, event);
+                        distance, aimInfo.panAngle, shootParams, event);
                     robot.shooter.setTiltAngle(shootParams.region.value);
-                    robot.shooter.aimShooter(
-                        owner, shootParams.outputs[0]/60.0, 0.0, null, aimInfo[1], event, 0.0, null, 0.0);
+                    robot.shooter.aimShooter(owner, aimInfo, event, 0.0, null, 0.0);
                 }
                 // GoalTracking is not ON and vision has detected AprilTag but aimInfo was cleared for faster
                 // shooting. It doesn't need to wait for flywheel speed recovery.

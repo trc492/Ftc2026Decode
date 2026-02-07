@@ -32,6 +32,7 @@ import teamcode.Robot;
 import teamcode.RobotParams;
 import teamcode.vision.Vision;
 import trclib.dataprocessor.TrcLookupTable;
+import trclib.dataprocessor.TrcUtil;
 import trclib.motor.TrcMotor;
 import trclib.motor.TrcServo;
 import trclib.pathdrive.TrcPose2D;
@@ -582,7 +583,7 @@ public class Shooter extends TrcSubsystem
                     }
                     // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                     // by mistake.
-                    shooter.disableShooterPowerMode(null, null);
+                    shooter.disableShooterPowerMode();
                     robot.enableTrackingInfo(true, alliance);
                     this.trackedAlliance = alliance;
                     this.visionTracking = true;
@@ -600,7 +601,7 @@ public class Shooter extends TrcSubsystem
                 }
                 // Reset failsafe so we can re-evaluate it again. This is just in case failsafe somehow got detected
                 // by mistake.
-                shooter.disableShooterPowerMode(null, null);
+                shooter.disableShooterPowerMode();
                 robot.enableTrackingInfo(false, alliance);
                 this.trackedAlliance = alliance;
                 this.visionTracking = false;
@@ -722,7 +723,7 @@ public class Shooter extends TrcSubsystem
 
         if (isGoalTrackingEnabled())
         {
-            double[] aimInfo;
+            TrcShooter.AimInfo aimInfo;
 
             synchronized (robot.trackingInfo)
             {
@@ -756,12 +757,13 @@ public class Shooter extends TrcSubsystem
             }
             else
             {
-                double panTarget = aimInfo[1];
+                double distance = TrcUtil.magnitude(aimInfo.targetPose.x, aimInfo.targetPose.y);
+                double panTarget = aimInfo.panAngle;
                 TrcLookupTable.Entry shootParams = shootParamsTable.get(
-                    aimInfo[0], Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
+                    distance, Dashboard.Subsystem_Shooter.autoShootParams.useRegression);
                 shooter.tracer.traceDebug(
                     Params.SUBSYSTEM_NAME, "ShootParams: dist=%f, pan=%f->%f, params=%s",
-                    aimInfo[0], panPosition, panTarget, shootParams);
+                    distance, panPosition, panTarget, shootParams);
 
                 // Set tilt angle (fire and forget).
                 shooter.setTiltAngle(shootParams.region.value);

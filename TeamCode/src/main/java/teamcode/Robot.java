@@ -68,7 +68,7 @@ public class Robot
         public boolean odometryTrackingEnabled = false;
         public FtcAuto.Alliance trackedAlliance = null;
         public double staleTimeout = 0.0;
-        public double[] aimInfo = null;
+        public TrcShooter.AimInfo aimInfo = null;
         public boolean robotLocalized = false;
     }   //class TrackingInfo
 

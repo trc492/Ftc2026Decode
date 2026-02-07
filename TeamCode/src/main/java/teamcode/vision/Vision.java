@@ -48,6 +48,7 @@ import teamcode.indicators.LEDIndicator;
 import trclib.dataprocessor.TrcUtil;
 import trclib.pathdrive.TrcPose2D;
 import trclib.robotcore.TrcDbgTrace;
+import trclib.subsystem.TrcShooter;
 import trclib.vision.TrcHomographyMapper;
 import trclib.vision.TrcOpenCvColorBlobPipeline;
 import trclib.vision.TrcOpenCvDetector;
@@ -631,9 +632,9 @@ public class Vision
      * This method determines the target depth and bearing by using AprilTag Vision.
      *
      * @param aprilTagInfo specifies the detected AprilTag info.
-     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     * @return Aim information including flywheel RPM, turret angle and tilt angle.
      */
-    public double[] getAimInfoByVision(TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo)
+    public TrcShooter.AimInfo getAimInfoByVision(TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo)
     {
         int aprilTagId = (int) aprilTagInfo.detectedObj.objId;
         TrcPose2D targetPose = aprilTagInfo.objPose.addRelativePose(
@@ -647,16 +648,16 @@ public class Vision
             moduleName, "aprilTagPose{%d}=%s, targetPose=%s, depth=%f, bearing=%f",
             aprilTagId, aprilTagInfo.objPose, targetPose, targetDepth, targetBearing, targetBearing);
 
-        return new double[] {targetDepth, targetBearing};
+        return new TrcShooter.AimInfo(targetPose, null, null, targetBearing, null, null);
     }   //getAimInfoByVision
 
     /**
      * This method determines the target depth and bearing by using Odometry.
      *
      * @param alliance specifies the alliance goal to shoot at.
-     * @return array of two doubles, first of which is target depth and second of which is target bearing.
+     * @return Aim information including flywheel RPM, turret angle and tilt angle.
      */
-    public double[] getAimInfoByOdometry(FtcAuto.Alliance alliance)
+    public TrcShooter.AimInfo getAimInfoByOdometry(FtcAuto.Alliance alliance)
     {
         TrcPose2D robotPose = robot.robotBase.driveBase.getFieldPosition();
         TrcPose2D goalFieldPose = alliance == FtcAuto.Alliance.BLUE_ALLIANCE?
@@ -671,7 +672,7 @@ public class Vision
             moduleName, "robotPose=%s, targetPose=%s, aprilTagPose=%s, depth=%f, bearing=%f",
             robotPose, targetPose, aprilTagPose, targetDepth, targetBearing);
 
-        return new double[] {targetDepth, targetBearing};
+        return new TrcShooter.AimInfo(targetPose, null, null, targetBearing, null, null);
     }   //getAimInfoByOdometry
 
     /**
