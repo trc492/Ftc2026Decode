@@ -42,7 +42,6 @@ import trclib.motor.TrcMotor;
 import trclib.robotcore.TrcEvent;
 import trclib.subsystem.TrcSubsystem;
 import trclib.timer.TrcTimer;
-import trclib.vision.TrcVision;
 
 /**
  * This class creates the appropriate Robot Drive Base according to the specified robot type.
@@ -74,7 +73,7 @@ public class DriveBase extends TrcSubsystem
         public VisionOnlyInfo()
         {
             this.setRobotInfo("VisionOnly")
-                .setVisionInfo(new TrcVision.CameraInfo[] {Vision.frontCamParams, Vision.limelightParams});
+                .setVisionInfo(Vision.frontCamParams, Vision.limelightParams);
         }   //VisionOnlyInfo
     }   //class VisionOnlyInfo
 
@@ -123,7 +122,7 @@ public class DriveBase extends TrcSubsystem
                 .setPidStallDetectionEnabled(true)
                 .setPidDriveParams(false)
                 .setPurePursuitDriveParams(6.0, true, false)
-                .setVisionInfo(new TrcVision.CameraInfo[] {Vision.frontCamParams, Vision.limelightParams})
+                .setVisionInfo(Vision.frontCamParams, Vision.limelightParams)
                 .setIndicators(
                     LEDIndicator.STATUS_LED_NAME, LEDIndicator.SPINDEXER1_LED_NAME, LEDIndicator.SPINDEXER2_LED_NAME,
                     LEDIndicator.SPINDEXER3_LED_NAME);
@@ -184,7 +183,7 @@ public class DriveBase extends TrcSubsystem
                 .setPidStallDetectionEnabled(true)
                 .setPidDriveParams(false)
                 .setPurePursuitDriveParams(6.0, true, false)
-                .setVisionInfo(new TrcVision.CameraInfo[] {Vision.frontCamParams, Vision.limelightParams})
+                .setVisionInfo(Vision.frontCamParams, Vision.limelightParams)
                 .setIndicators(
                     LEDIndicator.STATUS_LED_NAME, LEDIndicator.SPINDEXER1_LED_NAME, LEDIndicator.SPINDEXER2_LED_NAME,
                     LEDIndicator.SPINDEXER3_LED_NAME);
@@ -246,7 +245,7 @@ public class DriveBase extends TrcSubsystem
                 .setPidStallDetectionEnabled(true)
                 .setPidDriveParams(true)
                 .setPurePursuitDriveParams(6.0, true, true)
-                .setVisionInfo(new TrcVision.CameraInfo[] {Vision.sampleCamParams, Vision.intoTheDeepLimelightParams})
+                .setVisionInfo(Vision.sampleCamParams, Vision.intoTheDeepLimelightParams)
                 .setIndicators("blinkin", "gobildaLED");
         }   //IntoTheDeepRobotInfo
     }   //class IntoTheDeepRobotInfo
