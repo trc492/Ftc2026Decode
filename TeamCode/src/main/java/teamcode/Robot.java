@@ -364,8 +364,9 @@ public class Robot
                 TrcVisionTargetInfo<FtcLimelightVision.DetectedObject> aprilTagInfo =
                     vision.getLimelightDetectedObject(
                         FtcLimelightVision.ResultType.Fiducial,
-                        trackingInfo.trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE ?
-                            RobotParams.Game.blueGoalAprilTag : RobotParams.Game.redGoalAprilTag,
+//                        trackingInfo.trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE ?
+//                            RobotParams.Game.blueGoalAprilTag : RobotParams.Game.redGoalAprilTag,
+                        RobotParams.Game.obeliskAprilTags,
                         null, -1);
                 double currTime = TrcTimer.getCurrentTime();
                 if (aprilTagInfo != null)
