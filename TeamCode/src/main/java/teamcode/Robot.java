@@ -366,7 +366,7 @@ public class Robot
                         FtcLimelightVision.ResultType.Fiducial,
 //                        trackingInfo.trackedAlliance == FtcAuto.Alliance.BLUE_ALLIANCE ?
 //                            RobotParams.Game.blueGoalAprilTag : RobotParams.Game.redGoalAprilTag,
-                        RobotParams.Game.obeliskAprilTags,
+                        RobotParams.Game.anyAprilTags,
                         null, -1);
                 double currTime = TrcTimer.getCurrentTime();
                 if (aprilTagInfo != null)

@@ -128,6 +128,7 @@ public class RobotParams
         public static final int[] redGoalAprilTag               = new int[] {24};
         public static final int[] anyGoalAprilTags              = new int[] {20, 24};
         public static final int[] obeliskAprilTags              = new int[] {21, 22, 23};
+        public static final int[] anyAprilTags                  = new int[] {20, 21, 22, 23, 24};
         public static final Vision.ArtifactType[][] motifPatterns =
             new Vision.ArtifactType[][]
             {
